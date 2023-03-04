@@ -1580,6 +1580,7 @@ th {
 	min-width: 300px;
 	padding: 5px;
 	position: relative;
+	background-color: #2137;
 }
 
 @media (max-height: 700px) {
@@ -1780,19 +1781,19 @@ th {
 }
 
 .game-view > .bottom-section button {
-	background-color: #244967;
+	background-color: #24496722;
 }
 
 .game-view > .bottom-section button:hover {
-	background-color: #2f5e85;
+	background-color: #2f5e85aa;
 }
 
 .game-view > .bottom-section button:active {
-	background-color: #193449;
+	background-color: #193449aa;
 }
 
 .game-view > .bottom-section button:disabled {
-	background-color: #3e3e3e;
+	background-color: #3e3e3e66;
 }
 
 .game-view > .bottom-section .stats-view {
@@ -2360,10 +2361,8 @@ th {
 .roomlist-view > .dialog, .room-view.roomlist-view > .container {
 	position: relative;
 	min-height: 0;
-	max-width: 650px;
-	max-height: 700px;
-	height: 100%;
-	width: 100%;
+	height: 90%;
+	width: 90%;
 }
 
 .roomlist-view > .dialog [data-hook="count"], .room-view.roomlist-view > .container [data-hook="count"] {
@@ -2451,7 +2450,7 @@ th {
 }
 
 .roomlist-view > .dialog > .splitter > .list col:nth-child(3), .room-view.roomlist-view > .container > .splitter > .list col:nth-child(3) {
-	width: 40px;
+	width: 45px;
 }
 
 .roomlist-view > .dialog > .splitter > .list col:nth-child(4), .room-view.roomlist-view > .container > .splitter > .list col:nth-child(4) {
