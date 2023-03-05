@@ -32,8 +32,7 @@
 		e.get('ok');
 		e.get('cancel');
 		this.Vd = e.get('content');
-		for (var f =
-			e.get('title'), e = e.get('buttons'), g = 0, k = 0; k < c.length;) {
+		for (var f = e.get('title'), e = e.get('buttons'), g = 0, k = 0; k < c.length;) {
 			var l = c[k++], t = window.document.createElement('button');
 			t.textContent = l;
 			t.onclick = function (a) {
@@ -57,8 +56,7 @@
 			for (var c = p.Eo(a), d = 0; d < c.length;) {
 				var e = [c[d]];
 				++d;
-				var f = [window.document.createElement('div')],
-					g = e[0];
+				var f = [window.document.createElement('div')], g = e[0];
 				J.startsWith(e[0], 'Key') && (g = D.substr(e[0], 3, null));
 				f[0].textContent = g;
 				b.appendChild(f[0]);
@@ -83,8 +81,7 @@
 					q.classList.toggle('show', !1);
 					b.stopPropagation();
 					b = b.code;
-					null == p.L(b) &&
-					(p.Pa(b, a), n.A.tg.Xa(p), r());
+					null == p.L(b) && (p.Pa(b, a), n.A.tg.Xa(p), r());
 				};
 			};
 			return b;
@@ -117,8 +114,7 @@
 		function e(a, b, c) {
 			function d(a) {
 				e.classList.toggle('icon-ok', a);
-				e.classList.toggle('icon-cancel',
-					!a);
+				e.classList.toggle('icon-cancel', !a);
 			}
 
 			a = l.get(a);
@@ -157,8 +153,7 @@
 
 		null == a && (a = !1);
 		var k = this;
-		this.g =
-			v.Ga(aa.N);
+		this.g = v.Ga(aa.N);
 		var l = v.Ea(this.g);
 		this.nd = l.get('close');
 		var t = [];
@@ -260,8 +255,7 @@
 			y.i(b.aq, b.wf.selectedIndex);
 		};
 		this.qf.onchange = function () {
-			y.i(b.Tp,
-				b.qf.selectedIndex);
+			y.i(b.Tp, b.qf.selectedIndex);
 		};
 		this.tm.onclick = function () {
 			A.i(b.Yp);
@@ -365,8 +359,7 @@
 		f.onchange = function () {
 			var a = f.files;
 			if (!(1 > a.length)) {
-				var a = a.item(0),
-					b = new FileReader;
+				var a = a.item(0), b = new FileReader;
 				b.onload = function () {
 					y.i(c.xs, b.result);
 				};
@@ -390,13 +383,11 @@
 
 	function ab(a) {
 		this.Ja = v.Ga(ab.tj, 'tbody');
-		var b = v.Ea(this.Ja), c = b.get('name'), d = b.get('players'), e = b.get('distance'), f = b.get('pass'),
-			b = b.get('flag');
+		var b = v.Ea(this.Ja), c = b.get('name'), d = b.get('players'), e = b.get('distance'), f = b.get('pass'), b = b.get('flag');
 		this.Fs = a;
 		var g = a.vd;
 		c.textContent = g.w;
-		d.textContent =
-			'' + g.I + '/' + g.Xe;
+		d.textContent = '' + g.I + '/' + g.Xe;
 		f.textContent = g.Ib ? 'Yes' : 'No';
 		e.textContent = '' + (a.Le | 0) + 'km';
 		try {
@@ -429,8 +420,7 @@
 	function ha(a) {
 		function b() {
 			var b = g[f];
-			a.pl =
-				e ? b : 0;
+			a.pl = e ? b : 0;
 			d.get('spd').textContent = b + 'x';
 		}
 
@@ -541,8 +531,7 @@
 	}
 
 	function cb(a) {
-		var b =
-			this;
+		var b = this;
 		this.w = a.w;
 		this.yb = a.yb;
 		this.$ = a.V;
@@ -573,8 +562,7 @@
 		var d = v.Ea(this.g);
 		this.Ze = d.get('name');
 		this.Hf = d.get('admin');
-		this.Qe =
-			d.get('kick');
+		this.Qe = d.get('kick');
 		this.nd = d.get('close');
 		this.Hf.onclick = function () {
 			ia.i(c.Cp, c.Nb, !c.ql);
@@ -625,8 +613,7 @@
 		var c = b.get('list'), d = b.get('file');
 		this.Lg();
 		this.hi.onclick = function () {
-			null !=
-			a.jb && a.jb.Pd().then(function (b) {
+			null != a.jb && a.jb.Pd().then(function (b) {
 				y.i(a.og, b);
 			});
 		};
@@ -752,8 +739,7 @@
 				b.bb(null);
 			};
 			a.fi = function (a) {
-				a = new P('Error loading stadium',
-					a, ['Ok']);
+				a = new P('Error loading stadium', a, ['Ok']);
 				a.Va = function () {
 					b.bb(null);
 				};
@@ -778,8 +764,7 @@
 	}
 
 	function hb() {
-		this.Nb =
-			-1;
+		this.Nb = -1;
 		this.Eb = new N;
 		this.xc = new Rb;
 		this.g = v.Ga(hb.N);
@@ -836,8 +821,7 @@
 				y.i(b.Jp, {name: b.$e.value, password: a, qs: b.ai.selectedIndex + 2, Ks: b.Fm});
 			}
 		};
-		for (a = 2; 21 > a;) c = window.document.createElement('option'),
-			c.textContent = '' + a++, this.ai.appendChild(c);
+		for (a = 2; 21 > a;) c = window.document.createElement('option'), c.textContent = '' + a++, this.ai.appendChild(c);
 		this.ai.selectedIndex = 10;
 		this.Fj(!1);
 		this.C();
@@ -872,8 +856,7 @@
 		this.C();
 	}
 
-	function lb(a,
-	            b) {
+	function lb(a, b) {
 		this.Hj = [];
 		this.Iq = /[#@][^\s@#]*$/;
 		this.Mb = a;
@@ -903,8 +886,7 @@
 		this.gb.onkeydown = function (c) {
 			switch (c.keyCode) {
 				case 9:
-					b.Bc.Mb.hidden || (b.Bc.qo(),
-						c.preventDefault());
+					b.Bc.Mb.hidden || (b.Bc.qo(), c.preventDefault());
 					break;
 				case 13:
 					a();
@@ -941,8 +923,7 @@
 			A.i(a.qb);
 		};
 		this.wh = b.get('change');
-		this.wh.disabled =
-			!0;
+		this.wh.disabled = !0;
 		this.wh.onclick = function () {
 			null != a.rf && a.Zl(a.rf.index);
 		};
@@ -972,8 +953,7 @@
 		this.xc = 0;
 		this.ab = [];
 		this.Ar = new R(['Time is', 'Up!'], 16777215);
-		this.Gq = new R(['Red is', 'Victorious!'],
-			15035990);
+		this.Gq = new R(['Red is', 'Victorious!'], 15035990);
 		this.Fq = new R(['Red', 'Scores!'], 15035990);
 		this.Cn = new R(['Blue is', 'Victorious!'], 625603);
 		this.Bn = new R(['Blue', 'Scores!'], 625603);
@@ -998,8 +978,7 @@
 		this.td = new Sb;
 		this.sa = window.document.createElement('canvas');
 		this.sa.mozOpaque = !0;
-		this.c =
-			this.sa.getContext('2d', {alpha: !1});
+		this.c = this.sa.getContext('2d', {alpha: !1});
 		this.Lo = this.c.createPattern(n.Ko, null);
 		this.Wn = this.c.createPattern(n.Vn, null);
 		this.Un = this.c.createPattern(n.Tn, null);
@@ -1041,8 +1020,7 @@
 	}
 
 	function nb() {
-		this.R =
-			0;
+		this.R = 0;
 		this.ne = 1 / 0;
 		this.Hb = this.ec = 100;
 		this.Yd = this.Zd = 0;
@@ -1105,8 +1083,7 @@
 	}
 
 	function Na() {
-		this.da =
-			0;
+		this.da = 0;
 	}
 
 	function Oa() {
@@ -1218,8 +1195,7 @@
 		this.U = [];
 		this.qa = [];
 		this.tc = [];
-		this.F =
-			[];
+		this.F = [];
 		this.pb = [];
 		this.Dd = [];
 		this.md = [];
@@ -1266,8 +1242,7 @@
 	}
 
 	function ua() {
-		this.h = this.v =
-			63;
+		this.h = this.v = 63;
 		this.R = 16777215;
 		this.Ca = .99;
 		this.aa = 1;
@@ -1517,8 +1492,7 @@
 		this.Jn = new tb(3, 1E3);
 		this.ob = new Ra;
 		this.Bg = 'Waiting for link';
-		this.xi = this.am =
-			!1;
+		this.xi = this.am = !1;
 		this.sd = 0;
 		var b = this;
 		this.Of = new ub(a, function (a) {
@@ -1541,8 +1515,7 @@
 		this.ob.ng = function (b) {
 			a.ra(b);
 		};
-		this.j.Wa.aq =
-			function (b) {
+		this.j.Wa.aq = function (b) {
 				b = da.la(1, b);
 				a.ra(b);
 			};
@@ -1621,8 +1594,7 @@
 		}, 1E3);
 		this.Qr = window.setInterval(function () {
 				a.C();
-			},
-			50);
+			}, 50);
 		this.uf();
 		var c = n.A.rd.L(), c = -200 > c ? -200 : 200 < c ? 200 : c;
 		if (0 != c) {
@@ -1681,8 +1653,7 @@
 		this.Vk = [];
 		this.pl = 5;
 		this.Fd = -1;
-		this.hg = this.Qb =
-			this.Wh = this.sk = 0;
+		this.hg = this.Qb = this.Wh = this.sk = 0;
 		V.call(this, b);
 		a = new F(new DataView(a.buffer), !1);
 		if (1212305970 != a.hb()) throw new q('');
@@ -1709,8 +1680,7 @@
 	function $b(a) {
 		this.xj = new Map;
 		this.Ho = new tb(100, 16);
-		this.yg =
-			!1;
+		this.yg = !1;
 		this.yb = 0;
 		this.pa = a;
 		a = w.ha(8);
@@ -1747,8 +1717,7 @@
 	}
 
 	function xa(a, b) {
-		this.Di =
-			[];
+		this.Di = [];
 		this.pi = [];
 		this.ug = new Ia;
 		this.Ap = 1;
@@ -1780,8 +1749,7 @@
 					c.ia();
 				};
 				a = window.setTimeout(function () {
-					y.i(c.df,
-						xb.ih('Game state timeout'));
+					y.i(c.df, xb.ih('Game state timeout'));
 					c.ia();
 				}, 1E4);
 				c.re = a;
@@ -1885,8 +1853,7 @@
 	}
 
 	function Ia() {
-		this.list =
-			[];
+		this.list = [];
 	}
 
 	function m() {
@@ -1949,8 +1916,7 @@
 		this.gd = a.gd;
 		this.ym = window.performance.now();
 		var c = null, c = function () {
-			var a =
-				b.Eq - b.Br();
+			var a = b.Eq - b.Br();
 			0 >= a ? b.ia() : (window.clearTimeout(b.Am), a = window.setTimeout(c, a + 1E3), b.Am = a);
 		};
 		c();
@@ -2037,8 +2003,7 @@
 				null != g.gl && g.gl();
 				g.pa.Mi();
 				g.Bi(g.jr, g.pa.Uf, e);
-				g.pa.jg =
-					G(g, g.yi);
+				g.pa.jg = G(g, g.yi);
 				g.pa.Sh.then(function () {
 					g.Nc(0, null);
 				});
@@ -2086,8 +2051,7 @@
 		null == b.oh && (b.oh = rc++);
 		var c;
 		null == a.ej ? a.ej = {} : c = a.ej[b.oh];
-		null == c &&
-		(c = b.bind(a), a.ej[b.oh] = c);
+		null == c && (c = b.bind(a), a.ej[b.oh] = c);
 		return c;
 	}
 
@@ -2109,8 +2073,7 @@
 			null == c && (c = -1);
 			if (this.r.global) {
 				this.r.lastIndex = b;
-				this.r.nc = this.r.exec(0 >
-				c ? a : D.substr(a, 0, b + c));
+				this.r.nc = this.r.exec(0 > c ? a : D.substr(a, 0, b + c));
 				if (b = null != this.r.nc) this.r.bh = a;
 				return b;
 			}
@@ -2138,8 +2101,7 @@
 	ec.Mm = function (a) {
 		var b = [];
 		if (null != a) {
-			var c = Object.prototype.hasOwnProperty,
-				d;
+			var c = Object.prototype.hasOwnProperty, d;
 			for (d in a) '__id__' != d && 'hx__closures__' != d && c.call(a, d) && b.push(d);
 		}
 		return b;
@@ -2188,8 +2150,7 @@
 	dc.b = !0;
 	dc.prototype = {
 		Yr: function (a) {
-			for (var b = 0, c = a.length; b < c;) this.hash += a[b++], this.hash += this.hash << 10,
-				this.hash ^= this.hash >>> 6;
+			for (var b = 0, c = a.length; b < c;) this.hash += a[b++], this.hash += this.hash << 10, this.hash ^= this.hash >>> 6;
 		}, f: dc
 	};
 	var Ob = Ab['bas.basnet.FailReason'] = {
@@ -2250,8 +2211,7 @@
 				null != b && c.Vb(pako.deflateRaw(b.Sb()));
 				this.X.send(c.Hd());
 			}
-		},
-		Bi: function (a, b, c) {
+		}, Bi: function (a, b, c) {
 			var d = w.ha(32, !1);
 			d.l(this.rh ? 1 : 0);
 			d.mc(a.sdp);
@@ -2330,8 +2290,7 @@
 			this.Ra.onicecandidate = null;
 			this.Ra.ondatachannel = null;
 			this.Ra.onsignalingstatechange = null;
-			this.Ra.oniceconnectionstatechange =
-				null;
+			this.Ra.oniceconnectionstatechange = null;
 			for (var a = 0, b = this.Vc; a < b.length;) {
 				var c = b[a];
 				++a;
@@ -2384,8 +2343,7 @@
 				}
 				this.Mc = a.slice(0);
 				this.Ag = !0;
-				null != this.X && 1 == this.X.readyState &&
-				null == this.ke && (this.Ai(), this.ke = window.setTimeout(function () {
+				null != this.X && 1 == this.X.readyState && null == this.ke && (this.Ai(), this.ke = window.setTimeout(function () {
 					b.ke = null;
 					1 == b.X.readyState && b.Ag && b.Ai();
 				}, 1E4));
@@ -2413,8 +2371,7 @@
 				if (null == b) throw new q(null);
 				a = a.token;
 				if (null == a) throw new q(null);
-				d.X = new WebSocket(b +
-					'?token=' + a);
+				d.X = new WebSocket(b + '?token=' + a);
 				d.X.binaryType = 'arraybuffer';
 				d.X.onopen = function () {
 					d.So();
@@ -2449,8 +2406,7 @@
 				a.zi();
 			}, 4E4);
 		}, Ph: function (a) {
-			a =
-				new F(new DataView(a.data), !1);
+			a = new F(new DataView(a.data), !1);
 			switch (a.B()) {
 				case 1:
 					this.Oh(a);
@@ -2480,8 +2436,7 @@
 			this.Ro(b, c, e, f, a, d);
 		}, Ro: function (a, b, c, d, e, f) {
 			var g = this;
-			if (16 <= this.od.size) this.sf(a, 4104); else if (this.th.has(b)) this.sf(a,
-				4102); else {
+			if (16 <= this.od.size) this.sf(a, 4104); else if (this.th.has(b)) this.sf(a, 4102); else {
 				for (var k = [], l = 0; l < d.length;) {
 					var t = Sa.vk(d[l++]);
 					if (null != t) {
@@ -2545,8 +2500,7 @@
 			this.Dg = a.ie(a.o.byteLength - a.a);
 		}, Nc: function (a, b, c) {
 			if (!b.hl) {
-				0 ==
-				a && (b.hl = !0);
+				0 == a && (b.hl = !0);
 				b = b.$;
 				var d = w.ha(32, !1);
 				d.l(a);
@@ -2637,8 +2591,7 @@
 			}
 		}, ia: function () {
 			window.clearTimeout(this.Am);
-			this.wd && (this.wd = !1,
-				this.Ra.close(), null != this.cf && this.cf());
+			this.wd && (this.wd = !1, this.Ra.close(), null != this.cf && this.cf());
 		}, f: Nb
 	};
 	var pc = {
@@ -2662,9 +2615,7 @@
 	F.b = !0;
 	F.jo = function (a, b) {
 		var c = a.getUint8(b), d, e, f, g, k, l = b;
-		if (0 == (c & 128)) ++b; else if (192 == (c & 224)) d = a.getUint8(b + 1), c = (c & 31) << 6 | d & 63, b += 2; else if (224 == (c & 240)) d =
-			a.getUint8(b + 1), e = a.getUint8(b + 2), c = (c & 15) << 12 | (d & 63) << 6 | e & 63, b += 3; else if (240 == (c & 248)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), c = (c & 7) << 18 | (d & 63) << 12 | (e & 63) << 6 | f & 63, b += 4; else if (248 == (c & 252)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), c = (c & 3) << 24 | (d & 63) << 18 | (e & 63) << 12 | (f & 63) << 6 | g & 63, b += 5; else if (252 == (c & 254)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), k = a.getUint8(b + 5), c = (c & 1) << 30 | (d & 63) << 24 | (e & 63) << 18 | (f & 63) << 12 | (g & 63) << 6 | k & 63,
-			b += 6; else throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
+		if (0 == (c & 128)) ++b; else if (192 == (c & 224)) d = a.getUint8(b + 1), c = (c & 31) << 6 | d & 63, b += 2; else if (224 == (c & 240)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), c = (c & 15) << 12 | (d & 63) << 6 | e & 63, b += 3; else if (240 == (c & 248)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), c = (c & 7) << 18 | (d & 63) << 12 | (e & 63) << 6 | f & 63, b += 4; else if (248 == (c & 252)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), c = (c & 3) << 24 | (d & 63) << 18 | (e & 63) << 12 | (f & 63) << 6 | g & 63, b += 5; else if (252 == (c & 254)) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), k = a.getUint8(b + 5), c = (c & 1) << 30 | (d & 63) << 24 | (e & 63) << 18 | (f & 63) << 12 | (g & 63) << 6 | k & 63, b += 6; else throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
 		return {'char': c, length: b - l};
 	};
 	F.prototype = {
@@ -2683,8 +2634,7 @@
 			return this.o.getInt8(this.a++);
 		}, B: function () {
 			return this.o.getUint8(this.a++);
-		},
-		ni: function () {
+		}, ni: function () {
 			var a = this.o.getInt16(this.a, this.Sa);
 			this.a += 2;
 			return a;
@@ -2709,8 +2659,7 @@
 			this.a += 8;
 			return a;
 		}, Ab: function () {
-			for (var a = this.a, b = 0, c, d = 0; c = this.o.getUint8(a + b), 5 >
-			b && (d |= (c & 127) << 7 * b >>> 0), ++b, 0 != (c & 128);) ;
+			for (var a = this.a, b = 0, c, d = 0; c = this.o.getUint8(a + b), 5 > b && (d |= (c & 127) << 7 * b >>> 0), ++b, 0 != (c & 128);) ;
 			this.a += b;
 			return d | 0;
 		}, ie: function (a) {
@@ -2732,8 +2681,7 @@
 		}, f: F
 	};
 	w.b = !0;
-	w.ha = function (a,
-	                 b) {
+	w.ha = function (a, b) {
 		null == b && (b = !1);
 		null == a && (a = 16);
 		return new w(new DataView(new ArrayBuffer(a)), b);
@@ -2741,13 +2689,11 @@
 	w.uo = function (a, b, c) {
 		var d = c;
 		if (0 > a) throw new q('Cannot encode UTF8 character: charCode (' + a + ') is negative');
-		if (128 > a) b.setUint8(c, a & 127), ++c; else if (2048 > a) b.setUint8(c, a >> 6 & 31 | 192), b.setUint8(c + 1, a & 63 | 128), c += 2; else if (65536 > a) b.setUint8(c, a >> 12 & 15 | 224), b.setUint8(c + 1, a >> 6 & 63 | 128), b.setUint8(c + 2, a & 63 | 128), c += 3; else if (2097152 > a) b.setUint8(c, a >> 18 & 7 | 240), b.setUint8(c + 1, a >> 12 & 63 | 128), b.setUint8(c + 2, a >> 6 & 63 | 128),
-			b.setUint8(c + 3, a & 63 | 128), c += 4; else if (67108864 > a) b.setUint8(c, a >> 24 & 3 | 248), b.setUint8(c + 1, a >> 18 & 63 | 128), b.setUint8(c + 2, a >> 12 & 63 | 128), b.setUint8(c + 3, a >> 6 & 63 | 128), b.setUint8(c + 4, a & 63 | 128), c += 5; else if (-2147483648 > a) b.setUint8(c, a >> 30 & 1 | 252), b.setUint8(c + 1, a >> 24 & 63 | 128), b.setUint8(c + 2, a >> 18 & 63 | 128), b.setUint8(c + 3, a >> 12 & 63 | 128), b.setUint8(c + 4, a >> 6 & 63 | 128), b.setUint8(c + 5, a & 63 | 128), c += 6; else throw new q('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
+		if (128 > a) b.setUint8(c, a & 127), ++c; else if (2048 > a) b.setUint8(c, a >> 6 & 31 | 192), b.setUint8(c + 1, a & 63 | 128), c += 2; else if (65536 > a) b.setUint8(c, a >> 12 & 15 | 224), b.setUint8(c + 1, a >> 6 & 63 | 128), b.setUint8(c + 2, a & 63 | 128), c += 3; else if (2097152 > a) b.setUint8(c, a >> 18 & 7 | 240), b.setUint8(c + 1, a >> 12 & 63 | 128), b.setUint8(c + 2, a >> 6 & 63 | 128), b.setUint8(c + 3, a & 63 | 128), c += 4; else if (67108864 > a) b.setUint8(c, a >> 24 & 3 | 248), b.setUint8(c + 1, a >> 18 & 63 | 128), b.setUint8(c + 2, a >> 12 & 63 | 128), b.setUint8(c + 3, a >> 6 & 63 | 128), b.setUint8(c + 4, a & 63 | 128), c += 5; else if (-2147483648 > a) b.setUint8(c, a >> 30 & 1 | 252), b.setUint8(c + 1, a >> 24 & 63 | 128), b.setUint8(c + 2, a >> 18 & 63 | 128), b.setUint8(c + 3, a >> 12 & 63 | 128), b.setUint8(c + 4, a >> 6 & 63 | 128), b.setUint8(c + 5, a & 63 | 128), c += 6; else throw new q('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 		return c - d;
 	};
 	w.En = function (a) {
-		if (0 >
-			a) throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
+		if (0 > a) throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
 		if (128 > a) return 1;
 		if (2048 > a) return 2;
 		if (65536 > a) return 3;
@@ -2766,8 +2712,7 @@
 	};
 	w.prototype = {
 		Kg: function () {
-			var a =
-				new ArrayBuffer(this.a), b = new Uint8Array(this.o.buffer, this.o.byteOffset, this.a);
+			var a = new ArrayBuffer(this.a), b = new Uint8Array(this.o.buffer, this.o.byteOffset, this.a);
 			(new Uint8Array(a)).set(b);
 			return a;
 		}, Sb: function () {
@@ -2780,8 +2725,7 @@
 			this.o.byteLength < a && this.Yq(2 * this.o.byteLength >= a ? 2 * this.o.byteLength : a);
 		}, Yq: function (a) {
 			if (1 > a) throw new q('Can\'t resize buffer to a capacity lower than 1');
-			if (this.o.byteLength <
-				a) {
+			if (this.o.byteLength < a) {
 				var b = new Uint8Array(this.o.buffer);
 				a = new ArrayBuffer(a);
 				(new Uint8Array(a)).set(b);
@@ -2810,8 +2754,7 @@
 			var b = this.a;
 			this.a += 4;
 			this.rc(this.a);
-			this.o.setUint32(b,
-				a, this.Sa);
+			this.o.setUint32(b, a, this.Sa);
 		}, Wi: function (a) {
 			var b = this.a;
 			this.a += 4;
@@ -2835,8 +2778,7 @@
 		}, Db: function (a) {
 			null == a ? this.lb(0) : (this.lb(w.Kf(a) + 1), this.Og(a));
 		}, Im: function (a) {
-			var b =
-				w.Kf(a);
+			var b = w.Kf(a);
 			if (255 < b) throw new q(null);
 			this.l(b);
 			this.Og(a);
@@ -2852,8 +2794,7 @@
 			a >>>= 0;
 			this.rc(b + w.Fn(a));
 			this.o.setUint8(b, a | 128);
-			128 <= a ? (this.o.setUint8(b + 1, a >> 7 | 128), 16384 <= a ? (this.o.setUint8(b + 2, a >> 14 | 128), 2097152 <= a ? (this.o.setUint8(b + 3, a >> 21 | 128), 268435456 <= a ? (this.o.setUint8(b + 4, a >> 28 & 127), a = 5) : (this.o.setUint8(b + 3, this.o.getUint8(b +
-				3) & 127), a = 4)) : (this.o.setUint8(b + 2, this.o.getUint8(b + 2) & 127), a = 3)) : (this.o.setUint8(b + 1, this.o.getUint8(b + 1) & 127), a = 2)) : (this.o.setUint8(b, this.o.getUint8(b) & 127), a = 1);
+			128 <= a ? (this.o.setUint8(b + 1, a >> 7 | 128), 16384 <= a ? (this.o.setUint8(b + 2, a >> 14 | 128), 2097152 <= a ? (this.o.setUint8(b + 3, a >> 21 | 128), 268435456 <= a ? (this.o.setUint8(b + 4, a >> 28 & 127), a = 5) : (this.o.setUint8(b + 3, this.o.getUint8(b + 3) & 127), a = 4)) : (this.o.setUint8(b + 2, this.o.getUint8(b + 2) & 127), a = 3)) : (this.o.setUint8(b + 1, this.o.getUint8(b + 1) & 127), a = 2)) : (this.o.setUint8(b, this.o.getUint8(b) & 127), a = 1);
 			this.a += a;
 		}, f: w
 	};
@@ -2893,11 +2834,9 @@
 		try {
 			var c = new F(new DataView(a.buffer, a.byteOffset, a.byteLength), !1);
 			c.B();
-			var d = c.sb(c.Ob()), e = c.sb(), f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), !1), g = f.ic(),
-				k = f.ic(), l = f.sb();
+			var d = c.sb(c.Ob()), e = c.sb(), f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), !1), g = f.ic(), k = f.ic(), l = f.sb();
 			if (l.byteLength != b.byteLength) return Promise.reject(null);
-			for (var c = 0, t = l.byteLength; c <
-			t;) {
+			for (var c = 0, t = l.byteLength; c < t;) {
 				var h = c++;
 				if (l[h] != b[h]) return Promise.reject(null);
 			}
@@ -2922,8 +2861,7 @@
 	};
 	I.Wr = function (a, b) {
 		try {
-			return window.crypto.subtle.importKey('jwk',
-				{crv: 'P-256', ext: !0, key_ops: ['verify'], kty: 'EC', x: a, y: b}, I.qh, !0, ['verify']);
+			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: !0, key_ops: ['verify'], kty: 'EC', x: a, y: b}, I.qh, !0, ['verify']);
 		}
 		catch (c) {
 			return Promise.reject(c instanceof q ? c.Ta : c);
@@ -2951,8 +2889,7 @@
 				});
 			}
 			catch (g) {
-				return Promise.reject(g instanceof
-				q ? g.Ta : g);
+				return Promise.reject(g instanceof q ? g.Ta : g);
 			}
 		}, f: I
 	};
@@ -2975,8 +2912,7 @@
 	};
 	mc.b = !0;
 	mc.ts = function () {
-		var a =
-			window;
+		var a = window;
 		a.RTCPeerConnection = a.webkitRTCPeerConnection || a.mozRTCPeerConnection || a.RTCPeerConnection;
 		a.RTCIceCandidate = a.webkitRTCIceCandidate || a.mozRTCIceCandidate || a.RTCIceCandidate;
 		a.RTCSessionDescription = a.webkitRTCSessionDescription || a.mozRTCSessionDescription || a.RTCSessionDescription;
@@ -2989,8 +2925,7 @@
 			var a = a.RTCPeerConnection.prototype, c = a.createOffer, d = a.createAnswer;
 			a.createOffer = function (a) {
 				var b = this;
-				return new Promise(function (d,
-				                             e) {
+				return new Promise(function (d, e) {
 					c.call(b, d, e, a);
 				});
 			};
@@ -3023,8 +2958,7 @@
 	Db.b = !0;
 	Db.prototype = {
 		set: function (a) {
-			this.value !=
-			a && (this.value = a, this.Ja.textContent = '' + this.value);
+			this.value != a && (this.value = a, this.Ja.textContent = '' + this.value);
 		}, f: Db
 	};
 	v.b = !0;
@@ -3050,8 +2984,7 @@
 	};
 	zb.b = !0;
 	zb.eh = function (a) {
-		return new Promise(function (b,
-		                             c) {
+		return new Promise(function (b, c) {
 			a.onsuccess = function () {
 				b(a.result);
 			};
@@ -3087,8 +3020,7 @@
 		m.yf++;
 	};
 	m.lj = function (a, b) {
-		var c = (null ==
-		a ? null : r.Nm(a)).on;
+		var c = (null == a ? null : r.Nm(a)).on;
 		if (null == c) throw new q('Tried to pack unregistered action');
 		b.l(c);
 		a.ua(b);
@@ -3113,8 +3045,7 @@
 	};
 	Ia.b = !0;
 	Ia.ss = function (a, b, c) {
-		if (0 == a.length) for (a = 0; a < b.length;) c.push(b[a++]); else if (0 == b.length) for (b =
-			                                                                                           0; b < a.length;) c.push(a[b++]); else for (var d = 0, e = a.length, f = 0, g = b.length; ;) {
+		if (0 == a.length) for (a = 0; a < b.length;) c.push(b[a++]); else if (0 == b.length) for (b = 0; b < a.length;) c.push(a[b++]); else for (var d = 0, e = a.length, f = 0, g = b.length; ;) {
 			var k = a[d], l = b[f];
 			if (k.mb <= l.mb) {
 				if (c.push(k), ++d, d >= e) {
@@ -3146,8 +3077,7 @@
 			this.list.splice(b, 0, a);
 		}, Cs: function (a) {
 			for (var b = 0, c = 0, d = this.list; c < d.length && !(d[c++].mb >= a);) ++b;
-			this.list.splice(0,
-				b);
+			this.list.splice(0, b);
 		}, as: function (a, b) {
 			for (var c = this.list; 0 < c.length;) c.pop();
 			Ia.ss(a.list, b.list, this.list);
@@ -3174,8 +3104,7 @@
 			a.Mg(this.Rg);
 		}, va: function (a) {
 			this.Rg = a.Cl(a.Ab());
-		},
-		f: Ua
+		}, f: Ua
 	});
 	cc.b = !0;
 	cc.prototype = {f: cc};
@@ -3221,8 +3150,7 @@
 			b.tb(this.hj.Y - this.ah);
 			b.Vb(a);
 			return b.Sb();
-		},
-		f: ac
+		}, f: ac
 	};
 	Ta.b = !0;
 	ya.b = !0;
@@ -3280,8 +3208,7 @@
 			}
 			for (d = this.Ri.list; 0 < d.length;) d.pop();
 			return c;
-		},
-		kr: function (a) {
+		}, kr: function (a) {
 			300 < a && (a = 300);
 			0 > a && (a = 0);
 			this.bc = this.Ac * a | 0;
@@ -3294,8 +3221,7 @@
 			return {nb: 2, reason: a, eb: 'bas.marf.net.ConnFailReason', toString: ga};
 		}, X.Ae = ['reason'], X), ih: (X = function (a) {
 			return {
-				nb: 3, description: a, eb: 'bas.marf.net.ConnFailReason',
-				toString: ga
+				nb: 3, description: a, eb: 'bas.marf.net.ConnFailReason', toString: ga
 			};
 		}, X.Ae = ['description'], X)
 	};
@@ -3321,8 +3247,7 @@
 			this.ek = null == a ? 'Connection closed' : a;
 			this.tf(4);
 		}, tf: function (a) {
-			this.pd != a && (this.pd = a, null !=
-			this.Ad && this.Ad(a));
+			this.pd != a && (this.pd = a, null != this.Ad && this.Ad(a));
 		}, wd: function () {
 			return 3 == this.pd;
 		}, C: function () {
@@ -3409,8 +3334,7 @@
 			a.apply(this.T);
 			null != this.fc && this.fc(a);
 		}, wq: function (a) {
-			var b =
-				a.hb();
+			var b = a.hb();
 			a = a.hb();
 			this.pi.push({frame: b, yf: a});
 			this.Bl();
@@ -3433,8 +3357,7 @@
 			0 < a.o.byteLength - a.a && (d = a.ic());
 			a = b ? 'You were banned' : 'You were kicked';
 			'' != d && (a += ' by ' + d);
-			'' != c && (a += ' (' +
-				c + ')');
+			'' != c && (a += ' (' + c + ')');
 			this.ia(a);
 		}, tq: function (a) {
 			var b = a.u();
@@ -3466,8 +3389,7 @@
 		}, ra: function (a) {
 			if (3 == this.pd) {
 				var b = this.Ap++, c = 0;
-				0 > this.bc && (this.bc =
-					0);
+				0 > this.bc && (this.bc = 0);
 				a.zf.Aa && (c = this.Y + (this.Xc | 0) + this.bc);
 				var d = w.ha();
 				d.l(1);
@@ -3529,8 +3451,7 @@
 		}, Sf: function () {
 			0 > this.bc && (this.bc = 0);
 			return this.wk((window.performance.now() - this.Li) * this.Ac - this.Y + this.wi + this.bc + this.rd);
-		},
-		Oo: function (a, b) {
+		}, Oo: function (a, b) {
 			if (this.ac.length >= this.fg) return gc.kh(4100);
 			try {
 				if (b.Ob() != this.Sr) throw new q(null);
@@ -3602,8 +3523,7 @@
 			c.tb(this.te);
 			c.lb(this.cc);
 			this.T.ga(c);
-			for (var d =
-				this.le.list, e = 0, f = d.length; e < f;) this.il(d[e++], c);
+			for (var d = this.le.list, e = 0, f = d.length; e < f;) this.il(d[e++], c);
 			b.Vb(pako.deflateRaw(c.Sb()));
 			a.Rb(b);
 		}, gr: function () {
@@ -3664,8 +3584,7 @@
 			a.yg && null != this.$k && this.$k(a.$);
 			a.pa.ia();
 		}, sq: function (a, b) {
-			var c =
-				a.u();
+			var c = a.u();
 			b.yb = a.Ab();
 			var d = w.ha();
 			d.l(4);
@@ -3697,8 +3616,7 @@
 	Zb.b = !0;
 	Kb.b = !0;
 	Kb.prototype = {f: Kb};
-	Jb.b =
-		!0;
+	Jb.b = !0;
 	Jb.ma = V;
 	Jb.prototype = C(V.prototype, {
 		Cq: function (a) {
@@ -3722,8 +3640,7 @@
 		}, C: function () {
 			var a = window.performance.now(), b = a - this.Wh;
 			this.Wh = a;
-			0 < this.Fd ? (this.Qb +=
-				1E4, this.Qb > this.Fd && (this.Qb = this.Fd, this.Fd = -1)) : this.Qb += b * this.pl;
+			0 < this.Fd ? (this.Qb += 1E4, this.Qb > this.Fd && (this.Qb = this.Fd, this.Fd = -1)) : this.Qb += b * this.pl;
 			a = this.mf * this.mh;
 			this.Qb > a && (this.Qb = a);
 			b = this.Qb * this.Ac;
@@ -3806,8 +3723,7 @@
 		null != a && a();
 	};
 	y.b = !0;
-	y.i = function (a,
-	                b) {
+	y.i = function (a, b) {
 		null != a && a(b);
 	};
 	ia.b = !0;
@@ -3924,8 +3840,7 @@
 					2 == a.length ? (a = K.parseInt(a[1]), null != a && -200 <= a && 200 >= a ? (n.A.rd.Xa(a), this.ya.gm(a), this.ba('Extrapolation set to ' + a + ' msec')) : this.ba('Extrapolation must be a value between -200 and 50 milliseconds')) : this.ba('Extrapolation requires a value in milliseconds.');
 					break;
 				case 'handicap':
-					2 == a.length ? (a = K.parseInt(a[1]),
-						null != a && 0 <= a && 300 >= a ? (this.ya.kr(a), this.ba('Ping handicap set to ' + a + ' msec')) : this.ba('Ping handicap must be a value between 0 and 300 milliseconds')) : this.ba('Ping handicap requires a value in milliseconds.');
+					2 == a.length ? (a = K.parseInt(a[1]), null != a && 0 <= a && 300 >= a ? (this.ya.kr(a), this.ba('Ping handicap set to ' + a + ' msec')) : this.ba('Ping handicap must be a value between 0 and 300 milliseconds')) : this.ba('Ping handicap requires a value in milliseconds.');
 					break;
 				case 'kick_ratelimit':
 					if (4 > a.length) this.ba('Usage: /kick_ratelimit <min> <rate> <burst>'); else {
@@ -3966,8 +3881,7 @@
 						return Z.add(f);
 					}).then(function () {
 							b.ba('Stadium stored');
-						},
-						function () {
+						}, function () {
 							b.ba('Couldn\'t store stadium');
 						});
 					break;
@@ -3992,8 +3906,7 @@
 			var g = b[f];
 			++f;
 			g.ea == p.Ia && c.push(g.V);
-			g.ea ==
-			p.fa ? ++d : g.ea == p.xa && ++e;
+			g.ea == p.fa ? ++d : g.ea == p.xa && ++e;
 		}
 		f = c.length;
 		0 != f && (b = function () {
@@ -4016,8 +3929,7 @@
 			this.j.bb(a.g);
 		}, ia: function () {
 			window.document.removeEventListener('keydown', G(this, this.Bd));
-			window.document.removeEventListener('keyup',
-				G(this, this.Cd));
+			window.document.removeEventListener('keyup', G(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
 			this.ob.ia();
@@ -4038,8 +3950,7 @@
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			1 == n.A.Fh.L() && 28.333333333333336 >
-			a - this.$c || (this.$c = a, this.sd++, this.uf(), a = this.ya.T.na(this.ya.uc), null != a && (this.xi = a.cb), this.j.C(this.ya));
+			1 == n.A.Fh.L() && 28.333333333333336 > a - this.$c || (this.$c = a, this.sd++, this.uf(), a = this.ya.T.na(this.ya.uc), null != a && (this.xi = a.cb), this.j.C(this.ya));
 		}, Gp: function (a) {
 			var b = this;
 			this.Of.gf(a) || this.Jn.Zn(1, function () {
@@ -4062,8 +3973,7 @@
 				a.Bf = 120 != this.ya.T.K.Oa;
 				this.ya.ra(a);
 			}
-		},
-		Bd: function (a) {
+		}, Bd: function (a) {
 			switch (a.keyCode) {
 				case 9:
 				case 13:
@@ -4098,8 +4008,7 @@
 		}, uf: function () {
 			var a = n.A.Tb.L(), b = this.j.Fb, c = b.Eb;
 			c.zg = n.A.Sl.L();
-			0 == a ? (b.Gg(!0), c.kf = 1, c.jf = 0, c.xf = 0) : (b.Gg(!1), c.xf = 35, -1 == a ? c.jf = 450 : (c.jf = 0, c.kf = 1 + .25 *
-				(a - 1)));
+			0 == a ? (b.Gg(!0), c.kf = 1, c.jf = 0, c.xf = 0) : (b.Gg(!1), c.xf = 35, -1 == a ? c.jf = 450 : (c.jf = 0, c.kf = 1 + .25 * (a - 1)));
 		}, Cd: function (a) {
 			this.ob.Cd(a.code);
 		}, f: ba
@@ -4160,8 +4069,7 @@
 			a.Oi = function (a) {
 				var b = c.j.Fb.Eb.td;
 				b.Pa(a == p.fa ? b.Gq : b.Cn);
-				c.j.Qa.Gb('' +
-					a.w + ' team won the match');
+				c.j.Qa.Gb('' + a.w + ' team won the match');
 			};
 			a.ml = function (a, e, f) {
 				e && !f && c.j.Qa.Gb('Game paused' + b(a));
@@ -4188,8 +4096,7 @@
 				c.j.Qa.Gb('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
 			};
 			a.xl = function (d, e, f) {
-				null != a.K && c.j.Qa.Gb('' +
-					e.w + ' was moved to ' + f.w + b(d));
+				null != a.K && c.j.Qa.Gb('' + e.w + ' was moved to ' + f.w + b(d));
 			};
 			a.ii = function (a, e) {
 				var d = e.w;
@@ -4222,8 +4129,7 @@
 		}, f: Gb
 	};
 	Ra.b = !0;
-	Ra.Fk =
-		function (a) {
+	Ra.Fk = function (a) {
 			switch (n.A.tg.L().L(a)) {
 				case 'Down':
 					return 2;
@@ -4258,8 +4164,7 @@
 			if (null != this.ng && 0 != this.Yf) {
 				this.Yf = this.$d = 0;
 				var a = new Ga;
-				a.input =
-					0;
+				a.input = 0;
 				this.ng(a);
 			}
 		}, f: Ra
@@ -4335,8 +4240,7 @@
 	};
 	W.$j = function () {
 		var a = new W;
-		a.Pa('ArrowUp',
-			'Up');
+		a.Pa('ArrowUp', 'Up');
 		a.Pa('KeyW', 'Up');
 		a.Pa('ArrowDown', 'Down');
 		a.Pa('KeyS', 'Down');
@@ -4361,8 +4265,7 @@
 		}, Jq: function (a) {
 			this.Yc['delete'](a);
 		}, Eo: function (a) {
-			for (var b = [], c = this.Yc.keys(),
-				     d = c.next(); !d.done;) {
+			for (var b = [], c = this.Yc.keys(), d = c.next(); !d.done;) {
 				var e = d.value, d = c.next();
 				this.Yc.get(e) == a && b.push(e);
 			}
@@ -4438,8 +4341,7 @@
 		x.La((new P('Connecting', 'Connecting...', [])).g);
 		var e;
 		e = function (a, e) {
-			M.zl(n.Ee +
-				'api/client', 'room=' + a + '&rcr=' + e, M.vj).then(function (a) {
+			M.zl(n.Ee + 'api/client', 'room=' + a + '&rcr=' + e, M.vj).then(function (a) {
 				switch (a.action) {
 					case 'connect':
 						a = a.token;
@@ -4540,8 +4442,7 @@
 			}
 
 			x.La((new P('Creating room', 'Connecting...', [])).g);
-			var e = null,
-				f = n.A.Lh(), g = new fa;
+			var e = null, f = n.A.Lh(), g = new fa;
 			g.jc = b.name;
 			var k = new ea;
 			k.w = a;
@@ -4571,8 +4472,7 @@
 			l.Hp = function (a, b) {
 				var d = b.ic();
 				if (25 < d.length) throw new q('name too long');
-				var e =
-					b.ic();
+				var e = b.ic();
 				if (3 < e.length) throw new q('country too long');
 				var f = b.zb();
 				if (null != f && 2 < f.length) throw new q('avatar too long');
@@ -4648,9 +4548,7 @@
 			f.mc(n.A.fe.L());
 			f.mc(n.A.Lh().ub);
 			f.Db(n.A.sh.L());
-			var g = n.Vf, k = n.Vr, l = f.Kg(),
-				t = new xa(a, {iceServers: g, ij: k, state: e, version: 9, Ms: l, password: b, cn: d, gn: c, ds: u.Je}),
-				h = new jb;
+			var g = n.Vf, k = n.Vr, l = f.Kg(), t = new xa(a, {iceServers: g, ij: k, state: e, version: 9, Ms: l, password: b, cn: d, gn: c, ds: u.Je}), h = new jb;
 			h.ba('Connecting to master...');
 			h.vh.onclick = function () {
 				t.Ad = null;
@@ -4660,8 +4558,7 @@
 			};
 			x.La(h.g);
 			var m = function (a, b) {
-				var c =
-					new Ka(a, b);
+				var c = new Ka(a, b);
 				c.Va = function () {
 					u.xb();
 				};
@@ -4750,8 +4647,7 @@
 		}
 	};
 	x.Wg = function (a) {
-		return new Promise(function (b,
-		                             c) {
+		return new Promise(function (b, c) {
 			var d = window.document.createElement('img');
 			d.onload = function () {
 				URL.revokeObjectURL(d.src);
@@ -4777,8 +4673,7 @@
 			return Promise.all([M.L('res.dat', 'arraybuffer').then(function (a) {
 				a = new JSZip(a);
 				n.Na = new Ub(a);
-				return Promise.all([n.Na.ro,
-					x.Wg(a.file('images/grass.png').asArrayBuffer()).then(function (a) {
+				return Promise.all([n.Na.ro, x.Wg(a.file('images/grass.png').asArrayBuffer()).then(function (a) {
 						return n.Ko = a;
 					}), x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(function (a) {
 						return n.Vn = a;
@@ -4793,8 +4688,7 @@
 		});
 	};
 	x.es = function (a) {
-		for (var b = Modernizr, c = 'canvas datachannel dataview es6collections peerconnection promises websockets'.split(' '),
-			     d = [], e = 0; e < c.length;) {
+		for (var b = Modernizr, c = 'canvas datachannel dataview es6collections peerconnection promises websockets'.split(' '), d = [], e = 0; e < c.length;) {
 			var f = c[e];
 			++e;
 			b[f] || d.push(f);
@@ -4813,8 +4707,7 @@
 		a();
 	};
 	x.La = function (a) {
-		null !=
-		x.Vm && x.Vm.remove();
+		null != x.Vm && x.Vm.remove();
 		null != a && (x.Pg.appendChild(a), x.Vm = a);
 	};
 	Vb.b = !0;
@@ -4832,8 +4725,7 @@
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			1 == n.A.Fh.L() && 28.333333333333336 > a - this.$c ||
-			(this.$c = a, this.sd++, this.uf(n.A.Tb.L()), 0 < this.ya.Fd || this.j.C(this.ya));
+			1 == n.A.Fh.L() && 28.333333333333336 > a - this.$c || (this.$c = a, this.sd++, this.uf(n.A.Tb.L()), 0 < this.ya.Fd || this.j.C(this.ya));
 		}, Bd: function (a) {
 			switch (a.keyCode) {
 				case 27:
@@ -4926,8 +4818,7 @@
 			return va.parse(new F(new DataView(a), !1));
 		});
 	};
-	Z.b =
-		!0;
+	Z.b = !0;
 	Z['delete'] = function (a) {
 		return null == window.indexedDB ? Promise.reject('IndexedDB not supported by browser.') : new Promise(function (b, c) {
 			var d = window.indexedDB.open('stadiums', 1);
@@ -4964,8 +4855,7 @@
 				1 > a.oldVersion && (b.createObjectStore('files', {autoIncrement: !0}), b.createObjectStore('meta', {keyPath: 'id'}));
 			};
 			d.onsuccess = function () {
-				var e =
-					d.result;
+				var e = d.result;
 				e.onerror = c;
 				var f = e.transaction(['files']);
 				f.onerror = f.onabort = function (a) {
@@ -5077,8 +4967,7 @@
 		update: function () {
 			var a = window.performance.now(), b = a - this.Um;
 			this.Um = a;
-			this.ve += (this.dh - this.ve) *
-				this.Js;
+			this.ve += (this.dh - this.ve) * this.Js;
 			this.Ef -= b;
 			0 >= this.Ef && (this.Ef = this.dh = 0);
 			0 >= this.dh && .05 > this.ve && (window.clearInterval(this.gh), this.gh = null, this.ve = 0);
@@ -5095,8 +4984,7 @@
 		}, Ls: function (a) {
 			var b = a.K;
 			if (null != b) if (2 == b.Bb) 0 >= b.Oa && this.qj(1); else if (1 == b.Bb) {
-				var c = b.ta.F[0], d = null, e = null, f = null,
-					g = 0, k = null, l = null, t = null, h = 0, m = p.fa.Ch, n = 0;
+				var c = b.ta.F[0], d = null, e = null, f = null, g = 0, k = null, l = null, t = null, h = 0, m = p.fa.Ch, n = 0;
 				for (a = a.I; n < a.length;) {
 					var q = a[n];
 					++n;
@@ -5116,8 +5004,7 @@
 				}
 				null != l && null != e && 0 >= b.Oa && (f.a.x > l.a.x && c.a.x > l.a.x && 20 < c.a.x && this.qj(.3), t.a.x < e.a.x && c.a.x < e.a.x && -20 > c.a.x && this.qj(.3));
 			}
-		},
-		f: Tb
+		}, f: Tb
 	};
 	ua.b = !0;
 	ua.prototype = {
@@ -5207,8 +5094,7 @@
 			this.ta.U = this.S.U;
 			this.ta.pb = this.S.pb;
 			a = 0;
-			for (var b =
-				this.S.F; a < b.length;) this.ta.F.push(b[a++].rp());
+			for (var b = this.S.F; a < b.length;) this.ta.F.push(b[a++].rp());
 			this.Gk();
 		}, Ck: function (a) {
 			if (a.ea == p.Ia) a.H = null; else {
@@ -5265,8 +5151,7 @@
 									}
 								}
 							}
-							f && (null != this.Ma.ji && this.Ma.ji(d), d.Wb =
-								!1, d.Sc = this.Ma.yd, d.yc -= this.Ma.Zc);
+							f && (null != this.Ma.ji && this.Ma.ji(d), d.Wb = !1, d.Sc = this.Ma.yd, d.yc -= this.Ma.Zc);
 						}
 						f = d.ob;
 						k = g = 0;
@@ -5293,16 +5178,14 @@
 					0 < b.x * b.x + b.y * b.y && (this.Bb = 1);
 				}
 				else if (1 == this.Bb) {
-					this.Hc +=
-						.016666666666666666;
+					this.Hc += .016666666666666666;
 					for (a = 0; a < b.length;) d = b[a], ++a, null != d.H && (d.H.h = 39);
 					d = p.Ia;
 					b = this.ta.F;
 					for (a = 0; a < c && (d = a++, d = this.S.Kn(b[O.dk[d]].a, O.Yk[d]), d == p.Ia);) ;
 					d != p.Ia ? (this.Bb = 2, this.vc = 150, this.ae = d, d == p.fa ? this.Kb++ : this.Pb++, null != this.Ma.Ni && this.Ma.Ni(d.pg), null != this.Ma.Ol && this.Ma.Ol(d.$)) : 0 < this.Da && this.Hc >= 60 * this.Da && this.Pb != this.Kb && (null != this.Ma.Pi && this.Ma.Pi(), this.um());
 				}
-				else if (2 == this.Bb) this.vc--, 0 >= this.vc && (0 < this.ib && (this.Pb >= this.ib || this.Kb >= this.ib) || 0 < this.Da && this.Hc >= 60 *
-				this.Da && this.Pb != this.Kb ? this.um() : (this.Gk(), null != this.Ma.lq && this.Ma.lq())); else if (3 == this.Bb && (this.vc--, 0 >= this.vc && (b = this.Ma, null != b.K))) {
+				else if (2 == this.Bb) this.vc--, 0 >= this.vc && (0 < this.ib && (this.Pb >= this.ib || this.Kb >= this.ib) || 0 < this.Da && this.Hc >= 60 * this.Da && this.Pb != this.Kb ? this.um() : (this.Gk(), null != this.Ma.lq && this.Ma.lq())); else if (3 == this.Bb && (this.vc--, 0 >= this.vc && (b = this.Ma, null != b.K))) {
 					b.K = null;
 					a = 0;
 					for (c = b.I; a < c.length;) d = c[a], ++a, d.H = null, d.Jb = 0;
@@ -5321,8 +5204,7 @@
 				b[f].Bk(c[f]);
 			}
 			b = [0, 0, 0];
-			for (c = 0; c < a.length;) if (d = a[c], ++c, this.Ck(d),
-				e = d.ea, e != p.Ia) {
+			for (c = 0; c < a.length;) if (d = a[c], ++c, this.Ck(d), e = d.ea, e != p.Ia) {
 				var f = d.H.a, g = this.S, k = b[e.$], l = e == p.fa ? g.Dd : g.md;
 				0 == l.length ? (l = k + 1 >> 1, 0 == (k & 1) && (l = -l), g = g.kc * e.Ch, k = 55 * l) : (k >= l.length && (k = l.length - 1), k = l[k], g = k.x, k = k.y);
 				f.x = g;
@@ -5349,8 +5231,7 @@
 			this.Oa = a.M();
 			var c = a.lf();
 			this.ae = 1 == c ? p.fa : 2 == c ? p.xa : p.Ia;
-			this.Ma =
-				b;
+			this.Ma = b;
 			this.ib = b.ib;
 			this.Da = b.Da;
 			this.S = b.S;
@@ -5452,8 +5333,7 @@
 			a.ad('Big Easy', 600, 270, 550, 240, 95, 80);
 			h.wb.push(a);
 			a = new h;
-			a.ad('Big Rounded',
-				600, 270, 550, 240, 80, 75, 100);
+			a.ad('Big Rounded', 600, 270, 550, 240, 80, 75, 100);
 			h.wb.push(a);
 			a = new h;
 			a.ad('Huge', 750, 350, 700, 320, 100, 80);
@@ -5483,8 +5363,7 @@
 		0 != (a & 1) && b.push('ball');
 		0 != (a & 8) && b.push('redKO');
 		0 != (a & 16) && b.push('blueKO');
-		0 !=
-		(a & 32) && b.push('wall');
+		0 != (a & 32) && b.push('wall');
 		0 != (a & 64) && b.push('kick');
 		0 != (a & 128) && b.push('score');
 		0 != (a & 268435456) && b.push('c0');
@@ -5555,8 +5434,7 @@
 	};
 	h.Tr = function (a) {
 		var b = {
-			x: a.a.x,
-			y: a.a.y
+			x: a.a.x, y: a.a.y
 		};
 		h.ka(b, 'bCoef', a.m, 1);
 		h.Jc(b, 'cMask', a.h, 63);
@@ -5585,8 +5463,7 @@
 		h.ka(c, 'vis', a.Za, b.Za);
 		h.Jc(c, 'cMask', a.h, b.h);
 		h.Jc(c, 'cGroup', a.v, b.v);
-		h.qg(c, a.R,
-			b.R);
+		h.qg(c, a.R, b.R);
 		return c;
 	};
 	h.mp = function (a, b) {
@@ -5622,8 +5499,7 @@
 	};
 	h.gq = function (a) {
 		var b = {
-			normal: [a.wa.x, a.wa.y],
-			dist: a.Ua
+			normal: [a.wa.x, a.wa.y], dist: a.Ua
 		};
 		h.ka(b, 'bCoef', a.m, 1);
 		h.Jc(b, 'cMask', a.h, 63);
@@ -5647,8 +5523,7 @@
 		return {p0: [a.W.x, a.W.y], p1: [a.ca.x, a.ca.y], team: a.qe == p.fa ? 'red' : 'blue'};
 	};
 	h.ip = function (a) {
-		var b = new sb, c = r.G(a.p0, Array), d = r.G(a.p1, Array), e =
-			b.W;
+		var b = new sb, c = r.G(a.p0, Array), d = r.G(a.p1, Array), e = b.W;
 		e.x = c[0];
 		e.y = c[1];
 		c = b.ca;
@@ -5679,13 +5554,11 @@
 		h.Jc(b, 'cGroup', a.v, 0);
 		if (0 != a.oa.x || 0 != a.oa.y) b.gravity = [a.oa.x, a.oa.y];
 		h.ka(b, 'radius', a.Z, 15);
-		h.ka(b,
-			'kickback', a.Se, 0);
+		h.ka(b, 'kickback', a.Se, 0);
 		return b;
 	};
 	h.lp = function (a) {
-		var b = new Eb, c = a.bCoef, d = a.invMass, e = a.damping, f = a.acceleration, g = a.kickingAcceleration,
-			k = a.kickingDamping, l = a.kickStrength, t = a.gravity, m = a.cGroup, n = a.radius;
+		var b = new Eb, c = a.bCoef, d = a.invMass, e = a.damping, f = a.acceleration, g = a.kickingAcceleration, k = a.kickingDamping, l = a.kickStrength, t = a.gravity, m = a.cGroup, n = a.radius;
 		a = a.kickback;
 		null != c && (b.m = r.G(c, z));
 		null != d && (b.aa = r.G(d, z));
@@ -5697,8 +5570,7 @@
 		null != t && (c = b.oa, d = r.G(t[1], z), c.x = r.G(t[0], z), c.y = d);
 		null != m && (b.v = h.Fc(m));
 		null != n && (b.Z = r.G(n, z));
-		null != a &&
-		(b.Se = r.G(a, z));
+		null != a && (b.Se = r.G(a, z));
 		return b;
 	};
 	h.mo = function (a, b) {
@@ -5716,8 +5588,7 @@
 		return c;
 	};
 	h.Mk = function (a, b) {
-		var c = a.pos, d = a.speed, e = a.gravity, f = a.radius, g = a.bCoef, k = a.invMass, l = a.damping, t = a.color,
-			m = a.cMask, n = a.cGroup;
+		var c = a.pos, d = a.speed, e = a.gravity, f = a.radius, g = a.bCoef, k = a.invMass, l = a.damping, t = a.color, m = a.cMask, n = a.cGroup;
 		if (null != c) {
 			var p = b.a;
 			p.x = c[0];
@@ -5815,8 +5686,7 @@
 			this.Uc = a.u();
 			this.Fe = a.u();
 			this.jd = a.M();
-			this.$b =
-				a.u();
+			this.$b = a.u();
 			this.qc = a.u();
 			this.kc = a.u();
 			this.ge.ja(a);
@@ -5845,8 +5715,7 @@
 			for (d = 0; d < c;) ++d, e = new ua, e.ja(a), this.F.push(e);
 			this.pb = [];
 			c = a.B();
-			for (d = 0; d < c;) ++d,
-				e = new nb, e.ja(a), this.pb.push(e);
+			for (d = 0; d < c;) ++d, e = new nb, e.ja(a), this.pb.push(e);
 			this.Dd = b();
 			this.md = b();
 			this.he();
@@ -5873,8 +5742,7 @@
 			d = new E;
 			b = [];
 			e = 0;
-			for (f = this.U; e < f.length;) b.push(h.fr(f[e++],
-				d));
+			for (f = this.U; e < f.length;) b.push(h.fr(f[e++], d));
 			d = [];
 			e = 0;
 			for (f = this.qa; e < f.length;) d.push(h.gq(f[e++]));
@@ -5896,8 +5764,7 @@
 				t.push([p.x, p.y]);
 			}
 			c = {
-				name: this.w, width: this.$b, height: this.qc, bg: a, vertexes: c, segments: b, planes: d, goals: e, discs: g, playerPhysics: f,
-				ballPhysics: 'disc0'
+				name: this.w, width: this.$b, height: this.qc, bg: a, vertexes: c, segments: b, planes: d, goals: e, discs: g, playerPhysics: f, ballPhysics: 'disc0'
 			};
 			h.ka(c, 'maxViewWidth', this.Ye, 0);
 			h.ka(c, 'cameraFollow', 1 == this.Ge ? 'player' : '', '');
@@ -5920,8 +5787,7 @@
 			h.ka(a, 'width', this.Td, 0);
 			h.ka(a, 'height', this.Sd, 0);
 			h.ka(a, 'kickOffRadius', this.kd, 0);
-			h.ka(a, 'cornerRadius',
-				this.Uc, 0);
+			h.ka(a, 'cornerRadius', this.Uc, 0);
 			h.qg(a, this.jd, 7441498);
 			h.ka(a, 'goalLine', this.Fe, 0);
 			return c;
@@ -5955,8 +5821,7 @@
 			this.F = [];
 			this.pb = [];
 			this.w = r.G(e.name, String);
-			this.$b = r.G(e.width,
-				z);
+			this.$b = r.G(e.width, z);
 			this.qc = r.G(e.height, z);
 			this.Ye = this.be(e, 'maxViewWidth', 0) | 0;
 			'player' == e.cameraFollow && (this.Ge = 1);
@@ -5983,8 +5848,7 @@
 			this.jd = 7441498;
 			null != a.color && (this.jd = h.$f(a.color));
 			this.Fe = this.be(a, 'goalLine', 0);
-			this.Lf = this.op(e, 'canBeStored',
-				!0);
+			this.Lf = this.op(e, 'canBeStored', !0);
 			this.pf = 'full' == e.kickOffReset;
 			var g = e.traits;
 			a = e.ballPhysics;
@@ -6021,8 +5885,7 @@
 				var e = d[c];
 				++c;
 				var f = e.W, g = e.ca, k = b.x - a.x, l = b.y - a.y;
-				0 < -(f.y - a.y) * k + (f.x - a.x) * l == 0 < -(g.y - a.y) * k + (g.x - a.x) * l ? f = !1 : (k = g.x - f.x, g = g.y - f.y, f = 0 < -(a.y - f.y) * k + (a.x - f.x) * g == 0 < -(b.y - f.y) *
-				k + (b.x - f.x) * g ? !1 : !0);
+				0 < -(f.y - a.y) * k + (f.x - a.x) * l == 0 < -(g.y - a.y) * k + (g.x - a.x) * l ? f = !1 : (k = g.x - f.x, g = g.y - f.y, f = 0 < -(a.y - f.y) * k + (a.x - f.x) * g == 0 < -(b.y - f.y) * k + (b.x - f.x) * g ? !1 : !0);
 				if (f) return e.qe;
 			}
 			return p.Ia;
@@ -6068,8 +5931,7 @@
 			a.Ua = -b;
 			a.m = 0;
 			this.qa.push(a);
-			this.eg(d, 1, f,
-				13421823, p.xa);
+			this.eg(d, 1, f, 13421823, p.xa);
 			this.eg(-d, -1, f, 16764108, p.fa);
 			this.Rk(g, c);
 			b = new L;
@@ -6128,8 +5990,7 @@
 			f.h = 1;
 			f.Za = !1;
 			q = new E;
-			q.W =
-				a;
+			q.W = a;
 			q.ca = l;
 			q.h = 1;
 			q.Za = !1;
@@ -6263,8 +6124,7 @@
 			this.J.push(m);
 			this.J.push(n);
 			k = b;
-			for (b = this.J.length; k < b;) l = k++, this.J[l].h = f, this.J[l].v =
-				g, this.J[l].m = .1;
+			for (b = this.J.length; k < b;) l = k++, this.J[l].h = f, this.J[l].v = g, this.J[l].m = .1;
 			b = this.U.length;
 			this.U.push(h);
 			this.U.push(p);
@@ -6312,8 +6172,7 @@
 			var e = new B, f = e.a;
 			f.x = 0;
 			f.y = a;
-			e.m =
-				.1;
+			e.m = .1;
 			e.v = 24;
 			e.h = 6;
 			var f = new B, g = f.a;
@@ -6459,8 +6318,7 @@
 	fa.Rd = [Ta, cc];
 	fa.qd = function (a, b) {
 		a.jc = b.jc;
-		if (null ==
-			b.I) a.I = null; else {
+		if (null == b.I) a.I = null; else {
 			null == a.I && (a.I = []);
 			for (var c = a.I, d = b.I, e = d.length; c.length > e;) c.pop();
 			for (var e = 0, f = d.length; e < f;) {
@@ -6497,8 +6355,7 @@
 				D.remove(this.I, b);
 				this.I.push(b);
 				if (null != this.K) {
-					null !=
-					b.H && (D.remove(this.K.ta.F, b.H), b.H = null);
+					null != b.H && (D.remove(this.K.ta.F, b.H), b.H = null);
 					this.K.Ck(b);
 					for (var d = 0, e = !1; !e;) {
 						++d;
@@ -6534,8 +6391,7 @@
 			a.l(this.yd);
 			this.S.ga(a);
 			a.l(null != this.K ? 1 : 0);
-			null != this.K &&
-			this.K.ga(a);
+			null != this.K && this.K.ga(a);
 			a.l(this.I.length);
 			for (var b = 0, c = this.I; b < c.length;) c[b++].ua(a);
 			this.kb[1].ga(a);
@@ -6586,8 +6442,7 @@
 			vb.i(this.Hk, a, this.yd, this.Zc, d);
 		}, sc: function () {
 			var a = ya.zc, b = this.gc;
-			this.hc != a && (null == b && (this.gc =
-				b = new fa), this.hc = a, fa.qd(b, this));
+			this.hc != a && (null == b && (this.gc = b = new fa), this.hc = a, fa.qd(b, this));
 			return b;
 		}, f: fa
 	};
@@ -6627,8 +6482,7 @@
 			a.Xi(this.yc);
 			a.l(this.Sc);
 			a.l(this.ea.$);
-			a.Xi(null ==
-			this.H ? -1 : this.H.jl);
+			a.Xi(null == this.H ? -1 : this.H.jl);
 		}, va: function (a, b) {
 			this.cb = 0 != a.B();
 			this.Jb = a.M();
@@ -6660,8 +6514,7 @@
 		return b;
 	};
 	ta.ma = m;
-	ta.prototype =
-		C(m.prototype, {
+	ta.prototype = C(m.prototype, {
 			apply: function (a) {
 				var b = a.na(this.P);
 				null != b && this.Yg != b.Ld && (b.Ld = this.Yg, y.i(a.sl, b));
@@ -6717,8 +6570,7 @@
 	da.ma = m;
 	da.prototype = C(m.prototype, {
 		apply: function (a) {
-			if (a.Lb(this.P,
-				2) && null == a.K) switch (this.rj) {
+			if (a.Lb(this.P, 2) && null == a.K) switch (this.rj) {
 				case 0:
 					var b = this.newValue;
 					a.ib = 0 > b ? 0 : 99 < b ? 99 : b;
@@ -6786,8 +6638,7 @@
 		apply: function (a) {
 			var b = a.na(this.Md);
 			if (null != b) {
-				var c = a.na(this.P), d = a.Lb(this.P,
-					1);
+				var c = a.na(this.P), d = a.Lb(this.P, 1);
 				(d = d || b == c && !a.Pc && null == a.K) && a.Mf(c, b, this.jj);
 			}
 		}, ua: function (a) {
@@ -6891,8 +6742,7 @@
 	});
 	qb.b = !0;
 	qb.ma = m;
-	qb.prototype = C(m.prototype,
-		{
+	qb.prototype = C(m.prototype, {
 			apply: function (a) {
 				a = a.na(this.ze);
 				null != a && 0 == this.P && (a.Jd = this.Zb);
@@ -6921,8 +6771,7 @@
 			this.Bf = 0 != a.B();
 		}, f: Oa
 	});
-	Na.b =
-		!0;
+	Na.b = !0;
 	Na.ma = m;
 	Na.prototype = C(m.prototype, {
 		$m: function (a) {
@@ -6952,8 +6801,7 @@
 				b.ob = c;
 				null != a.iq && a.iq(b);
 			}
-		},
-		ua: function (a) {
+		}, ua: function (a) {
 			a.tb(this.input);
 		}, va: function (a) {
 			this.input = a.hb();
@@ -7032,8 +6880,7 @@
 			this.V = a.M();
 			this.fd = a.zb();
 			this.Qg = 0 != a.B();
-			if (null != this.fd &&
-				100 < this.fd.length) throw new q('string too long');
+			if (null != this.fd && 100 < this.fd.length) throw new q('string too long');
 		}, f: Y
 	});
 	pb.b = !0;
@@ -7063,8 +6910,7 @@
 			a.l(this.Zm ? 1 : 0);
 			a.l(this.Zg.length);
 			for (var b = 0, c = this.Zg; b < c.length;) a.O(c[b++]);
-		},
-		va: function (a) {
+		}, va: function (a) {
 			this.Zm = 0 != a.B();
 			var b = a.B();
 			this.Zg = [];
@@ -7084,8 +6930,7 @@
 						a = a.H;
 					}
 					else a = b.ta.F[this.ze];
-					null != a && (null != this.Ka[0] && (a.a.x = this.Ka[0]), null != this.Ka[1] && (a.a.y = this.Ka[1]), null != this.Ka[2] && (a.D.x = this.Ka[2]), null != this.Ka[3] && (a.D.y = this.Ka[3]), null != this.Ka[4] && (a.oa.x = this.Ka[4]), null != this.Ka[5] && (a.oa.y = this.Ka[5]),
-					null != this.Ka[6] && (a.Z = this.Ka[6]), null != this.Ka[7] && (a.m = this.Ka[7]), null != this.Ka[8] && (a.aa = this.Ka[8]), null != this.Ka[9] && (a.Ca = this.Ka[9]), null != this.Rc[0] && (a.R = this.Rc[0]), null != this.Rc[1] && (a.h = this.Rc[1]), null != this.Rc[2] && (a.v = this.Rc[2]));
+					null != a && (null != this.Ka[0] && (a.a.x = this.Ka[0]), null != this.Ka[1] && (a.a.y = this.Ka[1]), null != this.Ka[2] && (a.D.x = this.Ka[2]), null != this.Ka[3] && (a.D.y = this.Ka[3]), null != this.Ka[4] && (a.oa.x = this.Ka[4]), null != this.Ka[5] && (a.oa.y = this.Ka[5]), null != this.Ka[6] && (a.Z = this.Ka[6]), null != this.Ka[7] && (a.m = this.Ka[7]), null != this.Ka[8] && (a.aa = this.Ka[8]), null != this.Ka[9] && (a.Ca = this.Ka[9]), null != this.Rc[0] && (a.R = this.Rc[0]), null != this.Rc[1] && (a.h = this.Rc[1]), null != this.Rc[2] && (a.v = this.Rc[2]));
 				}
 			}
 		}, ua: function (a) {
@@ -7106,8 +6951,7 @@
 			a.Ub(c);
 			a.a = d;
 		}, va: function (a) {
-			this.ze =
-				a.M();
+			this.ze = a.M();
 			this.Sm = 0 != a.B();
 			var b = a.Ob();
 			this.Ka = [];
@@ -7139,8 +6983,7 @@
 			a.O(this.aj);
 		}, va: function (a) {
 			this.min = a.M();
-			this.nj =
-				a.M();
+			this.nj = a.M();
 			this.aj = a.M();
 		}, f: ma
 	});
@@ -7261,11 +7104,9 @@
 			this.h = a.M();
 			this.v = a.M();
 		}, Pn: function (a) {
-			var b = this.a, c =
-				a.a, d = b.x - c.x, b = b.y - c.y, e = a.Z + this.Z, f = d * d + b * b;
+			var b = this.a, c = a.a, d = b.x - c.x, b = b.y - c.y, e = a.Z + this.Z, f = d * d + b * b;
 			if (0 < f && f <= e * e) {
-				var f = Math.sqrt(f), d = d / f, b = b / f, c = this.aa / (this.aa + a.aa), e = e - f, f = e * c, g = this.a,
-					k = this.a;
+				var f = Math.sqrt(f), d = d / f, b = b / f, c = this.aa / (this.aa + a.aa), e = e - f, f = e * c, g = this.a, k = this.a;
 				g.x = k.x + d * f;
 				g.y = k.y + b * f;
 				k = g = a.a;
@@ -7287,8 +7128,7 @@
 				d = g.x - e.x;
 				e = g.y - e.y;
 				g = this.a;
-				if (0 >= (g.x - b.x) * c + (g.y - b.y) *
-					f || 0 <= d * c + e * f) return;
+				if (0 >= (g.x - b.x) * c + (g.y - b.y) * f || 0 <= d * c + e * f) return;
 				c = a.wa;
 				b = c.x;
 				c = c.y;
@@ -7313,8 +7153,7 @@
 			d >= this.Z || (d = this.Z - d, f = e = this.a, e.x = f.x + b * d, e.y = f.y + c * d, d = this.D, d = b * d.x + c * d.y, 0 > d && (d *= this.m * a.m + 1, e = a = this.D, a.x = e.x - b * d, a.y = e.y - c * d));
 		}, sc: function () {
 			var a = ya.zc, b = this.gc;
-			this.hc != a && (null == b && (this.gc =
-				b = new ca), this.hc = a, ca.qd(b, this));
+			this.hc != a && (null == b && (this.gc = b = new ca), this.hc = a, ca.qd(b, this));
 			return b;
 		}, f: ca
 	};
@@ -7346,8 +7185,7 @@
 					d = b.aa / (b.aa + a.aa);
 					d != d && (d = .5);
 					var g, k;
-					if (this.Hb >= this.ec) g = this.Hb, k = 0; else if (f <=
-						this.Hb) g = this.Hb, k = 1; else if (f >= this.ec) g = this.ec, k = -1; else return;
+					if (this.Hb >= this.ec) g = this.Hb, k = 0; else if (f <= this.Hb) g = this.Hb, k = 1; else if (f >= this.ec) g = this.ec, k = -1; else return;
 					f = g - f;
 					if (0 == 0 * this.ne) d = this.ne * f * .5, e *= d, c *= d, k = d = b.D, b = b.aa, d.x = k.x + e * b, d.y = k.y + c * b, d = b = a.D, a = a.aa, b.x = d.x + -e * a, b.y = d.y + -c * a; else {
 						g = f * d;
@@ -7371,8 +7209,7 @@
 	Fa.Rd = [Ta];
 	Fa.qd = function (a, b) {
 		if (null == b.F) a.F = null; else {
-			null == a.F &&
-			(a.F = []);
+			null == a.F && (a.F = []);
 			for (var c = a.F, d = b.F, e = d.length; c.length > e;) c.pop();
 			for (var e = 0, f = d.length; e < f;) {
 				var g = e++;
@@ -7434,8 +7271,7 @@
 						}
 					}
 					d = 0;
-					for (e = this.U; d < e.length;) f = e[d], ++d, 0 != (f.h & c.v) && 0 != (f.v &
-						c.h) && c.Qn(f);
+					for (e = this.U; d < e.length;) f = e[d], ++d, 0 != (f.h & c.v) && 0 != (f.v & c.h) && c.Qn(f);
 					d = 0;
 					for (e = this.J; d < e.length;) if (f = e[d], ++d, 0 != (f.h & c.v) && 0 != (f.v & c.h) && (k = c.a, l = f.a, g = k.x - l.x, k = k.y - l.y, l = g * g + k * k, 0 < l && l <= c.Z * c.Z)) {
 						var l = Math.sqrt(l), g = g / l, k = k / l, l = c.Z - l, m = h = c.a;
@@ -7457,8 +7293,7 @@
 	L.b = !0;
 	L.prototype = {
 		ga: function (a) {
-			var b =
-				this.wa;
+			var b = this.wa;
 			a.s(b.x);
 			a.s(b.y);
 			a.s(this.Ua);
@@ -7494,8 +7329,7 @@
 			var c = a.B();
 			this.W = b[a.B()];
 			this.ca = b[a.B()];
-			this.Cc =
-				0 != (c & 1) ? a.u() : 0;
+			this.Cc = 0 != (c & 1) ? a.u() : 0;
 			this.vb = 0 != (c & 2) ? a.u() : 1 / 0;
 			this.R = 0 != (c & 4) ? a.M() : 0;
 			this.Za = 0 != (c & 8);
@@ -7547,8 +7381,7 @@
 			var b = this.a;
 			b.x = a.u();
 			b.y = a.u();
-			this.m =
-				a.u();
+			this.m = a.u();
 			this.h = a.M();
 			this.v = a.M();
 		}, f: B
@@ -7573,10 +7406,8 @@
 			}
 		}, Pr: function () {
 			if (null != this.sa.parentElement) {
-				var a = window.devicePixelRatio * this.zg, b = this.sa.getBoundingClientRect(), c = Math.round(b.width * a),
-					a = Math.round(b.height * a);
-				if (this.sa.width !=
-					c || this.sa.height != a) this.sa.width = c, this.sa.height = a;
+				var a = window.devicePixelRatio * this.zg, b = this.sa.getBoundingClientRect(), c = Math.round(b.width * a), a = Math.round(b.height * a);
+				if (this.sa.width != c || this.sa.height != a) this.sa.width = c, this.sa.height = a;
 			}
 		}, Kc: function (a, b) {
 			var c = window.performance.now(), d = (c - this.$c) / 1E3;
@@ -7586,9 +7417,7 @@
 			N.Gi(this.c, !0);
 			this.c.resetTransform();
 			if (null != a.K) {
-				var c = a.K, e = c.ta, f = a.na(b), g = null != f ? f.H : null,
-					k = 0 != this.jf ? this.sa.height / this.jf : this.kf * window.devicePixelRatio * this.zg,
-					h = this.xf * this.zg, m = c.S.Ye, n = this.sa.width / k;
+				var c = a.K, e = c.ta, f = a.na(b), g = null != f ? f.H : null, k = 0 != this.jf ? this.sa.height / this.jf : this.kf * window.devicePixelRatio * this.zg, h = this.xf * this.zg, m = c.S.Ye, n = this.sa.width / k;
 				0 < m && n > m && (n = m, k = this.sa.width / m);
 				m = (this.sa.height - h) / k;
 				this.Mr(c, g, n, m, d);
@@ -7618,8 +7447,7 @@
 				f = 0;
 				for (g = a.I; f < g.length;) n = g[f], ++f, m = n.H, null != m && this.Ll(m, this.dd.get(n.V));
 				f = 0;
-				for (e = e.F; f < e.length;) g = e[f], ++f, null ==
-				this.Jg.get(g) && this.Ll(g, null);
+				for (e = e.F; f < e.length;) g = e[f], ++f, null == this.Jg.get(g) && this.Ll(g, null);
 				this.c.lineWidth = 3;
 				this.c.resetTransform();
 				this.c.translate(this.sa.width / 2, this.sa.height / 2);
@@ -7640,8 +7468,7 @@
 		}, Mr: function (a, b, c, d, e) {
 			var f, g;
 			if (null != b && 1 == a.S.Ge) g = b.a, f = g.x, g = g.y; else if (g = a.ta.F[0].a, f = g.x, g = g.y, null != b) {
-				var k =
-					b.a;
+				var k = b.a;
 				f = .5 * (f + k.x);
 				g = .5 * (g + k.y);
 				var h = .5 * c, m = .5 * d;
@@ -7664,8 +7491,7 @@
 			b > 2 * c.qc ? this.Ya.y = 0 : this.Ya.y + .5 * b > c.qc ? this.Ya.y = c.qc - .5 * b : this.Ya.y - .5 * b < -c.qc && (this.Ya.y = -c.qc + .5 * b);
 		}, Pq: function (a) {
 			this.c.beginPath();
-			this.c.strokeStyle =
-				'white';
+			this.c.strokeStyle = 'white';
 			this.c.globalAlpha = .3;
 			this.c.arc(a.x, a.y, 25, 0, 2 * Math.PI, !1);
 			this.c.stroke();
@@ -7693,8 +7519,7 @@
 			var b = this;
 			N.Gi(this.c, !1);
 			var c = a.Td, d = a.Sd;
-			if (1 == a.ld) this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore(), this.c.strokeStyle = '#C7E6BD', this.c.fillStyle = this.Lo, this.Wl(this.c, -c, -d, 2 * c, 2 * d, a.Uc), this.c.save(), this.c.scale(2, 2), this.c.fill(), this.c.restore(), this.c.moveTo(0, -d), this.c.lineTo(0, d), this.c.stroke(), this.c.beginPath(), this.c.arc(0, 0, a.kd,
-				0, 2 * Math.PI), this.c.stroke(); else if (2 == a.ld) {
+			if (1 == a.ld) this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore(), this.c.strokeStyle = '#C7E6BD', this.c.fillStyle = this.Lo, this.Wl(this.c, -c, -d, 2 * c, 2 * d, a.Uc), this.c.save(), this.c.scale(2, 2), this.c.fill(), this.c.restore(), this.c.moveTo(0, -d), this.c.lineTo(0, d), this.c.stroke(), this.c.beginPath(), this.c.arc(0, 0, a.kd, 0, 2 * Math.PI), this.c.stroke(); else if (2 == a.ld) {
 				this.c.strokeStyle = '#E9CC6E';
 				this.c.save();
 				this.c.beginPath();
@@ -7716,8 +7541,7 @@
 				this.c.lineTo(0, d);
 				this.c.stroke();
 				this.c.setLineDash([]);
-				var e =
-					a.Fe, c = c - e;
+				var e = a.Fe, c = c - e;
 				e < a.Uc && (c = 0);
 				e = function (c, e, h) {
 					b.c.beginPath();
@@ -7759,8 +7583,7 @@
 			else -1 != (a.R | 0) && this.c.fill();
 			this.c.stroke();
 		}, Rq: function (a) {
-			if (null !=
-				a) {
+			if (null != a) {
 				var b = 0;
 				for (a = a.U; b < a.length;) this.Qq(a[b++]);
 			}
@@ -7779,8 +7602,7 @@
 				if (0 != 0 * a.vb) this.c.moveTo(b.x, b.y), this.c.lineTo(c.x, c.y); else {
 					a = a.Xd;
 					var d = b.x - a.x, b = b.y - a.y;
-					this.c.arc(a.x, a.y, Math.sqrt(d * d + b * b), Math.atan2(b, d), Math.atan2(c.y -
-						a.y, c.x - a.x));
+					this.c.arc(a.x, a.y, Math.sqrt(d * d + b * b), Math.atan2(b, d), Math.atan2(c.y - a.y, c.x - a.x));
 				}
 				this.c.stroke();
 			}
@@ -7848,8 +7670,7 @@
 		}, lc: function (a) {
 			return 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
 		}, sp: function (a, b) {
-			var c = window.document.createElement('canvas'), d = c.getContext('2d',
-				null);
+			var c = window.document.createElement('canvas'), d = c.getContext('2d', null);
 			d.font = '900 70px Arial Black,Arial Bold,Gadget,sans-serif';
 			c.width = Math.ceil(d.measureText(a).width) + 7;
 			c.height = 90;
@@ -7872,8 +7693,7 @@
 			this.xc = 0;
 		}, C: function (a) {
 			0 < this.ab.length && (this.xc += a, this.xc > this.ab[0].zo() && (this.xc = 0, this.ab.shift()));
-		},
-		Kc: function (a) {
+		}, Kc: function (a) {
 			0 < this.ab.length && this.ab[0].Kc(a, this.xc);
 		}, f: Sb
 	};
@@ -7902,8 +7722,7 @@
 		}, Or: function () {
 			var a = this.vl;
 			a.resetTransform();
-			a.clearRect(0,
-				0, 160, 34);
+			a.clearRect(0, 0, 160, 34);
 			a.font = '26px sans-serif';
 			a.fillStyle = 'white';
 			160 < a.measureText(this.w).width ? (a.textAlign = 'left', a.translate(2, 29)) : (a.textAlign = 'center', a.translate(80, 29));
@@ -7913,8 +7732,7 @@
 		}, C: function (a, b) {
 			if (null != a.H) {
 				var c = n.A.xm.L() ? b.kb[a.ea.$] : a.ea.wm, d = null != a.Jd ? a.Jd : a.Xb, e = n.A.lm.L() && null != d;
-				if (!Ea.Ln(this.kb, c) || !e && a.Jb != this.uh || e && this.Jf != d) Ea.ao(this.kb, c), e ? (this.Jf = d, this.uh = -1) : (this.Jf = '' + a.Jb, this.uh =
-					a.Jb), this.Hq(this.Jf);
+				if (!Ea.Ln(this.kb, c) || !e && a.Jb != this.uh || e && this.Jf != d) Ea.ao(this.kb, c), e ? (this.Jf = d, this.uh = -1) : (this.Jf = '' + a.Jb, this.uh = a.Jb), this.Hq(this.Jf);
 			}
 			this.lo = 0 < b.K.Oa || !a.Wb ? 'black' : a.Wb && 0 >= a.Sc && 0 <= a.yc ? 'white' : 'black';
 			a.w != this.w && (this.w = a.w, this.Or());
@@ -7929,8 +7747,7 @@
 				this.rb.fillStyle = N.lc(this.kb.ed);
 				this.rb.textAlign = 'center';
 				this.rb.textBaseline = 'alphabetic';
-				this.rb.font =
-					'900 34px \'Arial Black\',\'Arial Bold\',Gadget,sans-serif';
+				this.rb.font = '900 34px \'Arial Black\',\'Arial Bold\',Gadget,sans-serif';
 				this.rb.fillText(a, 32, 44);
 				this.Ij = this.rb.createPattern(this.rb.canvas, 'no-repeat');
 			}
@@ -7940,8 +7757,7 @@
 	mb.prototype = {
 		ki: function (a) {
 			for (var b = this, c = 0, d = Ha.ab.length >> 2; c < d;) {
-				var e = c++, f = [e], g = Ha.ab[e << 2], e = Ha.ab[(e << 2) + 1].toLowerCase(),
-					h = [window.document.createElement('div')];
+				var e = c++, f = [e], g = Ha.ab[e << 2], e = Ha.ab[(e << 2) + 1].toLowerCase(), h = [window.document.createElement('div')];
 				h[0].className = 'elem';
 				h[0].innerHTML = '<div class="flagico f-' + e + '"></div> ' + g;
 				a.appendChild(h[0]);
@@ -8002,8 +7818,7 @@
 			this.vg.update();
 		}, ba: function (a, b) {
 			var c = window.document.createElement('p');
-			null != b && (c.className =
-				b);
+			null != b && (c.className = b);
 			c.textContent = a;
 			this.Ok(c);
 		}, Gb: function (a) {
@@ -8029,8 +7844,7 @@
 					a = e.exec(a.w);
 					return null == a ? -1 : a.index + a[0].length;
 				}, d = [], f = 0, g = this.Hj; f < g.length;) {
-					var h =
-						g[f];
+					var h = g[f];
 					++f;
 					var l = c(h);
 					0 <= l && d.push({dn: l, item: h});
@@ -8052,8 +7866,7 @@
 			if (c) {
 				for (var c = [], d = 0; d < a.length;) {
 					var e = a[d++], f = window.document.createElement('div'), e = [e.item], g = e[0].w;
-					this.Ek &&
-					(g = '(' + e[0].$ + ') ' + g);
+					this.Ek && (g = '(' + e[0].$ + ') ' + g);
 					f.textContent = g;
 					this.Mb.appendChild(f);
 					f.onclick = function (a) {
@@ -8078,8 +7891,7 @@
 				a = a.Ja;
 				b = a.offsetTop;
 				a = b + a.offsetHeight;
-				var c = this.Mb.scrollTop +
-					this.Mb.clientHeight;
+				var c = this.Mb.scrollTop + this.Mb.clientHeight;
 				b < this.Mb.scrollTop ? this.Mb.scrollTop = b : a > c && (this.Mb.scrollTop = a - this.Mb.clientHeight);
 			}
 		}, qo: function () {
@@ -8107,8 +7919,7 @@
 	ib.prototype = {
 		Fj: function (a) {
 			this.Fm = a;
-			this.Em.textContent =
-				'Show in room list: ' + (a ? 'No' : 'Yes');
+			this.Em.textContent = 'Show in room list: ' + (a ? 'No' : 'Yes');
 		}, Dc: function () {
 			var a = this.$e.value;
 			return 40 >= a.length ? 0 < a.length : !1;
@@ -8132,8 +7943,7 @@
 		Wd: function (a, b) {
 			var c = window.document.createElement('span');
 			c.textContent = a;
-			c.className =
-				b;
+			c.className = b;
 			return c;
 		}, sr: function (a) {
 			if (a != this.Ke) {
@@ -8157,8 +7967,7 @@
 		}, pr: function (a) {
 			a != this.hk && (this.bq.className = a ? 'overtime on' : 'overtime', this.hk = a);
 		}, ur: function (a) {
-			a != this.ik && (this.g.className =
-				a ? 'game-timer-view time-warn' : 'game-timer-view', this.ik = a);
+			a != this.ik && (this.g.className = a ? 'game-timer-view time-warn' : 'game-timer-view', this.ik = a);
 		}, f: Rb
 	};
 	ja.b = !0;
@@ -8175,8 +7984,7 @@
 		}, bb: function (a, b) {
 			v.Cf(this.hf);
 			ja.kq = a;
-			null != a ? (this.hf.style.display = 'flex',
-				this.hf.appendChild(a), this.yl = b) : (this.hf.style.display = 'none', this.yl = null);
+			null != a ? (this.hf.style.display = 'flex', this.hf.appendChild(a), this.yl = b) : (this.hf.style.display = 'none', this.yl = null);
 		}, f: ja
 	};
 	gb.b = !0;
@@ -8200,8 +8008,7 @@
 			e.className = 'elem';
 			null != c && e.classList.add('custom');
 			var f = {
-				Ja: e, Pd: b,
-				Lm: c
+				Ja: e, Pd: b, Lm: c
 			};
 			e.onclick = function () {
 				null != d.jb && d.jb.Ja.classList.remove('selected');
@@ -8234,8 +8041,7 @@
 							return function () {
 								return Z.get(a[0]);
 							};
-						}(f),
-						function (a) {
+						}(f), function (a) {
 							return function () {
 								return Z['delete'](a[0]);
 							};
@@ -8285,8 +8091,7 @@
 			this.un != a.cb && this.em(a.cb);
 		}, em: function (a) {
 			this.un = a;
-			this.g.className = 'player-list-item' +
-				(a ? ' admin' : '');
+			this.g.className = 'player-list-item' + (a ? ' admin' : '');
 		}, f: cb
 	};
 	za.b = !0;
@@ -8307,8 +8112,7 @@
 			d = b.values();
 			for (b = d.next(); !b.done;) c = b.value, b = d.next(), this.xd.get(c).g.remove(), this.xd['delete'](c);
 			d = 0;
-			for (b = a.length -
-				1; d < b;) f = d++, c = this.xd.get(a[f].V).g, f = this.xd.get(a[f + 1].V).g, c.nextSibling != f && this.ab.insertBefore(c, f);
+			for (b = a.length - 1; d < b;) f = d++, c = this.xd.get(a[f].V).g, f = this.xd.get(a[f + 1].V).g, c.nextSibling != f && this.ab.insertBefore(c, f);
 		}, f: za
 	};
 	Q.b = !0;
@@ -8335,8 +8139,7 @@
 	ab.prototype = {f: ab};
 	Aa.b = !0;
 	Aa.As = function (a) {
-		return Promise.race([new Promise(function (a,
-		                                           c) {
+		return Promise.race([new Promise(function (a, c) {
 			return window.setTimeout(function () {
 				c(null);
 			}, 5E3);
@@ -8372,8 +8175,7 @@
 				var h = [a[g]];
 				++g;
 				var l = h[0].vd;
-				if (!(e && l.I >= l.Xe ||
-					f && l.Ib)) {
+				if (!(e && l.I >= l.Xe || f && l.Ib)) {
 					var m = [new ab(h[0])];
 					m[0].Ja.ondblclick = function (a) {
 						return function () {
@@ -8404,8 +8206,7 @@
 		Il: function () {
 			var a = this;
 			M.tk(n.Ee + 'api/notice').then(function (b) {
-				var c =
-					b.content;
+				var c = b.content;
 				null != c && '' != c && $a.On != c && (a.$n.innerHTML = c, a.Xk.hidden = !1, a.nd.onclick = function () {
 					$a.On = c;
 					return a.Xk.hidden = !0;
@@ -8440,8 +8241,7 @@
 				y.i(e.ff, a);
 			};
 		}, Tk: function (a) {
-			for (var b = [], c = 0; c <
-			a;) {
+			for (var b = [], c = 0; c < a;) {
 				var d = c++;
 				b.push(null == d ? 'null' : '' + d);
 			}
@@ -8463,8 +8263,7 @@
 			this.qf.disabled = d;
 			this.sm.disabled = d;
 			d = null != a.K;
-			this.tm.hidden =
-				d;
+			this.tm.hidden = d;
 			this.vm.hidden = !d;
 			this.gi.hidden = !d;
 			this.wf.selectedIndex = a.Da;
@@ -8514,8 +8313,7 @@
 	q.prototype = C(Error.prototype, {f: q});
 	r.b = !0;
 	r.Nm = function (a) {
-		if (a instanceof
-			Array && null == a.eb) return Array;
+		if (a instanceof Array && null == a.eb) return Array;
 		var b = a.f;
 		if (null != b) return b;
 		a = r.wj(a);
@@ -8597,8 +8395,7 @@
 				return 'string' == typeof a;
 			default:
 				if (null != a) if ('function' == typeof b) {
-					if (a instanceof b || r.ph(r.Nm(a),
-						b)) return !0;
+					if (a instanceof b || r.ph(r.Nm(a), b)) return !0;
 				}
 				else {
 					if ('object' == typeof b && r.qn(b) && a instanceof b) return !0;
@@ -8656,23 +8453,9 @@
 	m.yf = 0;
 	Ua.za = m.Fa({Ba: !1, Aa: !1});
 	ya.zc = 0;
-	Zb.Km = [{name: 'ro', reliable: !0, kj: !0}, {name: 'ru', reliable: !0, kj: !1},
-		{name: 'uu', reliable: !1, kj: !1}];
+	Zb.Km = [{name: 'ro', reliable: !0, kj: !0}, {name: 'ru', reliable: !0, kj: !1}, {name: 'uu', reliable: !1, kj: !1}];
 	M.vj = 'application/x-www-form-urlencoded';
-	Ha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6,
-		'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso',
-		'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia',
-		'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5,
-		179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti',
-		'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2,
-		74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61,
-		'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia',
-		'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines',
-		'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland',
-		'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ',
-		-26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7,
-		'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2,
-		-12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
+	Ha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
 	n.Vr = 'wss://p2p.haxball.com/';
 	n.Ee = 'https://www.haxball.com/rs/';
 	n.Vf = [{urls: 'stun:stun.l.google.com:19302'}];
@@ -8691,8 +8474,7 @@
 	Qa.za = m.Fa({Ba: !1, Aa: !1});
 	da.za = m.Fa({Ba: !1, Aa: !1});
 	sa.za = m.Fa({
-		Ba: !1,
-		Aa: !1
+		Ba: !1, Aa: !1
 	});
 	ra.za = m.Fa({Ba: !1, Aa: !1});
 	S.za = m.Fa({Ba: !1, Aa: !1});
