@@ -71,10 +71,10 @@
 			c.className = 'icon-plus';
 			b.appendChild(c);
 			c.onclick = () => {
-				q.classList.toggle('show', !0);
+				q.classList.toggle('show', true);
 				q.focus();
 				q.onkeydown = b => {
-					q.classList.toggle('show', !1);
+					q.classList.toggle('show', false);
 					b.stopPropagation();
 					b = b.code;
 					p.L(b) == null && (p.Pa(b, a), n.A.tg.Xa(p), r());
@@ -85,7 +85,7 @@
 
 		function c(a, b, c) {
 			a = l.get(a);
-			if (c == null) a.hidden = !0; else {
+			if (c == null) a.hidden = true; else {
 				a.innerHTML = b + ': <div class=\'flagico\'></div> <span></span>';
 				b = a.querySelector('.flagico');
 				a = a.querySelector('span');
@@ -147,7 +147,7 @@
 			}
 		}
 
-		a == null && (a = !1);
+		a == null && (a = false);
 		var k = this;
 		this.g = v.Ga(aa.N);
 		var l = v.Ea(this.g);
@@ -209,7 +209,7 @@
 	}
 
 	function Ya(a) {
-		this.fk = !1;
+		this.fk = false;
 		this.qm = new za(p.Ia);
 		this.Lj = new za(p.xa);
 		this.Hl = new za(p.fa);
@@ -273,8 +273,8 @@
 		f.onclick = () => {
 			A.i(b.Pp);
 		};
-		this.Bj(!1);
-		this.Cj(!1);
+		this.Bj(false);
+		this.Cj(false);
 	}
 
 	function Za() {
@@ -313,7 +313,7 @@
 			}
 
 			a = d.get(a);
-			var e = a.querySelector('i'), f = {Ta: !0};
+			var e = a.querySelector('i'), f = {Ta: true};
 			b();
 			a.onclick = () => {
 				f.Ta = !f.Ta;
@@ -410,7 +410,7 @@
 			d.get('spd').textContent = b + 'x';
 		}
 
-		this.Wf = !1;
+		this.Wf = false;
 		var c = this;
 		this.g = v.Ga(ha.N);
 		var d = v.Ea(this.g);
@@ -419,7 +419,7 @@
 			a.ui();
 			c.el();
 		};
-		var e = !0, f = 2, g = [.5, .75, 1, 2, 3];
+		var e = true, f = 2, g = [.5, .75, 1, 2, 3];
 		b();
 		var k = d.get('playicon');
 		k.classList.add('icon-pause');
@@ -455,7 +455,7 @@
 		}
 		l.onclick = b => {
 			a.er((b.pageX - l.offsetLeft) / l.clientWidth * a.mh * a.mf);
-			c.Wf || (c.Wf = !0, c.Vp(), c.el());
+			c.Wf || (c.Wf = true, c.Vp(), c.el());
 		};
 		l.onmousemove = b => {
 			b = (b.pageX - l.offsetLeft) / l.clientWidth;
@@ -482,7 +482,7 @@
 			Q.Gl = a => {
 				window.setTimeout(() => {
 					y.i(b.Va, a);
-				}, 1E3);
+				}, 1000);
 				Q.Gl = null;
 			};
 			c.Vd.appendChild(Q.xg);
@@ -644,10 +644,10 @@
 		this.g = v.Ga(fb.N);
 		var b = v.Ea(this.g);
 		b.get('cancel').onclick = () => {
-			y.i(a.qb, !1);
+			y.i(a.qb, false);
 		};
 		b.get('leave').onclick = () => {
-			y.i(a.qb, !0);
+			y.i(a.qb, true);
 		};
 	}
 
@@ -674,12 +674,12 @@
 		this.oi.maxLength = 100;
 		this.Nb = a.V;
 		this.Ze.textContent = 'Kick ' + a.w;
-		this.Aj(!1);
+		this.Aj(false);
 	}
 
 	function ja(a) {
 		this.Fb = new hb;
-		this.Gd = !1;
+		this.Gd = false;
 		this.pe = new Xa;
 		this.Qa = new Da;
 		var b = this;
@@ -735,7 +735,7 @@
 
 	function Rb() {
 		this.Da = 0;
-		this.hk = this.ik = !1;
+		this.hk = this.ik = false;
 		this.Ke = 0;
 		this.g = window.document.createElement('div');
 		this.g.className = 'game-timer-view';
@@ -807,7 +807,7 @@
 		};
 		for (a = 2; a < 21;) c = window.document.createElement('option'), c.textContent = '' + a++, this.ai.appendChild(c);
 		this.ai.selectedIndex = 10;
-		this.Fj(!1);
+		this.Fj(false);
 		this.C();
 	}
 
@@ -845,7 +845,7 @@
 		this.Iq = /[#@][^\s@#]*$/;
 		this.Mb = a;
 		this.Rp = b;
-		a.hidden = !0;
+		a.hidden = true;
 	}
 
 	function Da() {
@@ -887,10 +887,10 @@
 			c.stopPropagation();
 		};
 		this.gb.onfocus = () => {
-			b.ig != null && b.ig(!0);
+			b.ig != null && b.ig(true);
 		};
 		this.gb.onblur = () => {
-			b.ig != null && b.ig(!1);
+			b.ig != null && b.ig(false);
 			b.Bc.Qh();
 		};
 		this.gb.oninput = () => {
@@ -907,7 +907,7 @@
 			A.i(a.qb);
 		};
 		this.wh = b.get('change');
-		this.wh.disabled = !0;
+		this.wh.disabled = true;
 		this.wh.onclick = () => {
 			a.rf != null && a.Zl(a.rf.index);
 		};
@@ -920,7 +920,7 @@
 	}
 
 	function Ea() {
-		this.Xf = !1;
+		this.Xf = false;
 		this.w = '';
 		this.uh = 0;
 		this.Jf = '';
@@ -958,11 +958,11 @@
 		this.jf = 0;
 		this.kf = 1.5;
 		this.Ya = new H(0, 0);
-		this.Dk = !1;
+		this.Dk = false;
 		this.td = new Sb;
 		this.sa = window.document.createElement('canvas');
-		this.sa.mozOpaque = !0;
-		this.c = this.sa.getContext('2d', {alpha: !1});
+		this.sa.mozOpaque = true;
+		this.c = this.sa.getContext('2d', {alpha: false});
 		this.Lo = this.c.createPattern(n.Ko, null);
 		this.Wn = this.c.createPattern(n.Vn, null);
 		this.Un = this.c.createPattern(n.Tn, null);
@@ -985,7 +985,7 @@
 		this.h = 63;
 		this.v = 32;
 		this.vb = 1 / 0;
-		this.Za = !0;
+		this.Za = true;
 		this.R = 0;
 	}
 
@@ -1051,7 +1051,7 @@
 	}
 
 	function Y() {
-		this.Qg = !1;
+		this.Qg = false;
 		this.da = 0;
 	}
 
@@ -1128,15 +1128,15 @@
 		this.ea = p.Ia;
 		this.H = null;
 		this.yc = this.Sc = 0;
-		this.Wb = !1;
+		this.Wb = false;
 		this.ob = this.V = 0;
 		this.w = 'Player';
 		this.Ug = this.yb = 0;
 		this.Kd = null;
-		this.Ld = !1;
+		this.Ld = false;
 		this.Xb = this.Jd = null;
 		this.Jb = 0;
-		this.cb = !1;
+		this.cb = false;
 	}
 
 	function fa() {
@@ -1146,7 +1146,7 @@
 		this.Zc = 0;
 		this.ce = 1;
 		this.ib = this.Da = 3;
-		this.Pc = !1;
+		this.Pc = false;
 		this.K = null;
 		this.I = [];
 		this.jc = '';
@@ -1186,8 +1186,8 @@
 		this.ge = new Eb;
 		this.Bh = 255;
 		this.Ge = this.Ye = 0;
-		this.Lf = !0;
-		this.pf = !1;
+		this.Lf = true;
+		this.pf = false;
 	}
 
 	function Bb(a) {
@@ -1246,7 +1246,7 @@
 		var c = b.createBufferSource();
 		c.buffer = a;
 		c.connect(this.Tg);
-		c.loop = !0;
+		c.loop = true;
 		c.start();
 	}
 
@@ -1293,7 +1293,7 @@
 		this.Gh = window.setInterval(() => {
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
-		}, 1E3);
+		}, 1000);
 		this.uf(n.A.Tb.L());
 		this.j.g.classList.add('replayer');
 		this.je = new ha(a);
@@ -1360,7 +1360,7 @@
 		}
 
 		function b(a) {
-			return new wa(a, e, a => a != null ? a != '0' : !0, a => a ? '1' : '0');
+			return new wa(a, e, a => a != null ? a != '0' : true, a => a ? '1' : '0');
 		}
 
 		function c(a, b) {
@@ -1441,14 +1441,14 @@
 
 	function ba(a) {
 		this.Nf = null;
-		this.Ik = this.zh = !1;
+		this.Ik = this.zh = false;
 		this.$c = window.performance.now();
 		this.Ed = null;
 		this.De = 0;
-		this.Jn = new tb(3, 1E3);
+		this.Jn = new tb(3, 1000);
 		this.ob = new Ra;
 		this.Bg = 'Waiting for link';
-		this.xi = this.am = !1;
+		this.xi = this.am = false;
 		this.sd = 0;
 		var b = this;
 		this.Of = new ub(a, a => {
@@ -1545,7 +1545,7 @@
 		this.Gh = window.setInterval(() => {
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
-		}, 1E3);
+		}, 1000);
 		this.Qr = window.setInterval(() => {
 				a.C();
 			}, 50);
@@ -1609,7 +1609,7 @@
 		this.Fd = -1;
 		this.hg = this.Qb = this.Wh = this.sk = 0;
 		V.call(this, b);
-		a = new F(new DataView(a.buffer), !1);
+		a = new F(new DataView(a.buffer), false);
 		if (a.hb() != 1212305970) throw new q('');
 		b = a.hb();
 		if (b != c) throw new q(new Kb(b));
@@ -1618,7 +1618,7 @@
 		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength));
 		this.Cq(this.Lc);
 		c = this.Lc.sb();
-		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength), !1);
+		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength), false);
 		this.ui();
 		this.Wh = window.performance.now();
 		this.uc = -1;
@@ -1634,7 +1634,7 @@
 	function $b(a) {
 		this.xj = new Map;
 		this.Ho = new tb(100, 16);
-		this.yg = !1;
+		this.yg = false;
 		this.yb = 0;
 		this.pa = a;
 		a = w.ha(8);
@@ -1678,7 +1678,7 @@
 		this.pd = this.zm = 0;
 		this.Qi = new Mb(50);
 		this.sg = new Mb(50);
-		this.nn = 1E3;
+		this.nn = 1000;
 		this.ek = '';
 		var c = this;
 		V.call(this, b.state);
@@ -1705,17 +1705,17 @@
 				a = window.setTimeout(() => {
 					y.i(c.df, xb.ih('Game state timeout'));
 					c.ia();
-				}, 1E4);
+				}, 10000);
 				c.re = a;
 				c.tf(2);
 			};
 			c.pc.gl = () => {
 				c.tf(1);
 			};
-			var g = !1;
-			c.pc.Zk = () => g = !0;
+			var g = false;
+			c.pc.Zk = () => g = true;
 			c.pc.bd = a => {
-				if (!e && c.pd == 1 && g) A.i(c.Sp), d(!0); else {
+				if (!e && c.pd == 1 && g) A.i(c.Sp), d(true); else {
 					var b = wb.Do(a);
 					switch (a.nb) {
 						case 0:
@@ -1759,7 +1759,7 @@
 		this.Xm = 0;
 		this.version = 1;
 		this.ah = 0;
-		this.Nd = w.ha(1E3);
+		this.Nd = w.ha(1000);
 		this.Df = w.ha(16384);
 		var c = this;
 		this.version = b;
@@ -1843,14 +1843,14 @@
 	}
 
 	function w(a, b) {
-		b == null && (b = !1);
+		b == null && (b = false);
 		this.o = a;
 		this.Sa = b;
 		this.a = 0;
 	}
 
 	function F(a, b) {
-		b == null && (b = !1);
+		b == null && (b = false);
 		this.o = a;
 		this.Sa = b;
 		this.a = 0;
@@ -1858,8 +1858,8 @@
 
 	function Nb(a) {
 		this.gd = null;
-		this.Eq = 1E4;
-		this.wd = !0;
+		this.Eq = 10000;
+		this.wd = true;
 		var b = this;
 		a.Tj();
 		this.Ra = a.Ra;
@@ -1869,7 +1869,7 @@
 		this.ym = window.performance.now();
 		var c = null, c = () => {
 			var a = b.Eq - b.Br();
-			a <= 0 ? b.ia() : (window.clearTimeout(b.Am), a = window.setTimeout(c, a + 1E3), b.Am = a);
+			a <= 0 ? b.ia() : (window.clearTimeout(b.Am), a = window.setTimeout(c, a + 1000), b.Am = a);
 		};
 		c();
 		this.Ra.oniceconnectionstatechange = () => {
@@ -1895,11 +1895,11 @@
 	function Sa(a, b, c, d) {
 		this.th = new Set;
 		this.If = new Set;
-		this.Ag = this.nf = this.dm = !1;
+		this.Ag = this.nf = this.dm = false;
 		this.Mc = null;
 		this.$ = '';
-		this.$q = 5E4;
-		this.Zq = 1E4;
+		this.$q = 50000;
+		this.Zq = 10000;
 		this.od = new Map;
 		this.xr = a;
 		this.Vf = b;
@@ -1913,7 +1913,7 @@
 		this.gd = this.re = null;
 		this.oe = [];
 		this.ak = 0;
-		this.hl = !1;
+		this.hl = false;
 		this.Uf = [];
 		this.Vc = [];
 		var d = this;
@@ -1929,7 +1929,7 @@
 	}
 
 	function wb(a, b, c, d, e, f) {
-		this.rh = this.yh = !1;
+		this.rh = this.yh = false;
 		var g = this;
 		this.pa = new Va(0, b, d);
 		this.pa.bd = () => {
@@ -2008,7 +2008,7 @@
 	}
 
 	var Ab = Ab || {}, X;
-	fc.b = !0;
+	fc.b = true;
 	fc.prototype = {
 		match: function (a) {
 			this.r.global && (this.r.lastIndex = 0);
@@ -2033,7 +2033,7 @@
 			return c;
 		}, f: fc
 	};
-	D.b = !0;
+	D.b = true;
 	D.bj = (a, b) => {
 		var c = a.charCodeAt(b);
 		if (c == c) return c;
@@ -2044,12 +2044,12 @@
 	};
 	D.remove = (a, b) => {
 		var c = a.indexOf(b);
-		if (c == -1) return !1;
+		if (c == -1) return false;
 		a.splice(c, 1);
-		return !0;
+		return true;
 	};
-	Math.b = !0;
-	ec.b = !0;
+	Math.b = true;
+	ec.b = true;
 	ec.Mm = a => {
 		var b = [];
 		if (a != null) {
@@ -2058,17 +2058,17 @@
 		}
 		return b;
 	};
-	K.b = !0;
+	K.b = true;
 	K.ye = a => r.Be(a, '');
 	K.parseInt = a => {
 		a = parseInt(a, !a || a[0] != '0' || a[1] != 'x' && a[1] != 'X' ? 10 : 16);
 		return isNaN(a) ? null : a;
 	};
-	J.b = !0;
-	J.startsWith = (a, b) => b.length <= a.length ? b == D.substr(a, 0, b.length) : !1;
+	J.b = true;
+	J.startsWith = (a, b) => b.length <= a.length ? b == D.substr(a, 0, b.length) : false;
 	J.ls = (a, b) => {
 		var c = D.bj(a, b);
-		return c > 8 && c < 14 ? !0 : c == 32;
+		return c > 8 && c < 14 ? true : c == 32;
 	};
 	J.Gs = a => {
 		for (var b = a.length, c = 0; b > c && J.ls(a, b - c - 1);) ++c;
@@ -2085,22 +2085,22 @@
 		if (b != null) for (; b > c.length;) c = '0' + c;
 		return c;
 	};
-	U.b = !0;
+	U.b = true;
 	U.Qc = (a, b) => b >= a.length ? a : D.substr(a, 0, b);
 	U.Zr = a => {
 		for (var b = '', c = 0, d = a.byteLength; d > c;) b += J.Vg(a[c++], 2);
 		return b;
 	};
-	dc.b = !0;
+	dc.b = true;
 	dc.prototype = {
 		Yr: function (a) {
 			for (var b = 0, c = a.length; c > b;) this.hash += a[b++], this.hash += this.hash << 10, this.hash ^= this.hash >>> 6;
 		}, f: dc
 	};
 	var Ob = Ab['bas.basnet.FailReason'] = {
-		Gf: !0, nh: ['PeerFailed', 'Rejected', 'Cancelled', 'Error'], jh: {nb: 0, eb: 'bas.basnet.FailReason', toString: ga}, lh: (X = a => ({nb: 1, code: a, eb: 'bas.basnet.FailReason', toString: ga}), X.Ae = ['code'], X), hh: {nb: 2, eb: 'bas.basnet.FailReason', toString: ga}, Error: {nb: 3, eb: 'bas.basnet.FailReason', toString: ga}
+		Gf: true, nh: ['PeerFailed', 'Rejected', 'Cancelled', 'Error'], jh: {nb: 0, eb: 'bas.basnet.FailReason', toString: ga}, lh: (X = a => ({nb: 1, code: a, eb: 'bas.basnet.FailReason', toString: ga}), X.Ae = ['code'], X), hh: {nb: 2, eb: 'bas.basnet.FailReason', toString: ga}, Error: {nb: 3, eb: 'bas.basnet.FailReason', toString: ga}
 	};
-	wb.b = !0;
+	wb.b = true;
 	wb.Do = a => {
 		switch (a.nb) {
 			case 0:
@@ -2125,7 +2125,7 @@
 		}, Ph: function (a) {
 			a = new F(new DataView(a.data));
 			var b = a.B();
-			a.o.byteLength - a.a > 0 && (a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), !1));
+			a.o.byteLength - a.a > 0 && (a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false));
 			switch (b) {
 				case 1:
 					for (var b = a.ic(), c = a.wg(), d = [], e = 0; c.length > e;) d.push(new RTCIceCandidate(c[e++]));
@@ -2136,8 +2136,8 @@
 			}
 		}, Oh: function (a, b) {
 			var c = this;
-			this.pa.Mi(this.rh ? 1E4 : 4E3);
-			this.yh = !0;
+			this.pa.Mi(this.rh ? 10000 : 4000);
+			this.yh = true;
 			this.Zk != null && this.Zk();
 			this.pa.Ra.setRemoteDescription(new RTCSessionDescription({sdp: a, type: 'answer'}), () => {
 				for (var a = 0; b.length > a;) c.pa.Ra.addIceCandidate(b[a++]);
@@ -2148,35 +2148,35 @@
 			this.pa.Ra.addIceCandidate(a);
 		}, Nc: function (a, b) {
 			if (this.X != null) {
-				var c = w.ha(32, !1);
+				var c = w.ha(32, false);
 				c.l(a);
 				b != null && c.Vb(pako.deflateRaw(b.Sb()));
 				this.X.send(c.Hd());
 			}
 		}, Bi: function (a, b, c) {
-			var d = w.ha(32, !1);
+			var d = w.ha(32, false);
 			d.l(this.rh ? 1 : 0);
 			d.mc(a.sdp);
 			d.Ng(b);
 			c != null && d.Vb(c.Sb());
 			this.Nc(1, d);
 		}, yi: function (a) {
-			var b = w.ha(32, !1);
+			var b = w.ha(32, false);
 			b.Ng(a);
 			this.Nc(4, b);
 		}, f: wb
 	};
-	Va.b = !0;
+	Va.b = true;
 	Va.prototype = {
 		Mi: function (a) {
-			a == null && (a = 1E4);
+			a == null && (a = 10000);
 			window.clearTimeout(this.re);
 			this.re = window.setTimeout(G(this, this.To), a);
 		}, bo: function (a, b) {
 			var c = this;
 			this.ck(this.Ra.setRemoteDescription(a).then(() => c.Ra.createAnswer()), b, 500);
 		}, eo: function () {
-			this.ck(this.Ra.createOffer(), [], 1E3);
+			this.ck(this.Ra.createOffer(), [], 1000);
 		}, ck: function (a, b, c) {
 			var d = this;
 			a.then(a => d.Ra.setLocalDescription(a).then(() => a)).then(a => {
@@ -2192,7 +2192,7 @@
 				d.Tf();
 			});
 		}, co: function (a) {
-			var b = this, c = {id: this.Vc.length, negotiated: !0, ordered: a.kj};
+			var b = this, c = {id: this.Vc.length, negotiated: true, ordered: a.kj};
 			a.reliable || (c.maxRetransmits = 0);
 			a = this.Ra.createDataChannel(a.name, c);
 			a.binaryType = 'arraybuffer';
@@ -2235,9 +2235,9 @@
 		}, f: Va
 	};
 	var gc = Ab['bas.basnet.ConnectionRequestResponse'] = {
-		Gf: !0, nh: ['Accept', 'Reject'], hn: {nb: 0, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}, kh: (X = a => ({nb: 1, reason: a, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}), X.Ae = ['reason'], X)
+		Gf: true, nh: ['Accept', 'Reject'], hn: {nb: 0, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}, kh: (X = a => ({nb: 1, reason: a, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}), X.Ae = ['reason'], X)
 	};
-	Sa.b = !0;
+	Sa.b = true;
 	Sa.vk = a => {
 		try {
 			var b = nc.gf(a.candidate);
@@ -2264,21 +2264,21 @@
 			var b = this;
 			if (this.Mc != null || a != null) {
 				if (this.Mc != null && a != null && a.byteLength == this.Mc.byteLength) {
-					for (var c = new Uint8Array(this.Mc), d = new Uint8Array(a), e = !1, f = 0, g = this.Mc.byteLength; g > f;) {
+					for (var c = new Uint8Array(this.Mc), d = new Uint8Array(a), e = false, f = 0, g = this.Mc.byteLength; g > f;) {
 						var k = f++;
 						if (d[k] != c[k]) {
-							e = !0;
+							e = true;
 							break;
 						}
 					}
 					if (!e) return;
 				}
 				this.Mc = a.slice(0);
-				this.Ag = !0;
+				this.Ag = true;
 				this.X != null && this.X.readyState == 1 && this.ke == null && (this.Ai(), this.ke = window.setTimeout(() => {
 					b.ke = null;
 					b.X.readyState == 1 && b.Ag && b.Ai();
-				}, 1E4));
+				}, 10000));
 			}
 		}, Ei: function (a) {
 			function b() {
@@ -2288,7 +2288,7 @@
 
 			var c = this;
 			this.nf = a;
-			this.Ql == null && (b(), this.Ql = window.setTimeout(b, 1E3));
+			this.Ql == null && (b(), this.Ql = window.setTimeout(b, 1000));
 		}, Ji: function (a) {
 			function b(a) {
 				a = a.sitekey;
@@ -2312,7 +2312,7 @@
 					d.Mh(a.code != 4001);
 				};
 				d.X.onerror = () => {
-					d.Mh(!0);
+					d.Mh(true);
 				};
 				d.X.onmessage = G(d, d.Ph);
 			}
@@ -2328,7 +2328,7 @@
 						b(a);
 				}
 			})['catch'](() => {
-				d.Mh(!0);
+				d.Mh(true);
 			});
 		}, So: function () {
 			var a = this;
@@ -2336,9 +2336,9 @@
 			this.nf != 0 && this.cm();
 			this.ol = window.setInterval(() => {
 				a.zi();
-			}, 4E4);
+			}, 40000);
 		}, Ph: function (a) {
-			a = new F(new DataView(a.data), !1);
+			a = new F(new DataView(a.data), false);
 			switch (a.B()) {
 				case 1:
 					this.Oh(a);
@@ -2355,7 +2355,7 @@
 		}, Oh: function (a) {
 			var b = a.hb(), c = U.Zr(a.sb(a.B())), d, e, f;
 			try {
-				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), !1);
+				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false);
 				d = a.B() != 0;
 				e = a.ic();
 				for (var g = a.wg(), k = [], l = 0; g.length > l;) k.push(new RTCIceCandidate(g[l++]));
@@ -2412,7 +2412,7 @@
 		}, Nh: function (a) {
 			var b = a.hb(), c;
 			try {
-				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), !1), c = new RTCIceCandidate(a.wg());
+				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false), c = new RTCIceCandidate(a.wg());
 			}
 			catch (d) {
 				return;
@@ -2432,44 +2432,44 @@
 			this.Dg = a.ie(a.o.byteLength - a.a);
 		}, Nc: function (a, b, c) {
 			if (!b.hl) {
-				a == 0 && (b.hl = !0);
+				a == 0 && (b.hl = true);
 				b = b.$;
-				var d = w.ha(32, !1);
+				var d = w.ha(32, false);
 				d.l(a);
 				d.tb(b);
 				c != null && d.Vb(pako.deflateRaw(c.Sb()));
 				this.X.send(d.Hd());
 			}
 		}, sf: function (a, b) {
-			var c = w.ha(16, !1);
+			var c = w.ha(16, false);
 			c.l(0);
 			c.tb(a);
 			c.Ub(b);
 			this.X.send(c.Hd());
 		}, zi: function () {
-			var a = w.ha(1, !1);
+			var a = w.ha(1, false);
 			a.l(8);
 			this.X.send(a.Hd());
 		}, Ai: function () {
-			this.Ag = !1;
-			var a = w.ha(256, !1);
+			this.Ag = false;
+			var a = w.ha(256, false);
 			a.l(7);
 			this.Mc != null && a.Mg(this.Mc);
 			this.X.send(a.Hd());
 		}, cm: function () {
-			var a = w.ha(2, !1);
+			var a = w.ha(2, false);
 			a.l(9);
 			a.l(this.nf ? 1 : 0);
 			this.X.send(a.Hd());
 			this.dm = this.nf;
 		}, Bi: function (a, b, c, d) {
-			var e = w.ha(32, !1);
+			var e = w.ha(32, false);
 			e.mc(b.sdp);
 			e.Ng(c);
 			d != null && e.Vb(d.Sb());
 			this.Nc(1, a, e);
 		}, yi: function (a, b) {
-			var c = w.ha(32, !1);
+			var c = w.ha(32, false);
 			c.Ng(b);
 			this.Nc(4, a, c);
 		}, qk: function () {
@@ -2483,7 +2483,7 @@
 			this.qk();
 			window.clearTimeout(this.ke);
 			this.ke = null;
-			this.Ag = !1;
+			this.Ag = false;
 			window.clearInterval(this.ol);
 			window.clearTimeout(this.Ul);
 			a && (this.Ul = window.setTimeout(() => {
@@ -2498,13 +2498,13 @@
 			this.th.clear();
 		}, f: Sa
 	};
-	nc.b = !0;
+	nc.b = true;
 	nc.gf = a => {
 		a = a.split(' ');
 		if (a[6] != 'typ') throw new q(null);
 		return {Jr: a[7], Xo: a[4]};
 	};
-	Nb.b = !0;
+	Nb.b = true;
 	Nb.prototype = {
 		Br: function () {
 			return window.performance.now() - this.ym;
@@ -2523,11 +2523,11 @@
 			}
 		}, ia: function () {
 			window.clearTimeout(this.Am);
-			this.wd && (this.wd = !1, this.Ra.close(), this.cf != null && this.cf());
+			this.wd && (this.wd = false, this.Ra.close(), this.cf != null && this.cf());
 		}, f: Nb
 	};
 	var pc = {
-		b: !0, description: a => {
+		b: true, description: a => {
 			switch (a) {
 				case 4001:
 					return 'The room was closed.';
@@ -2544,7 +2544,7 @@
 			}
 		}
 	};
-	F.b = !0;
+	F.b = true;
 	F.jo = (a, b) => {
 		var c = a.getUint8(b), d, e, f, g, k, l = b;
 		if ((c & 128) == 0) ++b; else if ((c & 224) == 192) d = a.getUint8(b + 1), c = (c & 31) << 6 | d & 63, b += 2; else if ((c & 240) == 224) d = a.getUint8(b + 1), e = a.getUint8(b + 2), c = (c & 15) << 12 | (d & 63) << 6 | e & 63, b += 3; else if ((c & 248) == 240) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), c = (c & 7) << 18 | (d & 63) << 12 | (e & 63) << 6 | f & 63, b += 4; else if ((c & 252) == 248) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), c = (c & 3) << 24 | (d & 63) << 18 | (e & 63) << 12 | (f & 63) << 6 | g & 63, b += 5; else if ((c & 254) == 252) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), k = a.getUint8(b + 5), c = (c & 1) << 30 | (d & 63) << 24 | (e & 63) << 18 | (f & 63) << 12 | (g & 63) << 6 | k & 63, b += 6; else throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
@@ -2612,9 +2612,9 @@
 			return JSON.parse(a);
 		}, f: F
 	};
-	w.b = !0;
+	w.b = true;
 	w.ha = (a, b) => {
-		b == null && (b = !1);
+		b == null && (b = false);
 		a == null && (a = 16);
 		return new w(new DataView(new ArrayBuffer(a)), b);
 	};
@@ -2730,10 +2730,10 @@
 			this.a += a;
 		}, f: w
 	};
-	I.b = !0;
+	I.b = true;
 	I.yo = () => {
 		try {
-			return window.crypto.subtle.generateKey(I.qh, !0, ['sign', 'verify']).then(a => {
+			return window.crypto.subtle.generateKey(I.qh, true, ['sign', 'verify']).then(a => {
 				var b = a.privateKey;
 				return window.crypto.subtle.exportKey('jwk', b).then(a => {
 					var c = a.y, e = a.d, f = new I;
@@ -2764,9 +2764,9 @@
 	};
 	I.Rr = (a, b) => {
 		try {
-			var c = new F(new DataView(a.buffer, a.byteOffset, a.byteLength), !1);
+			var c = new F(new DataView(a.buffer, a.byteOffset, a.byteLength), false);
 			c.B();
-			var d = c.sb(c.Ob()), e = c.sb(), f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), !1), g = f.ic(), k = f.ic(), l = f.sb();
+			var d = c.sb(c.Ob()), e = c.sb(), f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), false), g = f.ic(), k = f.ic(), l = f.sb();
 			if (b.byteLength != l.byteLength) return Promise.reject(null);
 			for (var c = 0, t = l.byteLength; t > c;) {
 				var h = c++;
@@ -2783,7 +2783,7 @@
 	};
 	I.Xr = (a, b, c) => {
 		try {
-			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: !0, key_ops: ['sign'], kty: 'EC', d: c, x: a, y: b}, I.qh, !0, ['sign']);
+			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['sign'], kty: 'EC', d: c, x: a, y: b}, I.qh, true, ['sign']);
 		}
 		catch (d) {
 			return Promise.reject(d instanceof q ? d.Ta : d);
@@ -2791,7 +2791,7 @@
 	};
 	I.Wr = (a, b) => {
 		try {
-			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: !0, key_ops: ['verify'], kty: 'EC', x: a, y: b}, I.qh, !0, ['verify']);
+			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['verify'], kty: 'EC', x: a, y: b}, I.qh, true, ['verify']);
 		}
 		catch (c) {
 			return Promise.reject(c instanceof q ? c.Ta : c);
@@ -2823,7 +2823,7 @@
 			}
 		}, f: I
 	};
-	Ja.b = !0;
+	Ja.b = true;
 	Ja.gp = () => {
 		if (Ja.li != null) return Ja.li;
 		Ja.li = new Promise((a, b) => {
@@ -2836,9 +2836,9 @@
 		});
 		return Ja.li;
 	};
-	Ba.b = !0;
+	Ba.b = true;
 	Ba.cg = a => new PerfectScrollbar(a, {handlers: Ba.Uo});
-	mc.b = !0;
+	mc.b = true;
 	mc.ts = () => {
 		var a = window;
 		a.RTCPeerConnection = a.webkitRTCPeerConnection || a.mozRTCPeerConnection || a.RTCPeerConnection;
@@ -2865,7 +2865,7 @@
 			};
 		}
 	};
-	Ca.b = !0;
+	Ca.b = true;
 	Ca.ar = (a, b) => {
 		Ca.Xl(new Blob([a], {type: 'octet/stream'}), b);
 	};
@@ -2883,13 +2883,13 @@
 		URL.revokeObjectURL(d);
 		c.remove();
 	};
-	Db.b = !0;
+	Db.b = true;
 	Db.prototype = {
 		set: function (a) {
 			a != this.value && (this.value = a, this.Ja.textContent = '' + this.value);
 		}, f: Db
 	};
-	v.b = !0;
+	v.b = true;
 	v.Ea = a => {
 		var b = new Map, c = 0;
 		for (a = a.querySelectorAll('[data-hook]'); a.length > c;) {
@@ -2910,14 +2910,14 @@
 	v.Cf = a => {
 		for (var b = a.firstChild; b != null;) a.removeChild(b), b = a.firstChild;
 	};
-	zb.b = !0;
+	zb.b = true;
 	zb.eh = a => new Promise((b, c) => {
 		a.onsuccess = () => {
 			b(a.result);
 		};
 		a.onerror = c;
 	});
-	lc.b = !0;
+	lc.b = true;
 	lc.Dr = (a, b) => new Promise((c, d) => {
 		var e = window.setTimeout(() => {
 			d('Timed out');
@@ -2930,10 +2930,10 @@
 			d(a);
 		});
 	});
-	m.b = !0;
+	m.b = true;
 	m.Fa = a => {
-		a.Aa == null && (a.Aa = !0);
-		a.Ba == null && (a.Ba = !0);
+		a.Aa == null && (a.Aa = true);
+		a.Ba == null && (a.Ba = true);
 		return a;
 	};
 	m.Ha = a => {
@@ -2957,7 +2957,7 @@
 		return b;
 	};
 	m.prototype = {
-		$m: () => !0, apply: () => {
+		$m: () => true, apply: () => {
 			throw new q('missing implementation');
 		}, va: () => {
 			throw new q('missing implementation');
@@ -2965,7 +2965,7 @@
 			throw new q('missing implementation');
 		}, f: m
 	};
-	Ia.b = !0;
+	Ia.b = true;
 	Ia.ss = (a, b, c) => {
 		if (a.length == 0) for (a = 0; b.length > a;) c.push(b[a++]); else if (b.length == 0) for (b = 0; a.length > b;) c.push(a[b++]); else for (var d = 0, e = a.length, f = 0, g = b.length; ;) {
 			var k = a[d], l = b[f];
@@ -3014,9 +3014,9 @@
 			return b;
 		}, f: Ia
 	};
-	yb.b = !0;
+	yb.b = true;
 	yb.prototype = {f: yb};
-	Ua.b = !0;
+	Ua.b = true;
 	Ua.ma = m;
 	Ua.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -3028,9 +3028,9 @@
 			this.Rg = a.Cl(a.Ab());
 		}, f: Ua
 	});
-	cc.b = !0;
+	cc.b = true;
 	cc.prototype = {f: cc};
-	Mb.b = !0;
+	Mb.b = true;
 	Mb.prototype = {
 		add: function (a) {
 			for (var b = this.$a.length, c = 0, d = this.Qd = 0; b > d;) {
@@ -3057,9 +3057,9 @@
 			return this.$a.length == 0 ? 0 : this.$a[this.$a.length - 1].value;
 		}, f: Mb
 	};
-	bc.b = !0;
+	bc.b = true;
 	bc.prototype = {f: bc};
-	ac.b = !0;
+	ac.b = true;
 	ac.prototype = {
 		stop: function () {
 			this.hj.fc = null;
@@ -3074,9 +3074,9 @@
 			return b.Sb();
 		}, f: ac
 	};
-	Ta.b = !0;
-	ya.b = !0;
-	V.b = !0;
+	Ta.b = true;
+	ya.b = true;
+	V.b = true;
 	V.ma = yb;
 	V.prototype = C(yb.prototype, {
 		ra: () => {
@@ -3139,11 +3139,11 @@
 		}, f: V
 	});
 	var xb = Ab['bas.marf.net.ConnFailReason'] = {
-		Gf: !0, nh: ['Cancelled', 'PeerFailed', 'Rejected', 'Other'], hh: {nb: 0, eb: 'bas.marf.net.ConnFailReason', toString: ga}, jh: {nb: 1, eb: 'bas.marf.net.ConnFailReason', toString: ga}, lh: (X = a => ({nb: 2, reason: a, eb: 'bas.marf.net.ConnFailReason', toString: ga}), X.Ae = ['reason'], X), ih: (X = a => ({
+		Gf: true, nh: ['Cancelled', 'PeerFailed', 'Rejected', 'Other'], hh: {nb: 0, eb: 'bas.marf.net.ConnFailReason', toString: ga}, jh: {nb: 1, eb: 'bas.marf.net.ConnFailReason', toString: ga}, lh: (X = a => ({nb: 2, reason: a, eb: 'bas.marf.net.ConnFailReason', toString: ga}), X.Ae = ['reason'], X), ih: (X = a => ({
 			nb: 3, description: a, eb: 'bas.marf.net.ConnFailReason', toString: ga
 		}), X.Ae = ['description'], X)
 	};
-	xa.b = !0;
+	xa.b = true;
 	xa.xh = a => {
 		switch (a.nb) {
 			case 0:
@@ -3317,7 +3317,7 @@
 			}
 		}, f: xa
 	});
-	Lb.b = !0;
+	Lb.b = true;
 	Lb.ma = V;
 	Lb.prototype = C(V.prototype, {
 		ia: function () {
@@ -3462,8 +3462,8 @@
 						var d = c.up++;
 						b.$ = d;
 						c.Ie.set(d, b);
-						ia.i(c.Hp, d, new F(new DataView(e.buffer, e.byteOffset, e.byteLength), !1));
-						b.yg = !0;
+						ia.i(c.Hp, d, new F(new DataView(e.buffer, e.byteOffset, e.byteLength), false));
+						b.yg = true;
 						c.hr(b);
 					}
 				}
@@ -3520,17 +3520,17 @@
 			e.$m(this.T) && (this.Cg(e), this.Eg(this.Zh(e), 1));
 		}, f: Lb
 	});
-	$b.b = !0;
+	$b.b = true;
 	$b.prototype = {
 		Rb: function (a, b) {
 			b == null && (b = 0);
 			this.pa.Rb(b, a);
 		}, f: $b
 	};
-	Zb.b = !0;
-	Kb.b = !0;
+	Zb.b = true;
+	Kb.b = true;
 	Kb.prototype = {f: Kb};
-	Jb.b = !0;
+	Jb.b = true;
 	Jb.ma = V;
 	Jb.prototype = C(V.prototype, {
 		Cq: function (a) {
@@ -3554,7 +3554,7 @@
 		}, C: function () {
 			var a = window.performance.now(), b = a - this.Wh;
 			this.Wh = a;
-			this.Fd > 0 ? (this.Qb += 1E4, this.Fd < this.Qb && (this.Qb = this.Fd, this.Fd = -1)) : this.Qb += b * this.pl;
+			this.Fd > 0 ? (this.Qb += 10000, this.Fd < this.Qb && (this.Qb = this.Fd, this.Fd = -1)) : this.Qb += b * this.pl;
 			a = this.mf * this.mh;
 			a < this.Qb && (this.Qb = a);
 			b = this.Qb * this.Ac;
@@ -3574,7 +3574,7 @@
 			this.Dl();
 		}, f: Jb
 	});
-	Ib.b = !0;
+	Ib.b = true;
 	Ib.prototype = {
 		eval: function (a) {
 			var b = this.Yb.length - 1;
@@ -3593,9 +3593,9 @@
 			return (2 * d - 3 * b + 1) * this.Yb[c + 1] + (d - 2 * b + a) * this.Yb[c + 2] + (-2 * d + 3 * b) * this.Yb[c + 3] + (d - b) * this.Yb[c + 4];
 		}, f: Ib
 	};
-	H.b = !0;
+	H.b = true;
 	H.prototype = {f: H};
-	M.b = !0;
+	M.b = true;
 	M.Pl = (a, b, c, d, e) => new Promise((f, g) => {
 		var k = new XMLHttpRequest;
 		k.open(b, a);
@@ -3622,32 +3622,32 @@
 		if (b != null) throw new q(b);
 		return a.data;
 	});
-	A.b = !0;
+	A.b = true;
 	A.i = a => {
 		a != null && a();
 	};
-	y.b = !0;
+	y.b = true;
 	y.i = (a, b) => {
 		a != null && a(b);
 	};
-	ia.b = !0;
+	ia.b = true;
 	ia.i = (a, b, c) => {
 		a != null && a(b, c);
 	};
-	Cb.b = !0;
+	Cb.b = true;
 	Cb.i = (a, b, c, d) => {
 		a != null && a(b, c, d);
 	};
-	vb.b = !0;
+	vb.b = true;
 	vb.i = (a, b, c, d, e) => {
 		a != null && a(b, c, d, e);
 	};
-	tb.b = !0;
+	tb.b = true;
 	tb.prototype = {
 		Cm: function (a) {
 			a == null && (a = 1);
 			this.C();
-			return this.oc >= a ? (this.oc -= a, !0) : !1;
+			return this.oc >= a ? (this.oc -= a, true) : false;
 		}, Cr: function (a) {
 			this.C();
 			a -= this.oc;
@@ -3663,7 +3663,7 @@
 			this.Nj <= this.oc && (this.oc = this.Nj, this.Ve = a);
 		}, f: tb
 	};
-	Hb.b = !0;
+	Hb.b = true;
 	Hb.gf = a => {
 		var b = new fc('([^&=]+)=?([^&]*)', 'g');
 		a = a.substring(1);
@@ -3676,7 +3676,7 @@
 		return d;
 	};
 	Hb.L = () => Hb.gf(window.top.location.search);
-	ub.b = !0;
+	ub.b = true;
 	ub.cq = a => {
 		if (a.length < 3) throw new q('Not enough arguments');
 		if (a.length > 7) throw new q('Too many arguments');
@@ -3706,8 +3706,8 @@
 	ub.prototype = {
 		gf: function (a) {
 			var b = this;
-			if (a.charAt(0) != '/') return !1;
-			if (a.length == 1) return !0;
+			if (a.charAt(0) != '/') return false;
+			if (a.length == 1) return true;
 			a = J.Gs(D.substr(a, 1, null)).split(' ');
 			var c = a[0];
 			switch (c) {
@@ -3757,10 +3757,10 @@
 						if (a.length == 2) {
 							switch (a[1]) {
 								case 'off':
-									e = !1;
+									e = false;
 									break;
 								case 'on':
-									e = !0;
+									e = true;
 									break;
 								default:
 									throw new q(null);
@@ -3788,15 +3788,15 @@
 				default:
 					this.ba('Unrecognized command: "' + c + '"');
 			}
-			return !0;
+			return true;
 		}, fm: function (a) {
 			a != null && (a = U.Qc(a, 2));
 			n.A.sh.Xa(a);
 			this.ya.ra(ra.la(a));
 		}, f: ub
 	};
-	Ha.b = !0;
-	ba.b = !0;
+	Ha.b = true;
+	ba.b = true;
 	ba.Yl = a => {
 		var b = new Date;
 		Ca.ar(a, 'HBReplay-' + b.getFullYear() + '-' + J.Af('' + (b.getMonth() + 1)) + '-' + J.Af('' + b.getDate()) + '-' + J.Af('' + b.getHours()) + 'h' + J.Af('' + b.getMinutes()) + 'm.hbr2');
@@ -3862,7 +3862,7 @@
 			this.Nf == null && (this.Nf = window.setTimeout(() => {
 				b.Nf = null;
 				b.bm(b.zh);
-			}, 1E3), this.bm(this.zh));
+			}, 1000), this.bm(this.zh));
 		}, bm: function (a) {
 			this.Ik != a && (this.ya.ra(na.la(a ? 0 : 1)), this.Ik = a);
 		}, Bm: function () {
@@ -3906,12 +3906,12 @@
 		}, uf: function () {
 			var a = n.A.Tb.L(), b = this.j.Fb, c = b.Eb;
 			c.zg = n.A.Sl.L();
-			a == 0 ? (b.Gg(!0), c.kf = 1, c.jf = 0, c.xf = 0) : (b.Gg(!1), c.xf = 35, a == -1 ? c.jf = 450 : (c.jf = 0, c.kf = 1 + .25 * (a - 1)));
+			a == 0 ? (b.Gg(true), c.kf = 1, c.jf = 0, c.xf = 0) : (b.Gg(false), c.xf = 35, a == -1 ? c.jf = 450 : (c.jf = 0, c.kf = 1 + .25 * (a - 1)));
 		}, Cd: function (a) {
 			this.ob.Cd(a.code);
 		}, f: ba
 	};
-	Gb.b = !0;
+	Gb.b = true;
 	Gb.prototype = {
 		Ti: function (a) {
 			var b = this.j.Qa.Bc, c = [], d = 0;
@@ -3977,7 +3977,7 @@
 				a.Pa(a.Ar);
 			};
 			a.Ki = a => {
-				c.j.me(!1);
+				c.j.me(false);
 				c.j.Fb.Eb.td.Nn();
 				c.j.Qa.Gb('Game started' + b(a));
 			};
@@ -4026,7 +4026,7 @@
 			a.Hk = null;
 		}, f: Gb
 	};
-	Ra.b = !0;
+	Ra.b = true;
 	Ra.Fk = a => {
 			switch (n.A.tg.L().L(a)) {
 				case 'Down':
@@ -4067,7 +4067,7 @@
 			}
 		}, f: Ra
 	};
-	T.b = !0;
+	T.b = true;
 	T.Hh = a => T.Rf(JSON.parse(a));
 	T.Rf = a => {
 		var b = new T;
@@ -4082,13 +4082,13 @@
 			return JSON.stringify({lat: this.Ec, lon: this.Gc, code: this.ub});
 		}, f: T
 	};
-	Yb.b = !0;
+	Yb.b = true;
 	Yb.prototype = {
 		Lh: function () {
 			return this.Ne.L() != null ? this.Ne.L() : this.Me.L() != null ? this.Me.L() : new T;
 		}, f: Yb
 	};
-	Xb.b = !0;
+	Xb.b = true;
 	Xb.Pm = () => {
 		try {
 			var a = window.localStorage;
@@ -4104,7 +4104,7 @@
 			return null;
 		}
 	};
-	wa.b = !0;
+	wa.b = true;
 	wa.prototype = {
 		L: function () {
 			return this.Hm;
@@ -4118,7 +4118,7 @@
 			}
 		}, f: wa
 	};
-	W.b = !0;
+	W.b = true;
 	W.Rf = a => {
 		for (var b = new W, c = ec.Mm(a), d = 0; c.length > d;) {
 			var e = c[d];
@@ -4168,10 +4168,10 @@
 			return JSON.stringify(a);
 		}, f: W
 	};
-	n.b = !0;
-	Wb.b = !0;
+	n.b = true;
+	Wb.b = true;
 	Wb.prototype = {f: Wb};
-	u.b = !0;
+	u.b = true;
 	u.qp = () => {
 		mc.ts();
 		x.fj(() => {
@@ -4188,7 +4188,7 @@
 	};
 	u.Bo = () => {
 		var a = Xb.Pm();
-		return a != null ? a.getItem('crappy_router') != null : !1;
+		return a != null ? a.getItem('crappy_router') != null : false;
 	};
 	u.jk = a => {
 		var b = new kb(n.A.fe.L());
@@ -4280,7 +4280,7 @@
 		};
 	};
 	u.mk = () => {
-		var a = new aa(!0), b = window.document.createElement('div');
+		var a = new aa(true), b = window.document.createElement('div');
 		b.className = 'view-wrapper';
 		b.appendChild(a.g);
 		x.La(b);
@@ -4328,7 +4328,7 @@
 			g.jc = b.name;
 			var k = new ea;
 			k.w = a;
-			k.cb = !0;
+			k.cb = true;
 			k.Kd = f.ub;
 			k.Xb = n.A.sh.L();
 			g.I.push(k);
@@ -4336,20 +4336,20 @@
 			l.fg = b.qs - 1;
 			l.Ib = b.password;
 			c();
-			var t = new ba(l), h = !1;
+			var t = new ba(l), h = false;
 			l.ef = (a, b) => {
 				u.kk(a, a => {
 					b(a);
 					x.La(t.j.g);
-					return h = !0;
+					return h = true;
 				});
 			};
 			var m = window.setInterval(() => {
 				var a = la.la(l);
 				l.ra(a);
-			}, 3E3);
+			}, 3000);
 			l.$k = a => {
-				g.na(a) != null && (a = Y.la(a, 'Bad actor', !1), l.ra(a));
+				g.na(a) != null && (a = Y.la(a, 'Bad actor', false), l.ra(a));
 			};
 			l.Hp = (a, b) => {
 				var d = b.ic();
@@ -4363,12 +4363,12 @@
 				c();
 			};
 			l.Ip = a => {
-				g.na(a) != null && (a = Y.la(a, null, !1), l.ra(a));
+				g.na(a) != null && (a = Y.la(a, null, false), l.ra(a));
 			};
 			l.kg = a => {
 				e = a;
 				t.Bg = u.$h(a, l.Ib != null);
-				h || (h = !0, x.La(t.j.g));
+				h || (h = true, x.La(t.j.g));
 			};
 			t.Ih.Np = (a, b, c, d) => {
 				l.to(a, b, c, d);
@@ -4459,7 +4459,7 @@
 					b.j.pe.or((10 * t.sg.max() | 0) / 10);
 					b.j.pe.nl.tn(a);
 				};
-				b.Bg = u.$h(a, !1);
+				b.Bg = u.$h(a, false);
 				x.La(b.j.g);
 				b.j.de = () => {
 					t.Ad = null;
@@ -4519,13 +4519,13 @@
 			window.console.log(ic instanceof q ? ic.Ta : ic), c = new P('Unexpected Error', '', []), c.Vd.innerHTML = 'An error ocurred while attempting to join the room.<br><br>This might be caused by a browser extension, try disabling all extensions and refreshing the site.<br><br>The error has been printed to the inspector console.', x.La(c.g);
 		}
 	};
-	x.b = !0;
+	x.b = true;
 	x.ks = () => {
 		try {
 			return window.top != window.self;
 		}
 		catch (a) {
-			return !0;
+			return true;
 		}
 	};
 	x.Wg = a => new Promise((b, c) => {
@@ -4571,16 +4571,16 @@
 		window.document.body.appendChild(x.Pg);
 		var b = null, b = () => {
 			n.Na.Tl();
-			window.document.removeEventListener('click', b, !0);
+			window.document.removeEventListener('click', b, true);
 		};
-		window.document.addEventListener('click', b, !0);
+		window.document.addEventListener('click', b, true);
 		a();
 	};
 	x.La = a => {
 		x.Vm != null && x.Vm.remove();
 		a != null && (x.Pg.appendChild(a), x.Vm = a);
 	};
-	Vb.b = !0;
+	Vb.b = true;
 	Vb.prototype = {
 		ia: function () {
 			window.document.removeEventListener('keydown', G(this, this.Bd));
@@ -4617,18 +4617,18 @@
 			}
 		}, uf: function (a) {
 			var b = this.j.Fb;
-			a <= 0 ? (b.Gg(!0), b.Eb.kf = 1, b.Eb.xf = 0) : (b.Gg(!1), b.Eb.xf = 35, b.Eb.kf = 1 + .25 * (a - 1));
+			a <= 0 ? (b.Gg(true), b.Eb.kf = 1, b.Eb.xf = 0) : (b.Gg(false), b.Eb.xf = 35, b.Eb.kf = 1 + .25 * (a - 1));
 		}, Cd: () => {
 		}, f: Vb
 	};
-	Fb.b = !0;
+	Fb.b = true;
 	Fb.prototype = {
 		Pj: function () {
 			this.w = U.Qc(this.w, 40);
 			this.ub = U.Qc(this.ub, 3);
 		}, ga: function (a) {
 			this.Pj();
-			a.Sa = !0;
+			a.Sa = true;
 			a.Ub(this.Id);
 			a.Im(this.w);
 			a.Im(this.ub);
@@ -4637,9 +4637,9 @@
 			a.l(this.Ib ? 1 : 0);
 			a.l(this.Xe);
 			a.l(this.I);
-			a.Sa = !1;
+			a.Sa = false;
 		}, ja: function (a) {
-			a.Sa = !0;
+			a.Sa = true;
 			this.Id = a.Ob();
 			this.w = a.El();
 			this.ub = a.El();
@@ -4648,19 +4648,19 @@
 			this.Ib = a.B() != 0;
 			this.Xe = a.B();
 			this.I = a.B();
-			a.Sa = !1;
+			a.Sa = false;
 			if (this.I > 30 || this.Xe > 30) throw new q(null);
 			this.Pj();
 		}, f: Fb
 	};
-	va.b = !0;
+	va.b = true;
 	va.parse = a => {
 		a.B();
 		for (var b = []; a.o.byteLength - a.a != 0;) {
 			var c = a.ie(a.Ob()), d = a.Cl(a.Ob());
 			try {
 				var e = new Fb;
-				e.ja(new F(new DataView(d), !1));
+				e.ja(new F(new DataView(d), false));
 				var f = new Wb;
 				f.vd = e;
 				f.$ = c;
@@ -4678,18 +4678,18 @@
 			++e;
 			var g = f.vd;
 			f.Le = 6378 * va.js(.017453292519943295 * g.Ec, .017453292519943295 * g.Gc, .017453292519943295 * c, .017453292519943295 * d);
-			isFinite(f.Le) || (f.Le = 22E3);
+			isFinite(f.Le) || (f.Le = 22000);
 		}
 	};
-	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), !1)));
-	Z.b = !0;
+	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), false)));
+	Z.b = true;
 	Z['delete'] = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((b, c) => {
 		var d = window.indexedDB.open('stadiums', 1);
 		d.onblocked = d.onerror = c;
 		d.onupgradeneeded = a => {
 			var b = d.result;
 			b.onerror = c;
-			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: !0}), b.createObjectStore('meta', {keyPath: 'id'}));
+			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: true}), b.createObjectStore('meta', {keyPath: 'id'}));
 		};
 		d.onsuccess = () => {
 			var e = d.result;
@@ -4713,7 +4713,7 @@
 		d.onupgradeneeded = a => {
 			var b = d.result;
 			b.onerror = c;
-			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: !0}), b.createObjectStore('meta', {keyPath: 'id'}));
+			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: true}), b.createObjectStore('meta', {keyPath: 'id'}));
 		};
 		d.onsuccess = () => {
 			var e = d.result;
@@ -4744,7 +4744,7 @@
 		c.onupgradeneeded = a => {
 			var d = c.result;
 			d.onerror = b;
-			a.oldVersion < 1 && (d.createObjectStore('files', {autoIncrement: !0}), d.createObjectStore('meta', {keyPath: 'id'}));
+			a.oldVersion < 1 && (d.createObjectStore('files', {autoIncrement: true}), d.createObjectStore('meta', {keyPath: 'id'}));
 		};
 		c.onsuccess = () => {
 			var d = c.result;
@@ -4762,12 +4762,12 @@
 	});
 	Z.Es = () => {
 		var a = window.navigator.storage;
-		if (a == null || a.persist == null) return Promise.resolve(!1);
+		if (a == null || a.persist == null) return Promise.resolve(false);
 		try {
-			return a.persisted().then(b => b ? !0 : a.persist())['catch'](() => !1);
+			return a.persisted().then(b => b ? true : a.persist())['catch'](() => false);
 		}
 		catch (b) {
-			return Promise.resolve(!1);
+			return Promise.resolve(false);
 		}
 	};
 	Z.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((b, c) => {
@@ -4776,7 +4776,7 @@
 		d.onupgradeneeded = a => {
 			var b = d.result;
 			b.onerror = c;
-			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: !0}), b.createObjectStore('meta', {keyPath: 'id'}));
+			a.oldVersion < 1 && (b.createObjectStore('files', {autoIncrement: true}), b.createObjectStore('meta', {keyPath: 'id'}));
 		};
 		d.onsuccess = () => {
 			var e = d.result;
@@ -4801,7 +4801,7 @@
 			}
 		};
 	});
-	Ub.b = !0;
+	Ub.b = true;
 	Ub.prototype = {
 		Tl: function () {
 			this.c.resume();
@@ -4814,7 +4814,7 @@
 			this.ag.gain.value = a;
 		}, f: Ub
 	};
-	Tb.b = !0;
+	Tb.b = true;
 	Tb.prototype = {
 		update: function () {
 			var a = window.performance.now(), b = a - this.Um;
@@ -4858,7 +4858,7 @@
 			}
 		}, f: Tb
 	};
-	ua.b = !0;
+	ua.b = true;
 	ua.prototype = {
 		ga: function (a) {
 			var b = this.a;
@@ -4919,7 +4919,7 @@
 			a.v = this.v;
 		}, f: ua
 	};
-	O.b = !0;
+	O.b = true;
 	O.Rd = [Ta];
 	O.qd = (a, b) => {
 		a.Ma = b.Ma.sc();
@@ -4979,12 +4979,12 @@
 					var d = b[c];
 					++c;
 					if (d.H != null) {
-						(d.ob & 16) == 0 && (d.Wb = !1);
+						(d.ob & 16) == 0 && (d.Wb = false);
 						var e = this.S.ge;
 						d.Sc > 0 && d.Sc--;
 						this.Ma.ce > d.yc && d.yc++;
 						if (d.Wb && d.Sc <= 0 && d.yc >= 0) {
-							for (var f = !1, g = 0, k = this.ta.F; k.length > g;) {
+							for (var f = false, g = 0, k = this.ta.F; k.length > g;) {
 								var l = k[g];
 								++g;
 								if ((l.v & 64) != 0 && d.H != l) {
@@ -4999,11 +4999,11 @@
 										n = n.aa;
 										t.x = h.x + f * l * n;
 										t.y = h.y + m * l * n;
-										f = !0;
+										f = true;
 									}
 								}
 							}
-							f && (this.Ma.ji != null && this.Ma.ji(d), d.Wb = !1, d.Sc = this.Ma.yd, d.yc -= this.Ma.Zc);
+							f && (this.Ma.ji != null && this.Ma.ji(d), d.Wb = false, d.Sc = this.Ma.yd, d.yc -= this.Ma.Zc);
 						}
 						f = d.ob;
 						k = g = 0;
@@ -5097,7 +5097,7 @@
 			return b;
 		}, f: O
 	};
-	sb.b = !0;
+	sb.b = true;
 	sb.prototype = {
 		ga: function (a) {
 			var b = this.W;
@@ -5118,7 +5118,7 @@
 			this.qe = a == 1 ? p.fa : a == 2 ? p.xa : p.Ia;
 		}, f: sb
 	};
-	Eb.b = !0;
+	Eb.b = true;
 	Eb.prototype = {
 		ga: function (a) {
 			a.s(this.m);
@@ -5150,9 +5150,9 @@
 			this.Se = a.u();
 		}, f: Eb
 	};
-	Bb.b = !0;
+	Bb.b = true;
 	Bb.prototype = {f: Bb};
-	h.b = !0;
+	h.b = true;
 	h.ja = a => {
 		var b = a.B();
 		return b == 255 ? (b = new h, b.Kr(a), b) : h.Kh()[b];
@@ -5649,7 +5649,7 @@
 			}
 
 			function c(a, b, c, d) {
-				d == null && (d = !1);
+				d == null && (d = false);
 				var f = e[b];
 				if (!d || f != null) if (d = r.G(f, Array), d != null) for (f = 0; d.length > f;) {
 					var k = d[f];
@@ -5698,7 +5698,7 @@
 			this.jd = 7441498;
 			a.color != null && (this.jd = h.$f(a.color));
 			this.Fe = this.be(a, 'goalLine', 0);
-			this.Lf = this.op(e, 'canBeStored', !0);
+			this.Lf = this.op(e, 'canBeStored', true);
 			this.pf = e.kickOffReset == 'full';
 			var g = e.traits;
 			a = e.ballPhysics;
@@ -5708,9 +5708,9 @@
 			c(this.tc, 'goals', h.ip);
 			c(this.F, 'discs', a => h.Mk(a, new ua));
 			c(this.qa, 'planes', h.kp);
-			c(this.pb, 'joints', a => h.jp(a, d.F), !0);
-			c(this.Dd, 'redSpawnPoints', b, !0);
-			c(this.md, 'blueSpawnPoints', b, !0);
+			c(this.pb, 'joints', a => h.jp(a, d.F), true);
+			c(this.Dd, 'redSpawnPoints', b, true);
+			c(this.md, 'blueSpawnPoints', b, true);
 			a = e.playerPhysics;
 			a != null && (this.ge = h.lp(a));
 			if (this.J.length > 255 || this.U.length > 255 || this.qa.length > 255 || this.tc.length > 255 || this.F.length > 255) throw new q('Error');
@@ -5729,7 +5729,7 @@
 				var e = d[c];
 				++c;
 				var f = e.W, g = e.ca, k = b.x - a.x, l = b.y - a.y;
-				-(g.y - a.y) * k + (g.x - a.x) * l > 0 == -(f.y - a.y) * k + (f.x - a.x) * l > 0 ? f = !1 : (k = g.x - f.x, g = g.y - f.y, f = -(b.y - f.y) * k + (b.x - f.x) * g > 0 == -(a.y - f.y) * k + (a.x - f.x) * g > 0 ? !1 : !0);
+				-(g.y - a.y) * k + (g.x - a.x) * l > 0 == -(f.y - a.y) * k + (f.x - a.x) * l > 0 ? f = false : (k = g.x - f.x, g = g.y - f.y, f = -(b.y - f.y) * k + (b.x - f.x) * g > 0 == -(a.y - f.y) * k + (a.x - f.x) * g > 0 ? false : true);
 				if (f) return e.qe;
 			}
 			return p.Ia;
@@ -5832,22 +5832,22 @@
 			f.W = c;
 			f.ca = g;
 			f.h = 1;
-			f.Za = !1;
+			f.Za = false;
 			q = new E;
 			q.W = a;
 			q.ca = l;
 			q.h = 1;
-			q.Za = !1;
+			q.Za = false;
 			var r = new E;
 			r.W = h;
 			r.ca = m;
 			r.h = 1;
-			r.Za = !1;
+			r.Za = false;
 			var u = new E;
 			u.W = n;
 			u.ca = b;
 			u.h = 1;
-			u.Za = !1;
+			u.Za = false;
 			this.J.push(b);
 			this.J.push(c);
 			this.J.push(g);
@@ -6030,21 +6030,21 @@
 			g.ca = d;
 			g.v = 24;
 			g.h = 6;
-			g.Za = !1;
+			g.Za = false;
 			g.m = .1;
 			var k = new E;
 			k.W = e;
 			k.ca = f;
 			k.v = 24;
 			k.h = 6;
-			k.Za = !1;
+			k.Za = false;
 			k.m = .1;
 			var l = new E;
 			l.W = d;
 			l.ca = e;
 			l.v = 8;
 			l.h = 6;
-			l.Za = !1;
+			l.Za = false;
 			l.Oc(180);
 			l.m = .1;
 			var h = new E;
@@ -6052,7 +6052,7 @@
 			h.ca = d;
 			h.v = 16;
 			h.h = 6;
-			h.Za = !1;
+			h.Za = false;
 			h.Oc(180);
 			h.m = .1;
 			this.J.push(c);
@@ -6101,28 +6101,28 @@
 				a.W = d;
 				a.ca = e;
 				a.h = 1;
-				a.Za = !1;
+				a.Za = false;
 				a.m = 1;
 				a.Oc(-90);
 				b = new E;
 				b.W = f;
 				b.ca = g;
 				b.h = 1;
-				b.Za = !1;
+				b.Za = false;
 				b.m = 1;
 				b.Oc(90);
 				c = new E;
 				c.W = k;
 				c.ca = l;
 				c.h = 1;
-				c.Za = !1;
+				c.Za = false;
 				c.m = 1;
 				c.Oc(-90);
 				n = new E;
 				n.W = h;
 				n.ca = m;
 				n.h = 1;
-				n.Za = !1;
+				n.Za = false;
 				n.m = 1;
 				n.Oc(90);
 				this.J.push(d);
@@ -6140,7 +6140,7 @@
 			}
 		}, f: h
 	};
-	ka.b = !0;
+	ka.b = true;
 	ka.prototype = {
 		ga: function (a) {
 			a.l(this.hd);
@@ -6156,9 +6156,9 @@
 			for (var c = 0; b > c;) ++c, this.fb.push(a.M());
 		}, f: ka
 	};
-	p.b = !0;
+	p.b = true;
 	p.prototype = {f: p};
-	fa.b = !0;
+	fa.b = true;
 	fa.Rd = [Ta, cc];
 	fa.qd = (a, b) => {
 		a.jc = b.jc;
@@ -6201,13 +6201,13 @@
 				if (this.K != null) {
 					b.H != null && (D.remove(this.K.ta.F, b.H), b.H = null);
 					this.K.Ck(b);
-					for (var d = 0, e = !1; !e;) {
+					for (var d = 0, e = false; !e;) {
 						++d;
-						for (var e = !0, f = 0, g = this.I; g.length > f;) {
+						for (var e = true, f = 0, g = this.I; g.length > f;) {
 							var k = g[f];
 							++f;
 							if (b != k && b.ea == k.ea && d == k.Jb) {
-								e = !1;
+								e = false;
 								break;
 							}
 						}
@@ -6275,9 +6275,9 @@
 		}, km: function (a) {
 			this.Ol = a;
 		}, Lb: function (a) {
-			if (a == 0) return !0;
+			if (a == 0) return true;
 			a = this.na(a);
-			return a != null && a.cb ? !0 : !1;
+			return a != null && a.cb ? true : false;
 		}, mr: function (a, b, c, d) {
 			this.yd = b < 0 ? 0 : b > 255 ? 255 : b;
 			this.Zc = c < 0 ? 0 : c > 255 ? 255 : c;
@@ -6290,7 +6290,7 @@
 			return b;
 		}, f: fa
 	};
-	ea.b = !0;
+	ea.b = true;
 	ea.Rd = [Ta];
 	ea.$r = (a, b) => {
 		a.cb = b.cb;
@@ -6351,7 +6351,7 @@
 			return b;
 		}, f: ea
 	};
-	ta.b = !0;
+	ta.b = true;
 	ta.la = a => {
 		var b = new ta;
 		b.Yg = a;
@@ -6368,25 +6368,25 @@
 				this.Yg = a.B() != 0;
 			}, f: ta
 		});
-	rb.b = !0;
+	rb.b = true;
 	rb.ma = m;
 	rb.prototype = C(m.prototype, {
 		apply: function (a) {
 			this.P == 0 && vb.i(a.Vl, this.Tc, this.color, this.style, this.fn);
 		}, ua: function (a) {
-			a.mc(U.Qc(this.Tc, 1E3));
+			a.mc(U.Qc(this.Tc, 1000));
 			a.O(this.color);
 			a.l(this.style);
 			a.l(this.fn);
 		}, va: function (a) {
 			this.Tc = a.ic();
-			if (this.Tc.length > 1E3) throw new q('message too long');
+			if (this.Tc.length > 1000) throw new q('message too long');
 			this.color = a.M();
 			this.style = a.B();
 			this.fn = a.B();
 		}, f: rb
 	});
-	Qa.b = !0;
+	Qa.b = true;
 	Qa.ma = m;
 	Qa.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6404,7 +6404,7 @@
 		}, va: () => {
 		}, f: Qa
 	});
-	da.b = !0;
+	da.b = true;
 	da.la = (a, b) => {
 		var c = new da;
 		c.rj = a;
@@ -6430,7 +6430,7 @@
 			this.newValue = a.M();
 		}, f: da
 	});
-	sa.b = !0;
+	sa.b = true;
 	sa.la = (a, b) => {
 		var c = new sa;
 		c.Md = a;
@@ -6452,7 +6452,7 @@
 			this.Xg = a.B() != 0;
 		}, f: sa
 	});
-	ra.b = !0;
+	ra.b = true;
 	ra.la = a => {
 		var b = new ra;
 		b.Zb = a;
@@ -6470,7 +6470,7 @@
 			this.Zb != null && (this.Zb = U.Qc(this.Zb, 2));
 		}, f: ra
 	});
-	S.b = !0;
+	S.b = true;
 	S.la = (a, b) => {
 		var c = new S;
 		c.Md = a;
@@ -6494,7 +6494,7 @@
 			this.jj = a == 1 ? p.fa : a == 2 ? p.xa : p.Ia;
 		}, f: S
 	});
-	qa.b = !0;
+	qa.b = true;
 	qa.la = a => {
 		var b = new qa;
 		b.Pd = a;
@@ -6518,7 +6518,7 @@
 			this.Pd = h.ja(new F(new DataView(a.buffer, a.byteOffset, a.byteLength)));
 		}, f: qa
 	});
-	Pa.b = !0;
+	Pa.b = true;
 	Pa.ma = m;
 	Pa.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6533,7 +6533,7 @@
 			this.Sg.ja(a);
 		}, f: Pa
 	});
-	pa.b = !0;
+	pa.b = true;
 	pa.la = a => {
 		var b = new pa;
 		b.newValue = a;
@@ -6550,7 +6550,7 @@
 			this.newValue = a.B() != 0;
 		}, f: pa
 	});
-	oa.b = !0;
+	oa.b = true;
 	oa.la = (a, b, c, d) => {
 		var e = new oa;
 		e.V = a;
@@ -6584,7 +6584,7 @@
 			this.Xb = a.zb();
 		}, f: oa
 	});
-	qb.b = !0;
+	qb.b = true;
 	qb.ma = m;
 	qb.prototype = C(m.prototype, {
 			apply: function (a) {
@@ -6599,7 +6599,7 @@
 			this.Zb != null && (this.Zb = U.Qc(this.Zb, 2));
 			}, f: qb
 		});
-	Oa.b = !0;
+	Oa.b = true;
 	Oa.ma = m;
 	Oa.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6615,15 +6615,15 @@
 			this.Bf = a.B() != 0;
 		}, f: Oa
 	});
-	Na.b = !0;
+	Na.b = true;
 	Na.ma = m;
 	Na.prototype = C(m.prototype, {
 		$m: function (a) {
 			if (a.hq != null) {
 				var b = a.na(this.P);
-				return b == null ? !1 : a.hq(b, this.Tc);
+				return b == null ? false : a.hq(b, this.Tc);
 			}
-			return !0;
+			return true;
 		}, apply: function (a) {
 			var b = a.na(this.P);
 			b != null && ia.i(a.rl, b, this.Tc);
@@ -6634,14 +6634,14 @@
 			if (this.Tc.length > 140) throw new q('message too long');
 		}, f: Na
 	});
-	Ga.b = !0;
+	Ga.b = true;
 	Ga.ma = m;
 	Ga.prototype = C(m.prototype, {
 		apply: function (a) {
 			var b = a.na(this.P);
 			if (b != null) {
 				var c = this.input;
-				(b.ob & 16) == 0 && (c & 16) != 0 && (b.Wb = !0);
+				(b.ob & 16) == 0 && (c & 16) != 0 && (b.Wb = true);
 				b.ob = c;
 				a.iq != null && a.iq(b);
 			}
@@ -6651,7 +6651,7 @@
 			this.input = a.hb();
 		}, f: Ga
 	});
-	na.b = !0;
+	na.b = true;
 	na.la = a => {
 		var b = new na;
 		b.sj = a;
@@ -6668,7 +6668,7 @@
 			this.sj = a.B();
 		}, f: na
 	});
-	kc.b = !0;
+	kc.b = true;
 	kc.fj = () => {
 		m.Ha(rb);
 		m.Ha(na);
@@ -6695,7 +6695,7 @@
 		m.Ha(qb);
 		m.Ha(ob);
 	};
-	Y.b = !0;
+	Y.b = true;
 	Y.la = (a, b, c) => {
 		var d = new Y;
 		d.V = a;
@@ -6727,7 +6727,7 @@
 			if (this.fd != null && this.fd.length > 100) throw new q('string too long');
 		}, f: Y
 	});
-	pb.b = !0;
+	pb.b = true;
 	pb.ma = m;
 	pb.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6761,7 +6761,7 @@
 			for (var c = 0; b > c;) ++c, this.Zg.push(a.M());
 		}, f: pb
 	});
-	ob.b = !0;
+	ob.b = true;
 	ob.ma = m;
 	ob.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6809,7 +6809,7 @@
 			for (c = 0; c < 3;) d = c++, this.Rc[d] = null, (b & 1) != 0 && (this.Rc[d] = a.M()), b >>>= 1;
 		}, f: ob
 	});
-	ma.b = !0;
+	ma.b = true;
 	ma.la = (a, b, c) => {
 		var d = new ma;
 		d.min = a;
@@ -6831,7 +6831,7 @@
 			this.aj = a.M();
 		}, f: ma
 	});
-	Ma.b = !0;
+	Ma.b = true;
 	Ma.ma = m;
 	Ma.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6840,7 +6840,7 @@
 		}, va: () => {
 		}, f: Ma
 	});
-	La.b = !0;
+	La.b = true;
 	La.ma = m;
 	La.prototype = C(m.prototype, {
 		apply: function (a) {
@@ -6861,7 +6861,7 @@
 		}, va: () => {
 		}, f: La
 	});
-	la.b = !0;
+	la.b = true;
 	la.la = a => {
 		for (var b = new la, c = a.T.I, d = [], e = 0; c.length > e;) {
 			var f = a.Ie.get(c[e++].V);
@@ -6889,7 +6889,7 @@
 			for (var b = a.Ab(), c = 0; b > c;) ++c, this.we.push(a.Ab());
 		}, f: la
 	});
-	ca.b = !0;
+	ca.b = true;
 	ca.Rd = [Ta];
 	ca.qd = (a, b) => {
 		a.Z = b.Z;
@@ -7001,7 +7001,7 @@
 			return b;
 		}, f: ca
 	};
-	nb.b = !0;
+	nb.b = true;
 	nb.Rd = [Ta];
 	nb.prototype = {
 		ga: function (a) {
@@ -7049,7 +7049,7 @@
 			}
 		}, f: nb
 	};
-	Fa.b = !0;
+	Fa.b = true;
 	Fa.Rd = [Ta];
 	Fa.qd = (a, b) => {
 		if (b.F == null) a.F = null; else {
@@ -7134,7 +7134,7 @@
 			return b;
 		}, f: Fa
 	};
-	L.b = !0;
+	L.b = true;
 	L.prototype = {
 		ga: function (a) {
 			var b = this.wa;
@@ -7154,7 +7154,7 @@
 			this.v = a.M();
 		}, f: L
 	};
-	E.b = !0;
+	E.b = true;
 	E.prototype = {
 		ga: function (a) {
 			var b = 0, c = a.a;
@@ -7212,7 +7212,7 @@
 			else a = this.W.a, b = this.ca.a, c = a.x - b.x, a = -(a.y - b.y), b = Math.sqrt(a * a + c * c), this.wa = new H(a / b, c / b);
 		}, f: E
 	};
-	B.b = !0;
+	B.b = true;
 	B.prototype = {
 		ga: function (a) {
 			var b = this.a;
@@ -7230,7 +7230,7 @@
 			this.v = a.M();
 		}, f: B
 	};
-	N.b = !0;
+	N.b = true;
 	N.lc = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
 	N.Gi = (a, b) => {
 		a.imageSmoothingEnabled = b;
@@ -7241,10 +7241,10 @@
 			var c = this.dd.get(a.V);
 			if (c != null) switch (b) {
 				case 0:
-					c.Xf = !0;
+					c.Xf = true;
 					break;
 				case 1:
-					c.Xf = !1;
+					c.Xf = false;
 			}
 		}, Pr: function () {
 			if (this.sa.parentElement != null) {
@@ -7252,11 +7252,11 @@
 				if (c != this.sa.width || a != this.sa.height) this.sa.width = c, this.sa.height = a;
 			}
 		}, Kc: function (a, b) {
-			var c = window.performance.now(), d = (c - this.$c) / 1E3;
+			var c = window.performance.now(), d = (c - this.$c) / 1000;
 			this.$c = c;
 			this.Jg.clear();
 			this.Pr();
-			N.Gi(this.c, !0);
+			N.Gi(this.c, true);
 			this.c.resetTransform();
 			if (a.K != null) {
 				var c = a.K, e = c.ta, f = a.na(b), g = f != null ? f.H : null, k = this.jf != 0 ? this.sa.height / this.jf : this.kf * window.devicePixelRatio * this.zg, h = this.xf * this.zg, m = c.S.Ye, n = this.sa.width / k;
@@ -7335,7 +7335,7 @@
 			this.c.beginPath();
 			this.c.strokeStyle = 'white';
 			this.c.globalAlpha = .3;
-			this.c.arc(a.x, a.y, 25, 0, 2 * Math.PI, !1);
+			this.c.arc(a.x, a.y, 25, 0, 2 * Math.PI, false);
 			this.c.stroke();
 			this.c.globalAlpha = 1;
 		}, Oq: function (a) {
@@ -7359,13 +7359,13 @@
 			a.closePath();
 		}, Sq: function (a) {
 			var b = this;
-			N.Gi(this.c, !1);
+			N.Gi(this.c, false);
 			var c = a.Td, d = a.Sd;
 			if (a.ld == 1) this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore(), this.c.strokeStyle = '#C7E6BD', this.c.fillStyle = this.Lo, this.Wl(this.c, -c, -d, 2 * c, 2 * d, a.Uc), this.c.save(), this.c.scale(2, 2), this.c.fill(), this.c.restore(), this.c.moveTo(0, -d), this.c.lineTo(0, d), this.c.stroke(), this.c.beginPath(), this.c.arc(0, 0, a.kd, 0, 2 * Math.PI), this.c.stroke(); else if (a.ld == 2) {
 				this.c.strokeStyle = '#E9CC6E';
 				this.c.save();
 				this.c.beginPath();
-				this.c.rect(this.Ya.x - 1E4, this.Ya.y - 1E4, 2E4, 2E4);
+				this.c.rect(this.Ya.x - 10000, this.Ya.y - 10000, 20000, 20000);
 				this.c.scale(2, 2);
 				this.c.fillStyle = this.Un;
 				this.c.fill();
@@ -7392,11 +7392,11 @@
 					e != 0 && (b.c.moveTo(e, -d), b.c.lineTo(e, d));
 					b.c.stroke();
 				};
-				e('#85ACF3', c, !1);
-				e('#E18977', -c, !0);
+				e('#85ACF3', c, false);
+				e('#E18977', -c, true);
 			}
 			else this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore();
-			N.Gi(this.c, !0);
+			N.Gi(this.c, true);
 		}, Nq: function (a, b) {
 			for (var c = n.A.Ak.L(), d = 0, e = a.I; e.length > d;) {
 				var f = e[d];
@@ -7412,7 +7412,7 @@
 			this.c.beginPath();
 			b == null ? (this.c.fillStyle = N.lc(a.R), this.c.strokeStyle = 'black') : (this.c.fillStyle = b.Ij, this.c.strokeStyle = b.lo);
 			this.c.beginPath();
-			this.c.arc(a.a.x, a.a.y, a.Z, 0, 2 * Math.PI, !1);
+			this.c.arc(a.a.x, a.a.y, a.Z, 0, 2 * Math.PI, false);
 			if (b != null) {
 				this.c.save();
 				var c = a.Z / 32;
@@ -7478,17 +7478,17 @@
 		}, Xq: function () {
 			for (var a = this.dd.values(), b = a.next(); !b.done;) {
 				var c = b.value, b = a.next();
-				c.Xf = !1;
+				c.Xf = false;
 			}
 		}, f: N
 	};
-	R.b = !0;
+	R.b = true;
 	R.prototype = {
 		zo: function () {
 			return 2.31 + .1155 * (this.We.length - 1);
 		}, Kc: function (a, b) {
 			var c = b / 2.31, d = 0;
-			a.imageSmoothingEnabled = !0;
+			a.imageSmoothingEnabled = true;
 			for (var e = 0, f = this.We; f.length > e;) {
 				var g = f[e];
 				++e;
@@ -7498,17 +7498,17 @@
 				a.globalAlpha = 1;
 				++d;
 			}
-			a.imageSmoothingEnabled = !1;
+			a.imageSmoothingEnabled = false;
 		}, Tq: function (a) {
 			var b = 0;
-			a.imageSmoothingEnabled = !0;
+			a.imageSmoothingEnabled = true;
 			for (var c = 0, d = this.We; d.length > c;) {
 				var e = d[c];
 				++c;
 				a.drawImage(e, .5 * -e.width, 35 * -(this.We.length - 1) + 70 * b - .5 * e.height);
 				++b;
 			}
-			a.imageSmoothingEnabled = !1;
+			a.imageSmoothingEnabled = false;
 		}, lc: a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)', sp: function (a, b) {
 			var c = window.document.createElement('canvas'), d = c.getContext('2d', null);
 			d.font = '900 70px Arial Black,Arial Bold,Gadget,sans-serif';
@@ -7524,7 +7524,7 @@
 			return c;
 		}, f: R
 	};
-	Sb.b = !0;
+	Sb.b = true;
 	Sb.prototype = {
 		Pa: function (a) {
 			this.ab.push(a);
@@ -7537,16 +7537,16 @@
 			this.ab.length > 0 && this.ab[0].Kc(a, this.xc);
 		}, f: Sb
 	};
-	Ea.b = !0;
+	Ea.b = true;
 	Ea.Ln = (a, b) => {
-		if (b.hd != a.hd || b.ed != a.ed) return !1;
+		if (b.hd != a.hd || b.ed != a.ed) return false;
 		var c = a.fb, d = b.fb;
-		if (d.length != c.length) return !1;
+		if (d.length != c.length) return false;
 		for (var e = 0, f = c.length; f > e;) {
 			var g = e++;
-			if (d[g] != c[g]) return !1;
+			if (d[g] != c[g]) return false;
 		}
-		return !0;
+		return true;
 	};
 	Ea.ao = (a, b) => {
 		a.hd = b.hd;
@@ -7593,7 +7593,7 @@
 			}
 		}, f: Ea
 	};
-	mb.b = !0;
+	mb.b = true;
 	mb.prototype = {
 		ki: function (a) {
 			for (var b = this, c = 0, d = Ha.ab.length >> 2; d > c;) {
@@ -7603,7 +7603,7 @@
 				a.appendChild(h[0]);
 				h[0].onclick = ((a, c) => () => {
 					b.rf != null && b.rf.Ja.classList.remove('selected');
-					b.wh.disabled = !1;
+					b.wh.disabled = false;
 					b.rf = {Ja: a[0], index: c[0]};
 					a[0].classList.add('selected');
 				})(h, f);
@@ -7620,7 +7620,7 @@
 			A.i(this.qb);
 		}, f: mb
 	};
-	Da.b = !0;
+	Da.b = true;
 	Da.Yo = a => a == a.parentElement.querySelector(':hover');
 	Da.prototype = {
 		pp: function (a, b, c) {
@@ -7659,7 +7659,7 @@
 			this.ba(a, 'notice');
 		}, f: Da
 	};
-	lb.b = !0;
+	lb.b = true;
 	lb.vo = a => '.$^{[(|)*+?\\'.indexOf(a) != -1 ? '\\' + a : a;
 	lb.prototype = {
 		Qh: function () {
@@ -7705,7 +7705,7 @@
 					c.push({item: e[0], Ja: f});
 				}
 				this.Wc = c;
-				this.Wc[0].Ja.classList.toggle('selected', !0);
+				this.Wc[0].Ja.classList.toggle('selected', true);
 				this.wc = 0;
 			}
 		}, Qj: function (a) {
@@ -7715,7 +7715,7 @@
 				a = this.Wc.length - 1;
 				this.wc < 0 ? this.wc = a : a < this.wc && (this.wc = 0);
 				a = this.Wc[this.wc];
-				this.wc != b && (a.Ja.classList.toggle('selected', !0), this.Wc[b].Ja.classList.toggle('selected', !1));
+				this.wc != b && (a.Ja.classList.toggle('selected', true), this.Wc[b].Ja.classList.toggle('selected', false));
 				a = a.Ja;
 				b = a.offsetTop;
 				a = b + a.offsetHeight;
@@ -7726,16 +7726,16 @@
 			this.Wc != null && (this.lk(this.Wc[this.wc].item), this.Qh());
 		}, f: lb
 	};
-	kb.b = !0;
+	kb.b = true;
 	kb.prototype = {
 		Dc: function () {
 			var a = this.Cb.value;
-			return a.length <= 25 ? a.length > 0 : !1;
+			return a.length <= 25 ? a.length > 0 : false;
 		}, C: function () {
 			this.af.disabled = !this.Dc();
 		}, f: kb
 	};
-	jb.b = !0;
+	jb.b = true;
 	jb.prototype = {
 		ba: function (a) {
 			var b = window.document.createElement('p');
@@ -7743,21 +7743,21 @@
 			this.dc.appendChild(b);
 		}, f: jb
 	};
-	ib.b = !0;
+	ib.b = true;
 	ib.prototype = {
 		Fj: function (a) {
 			this.Fm = a;
 			this.Em.textContent = 'Show in room list: ' + (a ? 'No' : 'Yes');
 		}, Dc: function () {
 			var a = this.$e.value;
-			return a.length <= 40 ? a.length > 0 : !1;
+			return a.length <= 40 ? a.length > 0 : false;
 		}, C: function () {
 			this.Wj.disabled = !this.Dc();
 		}, f: ib
 	};
-	Ka.b = !0;
+	Ka.b = true;
 	Ka.prototype = {f: Ka};
-	hb.b = !0;
+	hb.b = true;
 	hb.prototype = {
 		Gg: function (a) {
 			this.g.classList.toggle('restricted', a);
@@ -7766,7 +7766,7 @@
 			b != null && (this.xc.tr(60 * a.Da), this.xc.sr(b.Hc | 0), this.Kb.set(b.Kb), this.Pb.set(b.Pb), this.Eb.Kc(a, this.Nb));
 		}, f: hb
 	};
-	Rb.b = !0;
+	Rb.b = true;
 	Rb.prototype = {
 		Wd: (a, b) => {
 			var c = window.document.createElement('span');
@@ -7798,10 +7798,10 @@
 			this.ik != a && (this.g.className = a ? 'game-timer-view time-warn' : 'game-timer-view', this.ik = a);
 		}, f: Rb
 	};
-	ja.b = !0;
+	ja.b = true;
 	ja.prototype = {
 		C: function (a) {
-			a.T.K == null && this.me(!0);
+			a.T.K == null && this.me(true);
 			A.i(this.yl);
 			this.bi.disabled = a.T.K == null;
 			this.Gd ? this.Wa.C(a.T, a.T.na(a.uc)) : (a = a.Sf(), this.Fb.C(a), n.Na.Xj.Ls(a));
@@ -7813,16 +7813,16 @@
 			a != null ? (this.hf.style.display = 'flex', this.hf.appendChild(a), this.yl = b) : (this.hf.style.display = 'none', this.yl = null);
 		}, f: ja
 	};
-	gb.b = !0;
+	gb.b = true;
 	gb.prototype = {
 		Aj: function (a) {
 			this.Jj = a;
 			this.An.textContent = a ? 'Yes' : 'No';
 		}, f: gb
 	};
-	fb.b = !0;
+	fb.b = true;
 	fb.prototype = {f: fb};
-	eb.b = !0;
+	eb.b = true;
 	eb.prototype = {
 		Lg: function () {
 			this.hi.disabled = this.jb == null;
@@ -7866,7 +7866,7 @@
 			});
 		}, f: eb
 	};
-	Qb.b = !0;
+	Qb.b = true;
 	Qb.prototype = {
 		tn: function (a) {
 			a < 0 ? (a = 150, this.c.fillStyle = '#c13535') : this.c.fillStyle = 'green';
@@ -7881,7 +7881,7 @@
 			this.Eh.drawImage(this.sa, -d - 1, 0);
 		}, f: Qb
 	};
-	db.b = !0;
+	db.b = true;
 	db.prototype = {
 		C: function (a, b) {
 			var c = a.na(this.Nb);
@@ -7897,7 +7897,7 @@
 			this.Hf.textContent = a ? 'Remove Admin' : 'Give Admin';
 		}, f: db
 	};
-	cb.b = !0;
+	cb.b = true;
 	cb.prototype = {
 		C: function (a, b) {
 			this.g.draggable = b;
@@ -7908,7 +7908,7 @@
 			this.g.className = 'player-list-item' + (a ? ' admin' : '');
 		}, f: cb
 	};
-	za.b = !0;
+	za.b = true;
 	za.prototype = {
 		C: function (a, b, c, d) {
 			var e = this;
@@ -7929,42 +7929,42 @@
 			for (b = a.length - 1; b > d;) f = d++, c = this.xd.get(a[f].V).g, f = this.xd.get(a[f + 1].V).g, f != c.nextSibling && this.ab.insertBefore(c, f);
 		}, f: za
 	};
-	Q.b = !0;
+	Q.b = true;
 	Q.prototype = {f: Q};
-	ha.b = !0;
+	ha.b = true;
 	ha.Wk = a => {
-		a = a / 1E3 | 0;
+		a = a / 1000 | 0;
 		return (a / 60 | 0) + ':' + J.Af(K.ye(a % 60));
 	};
 	ha.prototype = {
 		C: function () {
 			this.Er.textContent = ha.Wk(this.ti.Qb);
 			this.Aq.style.width = 100 * this.ti.Go() + '%';
-			!this.Wf || this.ti.Fd > 0 || (this.Wf = !1, this.Up());
+			!this.Wf || this.ti.Fd > 0 || (this.Wf = false, this.Up());
 		}, f: ha
 	};
-	bb.b = !0;
+	bb.b = true;
 	bb.prototype = {
 		nr: function (a) {
 			a != this.gk && (this.gk = a, this.Zf.value = a);
 		}, f: bb
 	};
-	ab.b = !0;
+	ab.b = true;
 	ab.prototype = {f: ab};
-	Aa.b = !0;
+	Aa.b = true;
 	Aa.As = a => Promise.race([new Promise((a, c) => window.setTimeout(() => {
 		c(null);
-	}, 5E3)), a]);
+	}, 5000)), a]);
 	Aa.prototype = {
 		Om: function () {
 			function a() {
-				b.pj.disabled = !1;
+				b.pj.disabled = false;
 				b.bn(c);
 			}
 
 			var b = this;
 			this.en(null);
-			this.pj.disabled = !0;
+			this.pj.disabled = true;
 			v.Cf(this.gj);
 			var c = [];
 			this.dj = [];
@@ -8001,29 +8001,29 @@
 			this.Tm.disabled = this.Od == null;
 		}, f: Aa
 	};
-	$a.b = !0;
+	$a.b = true;
 	$a.prototype = {
 		Il: function () {
 			var a = this;
 			M.tk(n.Ee + 'api/notice').then(b => {
 				var c = b.content;
-				null != c && '' != c && $a.On != c && (a.$n.innerHTML = c, a.Xk.hidden = !1, a.nd.onclick = () => {
+				null != c && '' != c && $a.On != c && (a.$n.innerHTML = c, a.Xk.hidden = false, a.nd.onclick = () => {
 					$a.On = c;
-					return a.Xk.hidden = !0;
+					return a.Xk.hidden = true;
 				});
 			});
 		}, f: $a
 	};
-	Za.b = !0;
+	Za.b = true;
 	Za.prototype = {
 		Dc: function () {
 			var a = this.Cb.value;
-			return a.length <= 30 ? a.length > 0 : !1;
+			return a.length <= 30 ? a.length > 0 : false;
 		}, C: function () {
 			this.af.disabled = !this.Dc();
 		}, f: Za
 	};
-	Ya.b = !0;
+	Ya.b = true;
 	Ya.prototype = {
 		Th: function (a, b, c, d) {
 			var e = this;
@@ -8056,7 +8056,7 @@
 			this.Fl.classList.toggle('active', a);
 		}, C: function (a, b) {
 			a.jc != this.Uq && (this.Uq = a.jc, this.jc.textContent = a.jc);
-			var c = b == null ? !1 : b.cb;
+			var c = b == null ? false : b.cb;
 			c != this.fk && (this.g.className = 'room-view' + (c ? ' admin' : ''), this.fk = c);
 			var d = !c || a.K != null;
 			this.wf.disabled = d;
@@ -8086,11 +8086,11 @@
 			this.gi.innerHTML = '<i class=\'icon-pause\'></i>' + (this.ll ? 'Resume (P)' : 'Pause (P)');
 		}, f: Ya
 	};
-	aa.b = !0;
+	aa.b = true;
 	aa.prototype = {f: aa};
-	P.b = !0;
+	P.b = true;
 	P.prototype = {f: P};
-	Xa.b = !0;
+	Xa.b = true;
 	Xa.prototype = {
 		qr: function (a) {
 			this.rg.textContent = a == null ? 'null' : '' + a;
@@ -8100,12 +8100,12 @@
 			this.wo.textContent = a == null ? 'null' : '' + a;
 		}, f: Xa
 	};
-	Wa.b = !0;
+	Wa.b = true;
 	Wa.prototype = {f: Wa};
-	q.b = !0;
+	q.b = true;
 	q.ma = Error;
 	q.prototype = C(Error.prototype, {f: q});
-	r.b = !0;
+	r.b = true;
 	r.Nm = a => {
 		if (a instanceof Array && a.eb == null) return Array;
 		var b = a.f;
@@ -8163,38 +8163,38 @@
 		}
 	};
 	r.ph = (a, b) => {
-		if (a == null) return !1;
-		if (b == a) return !0;
+		if (a == null) return false;
+		if (b == a) return true;
 		var c = a.Rd;
 		if (c != null) for (var d = 0, e = c.length; e > d;) {
 			var f = c[d++];
-			if (b == f || r.ph(f, b)) return !0;
+			if (b == f || r.ph(f, b)) return true;
 		}
 		return r.ph(a.ma, b);
 	};
 	r.pn = (a, b) => {
-		if (b == null) return !1;
+		if (b == null) return false;
 		switch (b) {
 			case Array:
-				return a instanceof Array ? a.eb == null : !1;
+				return a instanceof Array ? a.eb == null : false;
 			case oc:
 				return typeof a == 'boolean';
 			case sc:
-				return !0;
+				return true;
 			case z:
 				return typeof a == 'number';
 			case Pb:
-				return typeof a == 'number' ? a === (a | 0) : !1;
+				return typeof a == 'number' ? a === (a | 0) : false;
 			case String:
 				return typeof a == 'string';
 			default:
 				if (a != null) if (typeof b == 'function') {
-					if (a instanceof b || r.ph(r.Nm(a), b)) return !0;
+					if (a instanceof b || r.ph(r.Nm(a), b)) return true;
 				}
 				else {
-					if (typeof b == 'object' && r.qn(b) && a instanceof b) return !0;
-				} else return !1;
-				return tc == b && a.b != null || uc == b && a.Gf != null ? !0 : b == Ab[a.eb];
+					if (typeof b == 'object' && r.qn(b) && a instanceof b) return true;
+				} else return false;
+				return tc == b && a.b != null || uc == b && a.Gf != null ? true : b == Ab[a.eb];
 		}
 	};
 	r.G = (a, b) => {
@@ -8207,7 +8207,7 @@
 	};
 	r.qn = a => r.wj(a) != null;
 	r.rn = a => qc[a];
-	hc.b = !0;
+	hc.b = true;
 	hc.Is = function (a, b) {
 		var c = new Uint8Array(this, a, b == null ? null : b - a), d = new Uint8Array(c.byteLength);
 		d.set(c);
@@ -8216,8 +8216,8 @@
 	var rc = 0;
 	String.fromCodePoint == null && (String.fromCodePoint = a => a < 65536 ? String.fromCharCode(a) : String.fromCharCode((a >> 10) + 55232) + String.fromCharCode((a & 1023) + 56320));
 	String.prototype.f = String;
-	String.b = !0;
-	Array.b = !0;
+	String.b = true;
+	Array.b = true;
 	Date.prototype.f = Date;
 	Date.b = 'Date';
 	var Pb = {}, sc = {}, z = Number, oc = Boolean, tc = {}, uc = {};
@@ -8233,15 +8233,15 @@
 		}
 	});
 	ArrayBuffer.prototype.slice == null && (ArrayBuffer.prototype.slice = hc.Is);
-	Va.Yn = {mandatory: {OfferToReceiveAudio: !1, OfferToReceiveVideo: !1}};
+	Va.Yn = {mandatory: {OfferToReceiveAudio: false, OfferToReceiveVideo: false}};
 	I.qh = {name: 'ECDSA', namedCurve: 'P-256'};
 	I.mm = {name: 'ECDSA', hash: {name: 'SHA-256'}};
 	Ba.Uo = ['click-rail', 'drag-thumb', 'wheel', 'touch'];
 	m.Qm = new Map;
 	m.yf = 0;
-	Ua.za = m.Fa({Ba: !1, Aa: !1});
+	Ua.za = m.Fa({Ba: false, Aa: false});
 	ya.zc = 0;
-	Zb.Km = [{name: 'ro', reliable: !0, kj: !0}, {name: 'ru', reliable: !0, kj: !1}, {name: 'uu', reliable: !1, kj: !1}];
+	Zb.Km = [{name: 'ro', reliable: true, kj: true}, {name: 'ru', reliable: true, kj: false}, {name: 'uu', reliable: false, kj: false}];
 	M.vj = 'application/x-www-form-urlencoded';
 	Ha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
 	n.Vr = 'wss://p2p.haxball.com/';
@@ -8257,31 +8257,31 @@
 		return a;
 	})(this);
 	h.Fr = w.ha(1024);
-	ta.za = m.Fa({Ba: !1, Aa: !1});
-	rb.za = m.Fa({Ba: !1, Aa: !1, oj: {$i: 10, uj: 900}});
-	Qa.za = m.Fa({Ba: !1, Aa: !1});
-	da.za = m.Fa({Ba: !1, Aa: !1});
+	ta.za = m.Fa({Ba: false, Aa: false});
+	rb.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
+	Qa.za = m.Fa({Ba: false, Aa: false});
+	da.za = m.Fa({Ba: false, Aa: false});
 	sa.za = m.Fa({
-		Ba: !1, Aa: !1
+		Ba: false, Aa: false
 	});
-	ra.za = m.Fa({Ba: !1, Aa: !1});
-	S.za = m.Fa({Ba: !1, Aa: !1});
-	qa.za = m.Fa({Ba: !1, Aa: !1, oj: {$i: 10, uj: 2E3}});
-	Pa.za = m.Fa({Ba: !1, Aa: !1});
-	pa.za = m.Fa({Ba: !1, Aa: !1});
-	oa.za = m.Fa({Ba: !1, Aa: !1});
-	qb.za = m.Fa({Ba: !1, Aa: !1});
+	ra.za = m.Fa({Ba: false, Aa: false});
+	S.za = m.Fa({Ba: false, Aa: false});
+	qa.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 2000}});
+	Pa.za = m.Fa({Ba: false, Aa: false});
+	pa.za = m.Fa({Ba: false, Aa: false});
+	oa.za = m.Fa({Ba: false, Aa: false});
+	qb.za = m.Fa({Ba: false, Aa: false});
 	Oa.za = m.Fa({});
-	Na.za = m.Fa({Ba: !1, Aa: !1, oj: {$i: 10, uj: 900}});
+	Na.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
 	Ga.za = m.Fa({});
-	na.za = m.Fa({Ba: !1, Aa: !1});
-	Y.za = m.Fa({Ba: !1, Aa: !1});
-	pb.za = m.Fa({Ba: !1, Aa: !1});
-	ob.za = m.Fa({Ba: !1, Aa: !1});
-	ma.za = m.Fa({Ba: !1, Aa: !1});
-	Ma.za = m.Fa({Ba: !1, Aa: !1});
-	La.za = m.Fa({Ba: !1, Aa: !1});
-	la.za = m.Fa({Ba: !1, Aa: !1});
+	na.za = m.Fa({Ba: false, Aa: false});
+	Y.za = m.Fa({Ba: false, Aa: false});
+	pb.za = m.Fa({Ba: false, Aa: false});
+	ob.za = m.Fa({Ba: false, Aa: false});
+	ma.za = m.Fa({Ba: false, Aa: false});
+	Ma.za = m.Fa({Ba: false, Aa: false});
+	La.za = m.Fa({Ba: false, Aa: false});
+	la.za = m.Fa({Ba: false, Aa: false});
 	E.mn = .17435839227423353;
 	E.ln = 5.934119456780721;
 	R.jn = new Ib([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
