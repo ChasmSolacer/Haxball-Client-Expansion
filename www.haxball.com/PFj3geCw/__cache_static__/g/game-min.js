@@ -91,7 +91,9 @@
 
 		function c(a, b, c) {
 			a = l.get(a);
-			if (c == null) a.hidden = true; else {
+			if (c == null)
+				a.hidden = true;
+			else {
 				a.innerHTML = b + ': <div class=\'flagico\'></div> <span></span>';
 				b = a.querySelector('.flagico');
 				a = a.querySelector('span');
@@ -499,11 +501,15 @@
 		this.g = c.g;
 		c.Vd.style.minHeight = '78px';
 		Ja.gp().then(d => {
-			Q.xg == null && (Q.xg = window.document.createElement('div'), c.Vd.appendChild(Q.xg), Q.Dq = d.render(Q.xg, {
-				sitekey: a, callback: a => {
-					y.i(Q.Gl, a);
-				}, theme: 'dark'
-			}));
+			if (Q.xg == null) {
+				Q.xg = window.document.createElement('div');
+				c.Vd.appendChild(Q.xg);
+				Q.Dq = d.render(Q.xg, {
+					sitekey: a, callback: a => {
+						y.i(Q.Gl, a);
+					}, theme: 'dark'
+				});
+			}
 			d.reset(Q.Dq);
 			Q.Gl = a => {
 				window.setTimeout(() => {
@@ -809,9 +815,11 @@
 		this.Nl = d.get('replay');
 		var e = b != null;
 		this.Nl.hidden = !e;
-		e && (this.Nl.onclick = () => {
-			ba.Yl(b);
-		});
+		if (e) {
+			this.Nl.onclick = () => {
+				ba.Yl(b);
+			};
+		}
 		d.get('reason').textContent = a;
 	}
 
@@ -1396,7 +1404,8 @@
 	function Yb() {
 		function a(a) {
 			return new wa(a, e, a => {
-				if (a == null) return null;
+				if (a == null)
+					return null;
 				try {
 					return T.Hh(a);
 				}
@@ -1404,7 +1413,8 @@
 					return null;
 				}
 			}, a => {
-				if (a == null) return null;
+				if (a == null)
+					return null;
 				try {
 					return a.se();
 				}
@@ -1463,7 +1473,8 @@
 		this.Me = a('geo');
 		this.Ne = a('geo_override');
 		this.tg = (() => new wa('player_keys', e, a => {
-			if (a == null) return W.$j();
+			if (a == null)
+				return W.$j();
 			try {
 				return W.Hh(a);
 			}
@@ -1596,7 +1607,9 @@
 			});
 		};
 		this.j.Wa.Qp = () => {
-			if (b.Ed == null) b.zr(); else {
+			if (b.Ed == null)
+				b.zr();
+			else {
 				var a = b.Ed.stop();
 				b.Ed = null;
 				ba.Yl(a);
@@ -1672,9 +1685,11 @@
 		this.hg = this.Qb = this.Wh = this.sk = 0;
 		V.call(this, b);
 		a = new F(new DataView(a.buffer), false);
-		if (a.hb() != 1212305970) throw new q('');
+		if (a.hb() != 1212305970)
+			throw new q('');
 		b = a.hb();
-		if (b != c) throw new q(new Kb(b));
+		if (b != c)
+			throw new q(new Kb(b));
 		this.mf = a.hb();
 		c = pako.inflateRaw(a.sb());
 		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength));
@@ -2081,7 +2096,8 @@
 	}
 
 	function G(a, b) {
-		if (b == null) return null;
+		if (b == null)
+			return null;
 		if (b.oh == null)
 			b.oh = rc++;
 		var c;
@@ -2103,10 +2119,12 @@
 			this.r.bh = a;
 			return this.r.nc != null;
 		}, Wm: function (a) {
-			if (this.r.nc != null && a >= 0 && this.r.nc.length > a) return this.r.nc[a];
+			if (this.r.nc != null && a >= 0 && this.r.nc.length > a)
+				return this.r.nc[a];
 			throw new q('EReg::matched');
 		}, ps: function () {
-			if (this.r.nc == null) throw new q('No string matched');
+			if (this.r.nc == null)
+				throw new q('No string matched');
 			return {mj: this.r.nc.index, ms: this.r.nc[0].length};
 		}, os: function (a, b, c) {
 			if (c == null)
@@ -2114,25 +2132,37 @@
 			if (this.r.global) {
 				this.r.lastIndex = b;
 				this.r.nc = this.r.exec(c < 0 ? a : D.substr(a, 0, b + c));
-				if (b = this.r.nc != null) this.r.bh = a;
+				if (b = this.r.nc != null)
+					this.r.bh = a;
 				return b;
 			}
-			if (c = this.match(c < 0 ? D.substr(a, b, null) : D.substr(a, b, c))) this.r.bh = a, this.r.nc.index += b;
+			if (c = this.match(c < 0 ? D.substr(a, b, null) : D.substr(a, b, c))) {
+				this.r.bh = a;
+				this.r.nc.index += b;
+			}
 			return c;
 		}, f: fc
 	};
 	D.b = true;
 	D.bj = (a, b) => {
 		var c = a.charCodeAt(b);
-		if (c == c) return c;
+		if (c == c)
+			return c;
 	};
 	D.substr = (a, b, c) => {
-		if (c == null) c = a.length; else if (c < 0) if (b == 0) c = a.length + c; else return '';
+		if (c == null)
+			c = a.length;
+		else if (c < 0)
+			if (b == 0)
+				c = a.length + c;
+			else
+				return '';
 		return a.substr(b, c);
 	};
 	D.remove = (a, b) => {
 		var c = a.indexOf(b);
-		if (c == -1) return false;
+		if (c == -1)
+			return false;
 		a.splice(c, 1);
 		return true;
 	};
@@ -2366,7 +2396,8 @@
 	Sa.vk = a => {
 		try {
 			var b = nc.gf(a.candidate);
-			if (b.Jr == 'srflx') return b.Xo;
+			if (b.Jr == 'srflx')
+				return b.Xo;
 		}
 		catch (c) {
 		}
@@ -2401,11 +2432,14 @@
 				}
 				this.Mc = a.slice(0);
 				this.Ag = true;
-				this.X != null && this.X.readyState == 1 && this.ke == null && (this.Ai(), this.ke = window.setTimeout(() => {
-					b.ke = null;
-					if (b.X.readyState == 1 && b.Ag)
-						b.Ai();
-				}, 10000));
+				if (this.X != null && this.X.readyState == 1 && this.ke == null) {
+					this.Ai();
+					this.ke = window.setTimeout(() => {
+						b.ke = null;
+						if (b.X.readyState == 1 && b.Ag)
+							b.Ai();
+					}, 10000);
+				}
 			}
 		}, Ei: function (a) {
 			function b() {
@@ -2423,7 +2457,8 @@
 		}, Ji: function (a) {
 			function b(a) {
 				a = a.sitekey;
-				if (a == null) throw new q(null);
+				if (a == null)
+					throw new q(null);
 				d.ef != null && d.ef(a, a => {
 					d.Ji(a);
 				});
@@ -2431,9 +2466,11 @@
 
 			function c(a) {
 				var b = a.url;
-				if (b == null) throw new q(null);
+				if (b == null)
+					throw new q(null);
 				a = a.token;
-				if (a == null) throw new q(null);
+				if (a == null)
+					throw new q(null);
 				d.X = new WebSocket(b + '?token=' + a);
 				d.X.binaryType = 'arraybuffer';
 				d.X.onopen = () => {
@@ -2503,7 +2540,11 @@
 			this.Ro(b, c, e, f, a, d);
 		}, Ro: function (a, b, c, d, e, f) {
 			var g = this;
-			if (this.od.size >= 16) this.sf(a, 4104); else if (this.th.has(b)) this.sf(a, 4102); else {
+			if (this.od.size >= 16)
+				this.sf(a, 4104);
+			else if (this.th.has(b))
+				this.sf(a, 4102);
+			else {
 				for (var k = [], l = 0; d.length > l;) {
 					var t = Sa.vk(d[l++]);
 					if (t != null) {
@@ -2629,9 +2670,11 @@
 			this.Ag = false;
 			window.clearInterval(this.ol);
 			window.clearTimeout(this.Ul);
-			a && (this.Ul = window.setTimeout(() => {
-				b.Ji();
-			}, this.Zq + Math.random() * this.$q | 0));
+			if (a) {
+				this.Ul = window.setTimeout(() => {
+					b.Ji();
+				}, this.Zq + Math.random() * this.$q | 0);
+			}
 		}, zn: function (a) {
 			for (var b = 0, c = a.oe; c.length > b; b++)
 				this.If.add(c[b]);
@@ -2646,7 +2689,8 @@
 	nc.b = true;
 	nc.gf = a => {
 		a = a.split(' ');
-		if (a[6] != 'typ') throw new q(null);
+		if (a[6] != 'typ')
+			throw new q(null);
 		return {Jr: a[7], Xo: a[4]};
 	};
 	Nb.b = true;
@@ -2697,14 +2741,53 @@
 	F.b = true;
 	F.jo = (a, b) => {
 		var c = a.getUint8(b), d, e, f, g, k, l = b;
-		if ((c & 128) == 0) ++b; else if ((c & 224) == 192) d = a.getUint8(b + 1), c = (c & 31) << 6 | d & 63, b += 2; else if ((c & 240) == 224) d = a.getUint8(b + 1), e = a.getUint8(b + 2), c = (c & 15) << 12 | (d & 63) << 6 | e & 63, b += 3; else if ((c & 248) == 240) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), c = (c & 7) << 18 | (d & 63) << 12 | (e & 63) << 6 | f & 63, b += 4; else if ((c & 252) == 248) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), c = (c & 3) << 24 | (d & 63) << 18 | (e & 63) << 12 | (f & 63) << 6 | g & 63, b += 5; else if ((c & 254) == 252) d = a.getUint8(b + 1), e = a.getUint8(b + 2), f = a.getUint8(b + 3), g = a.getUint8(b + 4), k = a.getUint8(b + 5), c = (c & 1) << 30 | (d & 63) << 24 | (e & 63) << 18 | (f & 63) << 12 | (g & 63) << 6 | k & 63, b += 6; else throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
+		if ((c & 128) == 0)
+			++b;
+		else if ((c & 224) == 192) {
+			d = a.getUint8(b + 1);
+			c = (c & 31) << 6 | d & 63;
+			b += 2;
+		}
+		else if ((c & 240) == 224) {
+			d = a.getUint8(b + 1);
+			e = a.getUint8(b + 2);
+			c = (c & 15) << 12 | (d & 63) << 6 | e & 63;
+			b += 3;
+		}
+		else if ((c & 248) == 240) {
+			d = a.getUint8(b + 1);
+			e = a.getUint8(b + 2);
+			f = a.getUint8(b + 3);
+			c = (c & 7) << 18 | (d & 63) << 12 | (e & 63) << 6 | f & 63;
+			b += 4;
+		}
+		else if ((c & 252) == 248) {
+			d = a.getUint8(b + 1);
+			e = a.getUint8(b + 2);
+			f = a.getUint8(b + 3);
+			g = a.getUint8(b + 4);
+			c = (c & 3) << 24 | (d & 63) << 18 | (e & 63) << 12 | (f & 63) << 6 | g & 63;
+			b += 5;
+		}
+		else if ((c & 254) == 252) {
+			d = a.getUint8(b + 1);
+			e = a.getUint8(b + 2);
+			f = a.getUint8(b + 3);
+			g = a.getUint8(b + 4);
+			k = a.getUint8(b + 5);
+			c = (c & 1) << 30 | (d & 63) << 24 | (e & 63) << 18 | (f & 63) << 12 | (g & 63) << 6 | k & 63;
+			b += 6;
+		}
+		else
+			throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
 		return {'char': c, length: b - l};
 	};
 	F.prototype = {
 		sb: function (a) {
 			if (a == null)
 				a = this.o.byteLength - this.a;
-			if (this.o.byteLength < this.a + a) throw new q('Read too much');
+			if (this.o.byteLength < this.a + a)
+				throw new q('Read too much');
 			var b = new Uint8Array(this.o.buffer, this.o.byteOffset + this.a, a);
 			this.a += a;
 			return b;
@@ -2778,18 +2861,66 @@
 	};
 	w.uo = (a, b, c) => {
 		var d = c;
-		if (a < 0) throw new q('Cannot encode UTF8 character: charCode (' + a + ') is negative');
-		if (a < 128) b.setUint8(c, a & 127), ++c; else if (a < 2048) b.setUint8(c, a >> 6 & 31 | 192), b.setUint8(c + 1, a & 63 | 128), c += 2; else if (a < 65536) b.setUint8(c, a >> 12 & 15 | 224), b.setUint8(c + 1, a >> 6 & 63 | 128), b.setUint8(c + 2, a & 63 | 128), c += 3; else if (a < 2097152) b.setUint8(c, a >> 18 & 7 | 240), b.setUint8(c + 1, a >> 12 & 63 | 128), b.setUint8(c + 2, a >> 6 & 63 | 128), b.setUint8(c + 3, a & 63 | 128), c += 4; else if (a < 67108864) b.setUint8(c, a >> 24 & 3 | 248), b.setUint8(c + 1, a >> 18 & 63 | 128), b.setUint8(c + 2, a >> 12 & 63 | 128), b.setUint8(c + 3, a >> 6 & 63 | 128), b.setUint8(c + 4, a & 63 | 128), c += 5; else if (a < -2147483648) b.setUint8(c, a >> 30 & 1 | 252), b.setUint8(c + 1, a >> 24 & 63 | 128), b.setUint8(c + 2, a >> 18 & 63 | 128), b.setUint8(c + 3, a >> 12 & 63 | 128), b.setUint8(c + 4, a >> 6 & 63 | 128), b.setUint8(c + 5, a & 63 | 128), c += 6; else throw new q('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
+		if (a < 0)
+			throw new q('Cannot encode UTF8 character: charCode (' + a + ') is negative');
+		if (a < 128) {
+			b.setUint8(c, a & 127);
+			++c;
+		}
+		else if (a < 2048) {
+			b.setUint8(c, a >> 6 & 31 | 192);
+			b.setUint8(c + 1, a & 63 | 128);
+			c += 2;
+		}
+		else if (a < 65536) {
+			b.setUint8(c, a >> 12 & 15 | 224);
+			b.setUint8(c + 1, a >> 6 & 63 | 128);
+			b.setUint8(c + 2, a & 63 | 128);
+			c += 3;
+		}
+		else if (a < 2097152) {
+			b.setUint8(c, a >> 18 & 7 | 240);
+			b.setUint8(c + 1, a >> 12 & 63 | 128);
+			b.setUint8(c + 2, a >> 6 & 63 | 128);
+			b.setUint8(c + 3, a & 63 | 128);
+			c += 4;
+		}
+		else if (a < 67108864) {
+			b.setUint8(c, a >> 24 & 3 | 248);
+			b.setUint8(c + 1, a >> 18 & 63 | 128);
+			b.setUint8(c + 2, a >> 12 & 63 | 128);
+			b.setUint8(c + 3, a >> 6 & 63 | 128);
+			b.setUint8(c + 4, a & 63 | 128);
+			c += 5;
+		}
+		else if (a < -2147483648) {
+			b.setUint8(c, a >> 30 & 1 | 252);
+			b.setUint8(c + 1, a >> 24 & 63 | 128);
+			b.setUint8(c + 2, a >> 18 & 63 | 128);
+			b.setUint8(c + 3, a >> 12 & 63 | 128);
+			b.setUint8(c + 4, a >> 6 & 63 | 128);
+			b.setUint8(c + 5, a & 63 | 128);
+			c += 6;
+		}
+		else
+			throw new q('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 		return c - d;
 	};
 	w.En = a => {
-		if (a < 0) throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
-		if (a < 128) return 1;
-		if (a < 2048) return 2;
-		if (a < 65536) return 3;
-		if (a < 2097152) return 4;
-		if (a < 67108864) return 5;
-		if (a < -2147483648) return 6;
+		if (a < 0)
+			throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
+		if (a < 128)
+			return 1;
+		if (a < 2048)
+			return 2;
+		if (a < 65536)
+			return 3;
+		if (a < 2097152)
+			return 4;
+		if (a < 67108864)
+			return 5;
+		if (a < -2147483648)
+			return 6;
 		throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 	};
 	w.Kf = a => {
@@ -2816,7 +2947,8 @@
 			if (a > this.o.byteLength)
 				this.Yq(a <= 2 * this.o.byteLength ? 2 * this.o.byteLength : a);
 		}, Yq: function (a) {
-			if (a < 1) throw new q('Can\'t resize buffer to a capacity lower than 1');
+			if (a < 1)
+				throw new q('Can\'t resize buffer to a capacity lower than 1');
 			if (a > this.o.byteLength) {
 				var b = new Uint8Array(this.o.buffer);
 				a = new ArrayBuffer(a);
@@ -2871,7 +3003,8 @@
 			a == null ? this.lb(0) : (this.lb(w.Kf(a) + 1), this.Og(a));
 		}, Im: function (a) {
 			var b = w.Kf(a);
-			if (b > 255) throw new q(null);
+			if (b > 255)
+				throw new q(null);
 			this.l(b);
 			this.Og(a);
 		}, Ng: function (a) {
@@ -2912,7 +3045,8 @@
 	};
 	I.xo = a => {
 		a = a.split('.');
-		if (a.length != 4 || a[0] != 'idkey') return Promise.reject('Invalid id format');
+		if (a.length != 4 || a[0] != 'idkey')
+			return Promise.reject('Invalid id format');
 		var b = a[1], c = a[2], d = a[3];
 		return I.Xr(b, c, d).then(a => {
 			var e = new I;
@@ -2929,7 +3063,8 @@
 			c.B();
 			var d = c.sb(c.Ob()), e = c.sb(), f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), false),
 				g = f.ic(), k = f.ic(), l = f.sb();
-			if (b.byteLength != l.byteLength) return Promise.reject(null);
+			if (b.byteLength != l.byteLength)
+				return Promise.reject(null);
 			for (var c = 0, t = l.byteLength; t > c; c++) {
 				var h = c;
 				if (b[h] != l[h])
@@ -2989,7 +3124,8 @@
 	};
 	Ja.b = true;
 	Ja.gp = () => {
-		if (Ja.li != null) return Ja.li;
+		if (Ja.li != null)
+			return Ja.li;
 		Ja.li = new Promise((a, b) => {
 			var c = window.grecaptcha;
 			c != null ? a(c) : (c = window.document.createElement('script'), c.src = 'https://www.google.com/recaptcha/api.js?onload=___recaptchaload&render=explicit', window.document.head.appendChild(c), window.___recaptchaload = () => {
@@ -3111,14 +3247,16 @@
 	};
 	m.Ha = a => {
 		a.on = m.yf;
-		if (a.za == null) throw new q('Class doesn\'t have a config');
+		if (a.za == null)
+			throw new q('Class doesn\'t have a config');
 		a.prototype.zf = a.za;
 		m.Qm.set(m.yf, a);
 		m.yf++;
 	};
 	m.lj = (a, b) => {
 		var c = (a == null ? null : r.Nm(a)).on;
-		if (c == null) throw new q('Tried to pack unregistered action');
+		if (c == null)
+			throw new q('Tried to pack unregistered action');
 		b.l(c);
 		a.ua(b);
 	};
@@ -3172,10 +3310,12 @@
 				var g = f[e];
 				++e;
 				var k = g.mb;
-				if (c < k) break;
+				if (c < k)
+					break;
 				if (c == k) {
 					g = g.da;
-					if (d < g) break;
+					if (d < g)
+						break;
 					if (d == g)
 						++d;
 				}
@@ -3243,8 +3383,10 @@
 				++a;
 			this.$a.splice(a, 0, b);
 		}, $g: function (a) {
-			if (this.$a.length == 0) return 0;
-			if (this.$a.length == 1) return this.$a[0].value;
+			if (this.$a.length == 0)
+				return 0;
+			if (this.$a.length == 1)
+				return this.$a[0].value;
 			a *= this.Qd;
 			for (var b = this.$a[0].weight, c = 0; this.$a.length - 1 > c && !(a <= b);) {
 				++c;
@@ -3287,7 +3429,8 @@
 			for (var b = this.le.list, c = 0, d = b.length, e = 0; a > e;) {
 				for (++e; d > c;) {
 					var f = b[c];
-					if (this.Y != f.mb) break;
+					if (this.Y != f.mb)
+						break;
 					f.apply(this.T);
 					if (this.fc != null)
 						this.fc(f);
@@ -3313,7 +3456,8 @@
 		}, Cg: function (a) {
 			this.Y == a.mb && this.cc >= a.da ? (a.da = this.cc++, a.apply(this.T), this.fc != null && this.fc(a)) : this.le.Rm(a);
 		}, wk: function (a, b) {
-			if (a <= 0) return this.T;
+			if (a <= 0)
+				return this.T;
 			if (this.Ff < a)
 				a = this.Ff;
 			ya.zc++;
@@ -3520,7 +3664,8 @@
 			for (var d = b = 0, e = this.Di; e.length > d;) {
 				var f = e[d];
 				++d;
-				if (a < f) break;
+				if (a < f)
+					break;
 				a > f ? y.i(this.dl, -1) : y.i(this.dl, c);
 				++b;
 			}
@@ -3620,16 +3765,19 @@
 				this.bc = 0;
 			return this.wk((window.performance.now() - this.Li) * this.Ac - this.Y + this.wi + this.bc + this.rd);
 		}, Oo: function (a, b) {
-			if (this.fg <= this.ac.length) return gc.kh(4100);
+			if (this.fg <= this.ac.length)
+				return gc.kh(4100);
 			try {
-				if (this.Sr != b.Ob()) throw new q(null);
+				if (this.Sr != b.Ob())
+					throw new q(null);
 			}
 			catch (d) {
 				return gc.kh(4103);
 			}
 			try {
 				var c = b.zb();
-				if (this.Ib != null && this.Ib != c) throw new q(null);
+				if (this.Ib != null && this.Ib != c)
+					throw new q(null);
 			}
 			catch (d) {
 				return gc.kh(4101);
@@ -3637,7 +3785,9 @@
 			return gc.hn;
 		}, Lp: function (a) {
 			var b = this;
-			if (this.fg <= this.ac.length) a.ia(); else {
+			if (this.fg <= this.ac.length)
+				a.ia();
+			else {
 				var c = new $b(a);
 				this.ac.push(c);
 				a.lg = a => {
@@ -3856,8 +4006,10 @@
 	Ib.prototype = {
 		eval: function (a) {
 			var b = this.Yb.length - 1;
-			if (this.Yb[0] >= a) return this.Yb[1];
-			if (this.Yb[b] <= a) return this.Yb[b - 2];
+			if (this.Yb[0] >= a)
+				return this.Yb[1];
+			if (this.Yb[b] <= a)
+				return this.Yb[b - 2];
 			for (var c = 0, b = b / 5 | 0; ;) {
 				var d = b + c >>> 1;
 				this.Yb[5 * d] < a ? c = d + 1 : b = d - 1;
@@ -3892,13 +4044,15 @@
 	M.L = (a, b) => M.Pl(a, 'GET', b, null);
 	M.tk = a => M.L(a, 'json').then(a => {
 		var b = a.error;
-		if (b != null) throw new q(b);
+		if (b != null)
+			throw new q(b);
 		return a.data;
 	});
 	M.mq = (a, b, c) => M.Pl(a, 'POST', 'json', b, c);
 	M.zl = (a, b, c) => M.mq(a, b, c).then(a => {
 		var b = a.error;
-		if (b != null) throw new q(b);
+		if (b != null)
+			throw new q(b);
 		return a.data;
 	});
 	A.b = true;
@@ -3966,8 +4120,10 @@
 	Hb.L = () => Hb.gf(window.top.location.search);
 	ub.b = true;
 	ub.cq = a => {
-		if (a.length < 3) throw new q('Not enough arguments');
-		if (a.length > 7) throw new q('Too many arguments');
+		if (a.length < 3)
+			throw new q('Not enough arguments');
+		if (a.length > 7)
+			throw new q('Too many arguments');
 		var b = new Pa, c = new ka;
 		b.Sg = c;
 		switch (a[1]) {
@@ -3982,7 +4138,8 @@
 			default:
 				throw new q('First argument must be either "red" or "blue"');
 		}
-		if (a[2] == 'clear') return b;
+		if (a[2] == 'clear')
+			return b;
 		c.hd = 256 * K.parseInt(a[2]) / 360 | 0;
 		c.ed = K.parseInt('0x' + a[3]);
 		if (a.length > 4) {
@@ -3995,8 +4152,10 @@
 	ub.prototype = {
 		gf: function (a) {
 			var b = this;
-			if (a.charAt(0) != '/') return false;
-			if (a.length == 1) return true;
+			if (a.charAt(0) != '/')
+				return false;
+			if (a.length == 1)
+				return true;
 			a = J.Gs(D.substr(a, 1, null)).split(' ');
 			var c = a[0];
 			switch (c) {
@@ -4045,28 +4204,30 @@
 					}
 					break;
 				case 'recaptcha':
-					if (this.jm == null) this.ba('Only the host can set recaptcha mode');
-					else try {
-						if (a.length == 2) {
-							switch (a[1]) {
-								case 'off':
-									e = false;
-									break;
-								case 'on':
-									e = true;
-									break;
-								default:
-									throw new q(null);
+					if (this.jm == null)
+						this.ba('Only the host can set recaptcha mode');
+					else
+						try {
+							if (a.length == 2) {
+								switch (a[1]) {
+									case 'off':
+										e = false;
+										break;
+									case 'on':
+										e = true;
+										break;
+									default:
+										throw new q(null);
+								}
+								this.jm(e);
+								this.ba('Room join Recaptcha ' + (e ? 'enabled' : 'disabled'));
 							}
-							this.jm(e);
-							this.ba('Room join Recaptcha ' + (e ? 'enabled' : 'disabled'));
+							else
+								throw new q(null);
 						}
-						else
-							throw new q(null);
-					}
-					catch (g) {
-						this.ba('Usage: /recaptcha <on|off>');
-					}
+						catch (g) {
+							this.ba('Usage: /recaptcha <on|off>');
+						}
 					break;
 				case 'set_password':
 					if (a.length == 2) {
@@ -4170,10 +4331,13 @@
 		}, Fp: function (a) {
 			var b = this;
 			this.zh = a;
-			this.Nf == null && (this.Nf = window.setTimeout(() => {
-				b.Nf = null;
-				b.bm(b.zh);
-			}, 1000), this.bm(this.zh));
+			if (this.Nf == null) {
+				this.Nf = window.setTimeout(() => {
+					b.Nf = null;
+					b.bm(b.zh);
+				}, 1000);
+				this.bm(this.zh);
+			}
 		}, bm: function (a) {
 			if (this.Ik != a) {
 				this.ya.ra(na.la(a ? 0 : 1));
@@ -4193,7 +4357,9 @@
 					a.preventDefault();
 					break;
 				case 27:
-					if (this.j.Zo()) this.j.bb(null); else {
+					if (this.j.Zo())
+						this.j.bb(null);
+					else {
 						var b = this.j;
 						b.me(!b.Gd);
 					}
@@ -4499,7 +4665,9 @@
 		if (a == null) I.yo().then(a => {
 			u.Je = a;
 			n.A.Gj.Xa(a.Ir());
-		})['catch'](() => ({})); else I.xo(a).then(a => u.Je = a)['catch'](() => ({}));
+		})['catch'](() => ({}));
+		else
+			I.xo(a).then(a => u.Je = a)['catch'](() => ({}));
 	};
 	u.Bo = () => {
 		var a = Xb.Pm();
@@ -4531,7 +4699,8 @@
 
 		function d(b) {
 			b = b.sitekey;
-			if (b == null) throw new q(null);
+			if (b == null)
+				throw new q(null);
 			u.kk(b, b => {
 				e(a, b);
 			});
@@ -4544,7 +4713,8 @@
 				switch (a.action) {
 					case 'connect':
 						a = a.token;
-						if (a == null) throw new q(null);
+						if (a == null)
+							throw new q(null);
 						b(a);
 						break;
 					case 'recaptcha':
@@ -4578,7 +4748,8 @@
 					return d.Va = null;
 				};
 			}
-			else b.vd.Ib ? u.Dh(b.$) : u.Pf(b.$);
+			else
+				b.vd.Ib ? u.Dh(b.$) : u.Pf(b.$);
 		};
 		a.ws = () => {
 			u.oo();
@@ -4872,20 +5043,22 @@
 		return d.src = URL.createObjectURL(new Blob([a], {type: 'image/png'}));
 	});
 	x.fj = a => {
-		x.ks() && x.es(() => {
-			kc.fj();
-			var b;
-			n.A.Me.L() == null ? T.Fo().then(a => {
-				n.A.Me.Xa(a);
-			}, () => ({})) : b = Promise.resolve(null);
-			return Promise.all([M.L('res.dat', 'arraybuffer').then(a => {
-				a = new JSZip(a);
-				n.Na = new Ub(a);
-				return Promise.all([n.Na.ro, x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a), x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a), x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a), x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)]);
-			}), b]).then(() => {
-				x.us(a);
+		if (x.ks()) {
+			x.es(() => {
+				kc.fj();
+				var b;
+				n.A.Me.L() == null ? T.Fo().then(a => {
+					n.A.Me.Xa(a);
+				}, () => ({})) : b = Promise.resolve(null);
+				return Promise.all([M.L('res.dat', 'arraybuffer').then(a => {
+					a = new JSZip(a);
+					n.Na = new Ub(a);
+					return Promise.all([n.Na.ro, x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a), x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a), x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a), x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)]);
+				}), b]).then(() => {
+					x.us(a);
+				});
 			});
-		});
+		}
 	};
 	x.es = a => {
 		for (var b = Modernizr, c = 'canvas datachannel dataview es6collections peerconnection promises websockets'.split(' '), d = [], e = 0; c.length > e; e++) {
@@ -4989,7 +5162,8 @@
 			this.Xe = a.B();
 			this.I = a.B();
 			a.Sa = false;
-			if (this.I > 30 || this.Xe > 30) throw new q(null);
+			if (this.I > 30 || this.Xe > 30)
+				throw new q(null);
 			this.Pj();
 		}, f: Fb
 	};
@@ -5112,7 +5286,8 @@
 	});
 	Z.Es = () => {
 		var a = window.navigator.storage;
-		if (a == null || a.persist == null) return Promise.resolve(false);
+		if (a == null || a.persist == null)
+			return Promise.resolve(false);
 		try {
 			return a.persisted().then(b => b ? true : a.persist())['catch'](() => false);
 		}
@@ -5328,7 +5503,9 @@
 				this.ta.F.push(b[a++].rp());
 			this.Gk();
 		}, Ck: function (a) {
-			if (p.Ia == a.ea) a.H = null; else {
+			if (p.Ia == a.ea)
+				a.H = null;
+			else {
 				a.ob = 0;
 				var b = a.H;
 				if (b == null) {
@@ -5355,7 +5532,11 @@
 				b.y = c.y;
 			}
 		}, C: function (a) {
-			if (this.Oa > 0) this.Oa < 120 && this.Oa--; else {
+			if (this.Oa > 0) {
+				if (this.Oa < 120)
+					this.Oa--;
+			}
+			else {
 				var b = this.Ma.Os;
 				if (b != null)
 					b();
@@ -5815,8 +5996,10 @@
 	};
 	h.jp = (a, b) => {
 		var c = new nb, d = r.G(a.d0, Pb), e = r.G(a.d1, Pb), f = a.color, g = a.strength, k = a.length;
-		if (b.length <= d || d < 0) throw new q(null);
-		if (b.length <= e || e < 0) throw new q(null);
+		if (b.length <= d || d < 0)
+			throw new q(null);
+		if (b.length <= e || e < 0)
+			throw new q(null);
 		c.Yd = d;
 		c.Zd = e;
 		k == null ? (d = b[d], k = b[e], d == null || k == null ? c.ec = c.Hb = 100 : (e = d.a, k = k.a, d = e.x - k.x, e = e.y - k.y, c.ec = c.Hb = Math.sqrt(d * d + e * e))) : k instanceof Array && k.eb == null ? (c.Hb = r.G(k[0], z), c.ec = r.G(k[1], z)) : c.ec = c.Hb = r.G(k, z);
@@ -6297,7 +6480,8 @@
 				++c;
 				var f = e.W, g = e.ca, k = b.x - a.x, l = b.y - a.y;
 				-(g.y - a.y) * k + (g.x - a.x) * l > 0 == -(f.y - a.y) * k + (f.x - a.x) * l > 0 ? f = false : (k = g.x - f.x, g = g.y - f.y, f = -(b.y - f.y) * k + (b.x - f.x) * g > 0 == -(a.y - f.y) * k + (a.x - f.x) * g > 0 ? false : true);
-				if (f) return e.qe;
+				if (f)
+					return e.qe;
 			}
 			return p.Ia;
 		}, ad: function (a, b, c, d, e, f, g, k) {
@@ -6734,7 +6918,8 @@
 			this.hd = a.B();
 			this.ed = a.M();
 			var b = a.B();
-			if (b > 3) throw new q('too many');
+			if (b > 3)
+				throw new q('too many');
 			this.fb = [];
 			for (var c = 0; b > c;) {
 				++c;
@@ -6748,7 +6933,9 @@
 	fa.Rd = [Ta, cc];
 	fa.qd = (a, b) => {
 		a.jc = b.jc;
-		if (b.I == null) a.I = null; else {
+		if (b.I == null)
+			a.I = null;
+		else {
 			if (a.I == null)
 				a.I = [];
 			for (var c = a.I, d = b.I, e = d.length; e < c.length;)
@@ -6873,7 +7060,8 @@
 		}, km: function (a) {
 			this.Ol = a;
 		}, Lb: function (a) {
-			if (a == 0) return true;
+			if (a == 0)
+				return true;
 			a = this.na(a);
 			return a != null && a.cb ? true : false;
 		}, mr: function (a, b, c, d) {
@@ -6992,7 +7180,8 @@
 			a.l(this.fn);
 		}, va: function (a) {
 			this.Tc = a.ic();
-			if (this.Tc.length > 1000) throw new q('message too long');
+			if (this.Tc.length > 1000)
+				throw new q('message too long');
 			this.color = a.M();
 			this.style = a.B();
 			this.fn = a.B();
@@ -7421,7 +7610,8 @@
 							return;
 						a = a.H;
 					}
-					else a = b.ta.F[this.ze];
+					else
+						a = b.ta.F[this.ze];
 					if (a != null) {
 						if (this.Ka[0] != null)
 							a.a.x = this.Ka[0];
@@ -7700,7 +7890,8 @@
 				if (a.vb <= 0 == (d.x * b + d.y * c > 0 && e.x * b + e.y * c > 0))
 					return;
 				e = Math.sqrt(b * b + c * c);
-				if (e == 0) return;
+				if (e == 0)
+					return;
 				d = e - a.Yj;
 				b /= e;
 				c /= e;
@@ -7771,8 +7962,12 @@
 					var g, k;
 					if (this.ec <= this.Hb)
 						g = this.Hb, k = 0;
-					else if (this.Hb >= f) g = this.Hb, k = 1; else if (this.ec <= f) g = this.ec, k = -1;
-					else return;
+					else if (this.Hb >= f)
+						g = this.Hb, k = 1;
+					else if (this.ec <= f)
+						g = this.ec, k = -1;
+					else
+						return;
 					f = g - f;
 					if (0 * this.ne == 0)
 						d = this.ne * f * .5, e *= d, c *= d, k = d = b.D, b = b.aa, d.x = k.x + e * b, d.y = k.y + c * b, d = b = a.D, a = a.aa, b.x = d.x + -e * a, b.y = d.y + -c * a;
@@ -7806,7 +8001,9 @@
 	Fa.b = true;
 	Fa.Rd = [Ta];
 	Fa.qd = (a, b) => {
-		if (b.F == null) a.F = null; else {
+		if (b.F == null)
+			a.F = null;
+		else {
 			if (a.F == null)
 				a.F = [];
 			for (var c = a.F, d = b.F, e = d.length; e < c.length;)
@@ -8063,7 +8260,8 @@
 			if (this.sa.parentElement != null) {
 				var a = window.devicePixelRatio * this.zg, b = this.sa.getBoundingClientRect(), c = Math.round(b.width * a),
 					a = Math.round(b.height * a);
-				if (c != this.sa.width || a != this.sa.height) this.sa.width = c, this.sa.height = a;
+				if (c != this.sa.width || a != this.sa.height)
+					this.sa.width = c, this.sa.height = a;
 			}
 		}, Kc: function (a, b) {
 			var c = window.performance.now(), d = (c - this.$c) / 1000;
@@ -8149,7 +8347,12 @@
 			}
 		}, Mr: function (a, b, c, d, e) {
 			var f, g;
-			if (b != null && a.S.Ge == 1) g = b.a, f = g.x, g = g.y; else if (g = a.ta.F[0].a, f = g.x, g = g.y, b != null) {
+			if (b != null && a.S.Ge == 1) {
+				g = b.a;
+				f = g.x;
+				g = g.y;
+			}
+			else if (g = a.ta.F[0].a, f = g.x, g = g.y, b != null) {
 				var k = b.a;
 				f = .5 * (f + k.x);
 				g = .5 * (g + k.y);
@@ -8212,7 +8415,27 @@
 			var b = this;
 			N.Gi(this.c, false);
 			var c = a.Td, d = a.Sd;
-			if (a.ld == 1) this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore(), this.c.strokeStyle = '#C7E6BD', this.c.fillStyle = this.Lo, this.Wl(this.c, -c, -d, 2 * c, 2 * d, a.Uc), this.c.save(), this.c.scale(2, 2), this.c.fill(), this.c.restore(), this.c.moveTo(0, -d), this.c.lineTo(0, d), this.c.stroke(), this.c.beginPath(), this.c.arc(0, 0, a.kd, 0, 2 * Math.PI), this.c.stroke(); else if (a.ld == 2) {
+			if (a.ld == 1) {
+				this.c.save();
+				this.c.resetTransform();
+				this.c.fillStyle = N.lc(a.jd);
+				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
+				this.c.restore();
+				this.c.strokeStyle = '#C7E6BD';
+				this.c.fillStyle = this.Lo;
+				this.Wl(this.c, -c, -d, 2 * c, 2 * d, a.Uc);
+				this.c.save();
+				this.c.scale(2, 2);
+				this.c.fill();
+				this.c.restore();
+				this.c.moveTo(0, -d);
+				this.c.lineTo(0, d);
+				this.c.stroke();
+				this.c.beginPath();
+				this.c.arc(0, 0, a.kd, 0, 2 * Math.PI);
+				this.c.stroke();
+			}
+			else if (a.ld == 2) {
 				this.c.strokeStyle = '#E9CC6E';
 				this.c.save();
 				this.c.beginPath();
@@ -8250,7 +8473,13 @@
 				e('#85ACF3', c, false);
 				e('#E18977', -c, true);
 			}
-			else this.c.save(), this.c.resetTransform(), this.c.fillStyle = N.lc(a.jd), this.c.fillRect(0, 0, this.sa.width, this.sa.height), this.c.restore();
+			else {
+				this.c.save();
+				this.c.resetTransform();
+				this.c.fillStyle = N.lc(a.jd);
+				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
+				this.c.restore();
+			}
 			N.Gi(this.c, true);
 		}, Nq: function (a, b) {
 			for (var c = n.A.Ak.L(), d = 0, e = a.I; e.length > d;) {
@@ -8279,7 +8508,8 @@
 				this.c.fill();
 				this.c.restore();
 			}
-			else (a.R | 0) != -1 && this.c.fill();
+			else if ((a.R | 0) != -1)
+				this.c.fill();
 			this.c.stroke();
 		}, Rq: function (a) {
 			if (a != null) {
@@ -8305,7 +8535,11 @@
 				this.c.beginPath();
 				this.c.strokeStyle = N.lc(a.R);
 				var b = a.W.a, c = a.ca.a;
-				if (0 * a.vb != 0) this.c.moveTo(b.x, b.y), this.c.lineTo(c.x, c.y); else {
+				if (0 * a.vb != 0) {
+					this.c.moveTo(b.x, b.y);
+					this.c.lineTo(c.x, c.y);
+				}
+				else {
 					a = a.Xd;
 					var d = b.x - a.x, b = b.y - a.y;
 					this.c.arc(a.x, a.y, Math.sqrt(d * d + b * b), Math.atan2(b, d), Math.atan2(c.y - a.y, c.x - a.x));
@@ -8418,9 +8652,11 @@
 	};
 	Ea.b = true;
 	Ea.Ln = (a, b) => {
-		if (b.hd != a.hd || b.ed != a.ed) return false;
+		if (b.hd != a.hd || b.ed != a.ed)
+			return false;
 		var c = a.fb, d = b.fb;
-		if (d.length != c.length) return false;
+		if (d.length != c.length)
+			return false;
 		for (var e = 0, f = c.length; f > e;) {
 			var g = e++;
 			if (d[g] != c[g])
@@ -8582,7 +8818,8 @@
 				d.sort((a, b) => a.dn - b.dn);
 				this.Ui(d);
 			}
-			else this.Ui(null);
+			else
+				this.Ui(null);
 		}, lk: function (a) {
 			a = this.Ek ? '#' + a.$ : '@' + J.replace(a.w, ' ', '_');
 			this.Rp(D.substr(this.Ml, 0, this.si) + a + ' ' + D.substr(this.Ml, this.si + this.Vq, null), this.si + a.length + 1);
@@ -8853,9 +9090,14 @@
 			for (c = 0; a.length > c; c++) {
 				f = a[c];
 				g = this.xd.get(f.V);
-				g == null && (g = new cb(f), g.ff = a => {
-					y.i(e.ff, a);
-				}, this.xd.set(f.V, g), this.ab.appendChild(g.g));
+				if (g == null) {
+					g = new cb(f);
+					g.ff = a => {
+						y.i(e.ff, a);
+					};
+					this.xd.set(f.V, g);
+					this.ab.appendChild(g.g);
+				}
 				g.C(f, d);
 				b['delete'](f.V);
 			}
@@ -8962,10 +9204,14 @@
 			var a = this;
 			M.tk(n.Ee + 'api/notice').then(b => {
 				var c = b.content;
-				null != c && '' != c && $a.On != c && (a.$n.innerHTML = c, a.Xk.hidden = false, a.nd.onclick = () => {
-					$a.On = c;
-					return a.Xk.hidden = true;
-				});
+				if (c != null && c != '' && c != $a.On) {
+					a.$n.innerHTML = c;
+					a.Xk.hidden = false;
+					a.nd.onclick = () => {
+						$a.On = c;
+						return a.Xk.hidden = true;
+					};
+				}
 			});
 		}, f: $a
 	};
@@ -9158,7 +9404,8 @@
 		return r.ph(a.ma, b);
 	};
 	r.pn = (a, b) => {
-		if (b == null) return false;
+		if (b == null)
+			return false;
 		switch (b) {
 			case Array:
 				return a instanceof Array ? a.eb == null : false;
