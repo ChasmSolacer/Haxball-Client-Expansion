@@ -361,7 +361,7 @@
 		var f = d.get('replayfile');
 		f.onchange = () => {
 			var a = f.files;
-			if (!(a.length < 1)) {
+			if (a.length >= 1) {
 				var a = a.item(0), b = new FileReader;
 				b.onload = () => {
 					y.i(c.xs, b.result);
@@ -660,7 +660,7 @@
 		}, 0);
 		d.onchange = () => {
 			var b = d.files;
-			if (!(b.length < 1)) {
+			if (b.length >= 1) {
 				var b = b.item(0), c = new FileReader;
 				c.onload = () => {
 					try {
@@ -1779,7 +1779,11 @@
 			var g = false;
 			c.pc.Zk = () => g = true;
 			c.pc.bd = a => {
-				if (!e && c.pd == 1 && g) A.i(c.Sp), d(true); else {
+				if (!e && c.pd == 1 && g) {
+					A.i(c.Sp);
+					d(true);
+				}
+				else {
 					var b = wb.Do(a);
 					switch (a.nb) {
 						case 0:
@@ -2392,7 +2396,8 @@
 							break;
 						}
 					}
-					if (!e) return;
+					if (!e)
+						return;
 				}
 				this.Mc = a.slice(0);
 				this.Ag = true;
@@ -2931,7 +2936,8 @@
 					return Promise.reject(null);
 			}
 			return I.Wr(g, k).then(a => window.crypto.subtle.verify(I.mm, a, e, d)).then(a => {
-				if (!a) throw new q(null);
+				if (!a)
+					throw new q(null);
 				return g;
 			});
 		}
@@ -3661,7 +3667,7 @@
 			b.tb(a.ue);
 			m.lj(a, b);
 		}, Ci: function () {
-			if (!(this.Y - this.Kk <= 0) && this.ac.length != 0) {
+			if (this.Y - this.Kk > 0 && this.ac.length != 0) {
 				var a = w.ha();
 				a.l(3);
 				a.tb(this.Y);
@@ -3769,7 +3775,8 @@
 					g = new tb(f.$i, f.uj);
 					b.xj.set(f, g);
 				}
-				if (!g.Cm()) throw new q(3);
+				if (!g.Cm())
+					throw new q(3);
 			}
 			f = this.Y;
 			g = this.Y + 120;
@@ -3854,7 +3861,7 @@
 			for (var c = 0, b = b / 5 | 0; ;) {
 				var d = b + c >>> 1;
 				this.Yb[5 * d] < a ? c = d + 1 : b = d - 1;
-				if (!(b >= c))
+				if (b < c)
 					break;
 			}
 			c = 5 * b;
@@ -6124,7 +6131,8 @@
 		}, se: function () {
 			return JSON.stringify(this.Hr());
 		}, Hr: function () {
-			if (!this.Lf) throw new q(0);
+			if (!this.Lf)
+				throw new q(0);
 			for (var a = {}, b = 0, c = [], d = 0, e = this.J; e.length > d;) {
 				var f = e[d];
 				++d;
@@ -6638,7 +6646,7 @@
 			this.U.push(l);
 			this.U.push(h);
 		}, Pk: function (a, b, c) {
-			if (!(c <= 0)) {
+			if (c > 0) {
 				var d = new B, e = d.a;
 				e.x = -a + c;
 				e.y = -b;
@@ -7754,7 +7762,7 @@
 			a = a[this.Zd];
 			if (b != null && a != null) {
 				var c = b.a, d = a.a, e = c.x - d.x, c = c.y - d.y, f = Math.sqrt(e * e + c * c);
-				if (!(f <= 0)) {
+				if (f > 0) {
 					e /= f;
 					c /= f;
 					d = b.aa / (b.aa + a.aa);
@@ -8136,7 +8144,8 @@
 			for (a = c.next(); !a.done;) {
 				var d = a.value;
 				a = c.next();
-				if (!b.has(d)) this.dd['delete'](d);
+				if (!b.has(d))
+					this.dd['delete'](d);
 			}
 		}, Mr: function (a, b, c, d, e) {
 			var f, g;
@@ -8279,7 +8288,7 @@
 					this.Qq(a[b++]);
 			}
 		}, Mq: function (a, b) {
-			if (!(a.R < 0)) {
+			if (a.R >= 0) {
 				this.c.beginPath();
 				this.c.strokeStyle = N.lc(a.R);
 				var c = b[a.Yd], d = b[a.Zd];
@@ -8456,7 +8465,7 @@
 			}
 		}, Hq: function (a) {
 			var b = this.kb.fb;
-			if (!(b.length < 1)) {
+			if (b.length >= 1) {
 				this.rb.save();
 				this.rb.translate(32, 32);
 				this.rb.rotate(3.141592653589793 * this.kb.hd / 128);
