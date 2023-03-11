@@ -477,7 +477,11 @@
 		}
 		l.onclick = b => {
 			a.er((b.pageX - l.offsetLeft) / l.clientWidth * a.mh * a.mf);
-			c.Wf || (c.Wf = true, c.Vp(), c.el());
+			if (!c.Wf) {
+				c.Wf = true;
+				c.Vp();
+				c.el();
+			}
 		};
 		l.onmousemove = b => {
 			b = (b.pageX - l.offsetLeft) / l.clientWidth;
@@ -913,7 +917,10 @@
 		this.gb.onkeydown = c => {
 			switch (c.keyCode) {
 				case 9:
-					b.Bc.Mb.hidden || (b.Bc.qo(), c.preventDefault());
+					if (!b.Bc.Mb.hidden) {
+						b.Bc.qo();
+						c.preventDefault();
+					}
 					break;
 				case 13:
 					a();
@@ -1933,7 +1940,8 @@
 		c();
 		this.Ra.oniceconnectionstatechange = () => {
 			var a = b.Ra.iceConnectionState;
-			a != 'closed' && a != 'failed' || b.ia();
+			if (a == 'closed' || a == 'failed')
+				b.ia();
 		};
 		a = 0;
 		for (var d = this.Vc; d.length > a; a++) {
@@ -2010,10 +2018,12 @@
 			g.X = new WebSocket(a + 'client?id=' + c + (f == null ? '' : '&token=' + f));
 			g.X.binaryType = 'arraybuffer';
 			g.X.onclose = a => {
-				g.yh || g.Oe(Ob.lh(a.code));
+				if (!g.yh)
+					g.Oe(Ob.lh(a.code));
 			};
 			g.X.onerror = () => {
-				g.yh || g.Oe(Ob.Error);
+				if (!g.yh)
+					g.Oe(Ob.Error);
 			};
 			g.X.onmessage = G(g, g.Ph);
 			g.X.onopen = () => {
@@ -2298,7 +2308,8 @@
 			});
 		}, co: function (a) {
 			var b = this, c = {id: this.Vc.length, negotiated: true, ordered: a.kj};
-			a.reliable || (c.maxRetransmits = 0);
+			if (!a.reliable)
+				c.maxRetransmits = 0;
 			a = this.Ra.createDataChannel(a.name, c);
 			a.binaryType = 'arraybuffer';
 			a.onopen = () => {
@@ -3468,7 +3479,10 @@
 			if (this.pd == 3) {
 				for (var a = 0, b = this.pi; b.length > a; a++) {
 					var c = b[a];
-					this.Y >= c.frame || this.te + this.cc + this.le.bs(c.frame) == c.yf && this.vn(c.frame - this.Y);
+					if (this.Y < c.frame) {
+						if (this.te + this.cc + this.le.bs(c.frame) == c.yf)
+							this.vn(c.frame - this.Y);
+					}
 				}
 				for (var a = 0, b = this.pi, c = 0, d = b.length; d > c;) {
 					var e = b[c++];
@@ -3578,7 +3592,8 @@
 		}, ra: function (a) {
 			a.P = 0;
 			var b = this.Y + this.wi + this.bc;
-			a.zf.Aa || (b = this.Y);
+			if (!a.zf.Aa)
+				b = this.Y;
 			a.mb = b;
 			this.Cg(a);
 			this.Ci();
@@ -4129,7 +4144,15 @@
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			n.A.Fh.L() == 1 && a - this.$c < 28.333333333333336 || (this.$c = a, this.sd++, this.uf(), a = this.ya.T.na(this.ya.uc), a != null && (this.xi = a.cb), this.j.C(this.ya));
+			if (n.A.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+				this.$c = a;
+				this.sd++;
+				this.uf();
+				a = this.ya.T.na(this.ya.uc);
+				if (a != null)
+					this.xi = a.cb;
+				this.j.C(this.ya);
+			}
 		}, Gp: function (a) {
 			var b = this;
 			this.Of.gf(a) || this.Jn.Zn(1, () => {
@@ -4661,7 +4684,10 @@
 			l.kg = a => {
 				e = a;
 				t.Bg = u.$h(a, l.Ib != null);
-				h || (h = true, x.La(t.j.g));
+				if (!h) {
+					h = true;
+					x.La(t.j.g);
+				}
 			};
 			t.Ih.Np = (a, b, c, d) => {
 				l.to(a, b, c, d);
@@ -4857,7 +4883,8 @@
 	x.es = a => {
 		for (var b = Modernizr, c = 'canvas datachannel dataview es6collections peerconnection promises websockets'.split(' '), d = [], e = 0; c.length > e; e++) {
 			var f = c[e];
-			b[f] || d.push(f);
+			if (!b[f])
+				d.push(f);
 		}
 		d.length != 0 ? (window.document.body.innerHTML = '', x.Pg = window.document.createElement('div'), window.document.body.appendChild(x.Pg), a = new Wa(d), x.La(a.g)) : a();
 	};
@@ -4895,7 +4922,13 @@
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			n.A.Fh.L() == 1 && a - this.$c < 28.333333333333336 || (this.$c = a, this.sd++, this.uf(n.A.Tb.L()), this.ya.Fd > 0 || this.j.C(this.ya));
+			if (n.A.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+				this.$c = a;
+				this.sd++;
+				this.uf(n.A.Tb.L());
+				if (this.ya.Fd <= 0)
+					this.j.C(this.ya);
+			}
 		}, Bd: function (a) {
 			switch (a.keyCode) {
 				case 27:
@@ -4978,7 +5011,8 @@
 			++e;
 			var g = f.vd;
 			f.Le = 6378 * va.js(.017453292519943295 * g.Ec, .017453292519943295 * g.Gc, .017453292519943295 * c, .017453292519943295 * d);
-			isFinite(f.Le) || (f.Le = 22000);
+			if (!isFinite(f.Le))
+				f.Le = 22000;
 		}
 	};
 	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), false)));
@@ -7673,7 +7707,20 @@
 			}
 			else if (e < 0 && (e = -e, d = -d, b = -b, c = -c), -e > d)
 				return;
-			this.Z <= d || (d = this.Z - d, f = e = this.a, e.x = f.x + b * d, e.y = f.y + c * d, d = this.D, d = b * d.x + c * d.y, d < 0 && (d *= this.m * a.m + 1, e = a = this.D, a.x = e.x - b * d, a.y = e.y - c * d));
+			if (this.Z > d) {
+				d = this.Z - d;
+				f = e = this.a;
+				e.x = f.x + b * d;
+				e.y = f.y + c * d;
+				d = this.D;
+				d = b * d.x + c * d.y;
+				if (d < 0) {
+					d *= this.m * a.m + 1;
+					e = a = this.D;
+					a.x = e.x - b * d;
+					a.y = e.y - c * d;
+				}
+			}
 		}, sc: function () {
 			var a = ya.zc, b = this.gc;
 			if (a != this.hc) {
@@ -8532,7 +8579,8 @@
 			this.Rp(D.substr(this.Ml, 0, this.si) + a + ' ' + D.substr(this.Ml, this.si + this.Vq, null), this.si + a.length + 1);
 		}, Ui: function (a) {
 			var b = this, c = a != null && a.length != 0;
-			this.Mb.hidden || v.Cf(this.Mb);
+			if (!this.Mb.hidden)
+				v.Cf(this.Mb);
 			this.Wc = null;
 			this.Mb.hidden = !c;
 			if (c) {
@@ -8830,7 +8878,10 @@
 		C: function () {
 			this.Er.textContent = ha.Wk(this.ti.Qb);
 			this.Aq.style.width = 100 * this.ti.Go() + '%';
-			!this.Wf || this.ti.Fd > 0 || (this.Wf = false, this.Up());
+			if (this.Wf && this.ti.Fd <= 0) {
+				this.Wf = false;
+				this.Up();
+			}
 		}, f: ha
 	};
 	bb.b = true;
@@ -9068,7 +9119,11 @@
 				b += '\t';
 				f = a.hasOwnProperty != null;
 				for (c in a) {
-					f && !a.hasOwnProperty(c) || c == 'prototype' || c == '__class__' || c == '__super__' || c == '__interfaces__' || c == '__properties__' || (d.length != 2 && (d += ', \n'), d += b + c + ' : ' + r.Be(a[c], b));
+					if ((!f || a.hasOwnProperty(c)) && c != 'prototype' && c != '__class__' && c != '__super__' && c != '__interfaces__' && c != '__properties__') {
+						if (d.length != 2)
+							d += ', \n';
+						d += b + c + ' : ' + r.Be(a[c], b);
+					}
 				}
 				b = b.substring(1);
 				return d + ('\n' + b + '}');
