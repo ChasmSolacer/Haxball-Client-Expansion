@@ -173,7 +173,7 @@
 		settingsOkCancelFun('tsound-crowd', ConnectionConstants.buildsStorageMInst.nm);
 		settingsDFun('viewmode', ConnectionConstants.buildsStorageMInst.Tb, a => a - 1, a => a + 1);
 		settingsDFun('fps', ConnectionConstants.buildsStorageMInst.Fh, a => a, a => a);
-		var h = [1, .75, .5, .25];
+		var h = [1, 0.75, 0.5, 0.25];
 		settingsDFun('resscale', ConnectionConstants.buildsStorageMInst.Sl, a => h[a], a => {
 			for (var b = 0, c = h.length - 1; c > b && !(a >= h[b]);) {
 				++b;
@@ -418,7 +418,7 @@
 		};
 		var e = true;
 		var f = 2;
-		var g = [.5, .75, 1, 2, 3];
+		var g = [.5, 0.75, 1, 2, 3];
 		b();
 		var k = d.get('playicon');
 		k.classList.add('icon-pause');
@@ -1021,9 +1021,9 @@
 		this.h = this.v = 63;
 		this.Mj = 0;
 		this.R = 16777215;
-		this.Ca = .99;
+		this.Ca = 0.99;
 		this.aa = 1;
-		this.m = .5;
+		this.m = 0.5;
 		this.Z = 10;
 		this.oa = new Point(0, 0);
 		this.D = new Point(0, 0);
@@ -1210,12 +1210,12 @@
 		this.Z = 15;
 		this.v = 0;
 		this.oa = new Point(0, 0);
-		this.m = .5;
-		this.aa = .5;
-		this.Ca = .96;
-		this.Ce = .1;
-		this.Te = .07;
-		this.Ue = .96;
+		this.m = 0.5;
+		this.aa = 0.5;
+		this.Ca = 0.96;
+		this.Ce = 0.1;
+		this.Te = 0.07;
+		this.Ue = 0.96;
 		this.Re = 5;
 	}
 
@@ -1245,9 +1245,9 @@
 		this.v = 63;
 		this.h = 63;
 		this.R = 16777215;
-		this.Ca = .99;
+		this.Ca = 0.99;
 		this.aa = 1;
-		this.m = .5;
+		this.m = 0.5;
 		this.Z = 10;
 		this.oa = new Point(0, 0);
 		this.D = new Point(0, 0);
@@ -1256,7 +1256,7 @@
 
 	function AudioTb(a, b) {
 		this.gh = null;
-		this.Js = .025;
+		this.Js = 0.025;
 		this.Ef = 0;
 		this.dh = 0;
 		this.ve = 0;
@@ -1766,7 +1766,7 @@
 		this.te = this.cc = 0;
 		this.le = new Dia;
 		this.uc = this.bc = this.rd = 0;
-		this.Ac = .06;
+		this.Ac = 0.06;
 		this.mh = 16.666666666666668;
 		this.Ff = 120;
 		YMajor.call(this, a);
@@ -3353,7 +3353,7 @@
 				var e = d++;
 				var f = this.$a[e];
 				f.index++;
-				f.weight *= .97;
+				f.weight *= 0.97;
 				if (f.index > this.$a[c].index)
 					c = e;
 				this.Qd += f.weight;
@@ -4534,7 +4534,7 @@
 					c.jf = 450;
 				else {
 					c.jf = 0;
-					c.kf = 1 + .25 * (a - 1);
+					c.kf = 1 + 0.25 * (a - 1);
 				}
 			}
 		}, Cd: function (a) {
@@ -5320,7 +5320,7 @@
 			else {
 				b.Gg(false);
 				b.Eb.xf = 35;
-				b.Eb.kf = 1 + .25 * (a - 1);
+				b.Eb.kf = 1 + 0.25 * (a - 1);
 			}
 		}, Cd: () => {
 		}, f: ReplayVb
@@ -5383,7 +5383,7 @@
 			var f = b[e];
 			++e;
 			var g = f.vd;
-			f.Le = 6378 * RoomListOps.js(.017453292519943295 * g.Ec, .017453292519943295 * g.Gc, .017453292519943295 * c, .017453292519943295 * d);
+			f.Le = 6378 * RoomListOps.js(0.017453292519943295 * g.Ec, 0.017453292519943295 * g.Gc, 0.017453292519943295 * c, 0.017453292519943295 * d);
 			if (!isFinite(f.Le))
 				f.Le = 22000;
 		}
@@ -5542,7 +5542,7 @@
 			this.Ef -= b;
 			if (this.Ef <= 0)
 				this.Ef = this.dh = 0;
-			if (this.dh <= 0 && this.ve < .05) {
+			if (this.dh <= 0 && this.ve < 0.05) {
 				window.clearInterval(this.gh);
 				this.gh = null;
 				this.ve = 0;
@@ -5855,7 +5855,7 @@
 						this.Bb = 1;
 				}
 				else if (this.Bb == 1) {
-					this.Hc += .016666666666666666;
+					this.Hc += 0.016666666666666666;
 					for (a = 0; b.length > a;) {
 						d = b[a];
 						++a;
@@ -6370,12 +6370,12 @@
 	};
 	Stadium.jq = a => {
 		var b = {};
-		Stadium.ka(b, 'bCoef', a.m, .5);
-		Stadium.ka(b, 'invMass', a.aa, .5);
-		Stadium.ka(b, 'damping', a.Ca, .96);
-		Stadium.ka(b, 'acceleration', a.Ce, .1);
-		Stadium.ka(b, 'kickingAcceleration', a.Te, .07);
-		Stadium.ka(b, 'kickingDamping', a.Ue, .96);
+		Stadium.ka(b, 'bCoef', a.m, 0.5);
+		Stadium.ka(b, 'invMass', a.aa, 0.5);
+		Stadium.ka(b, 'damping', a.Ca, 0.96);
+		Stadium.ka(b, 'acceleration', a.Ce, 0.1);
+		Stadium.ka(b, 'kickingAcceleration', a.Te, 0.07);
+		Stadium.ka(b, 'kickingDamping', a.Ue, 0.96);
 		Stadium.ka(b, 'kickStrength', a.Re, 5);
 		Stadium.Jc(b, 'cGroup', a.v, 0);
 		if (a.oa.x != 0 || a.oa.y != 0)
@@ -6495,9 +6495,9 @@
 			a.h = 63;
 			a.v = 193;
 			a.Z = 10;
-			a.Ca = .99;
+			a.Ca = 0.99;
 			a.aa = 1;
-			a.m = .5;
+			a.m = 0.5;
 			return a;
 		}, ga: function (a) {
 			a.l(this.Bh);
@@ -6847,7 +6847,7 @@
 			this.Sd = e;
 			this.kd = g;
 			this.Uc = k;
-			this.kc = .75 * d;
+			this.kc = 0.75 * d;
 			if (this.kc > 400)
 				this.kc = 400;
 			a = new Plane;
@@ -6980,7 +6980,7 @@
 			this.kd = k;
 			this.Uc = l;
 			this.Fe = g;
-			this.kc = .75 * (d - g);
+			this.kc = 0.75 * (d - g);
 			if (this.kc > 400)
 				this.kc = 400;
 			a = new Plane;
@@ -7086,7 +7086,7 @@
 				l = k++;
 				this.J[l].h = f;
 				this.J[l].v = g;
-				this.J[l].m = .1;
+				this.J[l].m = 0.1;
 			}
 			b = this.U.length;
 			this.U.push(h);
@@ -7097,7 +7097,7 @@
 				l = k++;
 				this.U[l].h = f;
 				this.U[l].v = g;
-				this.U[l].m = .1;
+				this.U[l].m = 0.1;
 			}
 			f = new Disc;
 			g = f.a;
@@ -7129,28 +7129,28 @@
 			var d = c.a;
 			d.x = 0;
 			d.y = -b;
-			c.m = .1;
+			c.m = 0.1;
 			c.v = 24;
 			c.h = 6;
 			var d = new Vertex;
 			var e = d.a;
 			e.x = 0;
 			e.y = -a;
-			d.m = .1;
+			d.m = 0.1;
 			d.v = 24;
 			d.h = 6;
 			var e = new Vertex;
 			var f = e.a;
 			f.x = 0;
 			f.y = a;
-			e.m = .1;
+			e.m = 0.1;
 			e.v = 24;
 			e.h = 6;
 			var f = new Vertex;
 			var g = f.a;
 			g.x = 0;
 			g.y = b;
-			f.m = .1;
+			f.m = 0.1;
 			f.v = 24;
 			f.h = 6;
 			g = new Segment;
@@ -7159,14 +7159,14 @@
 			g.v = 24;
 			g.h = 6;
 			g.Za = false;
-			g.m = .1;
+			g.m = 0.1;
 			var k = new Segment;
 			k.W = e;
 			k.ca = f;
 			k.v = 24;
 			k.h = 6;
 			k.Za = false;
-			k.m = .1;
+			k.m = 0.1;
 			var l = new Segment;
 			l.W = d;
 			l.ca = e;
@@ -7174,7 +7174,7 @@
 			l.h = 6;
 			l.Za = false;
 			l.Oc(180);
-			l.m = .1;
+			l.m = 0.1;
 			var h = new Segment;
 			h.W = e;
 			h.ca = d;
@@ -7182,7 +7182,7 @@
 			h.h = 6;
 			h.Za = false;
 			h.Oc(180);
-			h.m = .1;
+			h.m = 0.1;
 			this.J.push(c);
 			this.J.push(d);
 			this.J.push(e);
@@ -8369,7 +8369,7 @@
 					c /= f;
 					d = b.aa / (b.aa + a.aa);
 					if (d != d)
-						d = .5;
+						d = 0.5;
 					var g;
 					var k;
 					if (this.ec <= this.Hb)
@@ -8382,17 +8382,17 @@
 						return;
 					f = g - f;
 					if (0 * this.ne == 0)
-						d = this.ne * f * .5, e *= d, c *= d, k = d = b.D, b = b.aa, d.x = k.x + e * b, d.y = k.y + c * b, d = b = a.D, a = a.aa, b.x = d.x + -e * a, b.y = d.y + -c * a;
+						d = this.ne * f * 0.5, e *= d, c *= d, k = d = b.D, b = b.aa, d.x = k.x + e * b, d.y = k.y + c * b, d = b = a.D, a = a.aa, b.x = d.x + -e * a, b.y = d.y + -c * a;
 					else {
 						g = f * d;
 						var l = b.a;
 						var h = b.a;
-						l.x = h.x + e * g * .5;
-						l.y = h.y + c * g * .5;
+						l.x = h.x + e * g * 0.5;
+						l.y = h.y + c * g * 0.5;
 						h = l = a.a;
 						f -= g;
-						l.x = h.x - e * f * .5;
-						l.y = h.y - c * f * .5;
+						l.x = h.x - e * f * 0.5;
+						l.y = h.y - c * f * 0.5;
 						f = b.D;
 						g = a.D;
 						f = e * (f.x - g.x) + c * (f.y - g.y);
@@ -8601,7 +8601,7 @@
 			this.h = a.M();
 			this.v = a.M();
 		}, Oc: function (a) {
-			a *= .017453292519943295;
+			a *= 0.017453292519943295;
 			if (a < 0) {
 				a = -a;
 				var b = this.W;
@@ -8617,8 +8617,8 @@
 			if (0 * this.vb == 0) {
 				var a = this.ca.a;
 				var b = this.W.a;
-				var c = .5 * (a.x - b.x);
-				var a = .5 * (a.y - b.y);
+				var c = 0.5 * (a.x - b.x);
+				var a = 0.5 * (a.y - b.y);
 				var b = this.W.a;
 				var d = this.vb;
 				this.Xd = new Point(b.x + c + -a * d, b.y + a + c * d);
@@ -8794,10 +8794,10 @@
 			}
 			else if (g = a.ta.F[0].a, f = g.x, g = g.y, b != null) {
 				var k = b.a;
-				f = .5 * (f + k.x);
-				g = .5 * (g + k.y);
-				var h = .5 * c;
-				var m = .5 * d;
+				f = 0.5 * (f + k.x);
+				g = 0.5 * (g + k.y);
+				var h = 0.5 * c;
+				var m = 0.5 * d;
 				b = k.x - h + 50;
 				var n = k.y - m + 50;
 				var h = k.x + h - 50;
@@ -8809,7 +8809,7 @@
 			if (n > 1)
 				n = 1;
 			b = e = this.Ya;
-			n *= .04;
+			n *= 0.04;
 			h = b.x;
 			b = b.y;
 			e.x = h + (f - h) * n;
@@ -8819,23 +8819,23 @@
 			if (2 * c.$b < a)
 				this.Ya.x = 0;
 			else {
-				if (c.$b < this.Ya.x + .5 * a)
-					this.Ya.x = c.$b - .5 * a;
-				else if (-c.$b > this.Ya.x - .5 * a)
-					this.Ya.x = -c.$b + .5 * a;
+				if (c.$b < this.Ya.x + 0.5 * a)
+					this.Ya.x = c.$b - 0.5 * a;
+				else if (-c.$b > this.Ya.x - 0.5 * a)
+					this.Ya.x = -c.$b + 0.5 * a;
 			}
 			if (2 * c.qc < b)
 				this.Ya.y = 0;
 			else {
-				if (c.qc < this.Ya.y + .5 * b)
-					this.Ya.y = c.qc - .5 * b;
-				else if (-c.qc > this.Ya.y - .5 * b)
-					this.Ya.y = -c.qc + .5 * b;
+				if (c.qc < this.Ya.y + 0.5 * b)
+					this.Ya.y = c.qc - 0.5 * b;
+				else if (-c.qc > this.Ya.y - 0.5 * b)
+					this.Ya.y = -c.qc + 0.5 * b;
 			}
 		}, Pq: function (a) {
 			this.c.beginPath();
 			this.c.strokeStyle = 'white';
-			this.c.globalAlpha = .3;
+			this.c.globalAlpha = 0.3;
 			this.c.arc(a.x, a.y, 25, 0, 2 * Math.PI, false);
 			this.c.stroke();
 			this.c.globalAlpha = 1;
@@ -8949,7 +8949,7 @@
 					var g = g.a;
 					var h = this.dd.get(f.V);
 					if (c && h.Xf)
-						this.c.drawImage(ConnectionConstants.Dm, g.x - .5 * ConnectionConstants.Dm.width, g.y - 35);
+						this.c.drawImage(ConnectionConstants.Dm, g.x - 0.5 * ConnectionConstants.Dm.width, g.y - 35);
 					if (b != f)
 						h.so(this.c, g.x, g.y + 50);
 				}
@@ -9027,8 +9027,8 @@
 				}
 			}
 		}, nk: function (a, b, c, d) {
-			c = .5 * c - 25;
-			d = .5 * d - 25;
+			c = 0.5 * c - 25;
+			d = 0.5 * d - 25;
 			var e = this.Ya;
 			var f = a.x - e.x;
 			var e = a.y - e.y;
@@ -9067,7 +9067,7 @@
 	BigAnimatedText.b = true;
 	BigAnimatedText.prototype = {
 		zo: function () {
-			return 2.31 + .1155 * (this.We.length - 1);
+			return 2.31 + 0.1155 * (this.We.length - 1);
 		}, Kc: function (a, b) {
 			var c = b / 2.31;
 			var d = 0;
@@ -9075,10 +9075,10 @@
 			for (var e = 0, f = this.We; f.length > e;) {
 				var g = f[e];
 				++e;
-				var h = c - .05 * d;
+				var h = c - 0.05 * d;
 				var l = 180 * BigAnimatedText.keyFrames2.eval(h) * ((d & 1) != 0 ? -1 : 1);
 				a.globalAlpha = BigAnimatedText.keyFrames1.eval(h);
-				a.drawImage(g, l - .5 * g.width, 35 * -(this.We.length - 1) + 70 * d - .5 * g.height);
+				a.drawImage(g, l - 0.5 * g.width, 35 * -(this.We.length - 1) + 70 * d - 0.5 * g.height);
 				a.globalAlpha = 1;
 				++d;
 			}
@@ -9089,7 +9089,7 @@
 			for (var c = 0, d = this.We; d.length > c;) {
 				var e = d[c];
 				++c;
-				a.drawImage(e, .5 * -e.width, 35 * -(this.We.length - 1) + 70 * b - .5 * e.height);
+				a.drawImage(e, 0.5 * -e.width, 35 * -(this.We.length - 1) + 70 * b - 0.5 * e.height);
 				++b;
 			}
 			a.imageSmoothingEnabled = false;
@@ -9273,7 +9273,7 @@
 			this.Ok(d);
 		}, Ok: function (a) {
 			var b = this.dc.clientHeight;
-			var b = .5 * -b <= this.dc.scrollTop + b - this.dc.scrollHeight || !ChatboxView.Yo(this.dc);
+			var b = 0.5 * -b <= this.dc.scrollTop + b - this.dc.scrollHeight || !ChatboxView.Yo(this.dc);
 			this.dc.appendChild(a);
 			if (b)
 				this.dc.scrollTop = a.offsetTop;
@@ -10024,7 +10024,7 @@
 	Mya.zc = 0;
 	RoRuUu.Km = [{name: 'ro', reliable: true, kj: true}, {name: 'ru', reliable: true, kj: false}, {name: 'uu', reliable: false, kj: false}];
 	WebserverApiOps.vj = 'application/x-www-form-urlencoded';
-	Dha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
+	Dha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -0.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -0.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -0.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -0.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', 0.1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, 0.8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
 	ConnectionConstants.p2pWss = 'wss://p2p.haxball.com/';
 	ConnectionConstants.rsUrl = 'https://www.haxball.com/rs/';
 	ConnectionConstants.stuns = [{urls: 'stun:stun.l.google.com:19302'}];
@@ -10063,10 +10063,10 @@
 	Dma.configProp = Manager.Fa({Ba: false, Aa: false});
 	Dla.configProp = Manager.Fa({Ba: false, Aa: false});
 	Mla.configProp = Manager.Fa({Ba: false, Aa: false});
-	Segment.segVal1 = .17435839227423353;
+	Segment.segVal1 = 0.17435839227423353;
 	Segment.segVal2 = 5.934119456780721;
-	BigAnimatedText.keyFrames1 = new KeyFramesManager([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
-	BigAnimatedText.keyFrames2 = new KeyFramesManager([0, -1, 3, 0, 0, .35, 0, 0, 0, 0, .65, 0, 0, 1, 3, 1]);
+	BigAnimatedText.keyFrames1 = new KeyFramesManager([0, 0, 2, 1, 0, 0.35, 1, 0, 1, 0, 0.7, 1, 0, 0, 0, 1]);
+	BigAnimatedText.keyFrames2 = new KeyFramesManager([0, -1, 3, 0, 0, 0.35, 0, 0, 0, 0, 0.65, 0, 0, 1, 3, 1]);
 	ChangeLocationView.htmlContents = '<div class=\'dialog change-location-view\'><h1>Change Location</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'change\'>Change</button><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
 	ChatboxView.htmlContents = '<div class=\'chatbox-view\'><div data-hook=\'log\' class=\'log\'><p>Controls:<br/>Move: WASD or Arrows<br/>Kick: X, Space, Ctrl, Shift, Numpad 0<br/>View: Numbers 1 to 4</p></div><div class=\'autocompletebox\' data-hook=\'autocompletebox\'></div><div class=\'input\'><input data-hook=\'input\' type=\'text\' /><button data-hook=\'send\'>Send</button></div></div>';
 	ChooseNicknameView.htmlContents = '<div class=\'choose-nickname-view\'><img src="images/haxball.png" /><div class=\'dialog\'><h1>Choose nickname</h1><div class=\'label-input\'><label>Nick:</label><input data-hook=\'input\' type=\'text\' /></div><button data-hook=\'ok\'>Ok</button></div></div>';
