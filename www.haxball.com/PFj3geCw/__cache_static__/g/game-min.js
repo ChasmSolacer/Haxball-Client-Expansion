@@ -37,9 +37,7 @@
 			var l = c[k++];
 			var t = window.document.createElement('button');
 			t.textContent = l;
-			t.onclick = (a => () => {
-				y.i(d.Va, a[0]);
-			})([g++]);
+			t.onclick = (a => () => y.i(d.Va, a[0]))([g++]);
 			e.appendChild(t);
 		}
 		this.Vd.textContent = b;
@@ -141,9 +139,7 @@
 		function f(a) {
 			var b = {Jm: l.get(a + 'btn'), bh: l.get(a + 'sec')};
 			t.push(b);
-			b.Jm.onclick = () => {
-				g(b);
-			};
+			b.Jm.onclick = () => g(b);
 		}
 
 		function g(a) {
@@ -171,9 +167,7 @@
 		f('misc');
 		f('input');
 		g(t[aa.$l]);
-		e('tsound-main', n.A.pm, a => {
-			n.Na.im(a ? 1 : 0);
-		});
+		e('tsound-main', n.A.pm, a => n.Na.im(a ? 1 : 0));
 		e('tsound-chat', n.A.Hi);
 		e('tsound-highlight', n.A.om);
 		e('tsound-crowd', n.A.nm);
@@ -198,9 +192,7 @@
 			d.disabled = !a;
 			if (b == null) {
 				d.textContent = 'Override location';
-				d.onclick = () => {
-					A.i(k.Ep);
-				};
+				d.onclick = () => A.i(k.Ep);
 			}
 			else {
 				d.textContent = 'Remove override';
@@ -229,9 +221,7 @@
 			u.appendChild(a);
 		};
 		r();
-		this.nd.onclick = () => {
-			A.i(k.qb);
-		};
+		this.nd.onclick = () => A.i(k.qb);
 	}
 
 	function Ya(a) {
@@ -257,53 +247,29 @@
 		this.qf = c.get('score-limit-sel');
 		this.rm = c.get('stadium-name');
 		this.sm = c.get('stadium-pick');
-		this.sm.onclick = () => {
-			A.i(b.Xp);
-		};
+		this.sm.onclick = () => A.i(b.Xp);
 		this.Th(c.get('red-list'), this.Hl, p.fa, a);
 		this.Th(c.get('blue-list'), this.Lj, p.xa, a);
 		this.Th(c.get('spec-list'), this.qm, p.Ia, a);
 		this.Uk(this.wf, this.Tk(15));
 		this.Uk(this.qf, this.Tk(15));
-		this.wf.onchange = () => {
-			y.i(b.aq, b.wf.selectedIndex);
-		};
-		this.qf.onchange = () => {
-			y.i(b.Tp, b.qf.selectedIndex);
-		};
-		this.tm.onclick = () => {
-			A.i(b.Yp);
-		};
-		this.vm.onclick = () => {
-			A.i(b.Zp);
-		};
-		this.gi.onclick = () => {
-			A.i(b.Mp);
-		};
-		this.xn.onclick = () => {
-			A.i(b.Dp);
-		};
-		this.Nk.onclick = () => {
-			y.i(b.$p, !b.Xh);
-		};
+		this.wf.onchange = () => y.i(b.aq, b.wf.selectedIndex);
+		this.qf.onchange = () => y.i(b.Tp, b.qf.selectedIndex);
+		this.tm.onclick = () => A.i(b.Yp);
+		this.vm.onclick = () => A.i(b.Zp);
+		this.gi.onclick = () => A.i(b.Mp);
+		this.xn.onclick = () => A.i(b.Dp);
+		this.Nk.onclick = () => y.i(b.$p, !b.Xh);
 		this.Rl.onclick = () => {
 			if (b.ee != null) {
 				b.ee(p.xa);
 				b.ee(p.fa);
 			}
 		};
-		this.Fl.onclick = () => {
-			A.i(b.Qp);
-		};
-		d.onclick = () => {
-			A.i(b.Wp);
-		};
-		e.onclick = () => {
-			A.i(b.de);
-		};
-		f.onclick = () => {
-			A.i(b.Pp);
-		};
+		this.Fl.onclick = () => A.i(b.Qp);
+		d.onclick = () => A.i(b.Wp);
+		e.onclick = () => A.i(b.de);
+		f.onclick = () => A.i(b.Pp);
 		this.Bj(false);
 		this.Cj(false);
 	}
@@ -319,9 +285,7 @@
 				a.Va(null);
 		};
 		this.Cb.maxLength = 30;
-		this.Cb.oninput = () => {
-			a.C();
-		};
+		this.Cb.oninput = () => a.C();
 		this.Cb.onkeydown = b => {
 			if (b.keyCode == 13 && a.Dc() && a.Va != null)
 				a.Va(a.Cb.value);
@@ -368,24 +332,16 @@
 		this.Tm = d.get('join');
 		a = d.get('create');
 		this.cs = d.get('count');
-		a.onclick = () => {
-			A.i(c.ws);
-		};
-		d.get('changenick').onclick = () => {
-			A.i(c.vs);
-		};
-		d.get('settings').onclick = () => {
-			A.i(c.ys);
-		};
+		a.onclick = () => A.i(c.ws);
+		d.get('changenick').onclick = () => A.i(c.vs);
+		d.get('settings').onclick = () => A.i(c.ys);
 		var f = d.get('replayfile');
 		f.onchange = () => {
 			var a = f.files;
 			if (a.length >= 1) {
 				var a = a.item(0);
 				var b = new FileReader;
-				b.onload = () => {
-					y.i(c.xs, b.result);
-				};
+				b.onload = () => y.i(c.xs, b.result);
 				b.readAsArrayBuffer(a);
 			}
 		};
@@ -436,16 +392,12 @@
 		this.Zf = b.get('link');
 		var c = b.get('copy');
 		var b = b.get('close');
-		this.Zf.onfocus = () => {
-			a.Zf.select();
-		};
+		this.Zf.onfocus = () => a.Zf.select();
 		c.onclick = () => {
 			a.Zf.select();
 			return window.document.execCommand('Copy');
 		};
-		b.onclick = () => {
-			A.i(a.qb);
-		};
+		b.onclick = () => A.i(a.qb);
 	}
 
 	function ha(a) {
@@ -516,9 +468,7 @@
 			return t.style.left = 'calc(' + 100 * b + '% - 30px)';
 		};
 		this.fp = d.get('leave');
-		this.fp.onclick = () => {
-			A.i(c.de);
-		};
+		this.fp.onclick = () => A.i(c.de);
 	}
 
 	function Q(a) {
@@ -531,16 +481,12 @@
 				Q.xg = window.document.createElement('div');
 				c.Vd.appendChild(Q.xg);
 				Q.Dq = d.render(Q.xg, {
-					sitekey: a, callback: a => {
-						y.i(Q.Gl, a);
-					}, theme: 'dark'
+					sitekey: a, callback: a => y.i(Q.Gl, a), theme: 'dark'
 				});
 			}
 			d.reset(Q.Dq);
 			Q.Gl = a => {
-				window.setTimeout(() => {
-					y.i(b.Va, a);
-				}, 1000);
+				window.setTimeout(() => y.i(b.Va, a), 1000);
 				Q.Gl = null;
 			};
 			c.Vd.appendChild(Q.xg);
@@ -572,12 +518,8 @@
 					ia.i(b.mg, c, a);
 			}
 		};
-		this.Vh.onclick = () => {
-			y.i(b.Kp, a);
-		};
-		this.vi.onclick = () => {
-			y.i(b.ee, a);
-		};
+		this.Vh.onclick = () => y.i(b.Kp, a);
+		this.vi.onclick = () => y.i(b.ee, a);
 	}
 
 	function cb(a) {
@@ -596,9 +538,7 @@
 		}
 		this.Ze.textContent = this.w;
 		this.rg.textContent = '' + this.yb;
-		this.g.ondragstart = a => {
-			a.dataTransfer.setData('player', K.ye(b.$));
-		};
+		this.g.ondragstart = a => a.dataTransfer.setData('player', K.ye(b.$));
 		this.g.oncontextmenu = a => {
 			a.preventDefault();
 			y.i(b.ff, b.$);
@@ -614,15 +554,9 @@
 		this.Hf = d.get('admin');
 		this.Qe = d.get('kick');
 		this.nd = d.get('close');
-		this.Hf.onclick = () => {
-			ia.i(c.Cp, c.Nb, !c.ql);
-		};
-		this.Qe.onclick = () => {
-			y.i(c.ei, c.Nb);
-		};
-		this.nd.onclick = () => {
-			A.i(c.qb);
-		};
+		this.Hf.onclick = () => ia.i(c.Cp, c.Nb, !c.ql);
+		this.Qe.onclick = () => y.i(c.ei, c.Nb);
+		this.nd.onclick = () => A.i(c.qb);
 		this.Nb = a.V;
 		this.Ej(a.w);
 		this.Dj(a.cb);
@@ -656,20 +590,14 @@
 		var a = this;
 		this.g = v.Ga(eb.N);
 		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => {
-			A.i(a.ci);
-		};
+		b.get('cancel').onclick = () => A.i(a.ci);
 		this.hi = b.get('pick');
 		this.bk = b.get('delete');
 		this.rk = b.get('export');
 		var c = b.get('list');
 		var d = b.get('file');
 		this.Lg();
-		this.hi.onclick = () => {
-			a.jb != null && a.jb.Pd().then(b => {
-				y.i(a.og, b);
-			});
-		};
+		this.hi.onclick = () => a.jb != null && a.jb.Pd().then(b => y.i(a.og, b));
 		this.bk.onclick = () => {
 			if (a.jb != null) {
 				var b = a.jb.Lm;
@@ -681,16 +609,10 @@
 				}
 			}
 		};
-		this.rk.onclick = () => {
-			a.jb != null && a.jb.Pd().then(a => {
-				Ca.br(a.se(), a.w + '.hbs');
-			});
-		};
+		this.rk.onclick = () => a.jb != null && a.jb.Pd().then(a => Ca.br(a.se(), a.w + '.hbs'));
 		this.ki(c);
 		this.vg = Ba.cg(c);
-		window.setTimeout(() => {
-			a.vg.update();
-		}, 0);
+		window.setTimeout(() => a.vg.update(), 0);
 		d.onchange = () => {
 			var b = d.files;
 			if (b.length >= 1) {
@@ -736,12 +658,8 @@
 		var a = this;
 		this.g = v.Ga(fb.N);
 		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => {
-			y.i(a.qb, false);
-		};
-		b.get('leave').onclick = () => {
-			y.i(a.qb, true);
-		};
+		b.get('cancel').onclick = () => y.i(a.qb, false);
+		b.get('leave').onclick = () => y.i(a.qb, true);
 	}
 
 	function gb(a) {
@@ -754,15 +672,9 @@
 		this.An = c.get('ban-text');
 		this.Qe = c.get('kick');
 		this.nd = c.get('close');
-		this.yn.onclick = () => {
-			b.Aj(!b.Jj);
-		};
-		this.nd.onclick = () => {
-			A.i(b.qb);
-		};
-		this.Qe.onclick = () => {
-			Cb.i(b.ei, b.Nb, b.oi.value, b.Jj);
-		};
+		this.yn.onclick = () => b.Aj(!b.Jj);
+		this.nd.onclick = () => A.i(b.qb);
+		this.Qe.onclick = () => Cb.i(b.ei, b.Nb, b.oi.value, b.Jj);
 		this.oi.onkeydown = a => a.stopPropagation();
 		this.oi.maxLength = 100;
 		this.Nb = a.V;
@@ -792,9 +704,7 @@
 		};
 		a.get('settings').onclick = () => {
 			var a = new aa;
-			a.qb = () => {
-				b.bb(null);
-			};
+			a.qb = () => b.bb(null);
 			b.bb(a.g);
 		};
 		this.Jh.appendChild(this.Fb.g);
@@ -809,18 +719,14 @@
 		};
 		this.Wa.Xp = () => {
 			var a = new eb;
-			a.ci = () => {
-				b.bb(null);
-			};
+			a.ci = () => b.bb(null);
 			a.og = a => {
 				y.i(b.og, a);
 				b.bb(null);
 			};
 			a.fi = a => {
 				a = new P('Error loading stadium', a, ['Ok']);
-				a.Va = () => {
-					b.bb(null);
-				};
+				a.Va = () => b.bb(null);
 				b.bb(a.g);
 			};
 			b.bb(a.g);
@@ -858,16 +764,12 @@
 		this.g = v.Ga(Ka.N);
 		var d = v.Ea(this.g);
 		this.Bp = d.get('ok');
-		this.Bp.onclick = () => {
-			A.i(c.Va);
-		};
+		this.Bp.onclick = () => A.i(c.Va);
 		this.Nl = d.get('replay');
 		var e = b != null;
 		this.Nl.hidden = !e;
 		if (e) {
-			this.Nl.onclick = () => {
-				ba.Yl(b);
-			};
+			this.Nl.onclick = () => ba.Yl(b);
 		}
 		d.get('reason').textContent = a;
 	}
@@ -884,16 +786,10 @@
 		this.Em = c.get('unlisted');
 		this.$e.maxLength = 40;
 		this.$e.value = a;
-		this.$e.oninput = () => {
-			b.C();
-		};
+		this.$e.oninput = () => b.C();
 		this.kl.maxLength = 30;
-		this.Em.onclick = () => {
-			b.Fj(!b.Fm);
-		};
-		this.vh.onclick = () => {
-			A.i(b.ci);
-		};
+		this.Em.onclick = () => b.Fj(!b.Fm);
+		this.vh.onclick = () => A.i(b.ci);
 		this.Wj.onclick = () => {
 			if (b.Dc()) {
 				var a = b.kl.value;
@@ -932,9 +828,7 @@
 		this.af = d.get('ok');
 		this.Cb.maxLength = 25;
 		this.Cb.value = a;
-		this.Cb.oninput = () => {
-			c.C();
-		};
+		this.Cb.oninput = () => c.C();
 		this.Cb.onkeydown = a => {
 			if (a.keyCode == 13)
 				b();
@@ -1007,9 +901,7 @@
 				b.ig(false);
 			b.Bc.Qh();
 		};
-		this.gb.oninput = () => {
-			b.Bc.Hn(b.gb.value, b.gb.selectionStart);
-		};
+		this.gb.oninput = () => b.Bc.Hn(b.gb.value, b.gb.selectionStart);
 	}
 
 	function mb() {
@@ -1017,9 +909,7 @@
 		var a = this;
 		this.g = v.Ga(mb.N);
 		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => {
-			A.i(a.qb);
-		};
+		b.get('cancel').onclick = () => A.i(a.qb);
 		this.wh = b.get('change');
 		this.wh.disabled = true;
 		this.wh.onclick = () => {
@@ -1029,9 +919,7 @@
 		b = b.get('list');
 		this.ki(b);
 		var c = Ba.cg(b);
-		window.setTimeout(() => {
-			c.update();
-		}, 0);
+		window.setTimeout(() => c.update(), 0);
 	}
 
 	function Ea() {
@@ -1413,16 +1301,12 @@
 		this.uf(n.A.Tb.L());
 		this.j.g.classList.add('replayer');
 		this.je = new ha(a);
-		this.je.Vp = () => {
-			c.Lr(a.T);
-		};
+		this.je.Vp = () => c.Lr(a.T);
 		this.je.Up = () => {
 			b.j.me(a.T.K == null);
 			c.ri(a.T);
 		};
-		this.je.el = () => {
-			b.j.Fb.Eb.Xq();
-		};
+		this.je.el = () => b.j.Fb.Eb.Xq();
 		this.j.g.appendChild(this.je.g);
 	}
 
@@ -1574,9 +1458,7 @@
 		this.xi = this.am = false;
 		this.sd = 0;
 		var b = this;
-		this.Of = new ub(a, a => {
-			b.j.Qa.Gb(a);
-		});
+		this.Of = new ub(a, a => b.j.Qa.Gb(a));
 		this.ya = a;
 		a.T.ko = c => {
 			if (c != b.am) {
@@ -1593,9 +1475,7 @@
 		window.document.addEventListener('keydown', G(this, this.Bd));
 		window.document.addEventListener('keyup', G(this, this.Cd));
 		window.onbeforeunload = () => 'Are you sure you want to leave the room?';
-		this.ob.ng = b => {
-			a.ra(b);
-		};
+		this.ob.ng = b => a.ra(b);
 		this.j.Wa.aq = b => {
 			b = da.la(1, b);
 			a.ra(b);
@@ -1608,26 +1488,16 @@
 			b = qa.la(b);
 			a.ra(b);
 		};
-		this.j.Wa.Yp = () => {
-			a.ra(new Ma);
-		};
-		this.j.Wa.Zp = () => {
-			a.ra(new La);
-		};
-		this.j.Wa.Mp = () => {
-			b.Bm();
-		};
+		this.j.Wa.Yp = () => a.ra(new Ma);
+		this.j.Wa.Zp = () => a.ra(new La);
+		this.j.Wa.Mp = () => b.Bm();
 		this.j.Wa.mg = (b, c) => {
 			var d = S.la(b, c);
 			a.ra(d);
 		};
 		this.j.Wa.ee = G(this, this.Wq);
-		this.j.Wa.Dp = () => {
-			a.ra(new Qa);
-		};
-		this.j.Wa.Pp = () => {
-			ba.Bq(a);
-		};
+		this.j.Wa.Dp = () => a.ra(new Qa);
+		this.j.Wa.Pp = () => ba.Bq(a);
 		this.j.Wa.$p = b => {
 			b = pa.la(b);
 			a.ra(b);
@@ -1636,29 +1506,19 @@
 			var d = a.T.na(c);
 			if (d != null) {
 				var e = new db(d, b.xi);
-				e.qb = () => {
-					b.j.bb(null);
-				};
+				e.qb = () => b.j.bb(null);
 				e.Cp = (b, c) => {
 					var d = sa.la(b, c);
 					a.ra(d);
 				};
-				e.ei = () => {
-					b.vr(d);
-				};
-				b.j.bb(e.g, () => {
-					e.C(a.T, b.xi);
-				});
+				e.ei = () => b.vr(d);
+				b.j.bb(e.g, () => e.C(a.T, b.xi));
 			}
 		};
 		this.j.Wa.Wp = () => {
 			var a = new bb;
-			a.qb = () => {
-				b.j.bb(null);
-			};
-			b.j.bb(a.g, () => {
-				a.nr(b.Bg);
-			});
+			a.qb = () => b.j.bb(null);
+			b.j.bb(a.g, () => a.nr(b.Bg));
 		};
 		this.j.Wa.Qp = () => {
 			if (b.Ed == null)
@@ -1675,9 +1535,7 @@
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
-		this.Qr = window.setInterval(() => {
-			a.C();
-		}, 50);
+		this.Qr = window.setInterval(() => a.C(), 50);
 		this.uf();
 		var c = n.A.rd.L();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
@@ -1791,12 +1649,8 @@
 		this.Li = window.performance.now();
 		this.Ic = new Sa(this.tp, a.iceServers, Zb.Km, a.gn);
 		this.Ic.Vj = G(this, this.Oo);
-		this.Ic.bl = a => {
-			b.Lp(a);
-		};
-		this.Ic.kg = a => {
-			y.i(b.kg, a);
-		};
+		this.Ic.bl = a => b.Lp(a);
+		this.Ic.kg = a => y.i(b.kg, a);
 		this.Ic.ef = (a, d) => {
 			if (b.ef != null)
 				b.ef(a, d);
@@ -1844,9 +1698,7 @@
 				c.re = a;
 				c.tf(2);
 			};
-			c.pc.gl = () => {
-				c.tf(1);
-			};
+			c.pc.gl = () => c.tf(1);
 			var g = false;
 			c.pc.Zk = () => g = true;
 			c.pc.bd = a => {
@@ -2035,9 +1887,7 @@
 						b.lg(a.data);
 				}
 			};
-			e.onclose = () => {
-				b.ia();
-			};
+			e.onclose = () => b.ia();
 		}
 	}
 
@@ -2096,9 +1946,7 @@
 		this.rh = this.yh = false;
 		var g = this;
 		this.pa = new Va(0, b, d);
-		this.pa.bd = () => {
-			g.Oe(Ob.jh);
-		};
+		this.pa.bd = () => g.Oe(Ob.jh);
 		this.pa.zd = () => {
 			if (g.zd != null)
 				g.zd(new Nb(g.pa));
@@ -2124,9 +1972,7 @@
 				g.pa.Mi();
 				g.Bi(g.jr, g.pa.Uf, e);
 				g.pa.jg = G(g, g.yi);
-				g.pa.Sh.then(() => {
-					g.Nc(0, null);
-				});
+				g.pa.Sh.then(() => g.Nc(0, null));
 			};
 		};
 		this.pa.eo();
@@ -2366,9 +2212,7 @@
 			this.pa.Ra.setRemoteDescription(new RTCSessionDescription({sdp: a, type: 'answer'}), () => {
 				for (var a = 0; b.length > a;)
 					c.pa.Ra.addIceCandidate(b[a++]);
-			}, () => {
-				c.Oe(Ob.Error);
-			});
+			}, () => c.Oe(Ob.Error));
 		}, Nh: function (a) {
 			this.pa.Ra.addIceCandidate(a);
 		}, Nc: function (a, b) {
@@ -2415,11 +2259,7 @@
 				for (var g = 0; b.length > g;)
 					d.yj(b[g++]);
 				return lc.Dr(d.Sh, c).then(e, e);
-			}).then(a => {
-				d.di(a);
-			})['catch'](() => {
-				d.Tf();
-			});
+			}).then(a => d.di(a))['catch'](() => d.Tf());
 		}, co: function (a) {
 			var b = this;
 			var c = {id: this.Vc.length, negotiated: true, ordered: a.kj};
@@ -2435,12 +2275,8 @@
 				if (b.zd != null)
 					b.zd();
 			};
-			a.onclose = () => {
-				b.Tf();
-			};
-			a.onmessage = () => {
-				b.Tf();
-			};
+			a.onclose = () => b.Tf();
+			a.onmessage = () => b.Tf();
 			this.Vc.push(a);
 		}, yj: function (a) {
 			var b = this;
@@ -2540,9 +2376,7 @@
 				a = a.sitekey;
 				if (a == null)
 					throw new q(null);
-				d.ef != null && d.ef(a, a => {
-					d.Ji(a);
-				});
+				d.ef != null && d.ef(a, a => d.Ji(a));
 			}
 
 			function c(a) {
@@ -2554,15 +2388,9 @@
 					throw new q(null);
 				d.X = new WebSocket(b + '?token=' + a);
 				d.X.binaryType = 'arraybuffer';
-				d.X.onopen = () => {
-					d.So();
-				};
-				d.X.onclose = a => {
-					d.Mh(a.code != 4001);
-				};
-				d.X.onerror = () => {
-					d.Mh(true);
-				};
+				d.X.onopen = () => d.So();
+				d.X.onclose = a => d.Mh(a.code != 4001);
+				d.X.onerror = () => d.Mh(true);
 				d.X.onmessage = G(d, d.Ph);
 			}
 
@@ -2577,18 +2405,14 @@
 					case 'recaptcha':
 						b(a);
 				}
-			})['catch'](() => {
-				d.Mh(true);
-			});
+			})['catch'](() => d.Mh(true));
 		}, So: function () {
 			var a = this;
 			if (this.Mc != null)
 				this.Ai();
 			if (this.nf != 0)
 				this.cm();
-			this.ol = window.setInterval(() => {
-				a.zi();
-			}, 40000);
+			this.ol = window.setInterval(() => a.zi(), 40000);
 		}, Ph: function (a) {
 			a = new F(new DataView(a.data), false);
 			switch (a.B()) {
@@ -2662,12 +2486,8 @@
 				};
 				h.di = a => {
 					g.Bi(h, a, h.Uf, null);
-					h.Sh.then(() => {
-						g.Nc(0, h, null);
-					});
-					h.jg = a => {
-						g.yi(h, a);
-					};
+					h.Sh.then(() => g.Nc(0, h, null));
+					h.jg = a => g.yi(h, a);
 				};
 				h.Mi();
 				h.bo(new RTCSessionDescription({sdp: c, type: 'offer'}), d);
@@ -2758,9 +2578,7 @@
 			window.clearInterval(this.ol);
 			window.clearTimeout(this.Ul);
 			if (a) {
-				this.Ul = window.setTimeout(() => {
-					b.Ji();
-				}, this.Zq + Math.random() * this.$q | 0);
+				this.Ul = window.setTimeout(() => b.Ji(), this.Zq + Math.random() * this.$q | 0);
 			}
 		}, zn: function (a) {
 			for (var b = 0, c = a.oe; c.length > b; b++)
@@ -3271,12 +3089,8 @@
 				c = window.document.createElement('script');
 				c.src = 'https://www.google.com/recaptcha/api.js?onload=___recaptchaload&render=explicit';
 				window.document.head.appendChild(c);
-				window.___recaptchaload = () => {
-					a(window.grecaptcha);
-				};
-				c.onerror = () => {
-					b(null);
-				};
+				window.___recaptchaload = () => a(window.grecaptcha);
+				c.onerror = () => b(null);
 			}
 		});
 		return Ja.li;
@@ -3300,25 +3114,17 @@
 			var d = a.createAnswer;
 			a.createOffer = function (a) {
 				var b = this;
-				return new Promise((d, e) => {
-					c.call(b, d, e, a);
-				});
+				return new Promise((d, e) => c.call(b, d, e, a));
 			};
 			a.createAnswer = function (a) {
 				var b = this;
-				return new Promise((c, e) => {
-					d.call(b, c, e, a);
-				});
+				return new Promise((c, e) => d.call(b, c, e, a));
 			};
 		}
 	};
 	Ca.b = true;
-	Ca.ar = (a, b) => {
-		Ca.Xl(new Blob([a], {type: 'octet/stream'}), b);
-	};
-	Ca.br = (a, b) => {
-		Ca.Xl(new Blob([a], {type: 'text/plain'}), b);
-	};
+	Ca.ar = (a, b) => Ca.Xl(new Blob([a], {type: 'octet/stream'}), b);
+	Ca.br = (a, b) => Ca.Xl(new Blob([a], {type: 'text/plain'}), b);
 	Ca.Xl = (a, b) => {
 		var c = window.document.createElement('a');
 		c.style.display = 'display: none';
@@ -3356,9 +3162,7 @@
 		c.innerHTML = a;
 		return c.firstElementChild;
 	};
-	v.xe = (a, b) => {
-		a.parentElement.replaceChild(b, a);
-	};
+	v.xe = (a, b) => a.parentElement.replaceChild(b, a);
 	v.Cf = a => {
 		for (var b = a.firstChild; b != null;) {
 			a.removeChild(b);
@@ -3367,16 +3171,12 @@
 	};
 	zb.b = true;
 	zb.eh = a => new Promise((b, c) => {
-		a.onsuccess = () => {
-			b(a.result);
-		};
+		a.onsuccess = () => b(a.result);
 		a.onerror = c;
 	});
 	lc.b = true;
 	lc.Dr = (a, b) => new Promise((c, d) => {
-		var e = window.setTimeout(() => {
-			d('Timed out');
-		}, b);
+		var e = window.setTimeout(() => d('Timed out'), b);
 		a.then(a => {
 			window.clearTimeout(e);
 			c(a);
@@ -3747,9 +3547,7 @@
 			var c = Promise.resolve(null);
 			if (this.Je != null)
 				c = this.Je.wr(a);
-			c['catch'](() => null).then(a => {
-				b.ir(a);
-			});
+			c['catch'](() => null).then(a => b.ir(a));
 		}, qq: function (a) {
 			a = pako.inflateRaw(a.sb());
 			a = new F(new DataView(a.buffer, a.byteOffset, a.byteLength));
@@ -4261,9 +4059,7 @@
 			else
 				g('status: ' + k.status);
 		};
-		k.onerror = a => {
-			g(a);
-		};
+		k.onerror = a => g(a);
 		if (e != null)
 			k.setRequestHeader('Content-type', e);
 		k.send(d);
@@ -4527,11 +4323,7 @@
 					if (f.Pe())
 						this.ba('Can\'t store default stadium.');
 					else {
-						Z.Es().then(() => Z.add(f)).then(() => {
-							b.ba('Stadium stored');
-						}, () => {
-							b.ba('Couldn\'t store stadium');
-						});
+						Z.Es().then(() => Z.add(f)).then(() => b.ba('Stadium stored'), () => b.ba('Couldn\'t store stadium'));
 					}
 					break;
 				default:
@@ -4586,9 +4378,7 @@
 		}, vr: function (a) {
 			var b = this;
 			a = new gb(a);
-			a.qb = () => {
-				b.j.bb(null);
-			};
+			a.qb = () => b.j.bb(null);
 			a.ei = (a, d, e) => {
 				b.ya.ra(Y.la(a, d, e));
 				b.j.bb(null);
@@ -4768,9 +4558,7 @@
 						n.Na.cd(n.Na.zk);
 				}
 			};
-			a.ji = () => {
-				n.Na.cd(n.Na.bp);
-			};
+			a.ji = () => n.Na.cd(n.Na.bp);
 			a.Ni = a => {
 				n.Na.cd(n.Na.Io);
 				var b = c.j.Fb.Eb.td;
@@ -4804,9 +4592,7 @@
 					c.j.Qa.Gb('Stadium "' + e.w + '" (' + d + ') loaded' + b(a));
 				}
 			};
-			a.sl = a => {
-				c.j.Qa.Gb('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
-			};
+			a.sl = a => c.j.Qa.Gb('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
 			a.xl = (d, e, f) => {
 				if (a.K != null)
 					c.j.Qa.Gb('' + e.w + ' was moved to ' + f.w + b(d));
@@ -4815,12 +4601,8 @@
 				var d = e.w;
 				c.j.Qa.Gb((e.cb ? '' + d + ' was given admin rights' : '' + d + '\'s admin rights were taken away') + b(a));
 			};
-			a.wl = (a, b) => {
-				c.j.Fb.Eb.Po(a, b);
-			};
-			a.Hk = (a, e, f, g) => {
-				c.j.Qa.Gb('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(a));
-			};
+			a.wl = (a, b) => c.j.Fb.Eb.Po(a, b);
+			a.Hk = (a, e, f, g) => c.j.Qa.Gb('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(a));
 		}, Lr: a => {
 			a.tl = null;
 			a.ul = null;
@@ -4994,9 +4776,7 @@
 	u.b = true;
 	u.qp = () => {
 		mc.ts();
-		x.fj(() => {
-			u.jk(u.xq);
-		});
+		x.fj(() => u.jk(u.xq));
 		u.hp();
 	};
 	u.hp = () => {
@@ -5030,9 +4810,7 @@
 	u.no = (a, b) => {
 		function c() {
 			var a = new Ka('Failed', null);
-			a.Va = () => {
-				u.xb();
-			};
+			a.Va = () => u.xb();
 			x.La(a.g);
 		}
 
@@ -5040,14 +4818,12 @@
 			b = b.sitekey;
 			if (b == null)
 				throw new q(null);
-			u.kk(b, b => {
-				e(a, b);
-			});
+			u.kk(b, b => e(a, b));
 		}
 
 		x.La((new P('Connecting', 'Connecting...', [])).g);
 		var e;
-		e = (a, e) => {
+		e = (a, e) =>
 			M.zl(n.Ee + 'api/client', 'room=' + a + '&rcr=' + e, M.vj).then(a => {
 				switch (a.action) {
 					case 'connect':
@@ -5062,10 +4838,7 @@
 					default:
 						throw new q(null);
 				}
-			})['catch'](() => {
-				c();
-			});
-		};
+			})['catch'](() => c());
 		e(a, '');
 	};
 	u.xq = () => {
@@ -5112,18 +4885,10 @@
 			else
 				u.Pf(b.$);
 		};
-		a.ws = () => {
-			u.oo();
-		};
-		a.vs = () => {
-			u.jk(u.xb);
-		};
-		a.ys = () => {
-			u.mk();
-		};
-		a.xs = a => {
-			u.po(a);
-		};
+		a.ws = () => u.oo();
+		a.vs = () => u.jk(u.xb);
+		a.ys = () => u.mk();
+		a.xs = a => u.po(a);
 	};
 	u.mk = () => {
 		var a = new aa(true);
@@ -5131,18 +4896,14 @@
 		b.className = 'view-wrapper';
 		b.appendChild(a.g);
 		x.La(b);
-		a.qb = () => {
-			u.xb();
-		};
+		a.qb = () => u.xb();
 		a.Ep = () => {
 			var a = new mb;
 			var b = window.document.createElement('div');
 			b.className = 'view-wrapper';
 			b.appendChild(a.g);
 			x.La(b);
-			return a.qb = () => {
-				u.mk();
-			};
+			return a.qb = () => u.mk();
 		};
 	};
 	u.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
@@ -5150,9 +4911,7 @@
 		var a = n.A.fe.L();
 		var b = new ib('' + a + '\'s room');
 		x.La(b.g);
-		b.ci = () => {
-			u.xb();
-		};
+		b.ci = () => u.xb();
 		b.Jp = b => {
 			function c() {
 				if (!b.Ks) {
@@ -5189,13 +4948,12 @@
 			c();
 			var t = new ba(l);
 			var h = false;
-			l.ef = (a, b) => {
+			l.ef = (a, b) =>
 				u.kk(a, a => {
 					b(a);
 					x.La(t.j.g);
 					return h = true;
 				});
-			};
 			var m = window.setInterval(() => {
 				var a = la.la(l);
 				l.ra(a);
@@ -5234,12 +4992,8 @@
 					x.La(t.j.g);
 				}
 			};
-			t.Ih.Np = (a, b, c, d) => {
-				l.to(a, b, c, d);
-			};
-			t.Ih.Op = () => {
-				c();
-			};
+			t.Ih.Np = (a, b, c, d) => l.to(a, b, c, d);
+			t.Ih.Op = () => c();
 			t.j.de = () => {
 				l.ia();
 				t.ia();
@@ -5252,18 +5006,14 @@
 				if (e != null)
 					t.Bg = u.$h(e, l.Ib != null);
 			};
-			t.Of.jm = a => {
-				l.Ei(a);
-			};
+			t.Of.jm = a => l.Ei(a);
 			t.Of.Ud = G(l, l.Ud);
 		};
 	};
 	u.Dh = a => {
 		var b = new Za;
 		x.La(b.g);
-		b.Va = b => {
-			b == null ? u.xb() : u.Pf(a, b);
-		};
+		b.Va = b => b == null ? u.xb() : u.Pf(a, b);
 	};
 	u.po = a => {
 		try {
@@ -5321,16 +5071,12 @@
 			x.La(h.g);
 			var m = (a, b) => {
 				var c = new Ka(a, b);
-				c.Va = () => {
-					u.xb();
-				};
+				c.Va = () => u.xb();
 				x.La(c.g);
 			}, p = () => {
 				var a = new P('Connection Failed', '', ['Ok']);
 				a.Vd.innerHTML = '<p>Failed to connect to room host.</p><p>If this problem persists please see the <a href=\'https://github.com/haxball/haxball-issues/wiki/Connection-Issues\' target=\'_blank\'>troubleshooting guide</a>.</p>';
-				a.Va = () => {
-					u.xb();
-				};
+				a.Va = () => u.xb();
 				x.La(a.g);
 			}, r = () => {
 				var b = new ba(t);
@@ -5364,9 +5110,7 @@
 					case 2:
 						switch (c.reason) {
 							case 4004:
-								u.no(a, c => {
-									u.Pf(a, b, c);
-								});
+								u.no(a, c => u.Pf(a, b, c));
 								break;
 							case 4101:
 								if (b == null)
@@ -5394,9 +5138,7 @@
 						r();
 				}
 			};
-			t.Sp = () => {
-				h.ba('Trying reverse connection...');
-			};
+			t.Sp = () => h.ba('Trying reverse connection...');
 		}
 		catch (ic) {
 			window.console.log(ic instanceof q ? ic.Ta : ic);
@@ -5433,9 +5175,7 @@
 				kc.fj();
 				var b;
 				if (n.A.Me.L() == null) {
-					T.Fo().then(a => {
-						n.A.Me.Xa(a);
-					}, () => ({}));
+					T.Fo().then(a => n.A.Me.Xa(a), () => ({}));
 				}
 				else
 					b = Promise.resolve(null);
@@ -5443,9 +5183,7 @@
 					a = new JSZip(a);
 					n.Na = new Ub(a);
 					return Promise.all([n.Na.ro, x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a), x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a), x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a), x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)]);
-				}), b]).then(() => {
-					x.us(a);
-				});
+				}), b]).then(() => x.us(a));
 			});
 		}
 	};
@@ -5653,9 +5391,7 @@
 				c(a);
 				e.close();
 			};
-			f.oncomplete = () => {
-				e.close();
-			};
+			f.oncomplete = () => e.close();
 			zb.eh(f.objectStore('files').get(a)).then(a => {
 				try {
 					var d = new h;
@@ -5687,9 +5423,7 @@
 				b(a);
 				d.close();
 			};
-			e.oncomplete = () => {
-				d.close();
-			};
+			e.oncomplete = () => d.close();
 			zb.eh(e.objectStore('meta').getAll()).then(a, b);
 		};
 	});
@@ -5772,9 +5506,7 @@
 			this.dh = a;
 			this.Ef = 166.66666666666666;
 			if (this.gh == null) {
-				this.gh = window.setInterval(() => {
-					b.update();
-				}, 17);
+				this.gh = window.setInterval(() => b.update(), 17);
 				this.Um = window.performance.now();
 			}
 		}, connect: function (a) {
@@ -9454,9 +9186,7 @@
 					b.rf = {Ja: a[0], index: c[0]};
 					a[0].classList.add('selected');
 				})(h, f);
-				h[0].ondblclick = (a => () => {
-					b.Zl(a[0]);
-				})(f);
+				h[0].ondblclick = (a => () => b.Zl(a[0]))(f);
 			}
 		}, Zl: function (a) {
 			var b = new T;
@@ -9560,9 +9290,7 @@
 						g = '(' + e[0].$ + ') ' + g;
 					f.textContent = g;
 					this.Mb.appendChild(f);
-					f.onclick = (a => () => {
-						b.lk(a[0]);
-					})(e);
+					f.onclick = (a => () => b.lk(a[0]))(e);
 					c.push({item: e[0], Ja: f});
 				}
 				this.Wc = c;
@@ -9860,9 +9588,7 @@
 				g = this.xd.get(f.V);
 				if (g == null) {
 					g = new cb(f);
-					g.ff = a => {
-						y.i(e.ff, a);
-					};
+					g.ff = a => y.i(e.ff, a);
 					this.xd.set(f.V, g);
 					this.ab.appendChild(g.g);
 				}
@@ -9915,9 +9641,7 @@
 	ab.b = true;
 	ab.prototype = {f: ab};
 	Aa.b = true;
-	Aa.As = a => Promise.race([new Promise((a, c) => window.setTimeout(() => {
-		c(null);
-	}, 5000)), a]);
+	Aa.As = a => Promise.race([new Promise((a, c) => window.setTimeout(() => c(null), 5000)), a]);
 	Aa.prototype = {
 		Om: function () {
 			function a() {
@@ -9944,12 +9668,8 @@
 				var l = h[0].vd;
 				if (!(e && l.Xe <= l.I || f && l.Ib)) {
 					var m = [new ab(h[0])];
-					m[0].Ja.ondblclick = (a => () => {
-						y.i(b.Ym, a[0]);
-					})(h);
-					m[0].Ja.onclick = (a => () => {
-						b.en(a[0]);
-					})(m);
+					m[0].Ja.ondblclick = (a => () => y.i(b.Ym, a[0]))(h);
+					m[0].Ja.onclick = (a => () => b.en(a[0]))(m);
 					this.gj.appendChild(m[0].Ja);
 					c += l.I;
 					++d;
@@ -9997,18 +9717,10 @@
 		Th: function (a, b, c, d) {
 			var e = this;
 			v.xe(a, b.g);
-			b.mg = (a, b) => {
-				ia.i(e.mg, a, b);
-			};
-			b.ee = a => {
-				y.i(e.ee, a);
-			};
-			b.Kp = a => {
-				ia.i(e.mg, d, a);
-			};
-			b.ff = a => {
-				y.i(e.ff, a);
-			};
+			b.mg = (a, b) => ia.i(e.mg, a, b);
+			b.ee = a => y.i(e.ee, a);
+			b.Kp = a => ia.i(e.mg, d, a);
+			b.ff = a => y.i(e.ff, a);
 		}, Tk: a => {
 			for (var b = [], c = 0; a > c; c++) {
 				var d = c;
