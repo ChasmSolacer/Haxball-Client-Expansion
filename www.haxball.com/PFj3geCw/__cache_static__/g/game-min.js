@@ -1,35 +1,35 @@
 (function (qc) {
-	function hc() {
+	function Mhc() {
 	}
 
-	function r() {
+	function ObjectCastUtil() {
 	}
 
-	function q(a) {
+	function GlobalError(a) {
 		this.Ta = a;
 		if (Error.captureStackTrace)
-			Error.captureStackTrace(this, q);
+			Error.captureStackTrace(this, GlobalError);
 	}
 
-	function Wa(a) {
-		this.g = v.Ga(Wa.N);
-		v.Ea(this.g).get('features').textContent = a.join(', ');
+	function UnsupportedBrowserView(a) {
+		this.g = ViewUtil.buildHtmlContents(UnsupportedBrowserView.htmlContents);
+		ViewUtil.Ea(this.g).get('features').textContent = a.join(', ');
 	}
 
-	function Xa() {
-		this.nl = new Qb;
-		this.g = v.Ga(Xa.N);
-		var a = v.Ea(this.g);
+	function StatsView() {
+		this.nl = new PingGraph;
+		this.g = ViewUtil.buildHtmlContents(StatsView.htmlContents);
+		var a = ViewUtil.Ea(this.g);
 		this.rg = a.get('ping');
 		this.wp = a.get('max-ping');
 		this.wo = a.get('fps');
-		v.xe(a.get('graph'), this.nl.g);
+		ViewUtil.xe(a.get('graph'), this.nl.g);
 	}
 
-	function P(a, b, c) {
+	function SimpleDialogView(a, b, c) {
 		var d = this;
-		this.g = v.Ga(P.N);
-		var e = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(SimpleDialogView.htmlContents);
+		var e = ViewUtil.Ea(this.g);
 		e.get('ok');
 		e.get('cancel');
 		this.Vd = e.get('content');
@@ -37,15 +37,15 @@
 			var l = c[k++];
 			var t = window.document.createElement('button');
 			t.textContent = l;
-			t.onclick = (a => () => y.i(d.Va, a[0]))([g++]);
+			t.onclick = (a => () => Yyy.i(d.Va, a[0]))([g++]);
 			e.appendChild(t);
 		}
 		this.Vd.textContent = b;
 		f.textContent = a;
 	}
 
-	function aa(a) {
-		function b(a) {
+	function SettingsView(a) {
+		function settingsBFun(a) {
 			var b = window.document.createElement('div');
 			b.className = 'inputrow';
 			var c = window.document.createElement('div');
@@ -56,15 +56,15 @@
 				++d;
 				var f = [window.document.createElement('div')];
 				var g = e[0];
-				if (J.startsWith(e[0], 'Key'))
-					g = D.substr(e[0], 3, null);
+				if (StringOps3.startsWith(e[0], 'Key'))
+					g = StringOpsSubstr.substr(e[0], 3, null);
 				f[0].textContent = g;
 				b.appendChild(f[0]);
 				g = window.document.createElement('i');
 				g.className = 'icon-cancel';
 				g.onclick = ((a, b) => () => {
 					p.Jq(b[0]);
-					n.A.tg.Xa(p);
+					ConnectionConstants.buildsStorageMInst.tg.Xa(p);
 					a[0].remove();
 				})(f, e);
 				f[0].appendChild(g);
@@ -81,7 +81,7 @@
 					b = b.code;
 					if (p.L(b) == null) {
 						p.Pa(b, a);
-						n.A.tg.Xa(p);
+						ConnectionConstants.buildsStorageMInst.tg.Xa(p);
 						r();
 					}
 				};
@@ -89,7 +89,7 @@
 			return b;
 		}
 
-		function c(a, b, c) {
+		function settingsFlagFun(a, b, c) {
 			a = l.get(a);
 			if (c == null)
 				a.hidden = true;
@@ -106,7 +106,7 @@
 			}
 		}
 
-		function d(a, b, c, d) {
+		function settingsDFun(a, b, c, d) {
 			var e = l.get(a);
 			e.selectedIndex = d(b.L());
 			e.onchange = () => {
@@ -115,7 +115,7 @@
 			};
 		}
 
-		function e(a, b, c) {
+		function settingsOkCancelFun(a, b, c) {
 			function d(a) {
 				e.classList.toggle('icon-ok', a);
 				e.classList.toggle('icon-cancel', !a);
@@ -136,19 +136,19 @@
 			d(b.L());
 		}
 
-		function f(a) {
+		function settingsBtnSecFun(a) {
 			var b = {Jm: l.get(a + 'btn'), bh: l.get(a + 'sec')};
 			t.push(b);
-			b.Jm.onclick = () => g(b);
+			b.Jm.onclick = () => settingsSelectedFun(b);
 		}
 
-		function g(a) {
+		function settingsSelectedFun(a) {
 			for (var b = 0, c = 0; t.length > c;) {
 				var d = t[c];
 				++c;
 				var e = a == d;
 				if (e)
-					aa.$l = b;
+					SettingsView.$l = b;
 				d.bh.classList.toggle('selected', e);
 				d.Jm.classList.toggle('selected', e);
 				++b;
@@ -158,80 +158,80 @@
 		if (a == null)
 			a = false;
 		var k = this;
-		this.g = v.Ga(aa.N);
-		var l = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(SettingsView.htmlContents);
+		var l = ViewUtil.Ea(this.g);
 		this.nd = l.get('close');
 		var t = [];
-		f('sound');
-		f('video');
-		f('misc');
-		f('input');
-		g(t[aa.$l]);
-		e('tsound-main', n.A.pm, a => n.Na.im(a ? 1 : 0));
-		e('tsound-chat', n.A.Hi);
-		e('tsound-highlight', n.A.om);
-		e('tsound-crowd', n.A.nm);
-		d('viewmode', n.A.Tb, a => a - 1, a => a + 1);
-		d('fps', n.A.Fh, a => a, a => a);
+		settingsBtnSecFun('sound');
+		settingsBtnSecFun('video');
+		settingsBtnSecFun('misc');
+		settingsBtnSecFun('input');
+		settingsSelectedFun(t[SettingsView.$l]);
+		settingsOkCancelFun('tsound-main', ConnectionConstants.buildsStorageMInst.pm, a => ConnectionConstants.Na.im(a ? 1 : 0));
+		settingsOkCancelFun('tsound-chat', ConnectionConstants.buildsStorageMInst.Hi);
+		settingsOkCancelFun('tsound-highlight', ConnectionConstants.buildsStorageMInst.om);
+		settingsOkCancelFun('tsound-crowd', ConnectionConstants.buildsStorageMInst.nm);
+		settingsDFun('viewmode', ConnectionConstants.buildsStorageMInst.Tb, a => a - 1, a => a + 1);
+		settingsDFun('fps', ConnectionConstants.buildsStorageMInst.Fh, a => a, a => a);
 		var h = [1, .75, .5, .25];
-		d('resscale', n.A.Sl, a => h[a], a => {
+		settingsDFun('resscale', ConnectionConstants.buildsStorageMInst.Sl, a => h[a], a => {
 			for (var b = 0, c = h.length - 1; c > b && !(a >= h[b]);) {
 				++b;
 			}
 			return b;
 		});
-		e('tvideo-teamcol', n.A.xm);
-		e('tvideo-showindicators', n.A.Ak);
-		e('tvideo-showavatars', n.A.lm);
+		settingsOkCancelFun('tvideo-teamcol', ConnectionConstants.buildsStorageMInst.xm);
+		settingsOkCancelFun('tvideo-showindicators', ConnectionConstants.buildsStorageMInst.Ak);
+		settingsOkCancelFun('tvideo-showavatars', ConnectionConstants.buildsStorageMInst.lm);
 		var m = null;
 		var m = () => {
-			var b = n.A.Ne.L();
-			c('loc', 'Detected location', n.A.Me.L());
-			c('loc-ovr', 'Location override', b);
+			var b = ConnectionConstants.buildsStorageMInst.Ne.L();
+			settingsFlagFun('loc', 'Detected location', ConnectionConstants.buildsStorageMInst.Me.L());
+			settingsFlagFun('loc-ovr', 'Location override', b);
 			var d = l.get('loc-ovr-btn');
 			d.disabled = !a;
 			if (b == null) {
 				d.textContent = 'Override location';
-				d.onclick = () => A.i(k.Ep);
+				d.onclick = () => Daa.i(k.Ep);
 			}
 			else {
 				d.textContent = 'Remove override';
 				d.onclick = () => {
-					n.A.Ne.Xa(null);
+					ConnectionConstants.buildsStorageMInst.Ne.Xa(null);
 					m();
 				};
 			}
 		};
 		m();
-		var p = n.A.tg.L();
+		var p = ConnectionConstants.buildsStorageMInst.tg.L();
 		var q = l.get('presskey');
 		var r;
 		var u = l.get('inputsec');
 		r = () => {
-			v.Cf(u);
-			var a = b('Up');
+			ViewUtil.Cf(u);
+			var a = settingsBFun('Up');
 			u.appendChild(a);
-			a = b('Down');
+			a = settingsBFun('Down');
 			u.appendChild(a);
-			a = b('Left');
+			a = settingsBFun('Left');
 			u.appendChild(a);
-			a = b('Right');
+			a = settingsBFun('Right');
 			u.appendChild(a);
-			a = b('Kick');
+			a = settingsBFun('Kick');
 			u.appendChild(a);
 		};
 		r();
-		this.nd.onclick = () => A.i(k.qb);
+		this.nd.onclick = () => Daa.i(k.qb);
 	}
 
-	function Ya(a) {
+	function RoomMenuView(a) {
 		this.fk = false;
-		this.qm = new za(p.Ia);
-		this.Lj = new za(p.xa);
-		this.Hl = new za(p.fa);
+		this.qm = new PlayerListView(Team.spec);
+		this.Lj = new PlayerListView(Team.blue);
+		this.Hl = new PlayerListView(Team.red);
 		var b = this;
-		this.g = v.Ga(Ya.N);
-		var c = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(RoomMenuView.htmlContents);
+		var c = ViewUtil.Ea(this.g);
 		this.jc = c.get('room-name');
 		this.tm = c.get('start-btn');
 		this.vm = c.get('stop-btn');
@@ -247,37 +247,37 @@
 		this.qf = c.get('score-limit-sel');
 		this.rm = c.get('stadium-name');
 		this.sm = c.get('stadium-pick');
-		this.sm.onclick = () => A.i(b.Xp);
-		this.Th(c.get('red-list'), this.Hl, p.fa, a);
-		this.Th(c.get('blue-list'), this.Lj, p.xa, a);
-		this.Th(c.get('spec-list'), this.qm, p.Ia, a);
+		this.sm.onclick = () => Daa.i(b.Xp);
+		this.Th(c.get('red-list'), this.Hl, Team.red, a);
+		this.Th(c.get('blue-list'), this.Lj, Team.blue, a);
+		this.Th(c.get('spec-list'), this.qm, Team.spec, a);
 		this.Uk(this.wf, this.Tk(15));
 		this.Uk(this.qf, this.Tk(15));
-		this.wf.onchange = () => y.i(b.aq, b.wf.selectedIndex);
-		this.qf.onchange = () => y.i(b.Tp, b.qf.selectedIndex);
-		this.tm.onclick = () => A.i(b.Yp);
-		this.vm.onclick = () => A.i(b.Zp);
-		this.gi.onclick = () => A.i(b.Mp);
-		this.xn.onclick = () => A.i(b.Dp);
-		this.Nk.onclick = () => y.i(b.$p, !b.Xh);
+		this.wf.onchange = () => Yyy.i(b.aq, b.wf.selectedIndex);
+		this.qf.onchange = () => Yyy.i(b.Tp, b.qf.selectedIndex);
+		this.tm.onclick = () => Daa.i(b.Yp);
+		this.vm.onclick = () => Daa.i(b.Zp);
+		this.gi.onclick = () => Daa.i(b.Mp);
+		this.xn.onclick = () => Daa.i(b.Dp);
+		this.Nk.onclick = () => Yyy.i(b.$p, !b.Xh);
 		this.Rl.onclick = () => {
 			if (b.ee != null) {
-				b.ee(p.xa);
-				b.ee(p.fa);
+				b.ee(Team.blue);
+				b.ee(Team.red);
 			}
 		};
-		this.Fl.onclick = () => A.i(b.Qp);
-		d.onclick = () => A.i(b.Wp);
-		e.onclick = () => A.i(b.de);
-		f.onclick = () => A.i(b.Pp);
+		this.Fl.onclick = () => Daa.i(b.Qp);
+		d.onclick = () => Daa.i(b.Wp);
+		e.onclick = () => Daa.i(b.de);
+		f.onclick = () => Daa.i(b.Pp);
 		this.Bj(false);
 		this.Cj(false);
 	}
 
-	function Za() {
+	function PasswordView() {
 		var a = this;
-		this.g = v.Ga(Za.N);
-		var b = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(PasswordView.htmlContents);
+		var b = ViewUtil.Ea(this.g);
 		this.Cb = b.get('input');
 		this.af = b.get('ok');
 		b.get('cancel').onclick = () => {
@@ -297,14 +297,14 @@
 		this.C();
 	}
 
-	function $a(a) {
+	function Notice(a) {
 		this.Xk = a.get('notice');
 		this.$n = a.get('notice-contents');
 		this.nd = a.get('notice-close');
 		this.Il();
 	}
 
-	function Aa(a) {
+	function RoomListView(a) {
 		function b(a, checkedByDefault = true) {
 			function b() {
 				e.className = f.Ta ? 'icon-ok' : 'icon-cancel';
@@ -325,30 +325,30 @@
 		this.dj = [];
 		var c = this;
 		this.gs = a;
-		this.Ja = v.Ga(Aa.tj);
-		var d = v.Ea(this.Ja);
-		var e = new $a(d);
+		this.Ja = ViewUtil.buildHtmlContents(RoomListView.tj);
+		var d = ViewUtil.Ea(this.Ja);
+		var e = new Notice(d);
 		this.pj = d.get('refresh');
 		this.Tm = d.get('join');
 		a = d.get('create');
 		this.cs = d.get('count');
-		a.onclick = () => A.i(c.ws);
-		d.get('changenick').onclick = () => A.i(c.vs);
-		d.get('settings').onclick = () => A.i(c.ys);
+		a.onclick = () => Daa.i(c.ws);
+		d.get('changenick').onclick = () => Daa.i(c.vs);
+		d.get('settings').onclick = () => Daa.i(c.ys);
 		var f = d.get('replayfile');
 		f.onchange = () => {
 			var a = f.files;
 			if (a.length >= 1) {
 				var a = a.item(0);
 				var b = new FileReader;
-				b.onload = () => y.i(c.xs, b.result);
+				b.onload = () => Yyy.i(c.xs, b.result);
 				b.readAsArrayBuffer(a);
 			}
 		};
 		this.fs = b('fil-full', true);
 		this.zs = b('fil-pass', false);
 		this.ns = d.get('listscroll');
-		this.Bs = Ba.cg(this.ns);
+		this.Bs = Dba.cg(this.ns);
 		this.gj = d.get('list');
 		this.pj.onclick = () => {
 			e.Il();
@@ -356,14 +356,14 @@
 		};
 		this.Tm.onclick = () => {
 			if (c.Od != null)
-				y.i(c.Ym, c.Od.Fs);
+				Yyy.i(c.Ym, c.Od.Fs);
 		};
 		this.Om();
 	}
 
-	function ab(a) {
-		this.Ja = v.Ga(ab.tj, 'tbody');
-		var b = v.Ea(this.Ja);
+	function RoomListHeader(a) {
+		this.Ja = ViewUtil.buildHtmlContents(RoomListHeader.tj, 'tbody');
+		var b = ViewUtil.Ea(this.Ja);
 		var c = b.get('name');
 		var d = b.get('players');
 		var e = b.get('distance');
@@ -384,11 +384,11 @@
 			this.Ja.classList.add('old');
 	}
 
-	function bb() {
+	function RoomLinkView() {
 		this.gk = null;
 		var a = this;
-		this.g = v.Ga(bb.N);
-		var b = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(RoomLinkView.htmlContents);
+		var b = ViewUtil.Ea(this.g);
 		this.Zf = b.get('link');
 		var c = b.get('copy');
 		var b = b.get('close');
@@ -397,10 +397,10 @@
 			a.Zf.select();
 			return window.document.execCommand('Copy');
 		};
-		b.onclick = () => A.i(a.qb);
+		b.onclick = () => Daa.i(a.qb);
 	}
 
-	function ha(a) {
+	function ReplayControlsView(a) {
 		function b() {
 			var b = g[f];
 			a.pl = e ? b : 0;
@@ -409,8 +409,8 @@
 
 		this.Wf = false;
 		var c = this;
-		this.g = v.Ga(ha.N);
-		var d = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(ReplayControlsView.htmlContents);
+		var d = ViewUtil.Ea(this.g);
 		this.ti = a;
 		d.get('reset').onclick = () => {
 			a.ui();
@@ -464,45 +464,45 @@
 		};
 		l.onmousemove = b => {
 			b = (b.pageX - l.offsetLeft) / l.clientWidth;
-			t.textContent = ha.Wk(a.mf * a.mh * b);
+			t.textContent = ReplayControlsView.Wk(a.mf * a.mh * b);
 			return t.style.left = 'calc(' + 100 * b + '% - 30px)';
 		};
 		this.fp = d.get('leave');
-		this.fp.onclick = () => A.i(c.de);
+		this.fp.onclick = () => Daa.i(c.de);
 	}
 
-	function Q(a) {
+	function CaptchaDialogView(a) {
 		var b = this;
-		var c = new P('Only humans', '', []);
+		var c = new SimpleDialogView('Only humans', '', []);
 		this.g = c.g;
 		c.Vd.style.minHeight = '78px';
-		Ja.gp().then(d => {
-			if (Q.xg == null) {
-				Q.xg = window.document.createElement('div');
-				c.Vd.appendChild(Q.xg);
-				Q.Dq = d.render(Q.xg, {
-					sitekey: a, callback: a => y.i(Q.Gl, a), theme: 'dark'
+		Dja.gp().then(d => {
+			if (CaptchaDialogView.xg == null) {
+				CaptchaDialogView.xg = window.document.createElement('div');
+				c.Vd.appendChild(CaptchaDialogView.xg);
+				CaptchaDialogView.Dq = d.render(CaptchaDialogView.xg, {
+					sitekey: a, callback: a => Yyy.i(CaptchaDialogView.Gl, a), theme: 'dark'
 				});
 			}
-			d.reset(Q.Dq);
-			Q.Gl = a => {
-				window.setTimeout(() => y.i(b.Va, a), 1000);
-				Q.Gl = null;
+			d.reset(CaptchaDialogView.Dq);
+			CaptchaDialogView.Gl = a => {
+				window.setTimeout(() => Yyy.i(b.Va, a), 1000);
+				CaptchaDialogView.Gl = null;
 			};
-			c.Vd.appendChild(Q.xg);
+			c.Vd.appendChild(CaptchaDialogView.xg);
 		});
 	}
 
-	function za(a) {
+	function PlayerListView(a) {
 		this.xd = new Map;
 		var b = this;
-		this.g = v.Ga(za.N);
+		this.g = ViewUtil.buildHtmlContents(PlayerListView.htmlContents);
 		this.g.className += ' ' + a.io;
-		var c = v.Ea(this.g);
+		var c = ViewUtil.Ea(this.g);
 		this.ab = c.get('list');
 		this.Vh = c.get('join-btn');
 		this.vi = c.get('reset-btn');
-		if (p.Ia == a)
+		if (Team.spec == a)
 			this.vi.remove();
 		this.Vh.textContent = '' + a.w;
 		this.g.ondragover = this.g.Qs = a => {
@@ -513,22 +513,22 @@
 			c.preventDefault();
 			c = c.dataTransfer.getData('player');
 			if (c != null) {
-				c = K.parseInt(c);
+				c = StringOpsInt.parseInt(c);
 				if (c != null)
-					ia.i(b.mg, c, a);
+					Mia.i(b.mg, c, a);
 			}
 		};
-		this.Vh.onclick = () => y.i(b.Kp, a);
-		this.vi.onclick = () => y.i(b.ee, a);
+		this.Vh.onclick = () => Yyy.i(b.Kp, a);
+		this.vi.onclick = () => Yyy.i(b.ee, a);
 	}
 
-	function cb(a) {
+	function PlayerListItem(a) {
 		var b = this;
 		this.w = a.w;
 		this.yb = a.yb;
 		this.$ = a.V;
-		this.g = v.Ga(cb.N);
-		var c = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(PlayerListItem.htmlContents);
+		var c = ViewUtil.Ea(this.g);
 		this.Ze = c.get('name');
 		this.rg = c.get('ping');
 		try {
@@ -538,25 +538,25 @@
 		}
 		this.Ze.textContent = this.w;
 		this.rg.textContent = '' + this.yb;
-		this.g.ondragstart = a => a.dataTransfer.setData('player', K.ye(b.$));
+		this.g.ondragstart = a => a.dataTransfer.setData('player', StringOpsInt.ye(b.$));
 		this.g.oncontextmenu = a => {
 			a.preventDefault();
-			y.i(b.ff, b.$);
+			Yyy.i(b.ff, b.$);
 		};
 		this.em(a.cb);
 	}
 
-	function db(a, b) {
+	function PlayerMenuView(a, b) {
 		var c = this;
-		this.g = v.Ga(db.N);
-		var d = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(PlayerMenuView.htmlContents);
+		var d = ViewUtil.Ea(this.g);
 		this.Ze = d.get('name');
 		this.Hf = d.get('admin');
 		this.Qe = d.get('kick');
 		this.nd = d.get('close');
-		this.Hf.onclick = () => ia.i(c.Cp, c.Nb, !c.ql);
-		this.Qe.onclick = () => y.i(c.ei, c.Nb);
-		this.nd.onclick = () => A.i(c.qb);
+		this.Hf.onclick = () => Mia.i(c.Cp, c.Nb, !c.ql);
+		this.Qe.onclick = () => Yyy.i(c.ei, c.Nb);
+		this.nd.onclick = () => Daa.i(c.qb);
 		this.Nb = a.V;
 		this.Ej(a.w);
 		this.Dj(a.cb);
@@ -564,7 +564,7 @@
 		this.Qe.disabled = !b || this.Nb == 0;
 	}
 
-	function Qb() {
+	function PingGraph() {
 		this.Ah = 0;
 		this.vp = 400;
 		this.yk = 64;
@@ -585,19 +585,19 @@
 		this.g.className = 'graph';
 	}
 
-	function eb() {
+	function PickStadiumView() {
 		this.jb = null;
 		var a = this;
-		this.g = v.Ga(eb.N);
-		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => A.i(a.ci);
+		this.g = ViewUtil.buildHtmlContents(PickStadiumView.htmlContents);
+		var b = ViewUtil.Ea(this.g);
+		b.get('cancel').onclick = () => Daa.i(a.ci);
 		this.hi = b.get('pick');
 		this.bk = b.get('delete');
 		this.rk = b.get('export');
 		var c = b.get('list');
 		var d = b.get('file');
 		this.Lg();
-		this.hi.onclick = () => a.jb != null && a.jb.Pd().then(b => y.i(a.og, b));
+		this.hi.onclick = () => a.jb != null && a.jb.Pd().then(b => Yyy.i(a.og, b));
 		this.bk.onclick = () => {
 			if (a.jb != null) {
 				var b = a.jb.Lm;
@@ -609,9 +609,9 @@
 				}
 			}
 		};
-		this.rk.onclick = () => a.jb != null && a.jb.Pd().then(a => Ca.br(a.se(), a.w + '.hbs'));
+		this.rk.onclick = () => a.jb != null && a.jb.Pd().then(a => Dca.br(a.se(), a.w + '.hbs'));
 		this.ki(c);
-		this.vg = Ba.cg(c);
+		this.vg = Dba.cg(c);
 		window.setTimeout(() => a.vg.update(), 0);
 		d.onchange = () => {
 			var b = d.files;
@@ -620,31 +620,31 @@
 				var c = new FileReader;
 				c.onload = () => {
 					try {
-						var b = new h;
+						var b = new Stadium;
 						b.Lk(c.result);
-						y.i(a.og, b);
+						Yyy.i(a.og, b);
 					}
 					catch (k) {
-						if (k instanceof q) {
+						if (k instanceof GlobalError) {
 							b = k.Ta;
 							if (b instanceof SyntaxError)
-								y.i(a.fi, 'SyntaxError in line: ' + K.ye(b.lineNumber));
+								Yyy.i(a.fi, 'SyntaxError in line: ' + StringOpsInt.ye(b.lineNumber));
 							else {
-								if (b instanceof Bb)
-									y.i(a.fi, b.xp);
+								if (b instanceof Dbb)
+									Yyy.i(a.fi, b.xp);
 								else
-									y.i(a.fi, 'Error loading stadium file.');
+									Yyy.i(a.fi, 'Error loading stadium file.');
 							}
 						}
 						else {
 							b = k;
 							if (b instanceof SyntaxError)
-								y.i(a.fi, 'SyntaxError in line: ' + K.ye(b.lineNumber));
+								Yyy.i(a.fi, 'SyntaxError in line: ' + StringOpsInt.ye(b.lineNumber));
 							else {
-								if (b instanceof Bb)
-									y.i(a.fi, b.xp);
+								if (b instanceof Dbb)
+									Yyy.i(a.fi, b.xp);
 								else
-									y.i(a.fi, 'Error loading stadium file.');
+									Yyy.i(a.fi, 'Error loading stadium file.');
 							}
 						}
 					}
@@ -654,18 +654,18 @@
 		};
 	}
 
-	function fb() {
+	function LeaveRoomView() {
 		var a = this;
-		this.g = v.Ga(fb.N);
-		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => y.i(a.qb, false);
-		b.get('leave').onclick = () => y.i(a.qb, true);
+		this.g = ViewUtil.buildHtmlContents(LeaveRoomView.htmlContents);
+		var b = ViewUtil.Ea(this.g);
+		b.get('cancel').onclick = () => Yyy.i(a.qb, false);
+		b.get('leave').onclick = () => Yyy.i(a.qb, true);
 	}
 
-	function gb(a) {
+	function KickPlayerView(a) {
 		var b = this;
-		this.g = v.Ga(gb.N);
-		var c = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(KickPlayerView.htmlContents);
+		var c = ViewUtil.Ea(this.g);
 		this.Ze = c.get('title');
 		this.oi = c.get('reason');
 		this.yn = c.get('ban-btn');
@@ -673,8 +673,8 @@
 		this.Qe = c.get('kick');
 		this.nd = c.get('close');
 		this.yn.onclick = () => b.Aj(!b.Jj);
-		this.nd.onclick = () => A.i(b.qb);
-		this.Qe.onclick = () => Cb.i(b.ei, b.Nb, b.oi.value, b.Jj);
+		this.nd.onclick = () => Daa.i(b.qb);
+		this.Qe.onclick = () => Dcb.i(b.ei, b.Nb, b.oi.value, b.Jj);
 		this.oi.onkeydown = a => a.stopPropagation();
 		this.oi.maxLength = 100;
 		this.Nb = a.V;
@@ -682,50 +682,50 @@
 		this.Aj(false);
 	}
 
-	function ja(a) {
-		this.Fb = new hb;
+	function GameView(a) {
+		this.Fb = new GameStateView;
 		this.Gd = false;
-		this.pe = new Xa;
-		this.Qa = new Da;
+		this.pe = new StatsView;
+		this.Qa = new ChatboxView;
 		var b = this;
-		this.Wa = new Ya(a);
+		this.Wa = new RoomMenuView(a);
 		this.Fb.Nb = a;
-		this.g = v.Ga(ja.N);
-		a = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(GameView.htmlContents);
+		a = ViewUtil.Ea(this.g);
 		this.Jh = a.get('gameplay-section');
 		this.hf = a.get('popups');
 		this.hf.style.display = 'none';
-		v.xe(a.get('chatbox'), this.Qa.g);
-		v.xe(a.get('stats'), this.pe.g);
+		ViewUtil.xe(a.get('chatbox'), this.Qa.g);
+		ViewUtil.xe(a.get('stats'), this.pe.g);
 		this.bi = a.get('menu');
 		this.bi.onclick = () => {
 			b.me(!b.Gd);
 			b.bi.blur();
 		};
 		a.get('settings').onclick = () => {
-			var a = new aa;
+			var a = new SettingsView;
 			a.qb = () => b.bb(null);
 			b.bb(a.g);
 		};
 		this.Jh.appendChild(this.Fb.g);
 		this.Wa.de = () => {
-			var a = new fb;
+			var a = new LeaveRoomView;
 			a.qb = a => {
 				b.bb(null);
 				if (a)
-					A.i(b.de);
+					Daa.i(b.de);
 			};
 			b.bb(a.g);
 		};
 		this.Wa.Xp = () => {
-			var a = new eb;
+			var a = new PickStadiumView;
 			a.ci = () => b.bb(null);
 			a.og = a => {
-				y.i(b.og, a);
+				Yyy.i(b.og, a);
 				b.bb(null);
 			};
 			a.fi = a => {
-				a = new P('Error loading stadium', a, ['Ok']);
+				a = new SimpleDialogView('Error loading stadium', a, ['Ok']);
 				a.Va = () => b.bb(null);
 				b.bb(a.g);
 			};
@@ -733,7 +733,7 @@
 		};
 	}
 
-	function Rb() {
+	function GameTimerView() {
 		this.Da = 0;
 		this.hk = this.ik = false;
 		this.Ke = 0;
@@ -747,37 +747,37 @@
 		this.g.appendChild(this.cr = this.Wd('0', 'digit'));
 	}
 
-	function hb() {
+	function GameStateView() {
 		this.Nb = -1;
-		this.Eb = new N;
-		this.xc = new Rb;
-		this.g = v.Ga(hb.N);
-		var a = v.Ea(this.g);
-		this.Pb = new Db(a.get('red-score'), 0);
-		this.Kb = new Db(a.get('blue-score'), 0);
-		v.xe(a.get('timer'), this.xc.g);
-		v.xe(a.get('canvas'), this.Eb.sa);
+		this.Eb = new MajorCanvas;
+		this.xc = new GameTimerView;
+		this.g = ViewUtil.buildHtmlContents(GameStateView.htmlContents);
+		var a = ViewUtil.Ea(this.g);
+		this.Pb = new ScoreUtil(a.get('red-score'), 0);
+		this.Kb = new ScoreUtil(a.get('blue-score'), 0);
+		ViewUtil.xe(a.get('timer'), this.xc.g);
+		ViewUtil.xe(a.get('canvas'), this.Eb.sa);
 	}
 
-	function Ka(a, b) {
+	function DisconnectedView(a, b) {
 		var c = this;
-		this.g = v.Ga(Ka.N);
-		var d = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(DisconnectedView.htmlContents);
+		var d = ViewUtil.Ea(this.g);
 		this.Bp = d.get('ok');
-		this.Bp.onclick = () => A.i(c.Va);
+		this.Bp.onclick = () => Daa.i(c.Va);
 		this.Nl = d.get('replay');
 		var e = b != null;
 		this.Nl.hidden = !e;
 		if (e) {
-			this.Nl.onclick = () => ba.Yl(b);
+			this.Nl.onclick = () => ConnBa.Yl(b);
 		}
 		d.get('reason').textContent = a;
 	}
 
-	function ib(a) {
+	function CreateRoomView(a) {
 		var b = this;
-		this.g = v.Ga(ib.N);
-		var c = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(CreateRoomView.htmlContents);
+		var c = ViewUtil.Ea(this.g);
 		this.vh = c.get('cancel');
 		this.Wj = c.get('create');
 		this.$e = c.get('name');
@@ -789,13 +789,13 @@
 		this.$e.oninput = () => b.C();
 		this.kl.maxLength = 30;
 		this.Em.onclick = () => b.Fj(!b.Fm);
-		this.vh.onclick = () => A.i(b.ci);
+		this.vh.onclick = () => Daa.i(b.ci);
 		this.Wj.onclick = () => {
 			if (b.Dc()) {
 				var a = b.kl.value;
 				if (a == '')
 					a = null;
-				y.i(b.Jp, {name: b.$e.value, password: a, qs: b.ai.selectedIndex + 2, Ks: b.Fm});
+				Yyy.i(b.Jp, {name: b.$e.value, password: a, qs: b.ai.selectedIndex + 2, Ks: b.Fm});
 			}
 		};
 		for (a = 2; a < 21; a++) {
@@ -808,22 +808,22 @@
 		this.C();
 	}
 
-	function jb() {
-		this.g = v.Ga(jb.N);
-		var a = v.Ea(this.g);
+	function ConnectingView() {
+		this.g = ViewUtil.buildHtmlContents(ConnectingView.htmlContents);
+		var a = ViewUtil.Ea(this.g);
 		this.dc = a.get('log');
 		this.vh = a.get('cancel');
 	}
 
-	function kb(a) {
-		function b() {
+	function ChooseNicknameView(a) {
+		function confirmNick() {
 			if (c.Dc() && c.cl != null)
 				c.cl(c.Cb.value);
 		}
 
 		var c = this;
-		this.g = v.Ga(kb.N);
-		var d = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(ChooseNicknameView.htmlContents);
+		var d = ViewUtil.Ea(this.g);
 		this.Cb = d.get('input');
 		this.af = d.get('ok');
 		this.Cb.maxLength = 25;
@@ -831,13 +831,13 @@
 		this.Cb.oninput = () => c.C();
 		this.Cb.onkeydown = a => {
 			if (a.keyCode == 13)
-				b();
+				confirmNick();
 		};
-		this.af.onclick = b;
+		this.af.onclick = confirmNick;
 		this.C();
 	}
 
-	function lb(a, b) {
+	function Mention(a, b) {
 		this.Hj = [];
 		this.Iq = /[#@][^\s@#]*$/;
 		this.Mb = a;
@@ -845,7 +845,7 @@
 		a.hidden = true;
 	}
 
-	function Da() {
+	function ChatboxView() {
 		function a() {
 			if (b.fl != null && b.gb.value != '')
 				b.fl(b.gb.value);
@@ -854,14 +854,14 @@
 		}
 
 		var b = this;
-		this.g = v.Ga(Da.N);
-		var c = v.Ea(this.g);
+		this.g = ViewUtil.buildHtmlContents(ChatboxView.htmlContents);
+		var c = ViewUtil.Ea(this.g);
 		this.dc = c.get('log');
-		this.vg = Ba.cg(this.dc);
+		this.vg = Dba.cg(this.dc);
 		this.gb = c.get('input');
 		this.gb.maxLength = 140;
 		c.get('send').onclick = a;
-		this.Bc = new lb(c.get('autocompletebox'), (a, c) => {
+		this.Bc = new Mention(c.get('autocompletebox'), (a, c) => {
 			b.gb.value = a;
 			b.gb.setSelectionRange(c, c);
 		});
@@ -904,12 +904,12 @@
 		this.gb.oninput = () => b.Bc.Hn(b.gb.value, b.gb.selectionStart);
 	}
 
-	function mb() {
+	function ChangeLocationView() {
 		this.rf = null;
 		var a = this;
-		this.g = v.Ga(mb.N);
-		var b = v.Ea(this.g);
-		b.get('cancel').onclick = () => A.i(a.qb);
+		this.g = ViewUtil.buildHtmlContents(ChangeLocationView.htmlContents);
+		var b = ViewUtil.Ea(this.g);
+		b.get('cancel').onclick = () => Daa.i(a.qb);
 		this.wh = b.get('change');
 		this.wh.disabled = true;
 		this.wh.onclick = () => {
@@ -918,16 +918,16 @@
 		};
 		b = b.get('list');
 		this.ki(b);
-		var c = Ba.cg(b);
+		var c = Dba.cg(b);
 		window.setTimeout(() => c.update(), 0);
 	}
 
-	function Ea() {
+	function PlayerBallCanvas() {
 		this.Xf = false;
 		this.w = '';
 		this.uh = 0;
 		this.Jf = '';
-		this.kb = new ka;
+		this.kb = new TeamColors;
 		var a = window.document.createElement('canvas');
 		a.width = 64;
 		a.height = 64;
@@ -936,24 +936,24 @@
 		this.fo();
 	}
 
-	function Sb() {
+	function BigTextUtil() {
 		this.xc = 0;
 		this.ab = [];
-		this.Ar = new R(['Time is', 'Up!'], 16777215);
-		this.Gq = new R(['Red is', 'Victorious!'], 15035990);
-		this.Fq = new R(['Red', 'Scores!'], 15035990);
-		this.Cn = new R(['Blue is', 'Victorious!'], 625603);
-		this.Bn = new R(['Blue', 'Scores!'], 625603);
-		this.eq = new R(['Game', 'Paused'], 16777215);
+		this.Ar = new BigAnimatedText(['Time is', 'Up!'], 16777215);
+		this.Gq = new BigAnimatedText(['Red is', 'Victorious!'], 15035990);
+		this.Fq = new BigAnimatedText(['Red', 'Scores!'], 15035990);
+		this.Cn = new BigAnimatedText(['Blue is', 'Victorious!'], 625603);
+		this.Bn = new BigAnimatedText(['Blue', 'Scores!'], 625603);
+		this.eq = new BigAnimatedText(['Game', 'Paused'], 16777215);
 	}
 
-	function R(a, b) {
+	function BigAnimatedText(a, b) {
 		for (var c = [], d = 0; a.length > d; d++)
 			c.push(this.sp(a[d], b));
 		this.We = c;
 	}
 
-	function N() {
+	function MajorCanvas() {
 		this.$c = window.performance.now();
 		this.Jg = new Map;
 		this.dd = new Map;
@@ -961,26 +961,26 @@
 		this.xf = 35;
 		this.jf = 0;
 		this.kf = 1.5;
-		this.Ya = new H(0, 0);
+		this.Ya = new Point(0, 0);
 		this.Dk = false;
-		this.td = new Sb;
+		this.td = new BigTextUtil;
 		this.sa = window.document.createElement('canvas');
 		this.sa.mozOpaque = true;
 		this.c = this.sa.getContext('2d', {alpha: false});
-		this.Lo = this.c.createPattern(n.Ko, null);
-		this.Wn = this.c.createPattern(n.Vn, null);
-		this.Un = this.c.createPattern(n.Tn, null);
+		this.Lo = this.c.createPattern(ConnectionConstants.Ko, null);
+		this.Wn = this.c.createPattern(ConnectionConstants.Vn, null);
+		this.Un = this.c.createPattern(ConnectionConstants.Tn, null);
 	}
 
-	function B() {
+	function Vertex() {
 		this.ud = 0;
 		this.v = 32;
 		this.h = 63;
 		this.m = 1;
-		this.a = new H(0, 0);
+		this.a = new Point(0, 0);
 	}
 
-	function E() {
+	function Segment() {
 		this.Hg = this.Ig = this.wa = null;
 		this.Yj = 0;
 		this.ca = this.W = this.Xd = null;
@@ -993,28 +993,28 @@
 		this.R = 0;
 	}
 
-	function L() {
+	function Plane() {
 		this.v = 32;
 		this.h = 63;
 		this.m = 1;
 		this.Ua = 0;
-		this.wa = new H(0, 0);
+		this.wa = new Point(0, 0);
 	}
 
-	function Fa() {
+	function DynamicObjectsUtil() {
 		this.hc = -1;
 		this.gc = null;
 		this.F = [];
 	}
 
-	function nb() {
+	function Joint() {
 		this.R = 0;
 		this.ne = Infinity;
 		this.Hb = this.ec = 100;
 		this.Yd = this.Zd = 0;
 	}
 
-	function ca() {
+	function DynamicDisc() {
 		this.hc = -1;
 		this.gc = null;
 		this.jl = 0;
@@ -1025,143 +1025,149 @@
 		this.aa = 1;
 		this.m = .5;
 		this.Z = 10;
-		this.oa = new H(0, 0);
-		this.D = new H(0, 0);
-		this.a = new H(0, 0);
+		this.oa = new Point(0, 0);
+		this.D = new Point(0, 0);
+		this.a = new Point(0, 0);
 	}
 
-	function la() {
+	function Mla() {
 		this.da = 0;
 	}
 
-	function La() {
+	function Dla() {
 		this.da = 0;
 	}
 
-	function Ma() {
+	function Dma() {
 		this.da = 0;
 	}
 
-	function ma() {
+	function Mma() {
 		this.da = 0;
 	}
 
-	function ob() {
+	function Mob() {
 		this.da = 0;
 	}
 
-	function pb() {
+	function Mpb() {
 		this.da = 0;
 	}
 
-	function Y() {
+	function Dyy() {
 		this.Qg = false;
 		this.da = 0;
 	}
 
-	function kc() {
+	function Mkc() {
 	}
 
-	function na() {
+	function Mna() {
 		this.da = 0;
 	}
 
-	function Ga() {
+	function Dga() {
 		this.da = 0;
 	}
 
-	function Na() {
+	function Dna() {
 		this.da = 0;
 	}
 
-	function Oa() {
+	function Doa() {
 		this.da = 0;
 	}
 
-	function qb() {
+	function Mqb() {
 		this.da = 0;
 	}
 
-	function oa() {
+	function Moa() {
 		this.da = 0;
 	}
 
-	function pa() {
+	function Mpa() {
 		this.da = 0;
 	}
 
-	function Pa() {
+	function TeamColorsUtil() {
 		this.da = 0;
 	}
 
-	function qa() {
+	function Mqa() {
 		this.da = 0;
 	}
 
-	function S() {
+	function Dss() {
 		this.da = 0;
 	}
 
-	function ra() {
+	function Mra() {
 		this.da = 0;
 	}
 
-	function sa() {
+	function Msa() {
 		this.da = 0;
 	}
 
-	function da() {
+	function Mda() {
 		this.da = 0;
 	}
 
-	function Qa() {
+	function Dqa() {
 		this.da = 0;
 	}
 
-	function rb() {
+	function Mrb() {
 		this.da = 0;
 	}
 
-	function ta() {
+	function Mta() {
 		this.da = 0;
 	}
 
-	function ea() {
+	function FullPlayer() {
 		this.zc = -1;
 		this.an = null;
-		this.ea = p.Ia;
+		this.ea = Team.spec;
 		this.H = null;
-		this.yc = this.Sc = 0;
+		this.Sc = 0;
+		this.yc = 0;
 		this.Wb = false;
-		this.ob = this.V = 0;
+		this.V = 0;
+		this.ob = 0;
 		this.w = 'Player';
-		this.Ug = this.yb = 0;
+		this.yb = 0;
+		this.Ug = 0;
 		this.Kd = null;
 		this.Ld = false;
-		this.Xb = this.Jd = null;
+		this.Jd = null;
+		this.Xb = null;
 		this.Jb = 0;
 		this.cb = false;
 	}
 
-	function fa() {
+	function Room() {
 		this.hc = -1;
-		this.S = this.gc = null;
+		this.gc = null;
+		this.S = null;
 		this.yd = 2;
 		this.Zc = 0;
 		this.ce = 1;
-		this.ib = this.Da = 3;
+		this.Da = 3;
+		this.ib = 3;
 		this.Pc = false;
 		this.K = null;
 		this.I = [];
 		this.jc = '';
-		this.S = h.Kh()[0];
-		this.kb = [null, new ka, new ka];
-		this.kb[1].fb.push(p.fa.R);
-		this.kb[2].fb.push(p.xa.R);
+		this.S = Stadium.Kh()[0];
+		this.kb = [null, new TeamColors, new TeamColors];
+		this.kb[1].fb.push(Team.red.R);
+		this.kb[2].fb.push(Team.blue.R);
 	}
 
-	function p(a, b, c, d, e, f, g, k) {
-		this.pg = null;
+	function Team(a, b, c, d, e, f, g, k) {
+		this.enemyTeam = null;
 		this.$ = a;
 		this.R = b;
 		this.Ch = c;
@@ -1169,16 +1175,16 @@
 		this.w = e;
 		this.io = f;
 		this.v = k;
-		this.wm = new ka;
+		this.wm = new TeamColors;
 		this.wm.fb.push(b);
 	}
 
-	function ka() {
+	function TeamColors() {
 		this.ed = 16777215;
 		this.fb = [];
 	}
 
-	function h() {
+	function Stadium() {
 		this.J = [];
 		this.U = [];
 		this.qa = [];
@@ -1187,23 +1193,25 @@
 		this.pb = [];
 		this.Dd = [];
 		this.md = [];
-		this.ge = new Eb;
+		this.ge = new PlayerPhysics;
 		this.Bh = 255;
-		this.Ge = this.Ye = 0;
+		this.Ye = 0;
+		this.Ge = 0;
 		this.Lf = true;
 		this.pf = false;
 	}
 
-	function Bb(a) {
+	function Dbb(a) {
 		this.xp = a;
 	}
 
-	function Eb() {
+	function PlayerPhysics() {
 		this.Se = 0;
 		this.Z = 15;
 		this.v = 0;
-		this.oa = new H(0, 0);
-		this.aa = this.m = .5;
+		this.oa = new Point(0, 0);
+		this.m = .5;
+		this.aa = .5;
 		this.Ca = .96;
 		this.Ce = .1;
 		this.Te = .07;
@@ -1211,40 +1219,47 @@
 		this.Re = 5;
 	}
 
-	function sb() {
-		this.qe = p.Ia;
-		this.ca = new H(0, 0);
-		this.W = new H(0, 0);
+	function Goal() {
+		this.qe = Team.spec;
+		this.ca = new Point(0, 0);
+		this.W = new Point(0, 0);
 	}
 
-	function O() {
+	function Game() {
 		this.hc = -1;
 		this.gc = null;
-		this.Pb = this.Kb = this.Hc = this.Oa = 0;
-		this.ae = p.fa;
-		this.vc = this.Bb = 0;
-		this.ta = new Fa;
+		this.Oa = 0;
+		this.Hc = 0;
+		this.Kb = 0;
+		this.Pb = 0;
+		this.ae = Team.red;
+		this.Bb = 0;
+		this.vc = 0;
+		this.ta = new DynamicObjectsUtil;
 		this.Da = 0;
 		this.ib = 5;
 		this.S = null;
 	}
 
-	function ua() {
-		this.h = this.v = 63;
+	function Disc() {
+		this.v = 63;
+		this.h = 63;
 		this.R = 16777215;
 		this.Ca = .99;
 		this.aa = 1;
 		this.m = .5;
 		this.Z = 10;
-		this.oa = new H(0, 0);
-		this.D = new H(0, 0);
-		this.a = new H(0, 0);
+		this.oa = new Point(0, 0);
+		this.D = new Point(0, 0);
+		this.a = new Point(0, 0);
 	}
 
-	function Tb(a, b) {
+	function AudioTb(a, b) {
 		this.gh = null;
 		this.Js = .025;
-		this.ve = this.dh = this.Ef = 0;
+		this.Ef = 0;
+		this.dh = 0;
+		this.ve = 0;
 		this.Tg = b.createGain();
 		this.Tg.gain.value = 0;
 		var c = b.createBufferSource();
@@ -1254,7 +1269,7 @@
 		c.start();
 	}
 
-	function Ub(a) {
+	function AudioUtil(a) {
 		function b(b) {
 			return new Promise((resolve, reject) => {
 				var e = a.file(b).asArrayBuffer();
@@ -1265,7 +1280,7 @@
 		var c = this;
 		this.c = new AudioContext;
 		this.ag = this.c.createGain();
-		this.im(n.A.pm.L() ? 1 : 0);
+		this.im(ConnectionConstants.buildsStorageMInst.pm.L() ? 1 : 0);
 		this.ag.connect(this.c.destination);
 		this.ro = Promise.all([
 			b('sounds/chat.ogg').then(a => c.Rj = a),
@@ -1276,39 +1291,40 @@
 			b('sounds/leave.ogg').then(a => c.ep = a),
 			b('sounds/crowd.ogg').then(a => {
 				c.ho = a;
-				c.Xj = new Tb(c.ho, c.c);
+				c.Xj = new AudioTb(c.ho, c.c);
 				c.Xj.connect(c.ag);
 			})
 		]);
 	}
 
-	function Z() {
+	function Dzz() {
 	}
 
-	function va() {
+	function RoomListOps() {
 	}
 
-	function Fb() {
+	function Dfb() {
 	}
 
-	function Vb(a) {
+	function ReplayVb(a) {
 		this.$c = window.performance.now();
-		this.sd = this.De = 0;
+		this.De = 0;
+		this.sd = 0;
 		var b = this;
 		this.ya = a;
-		this.j = new ja(a.uc);
-		var c = new Gb(this.j);
+		this.j = new GameView(a.uc);
+		var c = new MentionUtil(this.j);
 		c.ri(a.T);
-		window.document.addEventListener('keydown', G(this, this.Bd));
-		window.document.addEventListener('keyup', G(this, this.Cd));
-		window.requestAnimationFrame(G(this, this.bf));
+		window.document.addEventListener('keydown', handleEvent(this, this.Bd));
+		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
+		window.requestAnimationFrame(handleEvent(this, this.bf));
 		this.Gh = window.setInterval(() => {
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
-		this.uf(n.A.Tb.L());
+		this.uf(ConnectionConstants.buildsStorageMInst.Tb.L());
 		this.j.g.classList.add('replayer');
-		this.je = new ha(a);
+		this.je = new ReplayControlsView(a);
 		this.je.Vp = () => c.Lr(a.T);
 		this.je.Up = () => {
 			b.j.me(a.T.K == null);
@@ -1318,23 +1334,23 @@
 		this.j.g.appendChild(this.je.g);
 	}
 
-	function x() {
+	function DisplayUtil() {
 	}
 
-	function u() {
+	function Muu() {
 	}
 
-	function Wb() {
+	function DObj() {
 	}
 
-	function n() {
+	function ConnectionConstants() {
 	}
 
-	function W() {
+	function DwwMap() {
 		this.Yc = new Map;
 	}
 
-	function wa(a, b, c, d) {
+	function StorageM(a, b, c, d) {
 		this.w = a;
 		this.Ur = d;
 		this.Yh = b;
@@ -1344,16 +1360,16 @@
 		this.Hm = c(d);
 	}
 
-	function Xb() {
+	function LocalStorageUtil() {
 	}
 
-	function Yb() {
+	function BuildsStorageM() {
 		function a(a) {
-			return new wa(a, e, a => {
+			return new StorageM(a, e, a => {
 				if (a == null)
 					return null;
 				try {
-					return T.Hh(a);
+					return GeoLocation.Hh(a);
 				}
 				catch (k) {
 					return null;
@@ -1371,15 +1387,15 @@
 		}
 
 		function b(a) {
-			return new wa(a, e, a => a != null ? a != '0' : true, a => a ? '1' : '0');
+			return new StorageM(a, e, a => a != null ? a != '0' : true, a => a ? '1' : '0');
 		}
 
 		function c(a, b) {
-			return new wa(a, e, a => {
+			return new StorageM(a, e, a => {
 				var c = b;
 				try {
 					if (a != null)
-						c = K.parseInt(a);
+						c = StringOpsInt.parseInt(a);
 				}
 				catch (t) {
 				}
@@ -1388,10 +1404,10 @@
 		}
 
 		function d(a, b, c) {
-			return new wa(a, e, a => a == null ? b : U.Qc(a, c), a => a);
+			return new StorageM(a, e, a => a == null ? b : StringOpsLimit.Qc(a, c), a => a);
 		}
 
-		var e = Xb.Pm();
+		var e = LocalStorageUtil.Pm();
 		this.fe = d('player_name', '', 25);
 		this.Tb = c('view_mode', -1);
 		this.Fh = c('fps_limit', 0);
@@ -1405,7 +1421,7 @@
 		this.nm = b('sound_crowd');
 		this.Gj = d('player_auth_key', null, 1024);
 		this.rd = c('extrapolation', 0);
-		this.Sl = ((a, b) => new wa(a, e, a => {
+		this.Sl = ((a, b) => new StorageM(a, e, a => {
 			var c = b;
 			try {
 				if (a != null)
@@ -1418,14 +1434,14 @@
 		this.lm = b('show_avatars');
 		this.Me = a('geo');
 		this.Ne = a('geo_override');
-		this.tg = (() => new wa('player_keys', e, a => {
+		this.tg = (() => new StorageM('player_keys', e, a => {
 			if (a == null)
-				return W.$j();
+				return DwwMap.$j();
 			try {
-				return W.Hh(a);
+				return DwwMap.Hh(a);
 			}
 			catch (g) {
-				return W.$j();
+				return DwwMap.$j();
 			}
 		}, a => {
 			try {
@@ -1437,86 +1453,89 @@
 		}))();
 	}
 
-	function T() {
+	function GeoLocation() {
 		this.ub = '';
-		this.Ec = this.Gc = 0;
+		this.Gc = 0;
+		this.Ec = 0;
 	}
 
-	function Ra() {
+	function Dra() {
 		this.$d = this.Yf = 0;
-		window.document.addEventListener('focusout', G(this, this.al));
+		window.document.addEventListener('focusout', handleEvent(this, this.al));
 	}
 
-	function Gb(a, b) {
+	function MentionUtil(a, b) {
 		this.Rh = null;
 		this.j = a;
 		if (b != null)
-			this.Rh = '@' + J.replace(b, ' ', '_');
+			this.Rh = '@' + StringOps3.replace(b, ' ', '_');
 	}
 
-	function ba(a) {
+	function ConnBa(a) {
 		this.Nf = null;
-		this.Ik = this.zh = false;
+		this.zh = false;
+		this.Ik = false;
 		this.$c = window.performance.now();
 		this.Ed = null;
 		this.De = 0;
-		this.Jn = new tb(3, 1000);
-		this.ob = new Ra;
+		this.Jn = new Mtb(3, 1000);
+		this.ob = new Dra;
 		this.Bg = 'Waiting for link';
-		this.xi = this.am = false;
+		this.am = false;
+		this.xi = false;
 		this.sd = 0;
 		var b = this;
-		this.Of = new ub(a, a => b.j.Qa.Gb(a));
+		this.Of = new CommandUtil(a, a => b.j.Qa.Gb(a));
 		this.ya = a;
 		a.T.ko = c => {
 			if (c != b.am) {
 				b.am = c;
-				c = ta.la(c);
+				c = Mta.la(c);
 				a.ra(c);
 			}
 		};
-		this.j = new ja(a.uc);
-		this.Ih = new Gb(this.j, a.T.na(a.uc).w);
+		this.j = new GameView(a.uc);
+		this.Ih = new MentionUtil(this.j, a.T.na(a.uc).w);
 		this.Ih.ri(a.T);
-		this.j.Qa.fl = G(this, this.Gp);
-		this.j.Qa.ig = G(this, this.Fp);
-		window.document.addEventListener('keydown', G(this, this.Bd));
-		window.document.addEventListener('keyup', G(this, this.Cd));
+		this.j.Qa.fl = handleEvent(this, this.Gp);
+		this.j.Qa.ig = handleEvent(this, this.Fp);
+		window.document.addEventListener('keydown', handleEvent(this, this.Bd));
+		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
 		window.onbeforeunload = () => 'Are you sure you want to leave the room?';
 		this.ob.ng = b => a.ra(b);
 		this.j.Wa.aq = b => {
-			b = da.la(1, b);
+			b = Mda.la(1, b);
 			a.ra(b);
 		};
 		this.j.Wa.Tp = b => {
-			b = da.la(0, b);
+			b = Mda.la(0, b);
 			a.ra(b);
 		};
 		this.j.og = b => {
-			b = qa.la(b);
+			b = Mqa.la(b);
 			a.ra(b);
 		};
-		this.j.Wa.Yp = () => a.ra(new Ma);
-		this.j.Wa.Zp = () => a.ra(new La);
+		this.j.Wa.Yp = () => a.ra(new Dma);
+		this.j.Wa.Zp = () => a.ra(new Dla);
 		this.j.Wa.Mp = () => b.Bm();
 		this.j.Wa.mg = (b, c) => {
-			var d = S.la(b, c);
+			var d = Dss.la(b, c);
 			a.ra(d);
 		};
-		this.j.Wa.ee = G(this, this.Wq);
-		this.j.Wa.Dp = () => a.ra(new Qa);
-		this.j.Wa.Pp = () => ba.Bq(a);
+		this.j.Wa.ee = handleEvent(this, this.Wq);
+		this.j.Wa.Dp = () => a.ra(new Dqa);
+		this.j.Wa.Pp = () => ConnBa.Bq(a);
 		this.j.Wa.$p = b => {
-			b = pa.la(b);
+			b = Mpa.la(b);
 			a.ra(b);
 		};
 		this.j.Wa.ff = c => {
 			var d = a.T.na(c);
 			if (d != null) {
-				var e = new db(d, b.xi);
+				var e = new PlayerMenuView(d, b.xi);
 				e.qb = () => b.j.bb(null);
 				e.Cp = (b, c) => {
-					var d = sa.la(b, c);
+					var d = Msa.la(b, c);
 					a.ra(d);
 				};
 				e.ei = () => b.vr(d);
@@ -1524,7 +1543,7 @@
 			}
 		};
 		this.j.Wa.Wp = () => {
-			var a = new bb;
+			var a = new RoomLinkView;
 			a.qb = () => b.j.bb(null);
 			b.j.bb(a.g, () => a.nr(b.Bg));
 		};
@@ -1534,113 +1553,116 @@
 			else {
 				var a = b.Ed.stop();
 				b.Ed = null;
-				ba.Yl(a);
+				ConnBa.Yl(a);
 			}
 			b.j.Wa.rr(b.Ed != null);
 		};
-		window.requestAnimationFrame(G(this, this.bf));
+		window.requestAnimationFrame(handleEvent(this, this.bf));
 		this.Gh = window.setInterval(() => {
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
 		this.Qr = window.setInterval(() => a.C(), 50);
 		this.uf();
-		var c = n.A.rd.L();
+		var c = ConnectionConstants.buildsStorageMInst.rd.L();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
 		if (c != 0) {
-			var d = n.A.rd.L();
+			var d = ConnectionConstants.buildsStorageMInst.rd.L();
 			a.gm(d);
 			this.j.Qa.Gb('Extrapolation set to ' + c + ' msec');
 		}
 	}
 
-	function Ha() {
+	function Dha() {
 	}
 
-	function ub(a, b) {
+	function CommandUtil(a, b) {
 		this.ya = a;
 		this.ba = b;
 	}
 
-	function Hb() {
+	function Dhb() {
 	}
 
-	function tb(a, b) {
+	function Mtb(a, b) {
 		this.Nj = a;
 		this.Si = b;
 		this.oc = a;
 		this.Ve = window.performance.now();
 	}
 
-	function vb() {
+	function FunM() {
 	}
 
-	function Cb() {
+	function Dcb() {
 	}
 
-	function ia() {
+	function Mia() {
 	}
 
-	function y() {
+	function Yyy() {
 	}
 
-	function A() {
+	function Daa() {
 	}
 
-	function M() {
+	function WebserverApiOps() {
 	}
 
-	function H(a, b) {
+	function Point(a, b) {
 		this.x = a;
 		this.y = b;
 	}
 
-	function Ib(a) {
+	function KeyFramesManager(a) {
 		this.Yb = a.slice();
 	}
 
-	function Jb(a, b, c) {
+	function HasStreamReader(a, b, c) {
 		this.Vk = [];
 		this.pl = 5;
 		this.Fd = -1;
-		this.hg = this.Qb = this.Wh = this.sk = 0;
-		V.call(this, b);
-		a = new F(new DataView(a.buffer), false);
+		this.sk = 0;
+		this.Wh = 0;
+		this.Qb = 0;
+		this.hg = 0;
+		VMajor.call(this, b);
+		a = new StreamReader(new DataView(a.buffer), false);
 		if (a.hb() != 1212305970)
-			throw new q('');
+			throw new GlobalError('');
 		b = a.hb();
 		if (b != c)
-			throw new q(new Kb(b));
+			throw new GlobalError(new Dkb(b));
 		this.mf = a.hb();
 		c = pako.inflateRaw(a.sb());
-		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength));
+		this.Lc = new StreamReader(new DataView(c.buffer, c.byteOffset, c.byteLength));
 		this.Cq(this.Lc);
 		c = this.Lc.sb();
-		this.Lc = new F(new DataView(c.buffer, c.byteOffset, c.byteLength), false);
+		this.Lc = new StreamReader(new DataView(c.buffer, c.byteOffset, c.byteLength), false);
 		this.ui();
 		this.Wh = window.performance.now();
 		this.uc = -1;
 	}
 
-	function Kb(a) {
+	function Dkb(a) {
 		this.Id = a;
 	}
 
-	function Zb() {
+	function RoRuUu() {
 	}
 
-	function $b(a) {
+	function HasMtb(a) {
 		this.xj = new Map;
-		this.Ho = new tb(100, 16);
+		this.Ho = new Mtb(100, 16);
 		this.yg = false;
 		this.yb = 0;
 		this.pa = a;
-		a = w.ha(8);
+		a = StreamWriter.ha(8);
 		a.s(Math.random());
 		this.He = a.Sb();
 	}
 
-	function Lb(a) {
+	function IceLb(a) {
 		this.Kj = new Map;
 		this.Ib = null;
 		this.fg = 32;
@@ -1649,58 +1671,60 @@
 		this.wi = 4;
 		this.Mn = 600;
 		var b = this;
-		V.call(this, a.state);
+		VMajor.call(this, a.state);
 		this.tp = a.ij;
 		this.Sr = a.version;
 		this.up = 1;
-		this.Jk = this.uc = 0;
+		this.uc = 0;
+		this.Jk = 0;
 		this.Li = window.performance.now();
-		this.Ic = new Sa(this.tp, a.iceServers, Zb.Km, a.gn);
-		this.Ic.Vj = G(this, this.Oo);
+		this.Ic = new IceSa(this.tp, a.iceServers, RoRuUu.Km, a.gn);
+		this.Ic.Vj = handleEvent(this, this.Oo);
 		this.Ic.bl = a => b.Lp(a);
-		this.Ic.kg = a => y.i(b.kg, a);
+		this.Ic.kg = a => Yyy.i(b.kg, a);
 		this.Ic.ef = (a, d) => {
 			if (b.ef != null)
 				b.ef(a, d);
 		};
 	}
 
-	function xa(a, b) {
+	function ConnectionUtil(a, b) {
 		this.Di = [];
 		this.pi = [];
-		this.ug = new Ia;
+		this.ug = new Dia;
 		this.Ap = 1;
-		this.pd = this.zm = 0;
-		this.Qi = new Mb(50);
-		this.sg = new Mb(50);
+		this.zm = 0;
+		this.pd = 0;
+		this.Qi = new PingUtil(50);
+		this.sg = new PingUtil(50);
 		this.nn = 1000;
 		this.ek = '';
 		var c = this;
-		V.call(this, b.state);
+		VMajor.call(this, b.state);
 		this.Uh = b.Ms;
 		this.Je = b.ds;
 		var d = null;
 		var d = e => {
 			c.tf(0);
-			var f = w.ha();
+			var f = StreamWriter.ha();
 			f.Ub(b.version);
 			f.Db(b.password);
-			c.pc = new wb(b.ij, b.iceServers, a, Zb.Km, f, b.gn);
+			c.pc = new SockWb(b.ij, b.iceServers, a, RoRuUu.Km, f, b.gn);
 			c.pc.rh = e;
 			c.pc.zd = a => {
 				c.pc = null;
 				c.pa = a;
 				a.lg = a => {
-					a = new F(new DataView(a));
+					a = new StreamReader(new DataView(a));
 					c.uq(a);
 				};
 				a.cf = () => {
 					if (c.pd != 3)
-						y.i(c.df, xb.ih('Connection closed'));
+						Yyy.i(c.df, xb.ih('Connection closed'));
 					c.ia();
 				};
 				a = window.setTimeout(() => {
-					y.i(c.df, xb.ih('Game state timeout'));
+					Yyy.i(c.df, xb.ih('Game state timeout'));
 					c.ia();
 				}, 10000);
 				c.re = a;
@@ -1711,11 +1735,11 @@
 			c.pc.Zk = () => g = true;
 			c.pc.bd = a => {
 				if (!e && c.pd == 1 && g) {
-					A.i(c.Sp);
+					Daa.i(c.Sp);
 					d(true);
 				}
 				else {
-					var b = wb.Do(a);
+					var b = SockWb.Do(a);
 					switch (a.nb) {
 						case 0:
 							a = xb.jh;
@@ -1729,7 +1753,7 @@
 						default:
 							a = xb.ih(b);
 					}
-					y.i(c.df, a);
+					Yyy.i(c.df, a);
 					c.ia(b);
 				}
 			};
@@ -1737,29 +1761,29 @@
 		d(b.cn != null && b.cn);
 	}
 
-	function V(a) {
-		this.Ri = new Ia;
+	function VMajor(a) {
+		this.Ri = new Dia;
 		this.te = this.cc = 0;
-		this.le = new Ia;
+		this.le = new Dia;
 		this.uc = this.bc = this.rd = 0;
 		this.Ac = .06;
 		this.mh = 16.666666666666668;
 		this.Ff = 120;
-		yb.call(this, a);
+		YMajor.call(this, a);
 	}
 
-	function ya() {
+	function Mya() {
 	}
 
-	function Ta() {
+	function Dta() {
 	}
 
-	function ac(a, b) {
+	function Mac(a, b) {
 		this.Xm = 0;
 		this.version = 1;
 		this.ah = 0;
-		this.Nd = w.ha(1000);
-		this.Df = w.ha(16384);
+		this.Nd = StreamWriter.ha(1000);
+		this.Df = StreamWriter.ha(16384);
 		var c = this;
 		this.version = b;
 		var d = this.ah = a.Y;
@@ -1770,7 +1794,7 @@
 			c.Df.lb(e - d);
 			d = e;
 			c.Df.Ub(b.P);
-			m.lj(b, c.Df);
+			Manager.lj(b, c.Df);
 		};
 		this.Nd.Ub(0);
 		var e = this.ah;
@@ -1783,65 +1807,65 @@
 		});
 	}
 
-	function bc() {
+	function Ping() {
 	}
 
-	function Mb(a) {
+	function PingUtil(a) {
 		this.rs = a;
 		this.$a = [];
 	}
 
-	function cc() {
+	function Mcc() {
 	}
 
-	function Ua() {
+	function Dua() {
 		this.da = 0;
 	}
 
-	function yb(a) {
-		this.Y = 0;
+	function YMajor(a) {
+		this.Y = 0; // frame no
 		this.T = a;
 	}
 
-	function Ia() {
+	function Dia() {
 		this.list = [];
 	}
 
-	function m() {
+	function Manager() {
 		this.da = 0;
 	}
 
-	function lc() {
+	function Mlc() {
 	}
 
-	function zb() {
+	function Mzb() {
 	}
 
-	function v() {
+	function ViewUtil() {
 	}
 
-	function Db(a, b) {
+	function ScoreUtil(a, b) {
 		this.Ja = a;
 		this.value = b;
 		a.textContent = '' + b;
 	}
 
-	function Ca() {
+	function Dca() {
 	}
 
-	function mc() {
+	function Mmc() {
 	}
 
-	function Ba() {
+	function Dba() {
 	}
 
-	function Ja() {
+	function Dja() {
 	}
 
-	function I() {
+	function Dii() {
 	}
 
-	function w(a, b) {
+	function StreamWriter(a, b) {
 		if (b == null)
 			b = false;
 		this.o = a;
@@ -1849,7 +1873,7 @@
 		this.a = 0;
 	}
 
-	function F(a, b) {
+	function StreamReader(a, b) {
 		if (b == null)
 			b = false;
 		this.o = a;
@@ -1857,7 +1881,7 @@
 		this.a = 0;
 	}
 
-	function Nb(a) {
+	function IceNb(a) {
 		this.gd = null;
 		this.Eq = 10000;
 		this.wd = true;
@@ -1899,13 +1923,15 @@
 		}
 	}
 
-	function nc() {
+	function Mnc() {
 	}
 
-	function Sa(a, b, c, d) {
+	function IceSa(a, b, c, d) {
 		this.th = new Set;
 		this.If = new Set;
-		this.Ag = this.nf = this.dm = false;
+		this.dm = false;
+		this.nf = false;
+		this.Ag = false;
 		this.Mc = null;
 		this.$ = '';
 		this.$q = 50000;
@@ -1920,15 +1946,16 @@
 		this.Ji();
 	}
 
-	function Va(a, b, c) {
-		this.gd = this.re = null;
+	function IceVa(a, b, c) {
+		this.re = null;
+		this.gd = null;
 		this.oe = [];
 		this.ak = 0;
 		this.hl = false;
 		this.Uf = [];
 		this.Vc = [];
 		var d = this;
-		this.Ra = new RTCPeerConnection({iceServers: b}, Va.Yn);
+		this.Ra = new RTCPeerConnection({iceServers: b}, IceVa.mediaConstraints);
 		this.Sh = new Promise(resolve => {
 			d.Vo = resolve;
 		});
@@ -1950,14 +1977,14 @@
 		this.$ = a;
 	}
 
-	function wb(a, b, c, d, e, f) {
+	function SockWb(a, b, c, d, e, f) {
 		this.rh = this.yh = false;
 		var g = this;
-		this.pa = new Va(0, b, d);
+		this.pa = new IceVa(0, b, d);
 		this.pa.bd = () => g.Oe(Ob.jh);
 		this.pa.zd = () => {
 			if (g.zd != null)
-				g.zd(new Nb(g.pa));
+				g.zd(new IceNb(g.pa));
 			g.pa = null;
 			g.Uj();
 		};
@@ -1973,47 +2000,47 @@
 				if (!g.yh)
 					g.Oe(Ob.Error);
 			};
-			g.X.onmessage = G(g, g.Ph);
+			g.X.onmessage = handleEvent(g, g.Ph);
 			g.X.onopen = () => {
 				if (g.gl != null)
 					g.gl();
 				g.pa.Mi();
 				g.Bi(g.jr, g.pa.Uf, e);
-				g.pa.jg = G(g, g.yi);
+				g.pa.jg = handleEvent(g, g.yi);
 				g.pa.Sh.then(() => g.Nc(0, null));
 			};
 		};
 		this.pa.eo();
 	}
 
-	function dc() {
+	function HashDc() {
 		this.hash = 0;
 	}
 
-	function U() {
+	function StringOpsLimit() {
 	}
 
-	function J() {
+	function StringOps3() {
 	}
 
-	function K() {
+	function StringOpsInt() {
 	}
 
-	function ec() {
+	function Mec() {
 	}
 
-	function D() {
+	function StringOpsSubstr() {
 	}
 
-	function fc(a, b) {
+	function RegexUtil(a, b) {
 		this.r = new RegExp(a, b.split('u').join(''));
 	}
 
-	function ga() {
-		return r.Be(this, '');
+	function CastGa() {
+		return ObjectCastUtil.Be(this, '');
 	}
 
-	function C(a, b) {
+	function Extend(a, b) {
 		var c = Object.create(a);
 		var d;
 		for (d in b)
@@ -2023,11 +2050,11 @@
 		return c;
 	}
 
-	function G(a, b) {
+	function handleEvent(a, b) {
 		if (b == null)
 			return null;
 		if (b.oh == null)
-			b.oh = rc++;
+			b.oh = rcCounter++;
 		var c;
 		if (a.ej == null)
 			a.ej = {};
@@ -2040,10 +2067,10 @@
 		return c;
 	}
 
-	var Ab = Ab || {};
-	var X;
-	fc.b = true;
-	fc.prototype = {
+	var BasnetArr = BasnetArr || {};
+	var xFun;
+	RegexUtil.b = true;
+	RegexUtil.prototype = {
 		match: function (a) {
 			if (this.r.global)
 				this.r.lastIndex = 0;
@@ -2053,35 +2080,35 @@
 		}, Wm: function (a) {
 			if (this.r.nc != null && a >= 0 && this.r.nc.length > a)
 				return this.r.nc[a];
-			throw new q('EReg::matched');
+			throw new GlobalError('EReg::matched');
 		}, ps: function () {
 			if (this.r.nc == null)
-				throw new q('No string matched');
+				throw new GlobalError('No string matched');
 			return {mj: this.r.nc.index, ms: this.r.nc[0].length};
 		}, os: function (a, b, c) {
 			if (c == null)
 				c = -1;
 			if (this.r.global) {
 				this.r.lastIndex = b;
-				this.r.nc = this.r.exec(c < 0 ? a : D.substr(a, 0, b + c));
+				this.r.nc = this.r.exec(c < 0 ? a : StringOpsSubstr.substr(a, 0, b + c));
 				if (b = this.r.nc != null)
 					this.r.bh = a;
 				return b;
 			}
-			if (c = this.match(c < 0 ? D.substr(a, b, null) : D.substr(a, b, c))) {
+			if (c = this.match(c < 0 ? StringOpsSubstr.substr(a, b, null) : StringOpsSubstr.substr(a, b, c))) {
 				this.r.bh = a;
 				this.r.nc.index += b;
 			}
 			return c;
-		}, f: fc
+		}, f: RegexUtil
 	};
-	D.b = true;
-	D.bj = (a, b) => {
+	StringOpsSubstr.b = true;
+	StringOpsSubstr.bj = (a, b) => {
 		var c = a.charCodeAt(b);
 		if (c == c)
 			return c;
 	};
-	D.substr = (a, b, c) => {
+	StringOpsSubstr.substr = (a, b, c) => {
 		if (c == null)
 			c = a.length;
 		else if (c < 0)
@@ -2091,7 +2118,7 @@
 				return '';
 		return a.substr(b, c);
 	};
-	D.remove = (a, b) => {
+	StringOpsSubstr.remove = (a, b) => {
 		var c = a.indexOf(b);
 		if (c == -1)
 			return false;
@@ -2099,8 +2126,8 @@
 		return true;
 	};
 	Math.b = true;
-	ec.b = true;
-	ec.Mm = a => {
+	Mec.b = true;
+	Mec.Mm = a => {
 		var b = [];
 		if (a != null) {
 			var c = Object.prototype.hasOwnProperty;
@@ -2112,60 +2139,60 @@
 		}
 		return b;
 	};
-	K.b = true;
-	K.ye = a => r.Be(a, '');
-	K.parseInt = a => {
+	StringOpsInt.b = true;
+	StringOpsInt.ye = a => ObjectCastUtil.Be(a, '');
+	StringOpsInt.parseInt = a => {
 		a = parseInt(a, !a || a[0] != '0' || a[1] != 'x' && a[1] != 'X' ? 10 : 16);
 		return isNaN(a) ? null : a;
 	};
-	J.b = true;
-	J.startsWith = (a, b) => b.length <= a.length ? b == D.substr(a, 0, b.length) : false;
-	J.ls = (a, b) => {
-		var c = D.bj(a, b);
+	StringOps3.b = true;
+	StringOps3.startsWith = (a, b) => b.length <= a.length ? b == StringOpsSubstr.substr(a, 0, b.length) : false;
+	StringOps3.ls = (a, b) => {
+		var c = StringOpsSubstr.bj(a, b);
 		return c > 8 && c < 14 ? true : c == 32;
 	};
-	J.Gs = a => {
-		for (var b = a.length, c = 0; b > c && J.ls(a, b - c - 1);)
+	StringOps3.Gs = a => {
+		for (var b = a.length, c = 0; b > c && StringOps3.ls(a, b - c - 1);)
 			++c;
-		return c > 0 ? D.substr(a, 0, b - c) : a;
+		return c > 0 ? StringOpsSubstr.substr(a, 0, b - c) : a;
 	};
-	J.Af = a => {
+	StringOps3.Af = a => {
 		var b;
 		var c = '';
 		for (b = 2 - a.length; b > c.length;)
 			c += '0';
 		return c + (a == null ? 'null' : '' + a);
 	};
-	J.replace = (a, b, c) => a.split(b).join(c);
-	J.Vg = (a, b) => {
+	StringOps3.replace = (a, b, c) => a.split(b).join(c);
+	StringOps3.Vg = (a, b) => {
 		for (var c = ''; c = "0123456789ABCDEF".charAt(a & 15) + c, a >>>= 4, a > 0;) ;
 		if (b != null)
 			for (; b > c.length;)
 				c = '0' + c;
 		return c;
 	};
-	U.b = true;
-	U.Qc = (a, b) => b >= a.length ? a : D.substr(a, 0, b);
-	U.Zr = a => {
+	StringOpsLimit.b = true;
+	StringOpsLimit.Qc = (a, b) => b >= a.length ? a : StringOpsSubstr.substr(a, 0, b);
+	StringOpsLimit.Zr = a => {
 		for (var b = '', c = 0, d = a.byteLength; d > c;)
-			b += J.Vg(a[c++], 2);
+			b += StringOps3.Vg(a[c++], 2);
 		return b;
 	};
-	dc.b = true;
-	dc.prototype = {
+	HashDc.b = true;
+	HashDc.prototype = {
 		Yr: function (a) {
 			for (var b = 0, c = a.length; c > b;) {
 				this.hash += a[b++];
 				this.hash += this.hash << 10;
 				this.hash ^= this.hash >>> 6;
 			}
-		}, f: dc
+		}, f: HashDc
 	};
-	var Ob = Ab['bas.basnet.FailReason'] = {
-		Gf: true, nh: ['PeerFailed', 'Rejected', 'Cancelled', 'Error'], jh: {nb: 0, eb: 'bas.basnet.FailReason', toString: ga}, lh: (X = a => ({nb: 1, code: a, eb: 'bas.basnet.FailReason', toString: ga}), X.Ae = ['code'], X), hh: {nb: 2, eb: 'bas.basnet.FailReason', toString: ga}, Error: {nb: 3, eb: 'bas.basnet.FailReason', toString: ga}
+	var Ob = BasnetArr['bas.basnet.FailReason'] = {
+		Gf: true, nh: ['PeerFailed', 'Rejected', 'Cancelled', 'Error'], jh: {nb: 0, eb: 'bas.basnet.FailReason', toString: CastGa}, lh: (xFun = a => ({nb: 1, code: a, eb: 'bas.basnet.FailReason', toString: CastGa}), xFun.Ae = ['code'], xFun), hh: {nb: 2, eb: 'bas.basnet.FailReason', toString: CastGa}, Error: {nb: 3, eb: 'bas.basnet.FailReason', toString: CastGa}
 	};
-	wb.b = true;
-	wb.Do = a => {
+	SockWb.b = true;
+	SockWb.Do = a => {
 		switch (a.nb) {
 			case 0:
 				return 'Failed';
@@ -2177,7 +2204,7 @@
 				return 'Master connection error';
 		}
 	};
-	wb.prototype = {
+	SockWb.prototype = {
 		Gn: function () {
 			this.Oe(Ob.hh);
 		}, Uj: function () {
@@ -2198,10 +2225,10 @@
 				this.bd(a);
 			this.Uj();
 		}, Ph: function (a) {
-			a = new F(new DataView(a.data));
+			a = new StreamReader(new DataView(a.data));
 			var b = a.B();
 			if (a.o.byteLength - a.a > 0)
-				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false);
+				a = new StreamReader(new DataView(pako.inflateRaw(a.sb()).buffer), false);
 			switch (b) {
 				case 1:
 					for (var b = a.ic(), c = a.wg(), d = [], e = 0; c.length > e;)
@@ -2225,14 +2252,14 @@
 			this.pa.Ra.addIceCandidate(a);
 		}, Nc: function (a, b) {
 			if (this.X != null) {
-				var c = w.ha(32, false);
+				var c = StreamWriter.ha(32, false);
 				c.l(a);
 				if (b != null)
 					c.Vb(pako.deflateRaw(b.Sb()));
 				this.X.send(c.Hd());
 			}
 		}, Bi: function (a, b, c) {
-			var d = w.ha(32, false);
+			var d = StreamWriter.ha(32, false);
 			d.l(this.rh ? 1 : 0);
 			d.mc(a.sdp);
 			d.Ng(b);
@@ -2240,18 +2267,18 @@
 				d.Vb(c.Sb());
 			this.Nc(1, d);
 		}, yi: function (a) {
-			var b = w.ha(32, false);
+			var b = StreamWriter.ha(32, false);
 			b.Ng(a);
 			this.Nc(4, b);
-		}, f: wb
+		}, f: SockWb
 	};
-	Va.b = true;
-	Va.prototype = {
+	IceVa.b = true;
+	IceVa.prototype = {
 		Mi: function (a) {
 			if (a == null)
 				a = 10000;
 			window.clearTimeout(this.re);
-			this.re = window.setTimeout(G(this, this.To), a);
+			this.re = window.setTimeout(handleEvent(this, this.To), a);
 		}, bo: function (a, b) {
 			var c = this;
 			this.ck(this.Ra.setRemoteDescription(a).then(() => c.Ra.createAnswer()), b, 500);
@@ -2266,7 +2293,7 @@
 
 				for (var g = 0; b.length > g;)
 					d.yj(b[g++]);
-				return lc.Dr(d.Sh, c).then(e, e);
+				return Mlc.Dr(d.Sh, c).then(e, e);
 			}).then(a => d.di(a)).catch(() => d.Tf());
 		}, co: function (a) {
 			var b = this;
@@ -2312,15 +2339,15 @@
 				c.onclose = null;
 				c.onmessage = null;
 			}
-		}, f: Va
+		}, f: IceVa
 	};
-	var gc = Ab['bas.basnet.ConnectionRequestResponse'] = {
-		Gf: true, nh: ['Accept', 'Reject'], hn: {nb: 0, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}, kh: (X = a => ({nb: 1, reason: a, eb: 'bas.basnet.ConnectionRequestResponse', toString: ga}), X.Ae = ['reason'], X)
+	var gc = BasnetArr['bas.basnet.ConnectionRequestResponse'] = {
+		Gf: true, nh: ['Accept', 'Reject'], hn: {nb: 0, eb: 'bas.basnet.ConnectionRequestResponse', toString: CastGa}, kh: (xFun = a => ({nb: 1, reason: a, eb: 'bas.basnet.ConnectionRequestResponse', toString: CastGa}), xFun.Ae = ['reason'], xFun)
 	};
-	Sa.b = true;
-	Sa.vk = a => {
+	IceSa.b = true;
+	IceSa.vk = a => {
 		try {
-			var b = nc.gf(a.candidate);
+			var b = Mnc.gf(a.candidate);
 			if (b.Jr == 'srflx')
 				return b.Xo;
 		}
@@ -2328,7 +2355,7 @@
 		}
 		return null;
 	};
-	Sa.prototype = {
+	IceSa.prototype = {
 		ia: function () {
 			window.clearTimeout(this.Ul);
 			window.clearTimeout(this.ke);
@@ -2383,29 +2410,29 @@
 			function b(a) {
 				a = a.sitekey;
 				if (a == null)
-					throw new q(null);
+					throw new GlobalError(null);
 				d.ef != null && d.ef(a, a => d.Ji(a));
 			}
 
 			function c(a) {
 				var b = a.url;
 				if (b == null)
-					throw new q(null);
+					throw new GlobalError(null);
 				a = a.token;
 				if (a == null)
-					throw new q(null);
+					throw new GlobalError(null);
 				d.X = new WebSocket(b + '?token=' + a);
 				d.X.binaryType = 'arraybuffer';
 				d.X.onopen = () => d.So();
 				d.X.onclose = a => d.Mh(a.code != 4001);
 				d.X.onerror = () => d.Mh(true);
-				d.X.onmessage = G(d, d.Ph);
+				d.X.onmessage = handleEvent(d, d.Ph);
 			}
 
 			if (a == null)
 				a = '';
 			var d = this;
-			M.zl(this.xr, 'token=' + this.Dg + '&rcr=' + a, M.vj).then(a => {
+			WebserverApiOps.zl(this.xr, 'token=' + this.Dg + '&rcr=' + a, WebserverApiOps.vj).then(a => {
 				switch (a.action) {
 					case 'connect':
 						c(a);
@@ -2422,7 +2449,7 @@
 				this.cm();
 			this.ol = window.setInterval(() => a.zi(), 40000);
 		}, Ph: function (a) {
-			a = new F(new DataView(a.data), false);
+			a = new StreamReader(new DataView(a.data), false);
 			switch (a.B()) {
 				case 1:
 					this.Oh(a);
@@ -2438,12 +2465,12 @@
 			}
 		}, Oh: function (a) {
 			var b = a.hb();
-			var c = U.Zr(a.sb(a.B()));
+			var c = StringOpsLimit.Zr(a.sb(a.B()));
 			var d;
 			var e;
 			var f;
 			try {
-				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false);
+				a = new StreamReader(new DataView(pako.inflateRaw(a.sb()).buffer), false);
 				d = a.B() != 0;
 				e = a.ic();
 				for (var g = a.wg(), k = [], l = 0; g.length > l;)
@@ -2463,7 +2490,7 @@
 				this.sf(a, 4102);
 			else {
 				for (var k = [], l = 0; d.length > l;) {
-					var t = Sa.vk(d[l++]);
+					var t = IceSa.vk(d[l++]);
 					if (t != null) {
 						if (this.If.has(t)) {
 							this.sf(a, 4102);
@@ -2472,11 +2499,11 @@
 						k.push(t);
 					}
 				}
-				if (this.Vj != null && (l = new F(e.o), l.a = e.a, e = this.Vj(b, l), e.nb == 1)) {
+				if (this.Vj != null && (l = new StreamReader(e.o), l.a = e.a, e = this.Vj(b, l), e.nb == 1)) {
 					this.sf(a, e.reason);
 					return;
 				}
-				var h = new Va(a, this.Vf, this.In);
+				var h = new IceVa(a, this.Vf, this.In);
 				if (f)
 					h.ak = 2500;
 				h.oe = k;
@@ -2490,7 +2517,7 @@
 					g.od.delete(h.$);
 					g.Nc(0, h, null);
 					if (g.bl != null)
-						g.bl(new Nb(h));
+						g.bl(new IceNb(h));
 				};
 				h.di = a => {
 					g.Bi(h, a, h.Uf, null);
@@ -2504,7 +2531,7 @@
 			var b = a.hb();
 			var c;
 			try {
-				a = new F(new DataView(pako.inflateRaw(a.sb()).buffer), false), c = new RTCIceCandidate(a.wg());
+				a = new StreamReader(new DataView(pako.inflateRaw(a.sb()).buffer), false), c = new RTCIceCandidate(a.wg());
 			}
 			catch (d) {
 				return;
@@ -2513,7 +2540,7 @@
 		}, Mo: function (a, b) {
 			var c = this.od.get(a);
 			if (c != null) {
-				var d = Sa.vk(b);
+				var d = IceSa.vk(b);
 				if (d != null && (c.oe.push(d), this.If.has(d)))
 					return;
 				c.yj(b);
@@ -2529,7 +2556,7 @@
 				if (a == 0)
 					b.hl = true;
 				b = b.$;
-				var d = w.ha(32, false);
+				var d = StreamWriter.ha(32, false);
 				d.l(a);
 				d.tb(b);
 				if (c != null)
@@ -2537,37 +2564,37 @@
 				this.X.send(d.Hd());
 			}
 		}, sf: function (a, b) {
-			var c = w.ha(16, false);
+			var c = StreamWriter.ha(16, false);
 			c.l(0);
 			c.tb(a);
 			c.Ub(b);
 			this.X.send(c.Hd());
 		}, zi: function () {
-			var a = w.ha(1, false);
+			var a = StreamWriter.ha(1, false);
 			a.l(8);
 			this.X.send(a.Hd());
 		}, Ai: function () {
 			this.Ag = false;
-			var a = w.ha(256, false);
+			var a = StreamWriter.ha(256, false);
 			a.l(7);
 			if (this.Mc != null)
 				a.Mg(this.Mc);
 			this.X.send(a.Hd());
 		}, cm: function () {
-			var a = w.ha(2, false);
+			var a = StreamWriter.ha(2, false);
 			a.l(9);
 			a.l(this.nf ? 1 : 0);
 			this.X.send(a.Hd());
 			this.dm = this.nf;
 		}, Bi: function (a, b, c, d) {
-			var e = w.ha(32, false);
+			var e = StreamWriter.ha(32, false);
 			e.mc(b.sdp);
 			e.Ng(c);
 			if (d != null)
 				e.Vb(d.Sb());
 			this.Nc(1, a, e);
 		}, yi: function (a, b) {
-			var c = w.ha(32, false);
+			var c = StreamWriter.ha(32, false);
 			c.Ng(b);
 			this.Nc(4, a, c);
 		}, qk: function () {
@@ -2597,17 +2624,17 @@
 		}, Ud: function () {
 			this.If.clear();
 			this.th.clear();
-		}, f: Sa
+		}, f: IceSa
 	};
-	nc.b = true;
-	nc.gf = a => {
+	Mnc.b = true;
+	Mnc.gf = a => {
 		a = a.split(' ');
 		if (a[6] != 'typ')
-			throw new q(null);
+			throw new GlobalError(null);
 		return {Jr: a[7], Xo: a[4]};
 	};
-	Nb.b = true;
-	Nb.prototype = {
+	IceNb.b = true;
+	IceNb.prototype = {
 		Br: function () {
 			return window.performance.now() - this.ym;
 		}, Rb: function (a, b) {
@@ -2619,7 +2646,7 @@
 						c.send(d);
 					}
 					catch (e) {
-						window.console.log(e instanceof q ? e.Ta : e);
+						window.console.log(e instanceof GlobalError ? e.Ta : e);
 					}
 				}
 			}
@@ -2631,7 +2658,7 @@
 				if (this.cf != null)
 					this.cf();
 			}
-		}, f: Nb
+		}, f: IceNb
 	};
 	var pc = {
 		b: true, description: a => {
@@ -2651,8 +2678,8 @@
 			}
 		}
 	};
-	F.b = true;
-	F.jo = (a, b) => {
+	StreamReader.b = true;
+	StreamReader.jo = (a, b) => {
 		var c = a.getUint8(b);
 		var d;
 		var e;
@@ -2698,15 +2725,15 @@
 			b += 6;
 		}
 		else
-			throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
+			throw new GlobalError('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
 		return {char: c, length: b - l};
 	};
-	F.prototype = {
+	StreamReader.prototype = {
 		sb: function (a) {
 			if (a == null)
 				a = this.o.byteLength - this.a;
 			if (this.o.byteLength < this.a + a)
-				throw new q('Read too much');
+				throw new GlobalError('Read too much');
 			var b = new Uint8Array(this.o.buffer, this.o.byteOffset + this.a, a);
 			this.a += a;
 			return b;
@@ -2752,12 +2779,12 @@
 			var c;
 			var d = '';
 			for (a = b + a; a > b;) {
-				c = F.jo(this.o, b);
+				c = StreamReader.jo(this.o, b);
 				b += c.length;
 				d += String.fromCodePoint(c.char);
 			}
 			if (a != b)
-				throw new q('Actual string length differs from the specified: ' + (b - a) + ' bytes');
+				throw new GlobalError('Actual string length differs from the specified: ' + (b - a) + ' bytes');
 			this.a = b;
 			return d;
 		}, zb: function () {
@@ -2770,20 +2797,20 @@
 		}, wg: function () {
 			var a = this.ic();
 			return JSON.parse(a);
-		}, f: F
+		}, f: StreamReader
 	};
-	w.b = true;
-	w.ha = (a, b) => {
+	StreamWriter.b = true;
+	StreamWriter.ha = (a, b) => {
 		if (b == null)
 			b = false;
 		if (a == null)
 			a = 16;
-		return new w(new DataView(new ArrayBuffer(a)), b);
+		return new StreamWriter(new DataView(new ArrayBuffer(a)), b);
 	};
-	w.uo = (a, b, c) => {
+	StreamWriter.uo = (a, b, c) => {
 		var d = c;
 		if (a < 0)
-			throw new q('Cannot encode UTF8 character: charCode (' + a + ') is negative');
+			throw new GlobalError('Cannot encode UTF8 character: charCode (' + a + ') is negative');
 		if (a < 128) {
 			b.setUint8(c, a & 127);
 			++c;
@@ -2824,12 +2851,12 @@
 			c += 6;
 		}
 		else
-			throw new q('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
+			throw new GlobalError('Cannot encode UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 		return c - d;
 	};
-	w.En = a => {
+	StreamWriter.En = a => {
 		if (a < 0)
-			throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
+			throw new GlobalError('Cannot calculate length of UTF8 character: charCode (' + a + ') is negative');
 		if (a < 128)
 			return 1;
 		if (a < 2048)
@@ -2842,18 +2869,18 @@
 			return 5;
 		if (a < -2147483648)
 			return 6;
-		throw new q('Cannot calculate length of UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
+		throw new GlobalError('Cannot calculate length of UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 	};
-	w.Kf = a => {
+	StreamWriter.Kf = a => {
 		for (var b = 0, c = a.length, d = 0; c > d; d++)
-			b += w.En(D.bj(a, d));
+			b += StreamWriter.En(StringOpsSubstr.bj(a, d));
 		return b;
 	};
-	w.Fn = a => {
+	StreamWriter.Fn = a => {
 		a >>>= 0;
 		return a < 128 ? 1 : a < 16384 ? 2 : a < 2097152 ? 3 : a < 268435456 ? 4 : 5;
 	};
-	w.prototype = {
+	StreamWriter.prototype = {
 		Kg: function () {
 			var a = new ArrayBuffer(this.a);
 			var b = new Uint8Array(this.o.buffer, this.o.byteOffset, this.a);
@@ -2864,13 +2891,13 @@
 		}, Hd: function () {
 			return new DataView(this.o.buffer, this.o.byteOffset, this.a);
 		}, Gr: function () {
-			return new F(this.Hd(), this.Sa);
+			return new StreamReader(this.Hd(), this.Sa);
 		}, rc: function (a) {
 			if (a > this.o.byteLength)
 				this.Yq(a <= 2 * this.o.byteLength ? 2 * this.o.byteLength : a);
 		}, Yq: function (a) {
 			if (a < 1)
-				throw new q('Can\'t resize buffer to a capacity lower than 1');
+				throw new GlobalError('Can\'t resize buffer to a capacity lower than 1');
 			if (a > this.o.byteLength) {
 				var b = new Uint8Array(this.o.buffer);
 				a = new ArrayBuffer(a);
@@ -2919,33 +2946,33 @@
 		}, Mg: function (a) {
 			this.Vb(new Uint8Array(a));
 		}, mc: function (a) {
-			this.lb(w.Kf(a));
+			this.lb(StreamWriter.Kf(a));
 			this.Og(a);
 		}, Db: function (a) {
 			if (a == null)
 				this.lb(0);
 			else {
-				this.lb(w.Kf(a) + 1);
+				this.lb(StreamWriter.Kf(a) + 1);
 				this.Og(a);
 			}
 		}, Im: function (a) {
-			var b = w.Kf(a);
+			var b = StreamWriter.Kf(a);
 			if (b > 255)
-				throw new q(null);
+				throw new GlobalError(null);
 			this.l(b);
 			this.Og(a);
 		}, Ng: function (a) {
 			this.mc(JSON.stringify(a));
 		}, Og: function (a) {
 			var b = this.a;
-			this.rc(b + w.Kf(a));
+			this.rc(b + StreamWriter.Kf(a));
 			for (var c = a.length, d = 0; c > d; d++)
-				b += w.uo(D.bj(a, d), this.o, b);
+				b += StreamWriter.uo(StringOpsSubstr.bj(a, d), this.o, b);
 			this.a = b;
 		}, lb: function (a) {
 			var b = this.a;
 			a >>>= 0;
-			this.rc(b + w.Fn(a));
+			this.rc(b + StreamWriter.Fn(a));
 			this.o.setUint8(b, a | 128);
 			if (a >= 128) {
 				this.o.setUint8(b + 1, a >> 7 | 128);
@@ -2977,17 +3004,17 @@
 				a = 1;
 			}
 			this.a += a;
-		}, f: w
+		}, f: StreamWriter
 	};
-	I.b = true;
-	I.yo = () => {
+	Dii.b = true;
+	Dii.yo = () => {
 		try {
-			return window.crypto.subtle.generateKey(I.qh, true, ['sign', 'verify']).then(a => {
+			return window.crypto.subtle.generateKey(Dii.ecKeyGenParams, true, ['sign', 'verify']).then(a => {
 				var b = a.privateKey;
 				return window.crypto.subtle.exportKey('jwk', b).then(a => {
 					var c = a.y;
 					var e = a.d;
-					var f = new I;
+					var f = new Dii;
 					f.Yi = a.x;
 					f.Zi = c;
 					f.Zj = e;
@@ -2997,18 +3024,18 @@
 			});
 		}
 		catch (a) {
-			return Promise.reject(a instanceof q ? a.Ta : a);
+			return Promise.reject(a instanceof GlobalError ? a.Ta : a);
 		}
 	};
-	I.xo = a => {
+	Dii.xo = a => {
 		a = a.split('.');
 		if (a.length != 4 || a[0] != 'idkey')
 			return Promise.reject('Invalid id format');
 		var b = a[1];
 		var c = a[2];
 		var d = a[3];
-		return I.Xr(b, c, d).then(a => {
-			var e = new I;
+		return Dii.Xr(b, c, d).then(a => {
+			var e = new Dii;
 			e.Yi = b;
 			e.Zi = c;
 			e.Zj = d;
@@ -3016,13 +3043,13 @@
 			return e;
 		});
 	};
-	I.Rr = (a, b) => {
+	Dii.Rr = (a, b) => {
 		try {
-			var c = new F(new DataView(a.buffer, a.byteOffset, a.byteLength), false);
+			var c = new StreamReader(new DataView(a.buffer, a.byteOffset, a.byteLength), false);
 			c.B();
 			var d = c.sb(c.Ob());
 			var e = c.sb();
-			var f = new F(new DataView(d.buffer, d.byteOffset, d.byteLength), false);
+			var f = new StreamReader(new DataView(d.buffer, d.byteOffset, d.byteLength), false);
 			var g = f.ic();
 			var k = f.ic();
 			var l = f.sb();
@@ -3033,38 +3060,38 @@
 				if (b[h] != l[h])
 					return Promise.reject(null);
 			}
-			return I.Wr(g, k).then(a => window.crypto.subtle.verify(I.mm, a, e, d)).then(a => {
+			return Dii.Wr(g, k).then(a => window.crypto.subtle.verify(Dii.ecdsaParams, a, e, d)).then(a => {
 				if (!a)
-					throw new q(null);
+					throw new GlobalError(null);
 				return g;
 			});
 		}
 		catch (jc) {
-			return Promise.reject(jc instanceof q ? jc.Ta : jc);
+			return Promise.reject(jc instanceof GlobalError ? jc.Ta : jc);
 		}
 	};
-	I.Xr = (a, b, c) => {
+	Dii.Xr = (a, b, c) => {
 		try {
-			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['sign'], kty: 'EC', d: c, x: a, y: b}, I.qh, true, ['sign']);
+			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['sign'], kty: 'EC', d: c, x: a, y: b}, Dii.ecKeyGenParams, true, ['sign']);
 		}
 		catch (d) {
-			return Promise.reject(d instanceof q ? d.Ta : d);
+			return Promise.reject(d instanceof GlobalError ? d.Ta : d);
 		}
 	};
-	I.Wr = (a, b) => {
+	Dii.Wr = (a, b) => {
 		try {
-			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['verify'], kty: 'EC', x: a, y: b}, I.qh, true, ['verify']);
+			return window.crypto.subtle.importKey('jwk', {crv: 'P-256', ext: true, key_ops: ['verify'], kty: 'EC', x: a, y: b}, Dii.ecKeyGenParams, true, ['verify']);
 		}
 		catch (c) {
-			return Promise.reject(c instanceof q ? c.Ta : c);
+			return Promise.reject(c instanceof GlobalError ? c.Ta : c);
 		}
 	};
-	I.prototype = {
+	Dii.prototype = {
 		Ir: function () {
 			return 'idkey.' + this.Yi + '.' + this.Zi + '.' + this.Zj;
 		}, wr: function (a) {
 			try {
-				var b = w.ha(1024);
+				var b = StreamWriter.ha(1024);
 				b.l(1);
 				var c = b.a;
 				b.Ub(0);
@@ -3075,21 +3102,21 @@
 				var e = b.a - d;
 				b.o.setUint16(c, e, b.Sa);
 				var f = new Uint8Array(b.o.buffer, b.o.byteOffset + d, e);
-				return window.crypto.subtle.sign(I.mm, this.Al, f).then(a => {
+				return window.crypto.subtle.sign(Dii.ecdsaParams, this.Al, f).then(a => {
 					b.Mg(a);
 					return b.Sb();
 				});
 			}
 			catch (g) {
-				return Promise.reject(g instanceof q ? g.Ta : g);
+				return Promise.reject(g instanceof GlobalError ? g.Ta : g);
 			}
-		}, f: I
+		}, f: Dii
 	};
-	Ja.b = true;
-	Ja.gp = () => {
-		if (Ja.li != null)
-			return Ja.li;
-		Ja.li = new Promise((resolve, reject) => {
+	Dja.b = true;
+	Dja.gp = () => {
+		if (Dja.li != null)
+			return Dja.li;
+		Dja.li = new Promise((resolve, reject) => {
 			var c = window.grecaptcha;
 			if (c != null)
 				resolve(c);
@@ -3101,12 +3128,12 @@
 				c.onerror = () => reject(null);
 			}
 		});
-		return Ja.li;
+		return Dja.li;
 	};
-	Ba.b = true;
-	Ba.cg = a => new PerfectScrollbar(a, {handlers: Ba.Uo});
-	mc.b = true;
-	mc.ts = () => {
+	Dba.b = true;
+	Dba.cg = a => new PerfectScrollbar(a, {handlers: Dba.scrollHandlers});
+	Mmc.b = true;
+	Mmc.ts = () => {
 		var a = window;
 		a.RTCPeerConnection = a.webkitRTCPeerConnection || a.mozRTCPeerConnection || a.RTCPeerConnection;
 		a.RTCIceCandidate = a.webkitRTCIceCandidate || a.mozRTCIceCandidate || a.RTCIceCandidate;
@@ -3130,10 +3157,10 @@
 			};
 		}
 	};
-	Ca.b = true;
-	Ca.ar = (a, b) => Ca.Xl(new Blob([a], {type: 'octet/stream'}), b);
-	Ca.br = (a, b) => Ca.Xl(new Blob([a], {type: 'text/plain'}), b);
-	Ca.Xl = (a, b) => {
+	Dca.b = true;
+	Dca.ar = (a, b) => Dca.Xl(new Blob([a], {type: 'octet/stream'}), b);
+	Dca.br = (a, b) => Dca.Xl(new Blob([a], {type: 'text/plain'}), b);
+	Dca.Xl = (a, b) => {
 		var c = window.document.createElement('a');
 		c.style.display = 'display: none';
 		window.document.body.appendChild(c);
@@ -3144,17 +3171,17 @@
 		URL.revokeObjectURL(d);
 		c.remove();
 	};
-	Db.b = true;
-	Db.prototype = {
+	ScoreUtil.b = true;
+	ScoreUtil.prototype = {
 		set: function (a) {
 			if (a != this.value) {
 				this.value = a;
 				this.Ja.textContent = '' + this.value;
 			}
-		}, f: Db
+		}, f: ScoreUtil
 	};
-	v.b = true;
-	v.Ea = a => {
+	ViewUtil.b = true;
+	ViewUtil.Ea = a => {
 		var b = new Map;
 		var c = 0;
 		for (a = a.querySelectorAll('[data-hook]'); a.length > c; c++) {
@@ -3163,27 +3190,25 @@
 		}
 		return b;
 	};
-	v.Ga = (a, b) => {
-		if (b == null)
-			b = 'div';
-		var c = window.document.createElement(b);
-		c.innerHTML = a;
+	ViewUtil.buildHtmlContents = (htmlContents, baseHtmlTag = 'div') => {
+		var c = window.document.createElement(baseHtmlTag);
+		c.innerHTML = htmlContents;
 		return c.firstElementChild;
 	};
-	v.xe = (a, b) => a.parentElement.replaceChild(b, a);
-	v.Cf = a => {
+	ViewUtil.xe = (a, b) => a.parentElement.replaceChild(b, a);
+	ViewUtil.Cf = a => {
 		for (var b = a.firstChild; b != null;) {
 			a.removeChild(b);
 			b = a.firstChild;
 		}
 	};
-	zb.b = true;
-	zb.eh = a => new Promise((resolve, reject) => {
+	Mzb.b = true;
+	Mzb.eh = a => new Promise((resolve, reject) => {
 		a.onsuccess = () => resolve(a.result);
 		a.onerror = reject;
 	});
-	lc.b = true;
-	lc.Dr = (a, b) => new Promise((resolve, reject) => {
+	Mlc.b = true;
+	Mlc.Dr = (a, b) => new Promise((resolve, reject) => {
 		var e = window.setTimeout(() => reject('Timed out'), b);
 		a.then(a => {
 			window.clearTimeout(e);
@@ -3193,48 +3218,48 @@
 			reject(a);
 		});
 	});
-	m.b = true;
-	m.Fa = a => {
+	Manager.b = true;
+	Manager.Fa = a => {
 		if (a.Aa == null)
 			a.Aa = true;
 		if (a.Ba == null)
 			a.Ba = true;
 		return a;
 	};
-	m.Ha = a => {
-		a.on = m.yf;
-		if (a.za == null)
-			throw new q('Class doesn\'t have a config');
-		a.prototype.zf = a.za;
-		m.Qm.set(m.yf, a);
-		m.yf++;
+	Manager.Ha = a => {
+		a.on = Manager.yf;
+		if (a.configProp == null)
+			throw new GlobalError('Class doesn\'t have a config');
+		a.prototype.zf = a.configProp;
+		Manager.yfMap.set(Manager.yf, a);
+		Manager.yf++;
 	};
-	m.lj = (a, b) => {
-		var c = (a == null ? null : r.Nm(a)).on;
+	Manager.lj = (a, b) => {
+		var c = (a == null ? null : ObjectCastUtil.Nm(a)).on;
 		if (c == null)
-			throw new q('Tried to pack unregistered action');
+			throw new GlobalError('Tried to pack unregistered action');
 		b.l(c);
 		a.ua(b);
 	};
-	m.fh = a => {
+	Manager.fh = a => {
 		var b = a.B();
-		var b = Object.create(m.Qm.get(b).prototype);
+		var b = Object.create(Manager.yfMap.get(b).prototype);
 		b.da = 0;
 		b.mb = 0;
 		b.va(a);
 		return b;
 	};
-	m.prototype = {
+	Manager.prototype = {
 		$m: () => true, apply: () => {
-			throw new q('missing implementation');
+			throw new GlobalError('missing implementation');
 		}, va: () => {
-			throw new q('missing implementation');
+			throw new GlobalError('missing implementation');
 		}, ua: () => {
-			throw new q('missing implementation');
-		}, f: m
+			throw new GlobalError('missing implementation');
+		}, f: Manager
 	};
-	Ia.b = true;
-	Ia.ss = (a, b, c) => {
+	Dia.b = true;
+	Dia.ss = (a, b, c) => {
 		if (a.length == 0) {
 			for (a = 0; b.length > a; a++)
 				c.push(b[a]);
@@ -3262,7 +3287,7 @@
 			}
 		}
 	};
-	Ia.prototype = {
+	Dia.prototype = {
 		Rm: function (a) {
 			for (var b = 0, c = a.mb, d = a.da, e = 0, f = this.list; f.length > e;) {
 				var g = f[e];
@@ -3288,7 +3313,7 @@
 		}, as: function (a, b) {
 			for (var c = this.list; c.length > 0;)
 				c.pop();
-			Ia.ss(a.list, b.list, this.list);
+			Dia.ss(a.list, b.list, this.list);
 		}, Ds: function (a) {
 			for (var b = 0, c = this.list, d = 0, e = c.length; e > d;) {
 				var f = c[d++];
@@ -3303,13 +3328,13 @@
 			for (var b = 0, c = 0, d = this.list; d.length > c && !(a <= d[c++].mb);)
 				++b;
 			return b;
-		}, f: Ia
+		}, f: Dia
 	};
-	yb.b = true;
-	yb.prototype = {f: yb};
-	Ua.b = true;
-	Ua.ma = m;
-	Ua.prototype = C(m.prototype, {
+	YMajor.b = true;
+	YMajor.prototype = {f: YMajor};
+	Dua.b = true;
+	Dua.ma = Manager;
+	Dua.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			a.Sn(this.Rg);
 		}, ua: function (a) {
@@ -3317,12 +3342,12 @@
 			a.Mg(this.Rg);
 		}, va: function (a) {
 			this.Rg = a.Cl(a.Ab());
-		}, f: Ua
+		}, f: Dua
 	});
-	cc.b = true;
-	cc.prototype = {f: cc};
-	Mb.b = true;
-	Mb.prototype = {
+	Mcc.b = true;
+	Mcc.prototype = {f: Mcc};
+	PingUtil.b = true;
+	PingUtil.prototype = {
 		add: function (a) {
 			for (var b = this.$a.length, c = 0, d = this.Qd = 0; b > d;) {
 				var e = d++;
@@ -3339,7 +3364,7 @@
 				this.$a.splice(c, 1);
 			}
 			else
-				b = new bc;
+				b = new Ping;
 			b.value = a;
 			b.weight = 1;
 			b.index = 0;
@@ -3360,37 +3385,37 @@
 			return this.$a[c].value;
 		}, max: function () {
 			return this.$a.length == 0 ? 0 : this.$a[this.$a.length - 1].value;
-		}, f: Mb
+		}, f: PingUtil
 	};
-	bc.b = true;
-	bc.prototype = {f: bc};
-	ac.b = true;
-	ac.prototype = {
+	Ping.b = true;
+	Ping.prototype = {f: Ping};
+	Mac.b = true;
+	Mac.prototype = {
 		stop: function () {
 			this.hj.fc = null;
 			this.hj.T.km(null);
 			this.Nd.o.setUint16(0, this.Xm, this.Nd.Sa);
 			this.Nd.Vb(this.Df.Sb());
 			var a = pako.deflateRaw(this.Nd.Sb());
-			var b = w.ha(a.byteLength + 32);
+			var b = StreamWriter.ha(a.byteLength + 32);
 			b.Og('HBR2');
 			b.tb(this.version);
 			b.tb(this.hj.Y - this.ah);
 			b.Vb(a);
 			return b.Sb();
-		}, f: ac
+		}, f: Mac
 	};
-	Ta.b = true;
-	ya.b = true;
-	V.b = true;
-	V.ma = yb;
-	V.prototype = C(yb.prototype, {
+	Dta.b = true;
+	Mya.b = true;
+	VMajor.b = true;
+	VMajor.ma = YMajor;
+	VMajor.prototype = Extend(YMajor.prototype, {
 		ra: () => {
-			throw new q('missing implementation');
+			throw new GlobalError('missing implementation');
 		}, Sf: () => {
-			throw new q('missing implementation');
+			throw new GlobalError('missing implementation');
 		}, C: () => {
-			throw new q('missing implementation');
+			throw new GlobalError('missing implementation');
 		}, zj: function (a) {
 			for (var b = this.le.list, c = 0, d = b.length, e = 0; a > e;) {
 				for (++e; d > c;) {
@@ -3433,7 +3458,7 @@
 				return this.T;
 			if (this.Ff < a)
 				a = this.Ff;
-			ya.zc++;
+			Mya.zc++;
 			var c = this.T.sc();
 			var d;
 			if (b != null) {
@@ -3466,15 +3491,15 @@
 			this.bc = this.Ac * a | 0;
 		}, gm: function (a) {
 			this.rd = this.Ac * (a < -200 ? -200 : a > 200 ? 200 : a);
-		}, f: V
+		}, f: VMajor
 	});
-	var xb = Ab['bas.marf.net.ConnFailReason'] = {
-		Gf: true, nh: ['Cancelled', 'PeerFailed', 'Rejected', 'Other'], hh: {nb: 0, eb: 'bas.marf.net.ConnFailReason', toString: ga}, jh: {nb: 1, eb: 'bas.marf.net.ConnFailReason', toString: ga}, lh: (X = a => ({nb: 2, reason: a, eb: 'bas.marf.net.ConnFailReason', toString: ga}), X.Ae = ['reason'], X), ih: (X = a => ({
-			nb: 3, description: a, eb: 'bas.marf.net.ConnFailReason', toString: ga
-		}), X.Ae = ['description'], X)
+	var xb = BasnetArr['bas.marf.net.ConnFailReason'] = {
+		Gf: true, nh: ['Cancelled', 'PeerFailed', 'Rejected', 'Other'], hh: {nb: 0, eb: 'bas.marf.net.ConnFailReason', toString: CastGa}, jh: {nb: 1, eb: 'bas.marf.net.ConnFailReason', toString: CastGa}, lh: (xFun = a => ({nb: 2, reason: a, eb: 'bas.marf.net.ConnFailReason', toString: CastGa}), xFun.Ae = ['reason'], xFun), ih: (xFun = a => ({
+			nb: 3, description: a, eb: 'bas.marf.net.ConnFailReason', toString: CastGa
+		}), xFun.Ae = ['description'], xFun)
 	};
-	xa.b = true;
-	xa.xh = a => {
+	ConnectionUtil.b = true;
+	ConnectionUtil.xh = a => {
 		switch (a.nb) {
 			case 0:
 				return 'Cancelled';
@@ -3486,8 +3511,8 @@
 				return a.description;
 		}
 	};
-	xa.ma = V;
-	xa.prototype = C(V.prototype, {
+	ConnectionUtil.ma = VMajor;
+	ConnectionUtil.prototype = Extend(VMajor.prototype, {
 		ia: function (a) {
 			if (this.pc != null) {
 				this.pc.bd = null;
@@ -3558,7 +3583,7 @@
 			c.catch(() => null).then(a => b.ir(a));
 		}, qq: function (a) {
 			a = pako.inflateRaw(a.sb());
-			a = new F(new DataView(a.buffer, a.byteOffset, a.byteLength));
+			a = new StreamReader(new DataView(a.buffer, a.byteOffset, a.byteLength));
 			this.uc = a.Ob();
 			this.Y = a.hb();
 			this.te = a.hb();
@@ -3569,7 +3594,7 @@
 			window.clearTimeout(this.re);
 			this.tf(3);
 		}, ir: function (a) {
-			var b = w.ha();
+			var b = StreamWriter.ha();
 			b.l(0);
 			if (a != null) {
 				b.lb(a.byteLength);
@@ -3590,7 +3615,7 @@
 			var c = a.Ab();
 			var d = a.Ob();
 			var e = a.hb();
-			a = m.fh(a);
+			a = Manager.fh(a);
 			a.P = d;
 			a.ue = e;
 			a.mb = b;
@@ -3603,7 +3628,7 @@
 				this.ug.Ds(a.ue);
 			this.Bl();
 		}, vq: function (a) {
-			a = m.fh(a);
+			a = Manager.fh(a);
 			a.P = 0;
 			a.ue = 0;
 			a.apply(this.T);
@@ -3661,9 +3686,9 @@
 				if (a < f)
 					break;
 				if (a > f)
-					y.i(this.dl, -1);
+					Yyy.i(this.dl, -1);
 				else
-					y.i(this.dl, c);
+					Yyy.i(this.dl, c);
 				++b;
 			}
 			this.Di.splice(0, b);
@@ -3672,7 +3697,7 @@
 			this.zm = a;
 			this.Di.push(a);
 			var b = this.sg.$g(.5) | 0;
-			var c = w.ha();
+			var c = StreamWriter.ha();
 			c.l(2);
 			c.s(a);
 			c.lb(b);
@@ -3689,11 +3714,11 @@
 					this.bc = 0;
 				if (a.zf.Aa)
 					c = this.Y + (this.Xc | 0) + this.bc;
-				var d = w.ha();
+				var d = StreamWriter.ha();
 				d.l(1);
 				d.tb(c);
 				d.tb(b);
-				m.lj(a, d);
+				Manager.lj(a, d);
 				this.Rb(d);
 				if (a.zf.Ba) {
 					a.ue = b;
@@ -3702,11 +3727,11 @@
 					this.ug.Rm(a);
 				}
 			}
-		}, f: xa
+		}, f: ConnectionUtil
 	});
-	Lb.b = true;
-	Lb.ma = V;
-	Lb.prototype = C(V.prototype, {
+	IceLb.b = true;
+	IceLb.ma = VMajor;
+	IceLb.prototype = Extend(VMajor.prototype, {
 		ia: function () {
 			this.Ic.ia();
 			for (var a = 0, b = this.ac; b.length > a;) {
@@ -3722,7 +3747,7 @@
 					var f = this.Ic.zn(e.pa);
 					this.Kj.set(a, f);
 				}
-				a = w.ha();
+				a = StreamWriter.ha();
 				a.l(5);
 				a.l(d ? 1 : 0);
 				a.mc(b);
@@ -3768,7 +3793,7 @@
 				return gc.kh(4100);
 			try {
 				if (this.Sr != b.Ob())
-					throw new q(null);
+					throw new GlobalError(null);
 			}
 			catch (d) {
 				return gc.kh(4103);
@@ -3776,7 +3801,7 @@
 			try {
 				var c = b.zb();
 				if (this.Ib != null && this.Ib != c)
-					throw new q(null);
+					throw new GlobalError(null);
 			}
 			catch (d) {
 				return gc.kh(4101);
@@ -3787,25 +3812,25 @@
 			if (this.fg <= this.ac.length)
 				a.ia();
 			else {
-				var c = new $b(a);
+				var c = new HasMtb(a);
 				this.ac.push(c);
 				a.lg = a => {
-					a = new F(new DataView(a));
+					a = new StreamReader(new DataView(a));
 					b.oq(a, c);
 				};
 				a.cf = () => {
-					D.remove(b.ac, c);
+					StringOpsSubstr.remove(b.ac, c);
 					b.Ie.delete(c.$);
-					y.i(b.Ip, c.$);
+					Yyy.i(b.Ip, c.$);
 				};
-				a = w.ha(1 + c.He.byteLength);
+				a = StreamWriter.ha(1 + c.He.byteLength);
 				a.l(0);
 				a.lb(c.He.byteLength);
 				a.Vb(c.He);
 				c.Rb(a);
 			}
 		}, Zh: function (a) {
-			var b = w.ha();
+			var b = StreamWriter.ha();
 			b.l(2);
 			this.il(a, b);
 			return b;
@@ -3814,10 +3839,10 @@
 			b.lb(a.da);
 			b.Ub(a.P);
 			b.tb(a.ue);
-			m.lj(a, b);
+			Manager.lj(a, b);
 		}, Ci: function () {
 			if (this.Y - this.Kk > 0 && this.ac.length != 0) {
-				var a = w.ha();
+				var a = StreamWriter.ha();
 				a.l(3);
 				a.tb(this.Y);
 				a.tb(this.te);
@@ -3834,9 +3859,9 @@
 					e.Rb(a, b);
 			}
 		}, hr: function (a) {
-			var b = w.ha();
+			var b = StreamWriter.ha();
 			b.l(1);
-			var c = w.ha();
+			var c = StreamWriter.ha();
 			c.Ub(a.$);
 			c.tb(this.Y);
 			c.tb(this.te);
@@ -3849,7 +3874,7 @@
 		}, gr: function () {
 			this.Jk = this.Y;
 			if (this.ac.length != 0) {
-				var a = new Ua;
+				var a = new Dua;
 				a.mb = this.Y;
 				a.da = this.cc++;
 				a.P = 0;
@@ -3862,27 +3887,27 @@
 			var e = a.sb(a.Ab());
 			var f = b.He;
 			b.He = null;
-			I.Rr(d, f).catch(() => null).then(a => {
+			Dii.Rr(d, f).catch(() => null).then(a => {
 				try {
 					if (c.ac.indexOf(b) != -1) {
 						b.Ns = a;
 						var d = c.up++;
 						b.$ = d;
 						c.Ie.set(d, b);
-						ia.i(c.Hp, d, new F(new DataView(e.buffer, e.byteOffset, e.byteLength), false));
+						Mia.i(c.Hp, d, new StreamReader(new DataView(e.buffer, e.byteOffset, e.byteLength), false));
 						b.yg = true;
 						c.hr(b);
 					}
 				}
 				catch (l) {
-					c.xk(b, l instanceof q ? l.Ta : l);
+					c.xk(b, l instanceof GlobalError ? l.Ta : l);
 				}
 			});
 		}, oq: function (a, b) {
 			this.C();
 			try {
 				if (!b.Ho.Cm())
-					throw new q(1);
+					throw new GlobalError(1);
 				var c = a.B();
 				if (b.yg) switch (c) {
 					case 1:
@@ -3892,29 +3917,29 @@
 						this.sq(a, b);
 						break;
 					default:
-						throw new q(0);
+						throw new GlobalError(0);
 				}
 				else if (c == 0)
 					this.yq(a, b);
 				else
-					throw new q(0);
+					throw new GlobalError(0);
 				if (a.o.byteLength - a.a > 0)
-					throw new q(2);
+					throw new GlobalError(2);
 			}
 			catch (d) {
-				this.xk(b, d instanceof q ? d.Ta : d);
+				this.xk(b, d instanceof GlobalError ? d.Ta : d);
 			}
 		}, xk: function (a, b) {
 			window.console.log(b);
 			this.Ie.delete(a.$);
-			D.remove(this.ac, a);
+			StringOpsSubstr.remove(this.ac, a);
 			if (a.yg && this.$k != null)
 				this.$k(a.$);
 			a.pa.ia();
 		}, sq: function (a, b) {
 			var c = a.u();
 			b.yb = a.Ab();
-			var d = w.ha();
+			var d = StreamWriter.ha();
 			d.l(4);
 			d.s((window.performance.now() - this.Li) * this.Ac + this.wi);
 			d.s(c);
@@ -3922,16 +3947,16 @@
 		}, zq: function (a, b) {
 			var c = a.hb();
 			var d = a.hb();
-			var e = m.fh(a);
+			var e = Manager.fh(a);
 			var f = e.zf.oj;
 			if (f != null) {
 				var g = b.xj.get(f);
 				if (g == null) {
-					g = new tb(f.$i, f.uj);
+					g = new Mtb(f.$i, f.uj);
 					b.xj.set(f, g);
 				}
 				if (!g.Cm())
-					throw new q(3);
+					throw new GlobalError(3);
 			}
 			f = this.Y;
 			g = this.Y + 120;
@@ -3942,22 +3967,22 @@
 				this.Cg(e);
 				this.Eg(this.Zh(e), 1);
 			}
-		}, f: Lb
+		}, f: IceLb
 	});
-	$b.b = true;
-	$b.prototype = {
+	HasMtb.b = true;
+	HasMtb.prototype = {
 		Rb: function (a, b) {
 			if (b == null)
 				b = 0;
 			this.pa.Rb(b, a);
-		}, f: $b
+		}, f: HasMtb
 	};
-	Zb.b = true;
-	Kb.b = true;
-	Kb.prototype = {f: Kb};
-	Jb.b = true;
-	Jb.ma = V;
-	Jb.prototype = C(V.prototype, {
+	RoRuUu.b = true;
+	Dkb.b = true;
+	Dkb.prototype = {f: Dkb};
+	HasStreamReader.b = true;
+	HasStreamReader.ma = VMajor;
+	HasStreamReader.prototype = Extend(VMajor.prototype, {
 		Cq: function (a) {
 			for (var b = a.Ob(), c = 0, d = 0; b > d;) {
 				++d;
@@ -3971,7 +3996,7 @@
 				a = this.Lc.Ab();
 				this.hg += a;
 				a = this.Lc.Ob();
-				this.gg = m.fh(this.Lc);
+				this.gg = Manager.fh(this.Lc);
 				this.gg.P = a;
 			}
 			else
@@ -3981,7 +4006,7 @@
 		}, ra: () => {
 		}, Sf: function () {
 			this.C();
-			ya.zc++;
+			Mya.zc++;
 			var a = this.T.sc();
 			a.C(this.sk);
 			return a;
@@ -4023,10 +4048,10 @@
 			this.Qb = this.Y = this.Lc.a = 0;
 			this.T.ja(this.Lc);
 			this.Dl();
-		}, f: Jb
+		}, f: HasStreamReader
 	});
-	Ib.b = true;
-	Ib.prototype = {
+	KeyFramesManager.b = true;
+	KeyFramesManager.prototype = {
 		eval: function (a) {
 			var b = this.Yb.length - 1;
 			if (this.Yb[0] >= a)
@@ -4048,12 +4073,12 @@
 			b = a * a;
 			d = b * a;
 			return (2 * d - 3 * b + 1) * this.Yb[c + 1] + (d - 2 * b + a) * this.Yb[c + 2] + (-2 * d + 3 * b) * this.Yb[c + 3] + (d - b) * this.Yb[c + 4];
-		}, f: Ib
+		}, f: KeyFramesManager
 	};
-	H.b = true;
-	H.prototype = {f: H};
-	M.b = true;
-	M.Pl = (a, b, c, d, e) => new Promise((resolve, reject) => {
+	Point.b = true;
+	Point.prototype = {f: Point};
+	WebserverApiOps.b = true;
+	WebserverApiOps.Pl = (a, b, c, d, e) => new Promise((resolve, reject) => {
 		var k = new XMLHttpRequest;
 		k.open(b, a);
 		k.responseType = c;
@@ -4072,47 +4097,47 @@
 			k.setRequestHeader('Content-type', e);
 		k.send(d);
 	});
-	M.L = (a, b) => M.Pl(a, 'GET', b, null);
-	M.tk = a => M.L(a, 'json').then(a => {
+	WebserverApiOps.L = (a, b) => WebserverApiOps.Pl(a, 'GET', b, null);
+	WebserverApiOps.tk = a => WebserverApiOps.L(a, 'json').then(a => {
 		var b = a.error;
 		if (b != null)
-			throw new q(b);
+			throw new GlobalError(b);
 		return a.data;
 	});
-	M.mq = (a, b, c) => M.Pl(a, 'POST', 'json', b, c);
-	M.zl = (a, b, c) => M.mq(a, b, c).then(a => {
+	WebserverApiOps.mq = (a, b, c) => WebserverApiOps.Pl(a, 'POST', 'json', b, c);
+	WebserverApiOps.zl = (a, b, c) => WebserverApiOps.mq(a, b, c).then(a => {
 		var b = a.error;
 		if (b != null)
-			throw new q(b);
+			throw new GlobalError(b);
 		return a.data;
 	});
-	A.b = true;
-	A.i = a => {
+	Daa.b = true;
+	Daa.i = a => {
 		if (a != null)
 			a();
 	};
-	y.b = true;
-	y.i = (a, b) => {
+	Yyy.b = true;
+	Yyy.i = (a, b) => {
 		if (a != null)
 			a(b);
 	};
-	ia.b = true;
-	ia.i = (a, b, c) => {
+	Mia.b = true;
+	Mia.i = (a, b, c) => {
 		if (a != null)
 			a(b, c);
 	};
-	Cb.b = true;
-	Cb.i = (a, b, c, d) => {
+	Dcb.b = true;
+	Dcb.i = (a, b, c, d) => {
 		if (a != null)
 			a(b, c, d);
 	};
-	vb.b = true;
-	vb.i = (a, b, c, d, e) => {
+	FunM.b = true;
+	FunM.i = (a, b, c, d, e) => {
 		if (a != null)
 			a(b, c, d, e);
 	};
-	tb.b = true;
-	tb.prototype = {
+	Mtb.b = true;
+	Mtb.prototype = {
 		Cm: function (a) {
 			if (a == null)
 				a = 1;
@@ -4139,11 +4164,11 @@
 				this.oc = this.Nj;
 				this.Ve = a;
 			}
-		}, f: tb
+		}, f: Mtb
 	};
-	Hb.b = true;
-	Hb.gf = a => {
-		var b = new fc('([^&=]+)=?([^&]*)', 'g');
+	Dhb.b = true;
+	Dhb.gf = a => {
+		var b = new RegexUtil('([^&=]+)=?([^&]*)', 'g');
 		a = a.substring(1);
 		for (var c = 0, d = new Map; b.os(a, c);) {
 			var c = b.Wm(1);
@@ -4155,47 +4180,47 @@
 		}
 		return d;
 	};
-	Hb.L = () => Hb.gf(window.top.location.search);
-	ub.b = true;
-	ub.cq = a => {
+	Dhb.L = () => Dhb.gf(window.top.location.search);
+	CommandUtil.b = true;
+	CommandUtil.cq = a => {
 		if (a.length < 3)
-			throw new q('Not enough arguments');
+			throw new GlobalError('Not enough arguments');
 		if (a.length > 7)
-			throw new q('Too many arguments');
-		var b = new Pa;
-		var c = new ka;
+			throw new GlobalError('Too many arguments');
+		var b = new TeamColorsUtil;
+		var c = new TeamColors;
 		b.Sg = c;
 		switch (a[1]) {
 			case 'blue':
-				c.fb = [p.xa.R];
-				b.ea = p.xa;
+				c.fb = [Team.blue.R];
+				b.ea = Team.blue;
 				break;
 			case 'red':
-				c.fb = [p.fa.R];
-				b.ea = p.fa;
+				c.fb = [Team.red.R];
+				b.ea = Team.red;
 				break;
 			default:
-				throw new q('First argument must be either "red" or "blue"');
+				throw new GlobalError('First argument must be either "red" or "blue"');
 		}
 		if (a[2] == 'clear')
 			return b;
-		c.hd = 256 * K.parseInt(a[2]) / 360 | 0;
-		c.ed = K.parseInt('0x' + a[3]);
+		c.hd = 256 * StringOpsInt.parseInt(a[2]) / 360 | 0;
+		c.ed = StringOpsInt.parseInt('0x' + a[3]);
 		if (a.length > 4) {
 			c.fb = [];
 			for (var d = 4, e = a.length; e > d;)
-				c.fb.push(K.parseInt('0x' + a[d++]));
+				c.fb.push(StringOpsInt.parseInt('0x' + a[d++]));
 		}
 		return b;
 	};
-	ub.prototype = {
+	CommandUtil.prototype = {
 		gf: function (a) {
 			var b = this;
 			if (a.charAt(0) != '/')
 				return false;
 			if (a.length == 1)
 				return true;
-			a = J.Gs(D.substr(a, 1, null)).split(' ');
+			a = StringOps3.Gs(StringOpsSubstr.substr(a, 1, null)).split(' ');
 			var c = a[0];
 			switch (c) {
 				case 'avatar':
@@ -4210,7 +4235,7 @@
 					if (d.Pe())
 						this.ba('Current stadium is original: "' + a + '"');
 					else {
-						d = J.Vg(d.Sj(), 8);
+						d = StringOps3.Vg(d.Sj(), 8);
 						this.ba('Stadium: "' + a + '" (checksum: ' + d + ')');
 					}
 					break;
@@ -4236,11 +4261,11 @@
 					break;
 				case 'colors':
 					try {
-						d = ub.cq(a);
+						d = CommandUtil.cq(a);
 						this.ya.ra(d);
 					}
 					catch (g) {
-						if (g instanceof q) {
+						if (g instanceof GlobalError) {
 							a = g.Ta;
 							typeof a == 'string' && this.ba(a);
 						}
@@ -4252,9 +4277,9 @@
 					break;
 				case 'extrapolation':
 					if (a.length == 2) {
-						a = K.parseInt(a[1]);
+						a = StringOpsInt.parseInt(a[1]);
 						if (a != null && a >= -200 && a <= 200) {
-							n.A.rd.Xa(a);
+							ConnectionConstants.buildsStorageMInst.rd.Xa(a);
 							this.ya.gm(a);
 							this.ba('Extrapolation set to ' + a + ' msec');
 						}
@@ -4266,7 +4291,7 @@
 					break;
 				case 'handicap':
 					if (a.length == 2) {
-						a = K.parseInt(a[1]);
+						a = StringOpsInt.parseInt(a[1]);
 						if (a != null && a >= 0 && a <= 300) {
 							this.ya.kr(a);
 							this.ba('Ping handicap set to ' + a + ' msec');
@@ -4281,13 +4306,13 @@
 					if (a.length < 4)
 						this.ba('Usage: /kick_ratelimit <min> <rate> <burst>');
 					else {
-						var d = K.parseInt(a[1]);
-						var e = K.parseInt(a[2]);
-						a = K.parseInt(a[3]);
+						var d = StringOpsInt.parseInt(a[1]);
+						var e = StringOpsInt.parseInt(a[2]);
+						a = StringOpsInt.parseInt(a[3]);
 						if (d == null || e == null || a == null)
 							this.ba('Invalid arguments');
 						else
-							this.ya.ra(ma.la(d, e, a));
+							this.ya.ra(Mma.la(d, e, a));
 					}
 					break;
 				case 'recaptcha':
@@ -4304,13 +4329,13 @@
 										e = true;
 										break;
 									default:
-										throw new q(null);
+										throw new GlobalError(null);
 								}
 								this.jm(e);
 								this.ba('Room join Recaptcha ' + (e ? 'enabled' : 'disabled'));
 							}
 							else
-								throw new q(null);
+								throw new GlobalError(null);
 						}
 						catch (g) {
 							this.ba('Usage: /recaptcha <on|off>');
@@ -4331,8 +4356,8 @@
 					if (f.Pe())
 						this.ba('Can\'t store default stadium.');
 					else {
-						Z.Es()
-							.then(() => Z.add(f))
+						Dzz.Es()
+							.then(() => Dzz.add(f))
 							.then(() => b.ba('Stadium stored'))
 							.catch(() => b.ba('Couldn\'t store stadium'));
 					}
@@ -4343,26 +4368,26 @@
 			return true;
 		}, fm: function (a) {
 			if (a != null)
-				a = U.Qc(a, 2);
-			n.A.sh.Xa(a);
-			this.ya.ra(ra.la(a));
-		}, f: ub
+				a = StringOpsLimit.Qc(a, 2);
+			ConnectionConstants.buildsStorageMInst.sh.Xa(a);
+			this.ya.ra(Mra.la(a));
+		}, f: CommandUtil
 	};
-	Ha.b = true;
-	ba.b = true;
-	ba.Yl = a => {
+	Dha.b = true;
+	ConnBa.b = true;
+	ConnBa.Yl = a => {
 		var b = new Date;
-		Ca.ar(a, 'HBReplay-' + b.getFullYear() + '-' + J.Af('' + (b.getMonth() + 1)) + '-' + J.Af('' + b.getDate()) + '-' + J.Af('' + b.getHours()) + 'h' + J.Af('' + b.getMinutes()) + 'm.hbr2');
+		Dca.ar(a, 'HBReplay-' + b.getFullYear() + '-' + StringOps3.Af('' + (b.getMonth() + 1)) + '-' + StringOps3.Af('' + b.getDate()) + '-' + StringOps3.Af('' + b.getHours()) + 'h' + StringOps3.Af('' + b.getMinutes()) + 'm.hbr2');
 	};
-	ba.Bq = a => {
+	ConnBa.Bq = a => {
 		for (var b = a.T.I, c = [], d = 0, e = 0, f = 0; b.length > f;) {
 			var g = b[f];
 			++f;
-			if (p.Ia == g.ea)
+			if (Team.spec == g.ea)
 				c.push(g.V);
-			if (p.fa == g.ea)
+			if (Team.red == g.ea)
 				++d;
-			else if (p.xa == g.ea)
+			else if (Team.blue == g.ea)
 				++e;
 		}
 		f = c.length;
@@ -4370,34 +4395,34 @@
 			b = () => c.splice(Math.random() * c.length | 0, 1)[0];
 			if (d == e) {
 				if (f >= 2) {
-					a.ra(S.la(b(), p.fa));
-					a.ra(S.la(b(), p.xa));
+					a.ra(Dss.la(b(), Team.red));
+					a.ra(Dss.la(b(), Team.blue));
 				}
 			}
 			else {
 				if (d < e)
-					d = p.fa;
+					d = Team.red;
 				else
-					d = p.xa;
-				a.ra(S.la(b(), d));
+					d = Team.blue;
+				a.ra(Dss.la(b(), d));
 			}
 		}
 	};
-	ba.prototype = {
+	ConnBa.prototype = {
 		zr: function () {
-			this.Ed = new ac(this.ya, 3);
+			this.Ed = new Mac(this.ya, 3);
 		}, vr: function (a) {
 			var b = this;
-			a = new gb(a);
+			a = new KickPlayerView(a);
 			a.qb = () => b.j.bb(null);
 			a.ei = (a, d, e) => {
-				b.ya.ra(Y.la(a, d, e));
+				b.ya.ra(Dyy.la(a, d, e));
 				b.j.bb(null);
 			};
 			this.j.bb(a.g);
 		}, ia: function () {
-			window.document.removeEventListener('keydown', G(this, this.Bd));
-			window.document.removeEventListener('keyup', G(this, this.Cd));
+			window.document.removeEventListener('keydown', handleEvent(this, this.Bd));
+			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
 			this.ob.ia();
@@ -4409,18 +4434,18 @@
 				var e = d[c];
 				++c;
 				if (a == e.ea)
-					b.push(S.la(e.V, p.Ia));
+					b.push(Dss.la(e.V, Team.spec));
 			}
 			for (a = 0; b.length > a;)
 				this.ya.ra(b[a++]);
 		}, bf: function () {
-			this.De = window.requestAnimationFrame(G(this, this.bf));
+			this.De = window.requestAnimationFrame(handleEvent(this, this.bf));
 			this.ob.C();
 			this.ya.C();
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			if (n.A.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.buildsStorageMInst.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
 				this.uf();
@@ -4432,7 +4457,7 @@
 		}, Gp: function (a) {
 			var b = this;
 			this.Of.gf(a) || this.Jn.Zn(1, () => {
-				var c = new Na;
+				var c = new Dna;
 				c.Tc = a;
 				b.ya.ra(c);
 			});
@@ -4448,12 +4473,12 @@
 			}
 		}, bm: function (a) {
 			if (this.Ik != a) {
-				this.ya.ra(na.la(a ? 0 : 1));
+				this.ya.ra(Mna.la(a ? 0 : 1));
 				this.Ik = a;
 			}
 		}, Bm: function () {
 			if (this.ya.T.K != null) {
-				var a = new Oa;
+				var a = new Doa;
 				a.Bf = this.ya.T.K.Oa != 120;
 				this.ya.ra(a);
 			}
@@ -4474,16 +4499,16 @@
 					a.preventDefault();
 					break;
 				case 49:
-					n.A.Tb.Xa(1);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(1);
 					break;
 				case 50:
-					n.A.Tb.Xa(2);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(2);
 					break;
 				case 51:
-					n.A.Tb.Xa(3);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(3);
 					break;
 				case 52:
-					n.A.Tb.Xa(0);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(0);
 					break;
 				case 80:
 					this.Bm();
@@ -4492,10 +4517,10 @@
 					this.ob.Bd(a.code);
 			}
 		}, uf: function () {
-			var a = n.A.Tb.L();
+			var a = ConnectionConstants.buildsStorageMInst.Tb.L();
 			var b = this.j.Fb;
 			var c = b.Eb;
-			c.zg = n.A.Sl.L();
+			c.zg = ConnectionConstants.buildsStorageMInst.Sl.L();
 			if (a == 0) {
 				b.Gg(true);
 				c.kf = 1;
@@ -4514,10 +4539,10 @@
 			}
 		}, Cd: function (a) {
 			this.ob.Cd(a.code);
-		}, f: ba
+		}, f: ConnBa
 	};
-	Gb.b = true;
-	Gb.prototype = {
+	MentionUtil.b = true;
+	MentionUtil.prototype = {
 		Ti: function (a) {
 			var b = this.j.Qa.Bc;
 			var c = [];
@@ -4536,48 +4561,48 @@
 			this.Ti(a);
 			a.tl = b => {
 				c.j.Qa.Gb('' + b.w + ' has joined');
-				n.Na.cd(n.Na.$o);
+				ConnectionConstants.Na.cd(ConnectionConstants.Na.$o);
 				c.Ti(a);
 			};
 			a.ul = (d, e, f, g) => {
-				y.i(c.Op, d.V);
+				Yyy.i(c.Op, d.V);
 				if (e == null)
 					d = '' + d.w + ' has left';
 				else {
-					vb.i(c.Np, d.V, e, g != null ? g.w : null, f);
+					FunM.i(c.Np, d.V, e, g != null ? g.w : null, f);
 					d = '' + d.w + ' was ' + (f ? 'banned' : 'kicked') + b(g) + (e != '' ? ' (' + e + ')' : '');
 				}
 				c.j.Qa.Gb(d);
-				n.Na.cd(n.Na.ep);
+				ConnectionConstants.Na.cd(ConnectionConstants.Na.ep);
 				c.Ti(a);
 			};
 			a.rl = (a, b) => {
 				var d = c.Rh != null && b.indexOf(c.Rh) != -1;
 				c.j.Qa.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
-				if (n.A.om.L() && d)
-					n.Na.cd(n.Na.zk);
-				else if (n.A.Hi.L())
-					n.Na.cd(n.Na.Rj);
+				if (ConnectionConstants.buildsStorageMInst.om.L() && d)
+					ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
+				else if (ConnectionConstants.buildsStorageMInst.Hi.L())
+					ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 			};
 			a.Vl = (a, b, f, g) => {
 				c.j.Qa.pp(a, b, f);
-				if (n.A.Hi.L()) switch (g) {
+				if (ConnectionConstants.buildsStorageMInst.Hi.L()) switch (g) {
 					case 1:
-						n.Na.cd(n.Na.Rj);
+						ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 						break;
 					case 2:
-						n.Na.cd(n.Na.zk);
+						ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
 				}
 			};
-			a.ji = () => n.Na.cd(n.Na.bp);
+			a.ji = () => ConnectionConstants.Na.cd(ConnectionConstants.Na.bp);
 			a.Ni = a => {
-				n.Na.cd(n.Na.Io);
+				ConnectionConstants.Na.cd(ConnectionConstants.Na.Io);
 				var b = c.j.Fb.Eb.td;
-				b.Pa(p.fa == a ? b.Fq : b.Bn);
+				b.Pa(a == Team.red ? b.Fq : b.Bn);
 			};
 			a.Oi = a => {
 				var b = c.j.Fb.Eb.td;
-				b.Pa(p.fa == a ? b.Gq : b.Cn);
+				b.Pa(a == Team.red ? b.Gq : b.Cn);
 				c.j.Qa.Gb('' + a.w + ' team won the match');
 			};
 			a.ml = (a, e, f) => {
@@ -4599,7 +4624,7 @@
 			};
 			a.Ii = (a, e) => {
 				if (!e.Pe()) {
-					var d = J.Vg(e.Sj(), 8);
+					var d = StringOps3.Vg(e.Sj(), 8);
 					c.j.Qa.Gb('Stadium "' + e.w + '" (' + d + ') loaded' + b(a));
 				}
 			};
@@ -4632,11 +4657,11 @@
 			a.ii = null;
 			a.wl = null;
 			a.Hk = null;
-		}, f: Gb
+		}, f: MentionUtil
 	};
-	Ra.b = true;
-	Ra.Fk = a => {
-		switch (n.A.tg.L().L(a)) {
+	Dra.b = true;
+	Dra.Fk = a => {
+		switch (ConnectionConstants.buildsStorageMInst.tg.L().L(a)) {
 			case 'Down':
 				return 2;
 			case 'Kick':
@@ -4651,53 +4676,53 @@
 				return 0;
 		}
 	};
-	Ra.prototype = {
+	Dra.prototype = {
 		ia: function () {
-			window.document.removeEventListener('focusout', G(this, this.al));
+			window.document.removeEventListener('focusout', handleEvent(this, this.al));
 		}, C: function () {
 			var a = this.$d;
 			if (this.ng != null && this.Yf != a) {
 				this.Yf = a;
-				var b = new Ga;
+				var b = new Dga;
 				b.input = a;
 				this.ng(b);
 			}
 		}, Bd: function (a) {
-			this.$d |= Ra.Fk(a);
+			this.$d |= Dra.Fk(a);
 		}, Cd: function (a) {
-			this.$d &= ~Ra.Fk(a);
+			this.$d &= ~Dra.Fk(a);
 		}, al: function () {
 			if (this.ng != null && this.Yf != 0) {
 				this.Yf = this.$d = 0;
-				var a = new Ga;
+				var a = new Dga;
 				a.input = 0;
 				this.ng(a);
 			}
-		}, f: Ra
+		}, f: Dra
 	};
-	T.b = true;
-	T.Hh = a => T.Rf(JSON.parse(a));
-	T.Rf = a => {
-		var b = new T;
+	GeoLocation.b = true;
+	GeoLocation.Hh = a => GeoLocation.Rf(JSON.parse(a));
+	GeoLocation.Rf = a => {
+		var b = new GeoLocation;
 		b.Ec = a.lat;
 		b.Gc = a.lon;
 		b.ub = a.code.toLowerCase();
 		return b;
 	};
-	T.Fo = () => M.tk(n.Ee + 'api/geo').then(a => T.Rf(a));
-	T.prototype = {
+	GeoLocation.Fo = () => WebserverApiOps.tk(ConnectionConstants.rsUrl + 'api/geo').then(a => GeoLocation.Rf(a));
+	GeoLocation.prototype = {
 		se: function () {
 			return JSON.stringify({lat: this.Ec, lon: this.Gc, code: this.ub});
-		}, f: T
+		}, f: GeoLocation
 	};
-	Yb.b = true;
-	Yb.prototype = {
+	BuildsStorageM.b = true;
+	BuildsStorageM.prototype = {
 		Lh: function () {
-			return this.Ne.L() != null ? this.Ne.L() : this.Me.L() != null ? this.Me.L() : new T;
-		}, f: Yb
+			return this.Ne.L() != null ? this.Ne.L() : this.Me.L() != null ? this.Me.L() : new GeoLocation;
+		}, f: BuildsStorageM
 	};
-	Xb.b = true;
-	Xb.Pm = () => {
+	LocalStorageUtil.b = true;
+	LocalStorageUtil.Pm = () => {
 		try {
 			var a = window.localStorage;
 			a.getItem('');
@@ -4712,8 +4737,8 @@
 			return null;
 		}
 	};
-	wa.b = true;
-	wa.prototype = {
+	StorageM.b = true;
+	StorageM.prototype = {
 		L: function () {
 			return this.Hm;
 		}, Xa: function (a) {
@@ -4727,19 +4752,19 @@
 			}
 			catch (c) {
 			}
-		}, f: wa
+		}, f: StorageM
 	};
-	W.b = true;
-	W.Rf = a => {
-		for (var b = new W, c = ec.Mm(a), d = 0; c.length > d; d++) {
+	DwwMap.b = true;
+	DwwMap.Rf = a => {
+		for (var b = new DwwMap, c = Mec.Mm(a), d = 0; c.length > d; d++) {
 			var e = c[d];
 			b.Yc.set(e, a[e]);
 		}
 		return b;
 	};
-	W.Hh = a => W.Rf(JSON.parse(a));
-	W.$j = () => {
-		var a = new W;
+	DwwMap.Hh = a => DwwMap.Rf(JSON.parse(a));
+	DwwMap.$j = () => {
+		var a = new DwwMap;
 		a.Pa('ArrowUp', 'Up');
 		a.Pa('KeyW', 'Up');
 		a.Pa('ArrowDown', 'Down');
@@ -4757,7 +4782,7 @@
 		a.Pa('Numpad0', 'Kick');
 		return a;
 	};
-	W.prototype = {
+	DwwMap.prototype = {
 		Pa: function (a, b) {
 			this.Yc.set(a, b);
 		}, L: function (a) {
@@ -4779,100 +4804,100 @@
 				a[d] = this.Yc.get(d);
 			}
 			return JSON.stringify(a);
-		}, f: W
+		}, f: DwwMap
 	};
-	n.b = true;
-	Wb.b = true;
-	Wb.prototype = {f: Wb};
-	u.b = true;
-	u.qp = () => {
-		mc.ts();
-		x.fj(() => u.jk(u.xq));
-		u.hp();
+	ConnectionConstants.b = true;
+	DObj.b = true;
+	DObj.prototype = {f: DObj};
+	Muu.b = true;
+	Muu.qpDisplay = () => {
+		Mmc.ts();
+		DisplayUtil.fj(() => Muu.jk(Muu.xq));
+		Muu.hp();
 	};
-	u.hp = () => {
-		var a = n.A.Gj.L();
-		if (a == null) I.yo().then(a => {
-			u.Je = a;
-			n.A.Gj.Xa(a.Ir());
+	Muu.hp = () => {
+		var a = ConnectionConstants.buildsStorageMInst.Gj.L();
+		if (a == null) Dii.yo().then(a => {
+			Muu.Je = a;
+			ConnectionConstants.buildsStorageMInst.Gj.Xa(a.Ir());
 		}).catch(() => ({}));
 		else
-			I.xo(a).then(a => u.Je = a).catch(() => ({}));
+			Dii.xo(a).then(a => Muu.Je = a).catch(() => ({}));
 	};
-	u.Bo = () => {
-		var a = Xb.Pm();
+	Muu.Bo = () => {
+		var a = LocalStorageUtil.Pm();
 		return a != null ? a.getItem('crappy_router') != null : false;
 	};
-	u.jk = a => {
-		var b = new kb(n.A.fe.L());
+	Muu.jk = a => {
+		var b = new ChooseNicknameView(ConnectionConstants.buildsStorageMInst.fe.L());
 		b.cl = b => {
-			n.A.fe.Xa(b);
-			n.Na.Tl();
+			ConnectionConstants.buildsStorageMInst.fe.Xa(b);
+			ConnectionConstants.Na.Tl();
 			a();
 		};
-		x.La(b.g);
+		DisplayUtil.La(b.g);
 		b.Cb.focus();
 	};
-	u.kk = (a, b) => {
-		var c = new Q(a);
+	Muu.kk = (a, b) => {
+		var c = new CaptchaDialogView(a);
 		c.Va = b;
-		x.La(c.g);
+		DisplayUtil.La(c.g);
 	};
-	u.no = (a, b) => {
+	Muu.no = (a, b) => {
 		function c() {
-			var a = new Ka('Failed', null);
-			a.Va = () => u.xb();
-			x.La(a.g);
+			var a = new DisconnectedView('Failed', null);
+			a.Va = () => Muu.xb();
+			DisplayUtil.La(a.g);
 		}
 
 		function d(b) {
 			b = b.sitekey;
 			if (b == null)
-				throw new q(null);
-			u.kk(b, b => e(a, b));
+				throw new GlobalError(null);
+			Muu.kk(b, b => e(a, b));
 		}
 
-		x.La((new P('Connecting', 'Connecting...', [])).g);
+		DisplayUtil.La((new SimpleDialogView('Connecting', 'Connecting...', [])).g);
 		var e;
 		e = (a, e) =>
-			M.zl(n.Ee + 'api/client', 'room=' + a + '&rcr=' + e, M.vj).then(a => {
+			WebserverApiOps.zl(ConnectionConstants.rsUrl + 'api/client', 'room=' + a + '&rcr=' + e, WebserverApiOps.vj).then(a => {
 				switch (a.action) {
 					case 'connect':
 						a = a.token;
 						if (a == null)
-							throw new q(null);
+							throw new GlobalError(null);
 						b(a);
 						break;
 					case 'recaptcha':
 						d(a);
 						break;
 					default:
-						throw new q(null);
+						throw new GlobalError(null);
 				}
 			}).catch(() => c());
 		e(a, '');
 	};
-	u.xq = () => {
-		var a = Hb.L();
+	Muu.xq = () => {
+		var a = Dhb.L();
 		var b = a.get('c');
 		var c = a.get('p');
 		a.get('v');
 		if (c != null) {
 			if (b != null)
-				u.Dh(b);
+				Muu.Dh(b);
 			else
-				u.xb();
+				Muu.xb();
 		}
 		else {
 			if (b != null)
-				u.Pf(b);
+				Muu.Pf(b);
 			else
-				u.xb();
+				Muu.xb();
 		}
 	};
-	u.xb = () => {
-		var a = new Aa(n.A.Lh());
-		x.La(a.Ja);
+	Muu.xb = () => {
+		var a = new RoomListView(ConnectionConstants.buildsStorageMInst.Lh());
+		DisplayUtil.La(a.Ja);
 		a.Ym = b => {
 			if (b.vd.Id != 9) {
 				var c;
@@ -4884,49 +4909,49 @@
 					b = 'New version';
 					c = 'The room is running a new version of haxball, refresh the site to update.';
 				}
-				var d = new P(b, c, ['Ok']);
-				x.La(d.g);
+				var d = new SimpleDialogView(b, c, ['Ok']);
+				DisplayUtil.La(d.g);
 				d.Va = () => {
-					x.La(a.Ja);
+					DisplayUtil.La(a.Ja);
 					return d.Va = null;
 				};
 			}
 			else if (b.vd.Ib)
-				u.Dh(b.$);
+				Muu.Dh(b.$);
 			else
-				u.Pf(b.$);
+				Muu.Pf(b.$);
 		};
-		a.ws = () => u.oo();
-		a.vs = () => u.jk(u.xb);
-		a.ys = () => u.mk();
-		a.xs = a => u.po(a);
+		a.ws = () => Muu.oo();
+		a.vs = () => Muu.jk(Muu.xb);
+		a.ys = () => Muu.mk();
+		a.xs = a => Muu.po(a);
 	};
-	u.mk = () => {
-		var a = new aa(true);
+	Muu.mk = () => {
+		var a = new SettingsView(true);
 		var b = window.document.createElement('div');
 		b.className = 'view-wrapper';
 		b.appendChild(a.g);
-		x.La(b);
-		a.qb = () => u.xb();
+		DisplayUtil.La(b);
+		a.qb = () => Muu.xb();
 		a.Ep = () => {
-			var a = new mb;
+			var a = new ChangeLocationView;
 			var b = window.document.createElement('div');
 			b.className = 'view-wrapper';
 			b.appendChild(a.g);
-			x.La(b);
-			return a.qb = () => u.mk();
+			DisplayUtil.La(b);
+			return a.qb = () => Muu.mk();
 		};
 	};
-	u.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
-	u.oo = () => {
-		var a = n.A.fe.L();
-		var b = new ib('' + a + '\'s room');
-		x.La(b.g);
-		b.ci = () => u.xb();
+	Muu.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
+	Muu.oo = () => {
+		var a = ConnectionConstants.buildsStorageMInst.fe.L();
+		var b = new CreateRoomView('' + a + '\'s room');
+		DisplayUtil.La(b.g);
+		b.ci = () => Muu.xb();
 		b.Jp = b => {
 			function c() {
 				if (!b.Ks) {
-					var a = new Fb;
+					var a = new Dfb;
 					a.Id = 9;
 					a.w = g.jc;
 					a.I = g.I.length;
@@ -4935,72 +4960,72 @@
 					a.Ib = l.Ib != null;
 					a.Ec = f.Ec;
 					a.Gc = f.Gc;
-					var c = w.ha(16);
+					var c = StreamWriter.ha(16);
 					a.ga(c);
 					a = c.Kg();
 					l.Fi(a);
 				}
 			}
 
-			x.La((new P('Creating room', 'Connecting...', [])).g);
+			DisplayUtil.La((new SimpleDialogView('Creating room', 'Connecting...', [])).g);
 			var e = null;
-			var f = n.A.Lh();
-			var g = new fa;
+			var f = ConnectionConstants.buildsStorageMInst.Lh();
+			var g = new Room;
 			g.jc = b.name;
-			var k = new ea;
+			var k = new FullPlayer;
 			k.w = a;
 			k.cb = true;
 			k.Kd = f.ub;
-			k.Xb = n.A.sh.L();
+			k.Xb = ConnectionConstants.buildsStorageMInst.sh.L();
 			g.I.push(k);
-			var l = new Lb({iceServers: n.Vf, ij: n.Ee + 'api/host', state: g, version: 9});
+			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: g, version: 9});
 			l.fg = b.qs - 1;
 			l.Ib = b.password;
 			c();
-			var t = new ba(l);
+			var t = new ConnBa(l);
 			var h = false;
 			l.ef = (a, b) =>
-				u.kk(a, a => {
+				Muu.kk(a, a => {
 					b(a);
-					x.La(t.j.g);
+					DisplayUtil.La(t.j.g);
 					return h = true;
 				});
 			var m = window.setInterval(() => {
-				var a = la.la(l);
+				var a = Mla.la(l);
 				l.ra(a);
 			}, 3000);
 			l.$k = a => {
 				if (g.na(a) != null) {
-					a = Y.la(a, 'Bad actor', false);
+					a = Dyy.la(a, 'Bad actor', false);
 					l.ra(a);
 				}
 			};
 			l.Hp = (a, b) => {
 				var d = b.ic();
 				if (d.length > 25)
-					throw new q('name too long');
+					throw new GlobalError('name too long');
 				var e = b.ic();
 				if (e.length > 3)
-					throw new q('country too long');
+					throw new GlobalError('country too long');
 				var f = b.zb();
 				if (f != null && f.length > 2)
-					throw new q('avatar too long');
-				d = oa.la(a, d, e, f);
+					throw new GlobalError('avatar too long');
+				d = Moa.la(a, d, e, f);
 				l.ra(d);
 				c();
 			};
 			l.Ip = a => {
 				if (g.na(a) != null) {
-					a = Y.la(a, null, false);
+					a = Dyy.la(a, null, false);
 					l.ra(a);
 				}
 			};
 			l.kg = a => {
 				e = a;
-				t.Bg = u.$h(a, l.Ib != null);
+				t.Bg = Muu.$h(a, l.Ib != null);
 				if (!h) {
 					h = true;
-					x.La(t.j.g);
+					DisplayUtil.La(t.j.g);
 				}
 			};
 			t.Ih.Np = (a, b, c, d) => l.to(a, b, c, d);
@@ -5008,101 +5033,101 @@
 			t.j.de = () => {
 				l.ia();
 				t.ia();
-				u.xb();
+				Muu.xb();
 				window.clearInterval(m);
 			};
 			t.Of.Fg = a => {
 				l.Ib = a;
 				c();
 				if (e != null)
-					t.Bg = u.$h(e, l.Ib != null);
+					t.Bg = Muu.$h(e, l.Ib != null);
 			};
 			t.Of.jm = a => l.Ei(a);
-			t.Of.Ud = G(l, l.Ud);
+			t.Of.Ud = handleEvent(l, l.Ud);
 		};
 	};
-	u.Dh = a => {
-		var b = new Za;
-		x.La(b.g);
-		b.Va = b => b == null ? u.xb() : u.Pf(a, b);
+	Muu.Dh = a => {
+		var b = new PasswordView;
+		DisplayUtil.La(b.g);
+		b.Va = b => b == null ? Muu.xb() : Muu.Pf(a, b);
 	};
-	u.po = a => {
+	Muu.po = a => {
 		try {
-			var b = new Vb(new Jb(new Uint8Array(a), new fa, 3));
+			var b = new ReplayVb(new HasStreamReader(new Uint8Array(a), new Room, 3));
 			b.je.de = () => {
 				b.ia();
-				u.xb();
+				Muu.xb();
 			};
-			x.La(b.j.g);
+			DisplayUtil.La(b.j.g);
 		}
 		catch (e) {
-			var c = e instanceof q ? e.Ta : e;
-			if (c instanceof Kb) {
-				a = new P('Incompatible replay version', 'The replay file is of a different version', ['Open player', 'Cancel']);
-				x.La(a.g);
+			var c = e instanceof GlobalError ? e.Ta : e;
+			if (c instanceof Dkb) {
+				a = new SimpleDialogView('Incompatible replay version', 'The replay file is of a different version', ['Open player', 'Cancel']);
+				DisplayUtil.La(a.g);
 				a.Va = a => {
 					if (a == 0) {
 						a = window.top.location;
 						window.top.open(a.protocol + '//' + a.hostname + (a.port != null ? ':' + a.port : '') + '/replay?v=' + c.Id, '_self');
 					}
 					else
-						u.xb();
+						Muu.xb();
 				};
 			}
 			else {
-				var d = new P('Replay error', 'Couldn\'t load the file.', ['Ok']);
-				x.La(d.g);
+				var d = new SimpleDialogView('Replay error', 'Couldn\'t load the file.', ['Ok']);
+				DisplayUtil.La(d.g);
 				d.Va = () => {
 					d.Va = null;
-					u.xb();
+					Muu.xb();
 				};
 			}
 		}
 	};
-	u.Pf = (a, b, c) => {
+	Muu.Pf = (a, b, c) => {
 		try {
-			var d = u.Bo();
-			var e = new fa;
-			var f = w.ha();
-			f.mc(n.A.fe.L());
-			f.mc(n.A.Lh().ub);
-			f.Db(n.A.sh.L());
-			var g = n.Vf;
-			var k = n.Vr;
+			var d = Muu.Bo();
+			var e = new Room;
+			var f = StreamWriter.ha();
+			f.mc(ConnectionConstants.buildsStorageMInst.fe.L());
+			f.mc(ConnectionConstants.buildsStorageMInst.Lh().ub);
+			f.Db(ConnectionConstants.buildsStorageMInst.sh.L());
+			var g = ConnectionConstants.stuns;
+			var k = ConnectionConstants.p2pWss;
 			var l = f.Kg();
-			var t = new xa(a, {iceServers: g, ij: k, state: e, version: 9, Ms: l, password: b, cn: d, gn: c, ds: u.Je});
-			var h = new jb;
+			var t = new ConnectionUtil(a, {iceServers: g, ij: k, state: e, version: 9, Ms: l, password: b, cn: d, gn: c, ds: Muu.Je});
+			var h = new ConnectingView;
 			h.ba('Connecting to master...');
 			h.vh.onclick = () => {
 				t.Ad = null;
 				t.df = null;
 				t.ia();
-				u.xb();
+				Muu.xb();
 			};
-			x.La(h.g);
+			DisplayUtil.La(h.g);
 			var m = (a, b) => {
-				var c = new Ka(a, b);
-				c.Va = () => u.xb();
-				x.La(c.g);
+				var c = new DisconnectedView(a, b);
+				c.Va = () => Muu.xb();
+				DisplayUtil.La(c.g);
 			}, p = () => {
-				var a = new P('Connection Failed', '', ['Ok']);
+				var a = new SimpleDialogView('Connection Failed', '', ['Ok']);
 				a.Vd.innerHTML = '<p>Failed to connect to room host.</p><p>If this problem persists please see the <a href=\'https://github.com/haxball/haxball-issues/wiki/Connection-Issues\' target=\'_blank\'>troubleshooting guide</a>.</p>';
-				a.Va = () => u.xb();
-				x.La(a.g);
+				a.Va = () => Muu.xb();
+				DisplayUtil.La(a.g);
 			}, r = () => {
-				var b = new ba(t);
+				var b = new ConnBa(t);
 				t.dl = a => {
 					b.j.pe.qr((10 * t.sg.$g(.5) | 0) / 10);
 					b.j.pe.or((10 * t.sg.max() | 0) / 10);
 					b.j.pe.nl.tn(a);
 				};
-				b.Bg = u.$h(a, false);
-				x.La(b.j.g);
+				b.Bg = Muu.$h(a, false);
+				DisplayUtil.La(b.j.g);
 				b.j.de = () => {
 					t.Ad = null;
 					t.ia();
 					b.ia();
-					u.xb();
+					Muu.xb();
 				};
 				t.Ad = () => {
 					t.Ad = null;
@@ -5121,20 +5146,20 @@
 					case 2:
 						switch (c.reason) {
 							case 4004:
-								u.no(a, c => u.Pf(a, b, c));
+								Muu.no(a, c => Muu.Pf(a, b, c));
 								break;
 							case 4101:
 								if (b == null)
-									u.Dh(a);
+									Muu.Dh(a);
 								else
-									m(xa.xh(c), null);
+									m(ConnectionUtil.xh(c), null);
 								break;
 							default:
-								m(xa.xh(c), null);
+								m(ConnectionUtil.xh(c), null);
 						}
 						break;
 					default:
-						m(xa.xh(c), null);
+						m(ConnectionUtil.xh(c), null);
 				}
 			};
 			t.Ad = a => {
@@ -5152,14 +5177,14 @@
 			t.Sp = () => h.ba('Trying reverse connection...');
 		}
 		catch (ic) {
-			window.console.log(ic instanceof q ? ic.Ta : ic);
-			c = new P('Unexpected Error', '', []);
+			window.console.log(ic instanceof GlobalError ? ic.Ta : ic);
+			c = new SimpleDialogView('Unexpected Error', '', []);
 			c.Vd.innerHTML = 'An error ocurred while attempting to join the room.<br><br>This might be caused by a browser extension, try disabling all extensions and refreshing the site.<br><br>The error has been printed to the inspector console.';
-			x.La(c.g);
+			DisplayUtil.La(c.g);
 		}
 	};
-	x.b = true;
-	x.ks = () => {
+	DisplayUtil.b = true;
+	DisplayUtil.ks = () => {
 		try {
 			return window.top != window.self;
 		}
@@ -5167,7 +5192,7 @@
 			return true;
 		}
 	};
-	x.Wg = a => new Promise((resolve, reject) => {
+	DisplayUtil.Wg = a => new Promise((resolve, reject) => {
 		var d = window.document.createElement('img');
 		d.onload = () => {
 			URL.revokeObjectURL(d.src);
@@ -5180,34 +5205,34 @@
 		};
 		return d.src = URL.createObjectURL(new Blob([a], {type: 'image/png'}));
 	});
-	x.fj = a => {
-		if (x.ks()) {
-			x.es(() => {
-				kc.fj();
+	DisplayUtil.fj = a => {
+		if (DisplayUtil.ks()) {
+			DisplayUtil.es(() => {
+				Mkc.fj();
 				var b;
-				if (n.A.Me.L() == null) {
-					T.Fo().then(a => n.A.Me.Xa(a)).catch(() => ({}));
+				if (ConnectionConstants.buildsStorageMInst.Me.L() == null) {
+					GeoLocation.Fo().then(a => ConnectionConstants.buildsStorageMInst.Me.Xa(a)).catch(() => ({}));
 				}
 				else
 					b = Promise.resolve(null);
 				return Promise.all([
-					M.L('res.dat', 'arraybuffer').then(a => {
+					WebserverApiOps.L('res.dat', 'arraybuffer').then(a => {
 						a = new JSZip(a);
-						n.Na = new Ub(a);
+						ConnectionConstants.Na = new AudioUtil(a);
 						return Promise.all([
-							n.Na.ro,
-							x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a),
-							x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a),
-							x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a),
-							x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)
+							ConnectionConstants.Na.ro,
+							DisplayUtil.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => ConnectionConstants.Ko = a),
+							DisplayUtil.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => ConnectionConstants.Vn = a),
+							DisplayUtil.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => ConnectionConstants.Tn = a),
+							DisplayUtil.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => ConnectionConstants.Dm = a)
 						]);
 					}),
 					b
-				]).then(() => x.us(a));
+				]).then(() => DisplayUtil.us(a));
 			});
 		}
 	};
-	x.es = a => {
+	DisplayUtil.es = a => {
 		for (var b = Modernizr, c = 'canvas datachannel dataview es6collections peerconnection promises websockets'.split(' '), d = [], e = 0; c.length > e; e++) {
 			var f = c[e];
 			if (!b[f])
@@ -5215,54 +5240,54 @@
 		}
 		if (d.length != 0) {
 			window.document.body.innerHTML = '';
-			x.Pg = window.document.createElement('div');
-			window.document.body.appendChild(x.Pg);
-			a = new Wa(d);
-			x.La(a.g);
+			DisplayUtil.Pg = window.document.createElement('div');
+			window.document.body.appendChild(DisplayUtil.Pg);
+			a = new UnsupportedBrowserView(d);
+			DisplayUtil.La(a.g);
 		}
 		else {
 			a();
 		}
 	};
-	x.us = a => {
+	DisplayUtil.us = a => {
 		window.document.body.innerHTML = '';
-		x.Pg = window.document.createElement('div');
-		window.document.body.appendChild(x.Pg);
+		DisplayUtil.Pg = window.document.createElement('div');
+		window.document.body.appendChild(DisplayUtil.Pg);
 		var b = null;
 		var b = () => {
-			n.Na.Tl();
+			ConnectionConstants.Na.Tl();
 			window.document.removeEventListener('click', b, true);
 		};
 		window.document.addEventListener('click', b, true);
 		a();
 	};
-	x.La = a => {
-		if (x.Vm != null)
-			x.Vm.remove();
+	DisplayUtil.La = a => {
+		if (DisplayUtil.Vm != null)
+			DisplayUtil.Vm.remove();
 		if (a != null) {
-			x.Pg.appendChild(a);
-			x.Vm = a;
+			DisplayUtil.Pg.appendChild(a);
+			DisplayUtil.Vm = a;
 		}
 	};
-	Vb.b = true;
-	Vb.prototype = {
+	ReplayVb.b = true;
+	ReplayVb.prototype = {
 		ia: function () {
-			window.document.removeEventListener('keydown', G(this, this.Bd));
-			window.document.removeEventListener('keyup', G(this, this.Cd));
+			window.document.removeEventListener('keydown', handleEvent(this, this.Bd));
+			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
 			window.clearInterval(this.Gh);
 		}, bf: function () {
-			this.De = window.requestAnimationFrame(G(this, this.bf));
+			this.De = window.requestAnimationFrame(handleEvent(this, this.bf));
 			this.ya.C();
 			this.Kc();
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			if (n.A.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.buildsStorageMInst.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
-				this.uf(n.A.Tb.L());
+				this.uf(ConnectionConstants.buildsStorageMInst.Tb.L());
 				if (this.ya.Fd <= 0)
 					this.j.C(this.ya);
 			}
@@ -5274,16 +5299,16 @@
 					a.preventDefault();
 					break;
 				case 49:
-					n.A.Tb.Xa(1);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(1);
 					break;
 				case 50:
-					n.A.Tb.Xa(2);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(2);
 					break;
 				case 51:
-					n.A.Tb.Xa(3);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(3);
 					break;
 				case 52:
-					n.A.Tb.Xa(0);
+					ConnectionConstants.buildsStorageMInst.Tb.Xa(0);
 			}
 		}, uf: function (a) {
 			var b = this.j.Fb;
@@ -5298,13 +5323,13 @@
 				b.Eb.kf = 1 + .25 * (a - 1);
 			}
 		}, Cd: () => {
-		}, f: Vb
+		}, f: ReplayVb
 	};
-	Fb.b = true;
-	Fb.prototype = {
+	Dfb.b = true;
+	Dfb.prototype = {
 		Pj: function () {
-			this.w = U.Qc(this.w, 40);
-			this.ub = U.Qc(this.ub, 3);
+			this.w = StringOpsLimit.Qc(this.w, 40);
+			this.ub = StringOpsLimit.Qc(this.ub, 3);
 		}, ga: function (a) {
 			this.Pj();
 			a.Sa = true;
@@ -5329,20 +5354,20 @@
 			this.I = a.B();
 			a.Sa = false;
 			if (this.I > 30 || this.Xe > 30)
-				throw new q(null);
+				throw new GlobalError(null);
 			this.Pj();
-		}, f: Fb
+		}, f: Dfb
 	};
-	va.b = true;
-	va.parse = a => {
+	RoomListOps.b = true;
+	RoomListOps.parse = a => {
 		a.B();
 		for (var b = []; a.o.byteLength - a.a != 0;) {
 			var c = a.ie(a.Ob());
 			var d = a.Cl(a.Ob());
 			try {
-				var e = new Fb;
-				e.ja(new F(new DataView(d), false));
-				var f = new Wb;
+				var e = new Dfb;
+				e.ja(new StreamReader(new DataView(d), false));
+				var f = new DObj;
 				f.vd = e;
 				f.$ = c;
 				b.push(f);
@@ -5352,20 +5377,20 @@
 		}
 		return b;
 	};
-	va.js = (a, b, c, d) => Math.acos(Math.sin(a) * Math.sin(c) + Math.cos(a) * Math.cos(c) * Math.cos(b - d));
-	va.Hs = (a, b) => {
+	RoomListOps.js = (a, b, c, d) => Math.acos(Math.sin(a) * Math.sin(c) + Math.cos(a) * Math.cos(c) * Math.cos(b - d));
+	RoomListOps.Hs = (a, b) => {
 		for (var c = a.Ec, d = a.Gc, e = 0; b.length > e;) {
 			var f = b[e];
 			++e;
 			var g = f.vd;
-			f.Le = 6378 * va.js(.017453292519943295 * g.Ec, .017453292519943295 * g.Gc, .017453292519943295 * c, .017453292519943295 * d);
+			f.Le = 6378 * RoomListOps.js(.017453292519943295 * g.Ec, .017453292519943295 * g.Gc, .017453292519943295 * c, .017453292519943295 * d);
 			if (!isFinite(f.Le))
 				f.Le = 22000;
 		}
 	};
-	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), false)));
-	Z.b = true;
-	Z.delete = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
+	RoomListOps.get = () => WebserverApiOps.L(ConnectionConstants.rsUrl + 'api/list', 'arraybuffer').then(a => RoomListOps.parse(new StreamReader(new DataView(a), false)));
+	Dzz.b = true;
+	Dzz.delete = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
 		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
@@ -5392,7 +5417,7 @@
 			f.objectStore('meta').delete(a);
 		};
 	});
-	Z.get = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
+	Dzz.get = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
 		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
@@ -5412,19 +5437,19 @@
 				e.close();
 			};
 			f.oncomplete = () => e.close();
-			zb.eh(f.objectStore('files').get(a)).then(a => {
+			Mzb.eh(f.objectStore('files').get(a)).then(a => {
 				try {
-					var d = new h;
+					var d = new Stadium;
 					d.Lk(a);
 					resolve(d);
 				}
 				catch (l) {
-					reject(l instanceof q ? l.Ta : l);
+					reject(l instanceof GlobalError ? l.Ta : l);
 				}
 			}).catch(reject);
 		};
 	});
-	Z.getAll = () => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
+	Dzz.getAll = () => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var c = window.indexedDB.open('stadiums', 1);
 		c.onblocked = c.onerror = reject;
 		c.onupgradeneeded = a => {
@@ -5444,10 +5469,10 @@
 				d.close();
 			};
 			e.oncomplete = () => d.close();
-			zb.eh(e.objectStore('meta').getAll()).then(resolve, reject);
+			Mzb.eh(e.objectStore('meta').getAll()).then(resolve, reject);
 		};
 	});
-	Z.Es = () => {
+	Dzz.Es = () => {
 		var a = window.navigator.storage;
 		if (a == null || a.persist == null)
 			return Promise.resolve(false);
@@ -5458,7 +5483,7 @@
 			return Promise.resolve(false);
 		}
 	};
-	Z.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
+	Dzz.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
 		d.onerror = reject;
 		d.onblocked = d.onerror;
@@ -5484,9 +5509,9 @@
 				e.close();
 			};
 			try {
-				zb.eh(f.objectStore('files').add(a.se())).then(id => {
+				Mzb.eh(f.objectStore('files').add(a.se())).then(id => {
 					let bObj = {name: a.w, id: id};
-					return zb.eh(f.objectStore('meta').add(bObj));
+					return Mzb.eh(f.objectStore('meta').add(bObj));
 				}).catch(reject);
 			}
 			catch (g) {
@@ -5494,8 +5519,8 @@
 			}
 		};
 	});
-	Ub.b = true;
-	Ub.prototype = {
+	AudioUtil.b = true;
+	AudioUtil.prototype = {
 		Tl: function () {
 			this.c.resume();
 		}, cd: function (a) {
@@ -5505,10 +5530,10 @@
 			b.start();
 		}, im: function (a) {
 			this.ag.gain.value = a;
-		}, f: Ub
+		}, f: AudioUtil
 	};
-	Tb.b = true;
-	Tb.prototype = {
+	AudioTb.b = true;
+	AudioTb.prototype = {
 		update: function () {
 			var a = window.performance.now();
 			var b = a - this.Um;
@@ -5522,7 +5547,7 @@
 				this.gh = null;
 				this.ve = 0;
 			}
-			this.Tg.gain.value = n.A.nm.L() ? this.ve : 0;
+			this.Tg.gain.value = ConnectionConstants.buildsStorageMInst.nm.L() ? this.ve : 0;
 		}, qj: function (a) {
 			var b = this;
 			this.dh = a;
@@ -5550,7 +5575,7 @@
 					var l = null;
 					var t = null;
 					var h = 0;
-					var m = p.fa.Ch;
+					var m = Team.red.Ch;
 					var n = 0;
 					for (a = a.I; a.length > n;) {
 						var q = a[n];
@@ -5561,7 +5586,7 @@
 							var u = r.x - v.x;
 							var r = r.y - v.y;
 							var u = u * u + r * r;
-							if (p.fa == q.ea) {
+							if (Team.red == q.ea) {
 								if (d == null || q.H.a.x * m > d.a.x * m)
 									d = q.H;
 								if (e == null || q.H.a.x * m < e.a.x * m)
@@ -5569,7 +5594,7 @@
 								if (f == null || g > u)
 									f = q.H, g = u;
 							}
-							else if (p.xa == q.ea) {
+							else if (Team.blue == q.ea) {
 								if (k == null || q.H.a.x * m > k.a.x * m)
 									k = q.H;
 								if (l == null || q.H.a.x * m < l.a.x * m)
@@ -5586,10 +5611,10 @@
 							this.qj(.3);
 					}
 				}
-		}, f: Tb
+		}, f: AudioTb
 	};
-	ua.b = true;
-	ua.prototype = {
+	Disc.b = true;
+	Disc.prototype = {
 		ga: function (a) {
 			var b = this.a;
 			a.s(b.x);
@@ -5625,7 +5650,7 @@
 			this.h = a.M();
 			this.v = a.M();
 		}, rp: function () {
-			var a = new ca;
+			var a = new DynamicDisc;
 			this.Bk(a);
 			return a;
 		}, Bk: function (a) {
@@ -5648,11 +5673,11 @@
 			a.R = this.R;
 			a.h = this.h;
 			a.v = this.v;
-		}, f: ua
+		}, f: Disc
 	};
-	O.b = true;
-	O.Rd = [Ta];
-	O.qd = (a, b) => {
+	Game.b = true;
+	Game.Rd = [Dta];
+	Game.qd = (a, b) => {
 		a.Ma = b.Ma.sc();
 		a.ib = b.ib;
 		a.Da = b.Da;
@@ -5666,7 +5691,7 @@
 		a.S = b.S;
 		a.ae = b.ae;
 	};
-	O.prototype = {
+	Game.prototype = {
 		Wo: function (a) {
 			this.Ma = a;
 			this.ib = a.ib;
@@ -5681,13 +5706,13 @@
 				this.ta.F.push(b[a++].rp());
 			this.Gk();
 		}, Ck: function (a) {
-			if (p.Ia == a.ea)
+			if (Team.spec == a.ea)
 				a.H = null;
 			else {
 				a.ob = 0;
 				var b = a.H;
 				if (b == null) {
-					b = new ca;
+					b = new DynamicDisc;
 					a.H = b;
 					this.ta.F.push(b);
 				}
@@ -5699,7 +5724,7 @@
 				b.m = c.m;
 				b.h = 39;
 				b.v = a.ea.v | c.v;
-				var d = p.fa == a.ea ? this.S.Dd : this.S.md;
+				var d = Team.red == a.ea ? this.S.Dd : this.S.md;
 				if (d.length == 0) {
 					b.a.x = a.ea.Ch * this.S.$b;
 					b.a.y = 0;
@@ -5809,8 +5834,8 @@
 					f = e++;
 					k = d[f];
 					if ((k.v & 128) != 0) {
-						O.dk[c] = f;
-						f = O.Yk[c];
+						Game.idsMaxArray[c] = f;
+						f = Game.pointsMaxArray[c];
 						k = k.a;
 						f.x = k.x;
 						f.y = k.y;
@@ -5837,19 +5862,19 @@
 						if (d.H != null)
 							d.H.h = 39;
 					}
-					d = p.Ia;
+					d = Team.spec;
 					b = this.ta.F;
-					for (a = 0; c > a && (d = a++, d = this.S.Kn(b[O.dk[d]].a, O.Yk[d]), p.Ia == d);) ;
-					if (p.Ia != d) {
+					for (a = 0; c > a && (d = a++, d = this.S.Kn(b[Game.idsMaxArray[d]].a, Game.pointsMaxArray[d]), Team.spec == d);) ;
+					if (Team.spec != d) {
 						this.Bb = 2;
 						this.vc = 150;
 						this.ae = d;
-						if (p.fa == d)
+						if (Team.red == d)
 							this.Kb++;
 						else
 							this.Pb++;
 						if (this.Ma.Ni != null)
-							this.Ma.Ni(d.pg);
+							this.Ma.Ni(d.enemyTeam);
 						if (this.Ma.Ol != null)
 							this.Ma.Ol(d.$);
 					}
@@ -5890,7 +5915,7 @@
 			this.vc = 300;
 			this.Bb = 3;
 			if (this.Ma.Oi != null)
-				this.Ma.Oi(this.Kb < this.Pb ? p.fa : p.xa);
+				this.Ma.Oi(this.Kb < this.Pb ? Team.red : Team.blue);
 		}, Gk: function () {
 			var a = this.Ma.I;
 			this.Bb = 0;
@@ -5900,11 +5925,11 @@
 			}
 			b = [0, 0, 0];
 			for (c = 0; a.length > c;) {
-				if (d = a[c], ++c, this.Ck(d), e = d.ea, p.Ia != e) {
+				if (d = a[c], ++c, this.Ck(d), e = d.ea, Team.spec != e) {
 					var f = d.H.a;
 					var g = this.S;
 					var k = b[e.$];
-					var l = p.fa == e ? g.Dd : g.md;
+					var l = Team.red == e ? g.Dd : g.md;
 					if (l.length == 0) {
 						l = k + 1 >> 1;
 						if ((k & 1) == 0)
@@ -5943,7 +5968,7 @@
 			this.Hc = a.u();
 			this.Oa = a.M();
 			var c = a.lf();
-			this.ae = c == 1 ? p.fa : c == 2 ? p.xa : p.Ia;
+			this.ae = c == 1 ? Team.red : c == 2 ? Team.blue : Team.spec;
 			this.Ma = b;
 			this.ib = b.ib;
 			this.Da = b.Da;
@@ -5953,19 +5978,19 @@
 			this.ta.qa = this.S.qa;
 			this.ta.pb = this.S.pb;
 		}, sc: function () {
-			var a = ya.zc;
+			var a = Mya.zc;
 			var b = this.gc;
 			if (a != this.hc) {
 				if (b == null)
-					this.gc = b = new O;
+					this.gc = b = new Game;
 				this.hc = a;
-				O.qd(b, this);
+				Game.qd(b, this);
 			}
 			return b;
-		}, f: O
+		}, f: Game
 	};
-	sb.b = true;
-	sb.prototype = {
+	Goal.b = true;
+	Goal.prototype = {
 		ga: function (a) {
 			var b = this.W;
 			a.s(b.x);
@@ -5982,11 +6007,11 @@
 			b.x = a.u();
 			b.y = a.u();
 			a = a.lf();
-			this.qe = a == 1 ? p.fa : a == 2 ? p.xa : p.Ia;
-		}, f: sb
+			this.qe = a == 1 ? Team.red : a == 2 ? Team.blue : Team.spec;
+		}, f: Goal
 	};
-	Eb.b = true;
-	Eb.prototype = {
+	PlayerPhysics.b = true;
+	PlayerPhysics.prototype = {
 		ga: function (a) {
 			a.s(this.m);
 			a.s(this.aa);
@@ -6015,60 +6040,60 @@
 			this.v = a.M();
 			this.Z = a.u();
 			this.Se = a.u();
-		}, f: Eb
+		}, f: PlayerPhysics
 	};
-	Bb.b = true;
-	Bb.prototype = {f: Bb};
-	h.b = true;
-	h.ja = a => {
+	Dbb.b = true;
+	Dbb.prototype = {f: Dbb};
+	Stadium.b = true;
+	Stadium.ja = a => {
 		var b = a.B();
-		return b == 255 ? (b = new h, b.Kr(a), b) : h.Kh()[b];
+		return b == 255 ? (b = new Stadium, b.Kr(a), b) : Stadium.Kh()[b];
 	};
-	h.Kh = () => {
-		if (h.wb == null) {
-			h.wb = [];
-			var a = new h;
+	Stadium.Kh = () => {
+		if (Stadium.wb == null) {
+			Stadium.wb = [];
+			var a = new Stadium;
 			a.ad('Classic', 420, 200, 370, 170, 64, 75);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Easy', 420, 200, 370, 170, 90, 75);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Small', 420, 200, 320, 130, 55, 70);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Big', 600, 270, 550, 240, 80, 80);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Rounded', 420, 200, 370, 170, 64, 75, 75);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.Qk('Hockey', 420, 204, 398, 182, 68, 120, 75, 100);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.Qk('Big Hockey', 600, 270, 550, 240, 90, 160, 75, 150);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Big Easy', 600, 270, 550, 240, 95, 80);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Big Rounded', 600, 270, 550, 240, 80, 75, 100);
-			h.wb.push(a);
-			a = new h;
+			Stadium.wb.push(a);
+			a = new Stadium;
 			a.ad('Huge', 750, 350, 700, 320, 100, 80);
-			h.wb.push(a);
-			for (var a = 0, b = h.wb.length; b > a; a++) {
+			Stadium.wb.push(a);
+			for (var a = 0, b = Stadium.wb.length; b > a; a++) {
 				var c = a;
-				h.wb[c].Bh = c;
+				Stadium.wb[c].Bh = c;
 			}
 		}
-		return h.wb;
+		return Stadium.wb;
 	};
-	h.wn = (a, b) => {
+	Stadium.wn = (a, b) => {
 		if (a.trait != null) {
-			var c = b[r.G(a.trait, String)];
+			var c = b[ObjectCastUtil.G(a.trait, String)];
 			if (c != null) {
-				for (var d = 0, e = ec.Mm(c); e.length > d; d++) {
+				for (var d = 0, e = Mec.Mm(c); e.length > d; d++) {
 					var f = e[d];
 					if (a[f] == null)
 						a[f] = c[f];
@@ -6076,7 +6101,7 @@
 			}
 		}
 	};
-	h.Dn = a => {
+	Stadium.Dn = a => {
 		if (a == 63)
 			return ['all'];
 		var b = [];
@@ -6106,8 +6131,8 @@
 			b.push('c3');
 		return b;
 	};
-	h.Fc = a => {
-		a = r.G(a, Array);
+	Stadium.Fc = a => {
+		a = ObjectCastUtil.G(a, Array);
 		for (var b = 0, c = 0; a.length > c;) {
 			switch (a[c++]) {
 				case 'all':
@@ -6152,69 +6177,69 @@
 		}
 		return b;
 	};
-	h.Jc = (a, b, c, d) => {
+	Stadium.Jc = (a, b, c, d) => {
 		if (d != c)
-			a[b] = h.Dn(c);
+			a[b] = Stadium.Dn(c);
 	};
-	h.qg = (a, b, c) => {
+	Stadium.qg = (a, b, c) => {
 		if (c != b)
-			a.color = h.Rn(b);
+			a.color = Stadium.Rn(b);
 	};
-	h.Rn = a => {
+	Stadium.Rn = a => {
 		a |= 0;
-		return a < 0 ? 'transparent' : J.Vg(a);
+		return a < 0 ? 'transparent' : StringOps3.Vg(a);
 	};
-	h.$f = a => {
+	Stadium.$f = a => {
 		if (a == 'transparent')
 			return -1;
 		if (typeof a == 'string')
-			return K.parseInt('0x' + K.ye(a));
+			return StringOpsInt.parseInt('0x' + StringOpsInt.ye(a));
 		if (a instanceof Array && a.eb == null)
 			return ((a[0] | 0) << 16) + ((a[1] | 0) << 8) + (a[2] | 0);
-		throw new q('Bad color');
+		throw new GlobalError('Bad color');
 	};
-	h.Tr = a => {
+	Stadium.Tr = a => {
 		var b = {
 			x: a.a.x, y: a.a.y
 		};
-		h.ka(b, 'bCoef', a.m, 1);
-		h.Jc(b, 'cMask', a.h, 63);
-		h.Jc(b, 'cGroup', a.v, 32);
+		Stadium.ka(b, 'bCoef', a.m, 1);
+		Stadium.Jc(b, 'cMask', a.h, 63);
+		Stadium.Jc(b, 'cGroup', a.v, 32);
 		return b;
 	};
-	h.np = a => {
-		var b = new B;
-		b.a.x = r.G(a.x, z);
-		b.a.y = r.G(a.y, z);
+	Stadium.np = a => {
+		var b = new Vertex;
+		b.a.x = ObjectCastUtil.G(a.x, objNumber);
+		b.a.y = ObjectCastUtil.G(a.y, objNumber);
 		var c = a.bCoef;
 		if (c != null)
-			b.m = r.G(c, z);
+			b.m = ObjectCastUtil.G(c, objNumber);
 		c = a.cMask;
 		if (c != null)
-			b.h = h.Fc(c);
+			b.h = Stadium.Fc(c);
 		a = a.cGroup;
 		if (a != null)
-			b.v = h.Fc(a);
+			b.v = Stadium.Fc(a);
 		return b;
 	};
-	h.fr = (a, b) => {
+	Stadium.fr = (a, b) => {
 		var c = {v0: a.W.ud, v1: a.ca.ud};
-		h.ka(c, 'bias', a.Cc, b.Cc);
-		h.ka(c, 'bCoef', a.m, b.m);
+		Stadium.ka(c, 'bias', a.Cc, b.Cc);
+		Stadium.ka(c, 'bCoef', a.m, b.m);
 		var d = a.Co();
-		h.ka(c, 'curve', d, 0);
+		Stadium.ka(c, 'curve', d, 0);
 		if (d != 0)
 			c.curveF = a.vb;
-		h.ka(c, 'vis', a.Za, b.Za);
-		h.Jc(c, 'cMask', a.h, b.h);
-		h.Jc(c, 'cGroup', a.v, b.v);
-		h.qg(c, a.R, b.R);
+		Stadium.ka(c, 'vis', a.Za, b.Za);
+		Stadium.Jc(c, 'cMask', a.h, b.h);
+		Stadium.Jc(c, 'cGroup', a.v, b.v);
+		Stadium.qg(c, a.R, b.R);
 		return c;
 	};
-	h.mp = (a, b) => {
-		var c = new E;
-		var d = r.G(a.v1, Pb);
-		c.W = b[r.G(a.v0, Pb)];
+	Stadium.mp = (a, b) => {
+		var c = new Segment;
+		var d = ObjectCastUtil.G(a.v1, object1);
+		c.W = b[ObjectCastUtil.G(a.v0, object1)];
 		c.ca = b[d];
 		var d = a.bias;
 		var e = a.bCoef;
@@ -6225,40 +6250,40 @@
 		var t = a.cGroup;
 		var m = a.color;
 		if (d != null)
-			c.Cc = r.G(d, z);
+			c.Cc = ObjectCastUtil.G(d, objNumber);
 		if (e != null)
-			c.m = r.G(e, z);
+			c.m = ObjectCastUtil.G(e, objNumber);
 		if (g != null)
-			c.vb = r.G(g, z);
+			c.vb = ObjectCastUtil.G(g, objNumber);
 		else if (f != null)
-			c.Oc(r.G(f, z));
+			c.Oc(ObjectCastUtil.G(f, objNumber));
 		if (k != null)
-			c.Za = r.G(k, oc);
+			c.Za = ObjectCastUtil.G(k, objBoolean);
 		if (l != null)
-			c.h = h.Fc(l);
+			c.h = Stadium.Fc(l);
 		if (t != null)
-			c.v = h.Fc(t);
+			c.v = Stadium.Fc(t);
 		if (m != null)
-			c.R = h.$f(m);
+			c.R = Stadium.$f(m);
 		return c;
 	};
-	h.ap = a => {
+	Stadium.ap = a => {
 		var b = {d0: a.Yd, d1: a.Zd, length: a.ec <= a.Hb ? a.Hb : [a.Hb, a.ec]};
-		h.qg(b, a.R, 0);
-		h.ka(b, 'strength', a.ne, Infinity);
+		Stadium.qg(b, a.R, 0);
+		Stadium.ka(b, 'strength', a.ne, Infinity);
 		return b;
 	};
-	h.jp = (a, b) => {
-		var c = new nb;
-		var d = r.G(a.d0, Pb);
-		var e = r.G(a.d1, Pb);
+	Stadium.jp = (a, b) => {
+		var c = new Joint;
+		var d = ObjectCastUtil.G(a.d0, object1);
+		var e = ObjectCastUtil.G(a.d1, object1);
 		var f = a.color;
 		var g = a.strength;
 		var k = a.length;
 		if (b.length <= d || d < 0)
-			throw new q(null);
+			throw new GlobalError(null);
 		if (b.length <= e || e < 0)
-			throw new q(null);
+			throw new GlobalError(null);
 		c.Yd = d;
 		c.Zd = e;
 		if (k == null) {
@@ -6277,53 +6302,53 @@
 		}
 		else {
 			if (k instanceof Array && k.eb == null) {
-				c.Hb = r.G(k[0], z);
-				c.ec = r.G(k[1], z);
+				c.Hb = ObjectCastUtil.G(k[0], objNumber);
+				c.ec = ObjectCastUtil.G(k[1], objNumber);
 			}
 			else {
-				c.ec = c.Hb = r.G(k, z);
+				c.ec = c.Hb = ObjectCastUtil.G(k, objNumber);
 			}
 		}
-		c.ne = g == null || g == 'rigid' ? Infinity : r.G(g, z);
+		c.ne = g == null || g == 'rigid' ? Infinity : ObjectCastUtil.G(g, objNumber);
 		if (f != null)
-			c.R = h.$f(f);
+			c.R = Stadium.$f(f);
 		return c;
 	};
-	h.gq = a => {
+	Stadium.gq = a => {
 		var b = {
 			normal: [a.wa.x, a.wa.y], dist: a.Ua
 		};
-		h.ka(b, 'bCoef', a.m, 1);
-		h.Jc(b, 'cMask', a.h, 63);
-		h.Jc(b, 'cGroup', a.v, 32);
+		Stadium.ka(b, 'bCoef', a.m, 1);
+		Stadium.Jc(b, 'cMask', a.h, 63);
+		Stadium.Jc(b, 'cGroup', a.v, 32);
 		return b;
 	};
-	h.kp = a => {
-		var b = new L;
-		var c = r.G(a.normal, Array);
-		var d = r.G(c[0], z);
-		var c = r.G(c[1], z);
+	Stadium.kp = a => {
+		var b = new Plane;
+		var c = ObjectCastUtil.G(a.normal, Array);
+		var d = ObjectCastUtil.G(c[0], objNumber);
+		var c = ObjectCastUtil.G(c[1], objNumber);
 		var e = b.wa;
 		var f = Math.sqrt(d * d + c * c);
 		e.x = d / f;
 		e.y = c / f;
-		b.Ua = r.G(a.dist, z);
+		b.Ua = ObjectCastUtil.G(a.dist, objNumber);
 		d = a.bCoef;
 		c = a.cMask;
 		a = a.cGroup;
 		if (d != null)
-			b.m = r.G(d, z);
+			b.m = ObjectCastUtil.G(d, objNumber);
 		if (c != null)
-			b.h = h.Fc(c);
+			b.h = Stadium.Fc(c);
 		if (a != null)
-			b.v = h.Fc(a);
+			b.v = Stadium.Fc(a);
 		return b;
 	};
-	h.Jo = a => ({p0: [a.W.x, a.W.y], p1: [a.ca.x, a.ca.y], team: p.fa == a.qe ? 'red' : 'blue'});
-	h.ip = a => {
-		var b = new sb;
-		var c = r.G(a.p0, Array);
-		var d = r.G(a.p1, Array);
+	Stadium.Jo = a => ({p0: [a.W.x, a.W.y], p1: [a.ca.x, a.ca.y], team: Team.red == a.qe ? 'red' : 'blue'});
+	Stadium.ip = a => {
+		var b = new Goal;
+		var c = ObjectCastUtil.G(a.p0, Array);
+		var d = ObjectCastUtil.G(a.p1, Array);
 		var e = b.W;
 		e.x = c[0];
 		e.y = c[1];
@@ -6332,35 +6357,35 @@
 		c.y = d[1];
 		switch (a.team) {
 			case 'blue':
-				a = p.xa;
+				a = Team.blue;
 				break;
 			case 'red':
-				a = p.fa;
+				a = Team.red;
 				break;
 			default:
-				throw new q('Bad team value');
+				throw new GlobalError('Bad team value');
 		}
 		b.qe = a;
 		return b;
 	};
-	h.jq = a => {
+	Stadium.jq = a => {
 		var b = {};
-		h.ka(b, 'bCoef', a.m, .5);
-		h.ka(b, 'invMass', a.aa, .5);
-		h.ka(b, 'damping', a.Ca, .96);
-		h.ka(b, 'acceleration', a.Ce, .1);
-		h.ka(b, 'kickingAcceleration', a.Te, .07);
-		h.ka(b, 'kickingDamping', a.Ue, .96);
-		h.ka(b, 'kickStrength', a.Re, 5);
-		h.Jc(b, 'cGroup', a.v, 0);
+		Stadium.ka(b, 'bCoef', a.m, .5);
+		Stadium.ka(b, 'invMass', a.aa, .5);
+		Stadium.ka(b, 'damping', a.Ca, .96);
+		Stadium.ka(b, 'acceleration', a.Ce, .1);
+		Stadium.ka(b, 'kickingAcceleration', a.Te, .07);
+		Stadium.ka(b, 'kickingDamping', a.Ue, .96);
+		Stadium.ka(b, 'kickStrength', a.Re, 5);
+		Stadium.Jc(b, 'cGroup', a.v, 0);
 		if (a.oa.x != 0 || a.oa.y != 0)
 			b.gravity = [a.oa.x, a.oa.y];
-		h.ka(b, 'radius', a.Z, 15);
-		h.ka(b, 'kickback', a.Se, 0);
+		Stadium.ka(b, 'radius', a.Z, 15);
+		Stadium.ka(b, 'kickback', a.Se, 0);
 		return b;
 	};
-	h.lp = a => {
-		var b = new Eb;
+	Stadium.lp = a => {
+		var b = new PlayerPhysics;
 		var c = a.bCoef;
 		var d = a.invMass;
 		var e = a.damping;
@@ -6373,34 +6398,34 @@
 		var n = a.radius;
 		a = a.kickback;
 		if (c != null)
-			b.m = r.G(c, z);
+			b.m = ObjectCastUtil.G(c, objNumber);
 		if (d != null)
-			b.aa = r.G(d, z);
+			b.aa = ObjectCastUtil.G(d, objNumber);
 		if (e != null)
-			b.Ca = r.G(e, z);
+			b.Ca = ObjectCastUtil.G(e, objNumber);
 		if (f != null)
-			b.Ce = r.G(f, z);
+			b.Ce = ObjectCastUtil.G(f, objNumber);
 		if (g != null)
-			b.Te = r.G(g, z);
+			b.Te = ObjectCastUtil.G(g, objNumber);
 		if (k != null)
-			b.Ue = r.G(k, z);
+			b.Ue = ObjectCastUtil.G(k, objNumber);
 		if (l != null)
-			b.Re = r.G(l, z);
+			b.Re = ObjectCastUtil.G(l, objNumber);
 		if (t != null) {
 			c = b.oa;
-			d = r.G(t[1], z);
-			c.x = r.G(t[0], z);
+			d = ObjectCastUtil.G(t[1], objNumber);
+			c.x = ObjectCastUtil.G(t[0], objNumber);
 			c.y = d;
 		}
 		if (m != null)
-			b.v = h.Fc(m);
+			b.v = Stadium.Fc(m);
 		if (n != null)
-			b.Z = r.G(n, z);
+			b.Z = ObjectCastUtil.G(n, objNumber);
 		if (a != null)
-			b.Se = r.G(a, z);
+			b.Se = ObjectCastUtil.G(a, objNumber);
 		return b;
 	};
-	h.mo = (a, b) => {
+	Stadium.mo = (a, b) => {
 		var c = {};
 		if (b.a.x != a.a.x || b.a.y != a.a.y)
 			c.pos = [a.a.x, a.a.y];
@@ -6408,16 +6433,16 @@
 			c.speed = [a.D.x, a.D.y];
 		if (b.oa.x != a.oa.x || b.oa.y != a.oa.y)
 			c.gravity = [a.oa.x, a.oa.y];
-		h.ka(c, 'radius', a.Z, b.Z);
-		h.ka(c, 'bCoef', a.m, b.m);
-		h.ka(c, 'invMass', a.aa, b.aa);
-		h.ka(c, 'damping', a.Ca, b.Ca);
-		h.qg(c, a.R, b.R);
-		h.Jc(c, 'cMask', a.h, b.h);
-		h.Jc(c, 'cGroup', a.v, b.v);
+		Stadium.ka(c, 'radius', a.Z, b.Z);
+		Stadium.ka(c, 'bCoef', a.m, b.m);
+		Stadium.ka(c, 'invMass', a.aa, b.aa);
+		Stadium.ka(c, 'damping', a.Ca, b.Ca);
+		Stadium.qg(c, a.R, b.R);
+		Stadium.Jc(c, 'cMask', a.h, b.h);
+		Stadium.Jc(c, 'cGroup', a.v, b.v);
 		return c;
 	};
-	h.Mk = (a, b) => {
+	Stadium.Mk = (a, b) => {
 		var c = a.pos;
 		var d = a.speed;
 		var e = a.gravity;
@@ -6444,28 +6469,28 @@
 			d.y = e[1];
 		}
 		if (f != null)
-			b.Z = r.G(f, z);
+			b.Z = ObjectCastUtil.G(f, objNumber);
 		if (g != null)
-			b.m = r.G(g, z);
+			b.m = ObjectCastUtil.G(g, objNumber);
 		if (k != null)
-			b.aa = r.G(k, z);
+			b.aa = ObjectCastUtil.G(k, objNumber);
 		if (l != null)
-			b.Ca = r.G(l, z);
+			b.Ca = ObjectCastUtil.G(l, objNumber);
 		if (t != null)
-			b.R = h.$f(t);
+			b.R = Stadium.$f(t);
 		if (m != null)
-			b.h = h.Fc(m);
+			b.h = Stadium.Fc(m);
 		if (n != null)
-			b.v = h.Fc(n);
+			b.v = Stadium.Fc(n);
 		return b;
 	};
-	h.ka = (a, b, c, d) => {
+	Stadium.ka = (a, b, c, d) => {
 		if (d != c)
 			a[b] = c;
 	};
-	h.prototype = {
+	Stadium.prototype = {
 		dg: () => {
-			var a = new ua;
+			var a = new Disc;
 			a.R = 16777215;
 			a.h = 63;
 			a.v = 193;
@@ -6538,7 +6563,7 @@
 		}, Kr: function (a) {
 			function b() {
 				for (var b = [], c = a.B(), d = 0; c > d; d++) {
-					var e = new H(0, 0);
+					var e = new Point(0, 0);
 					e.x = a.u();
 					e.y = a.u();
 					b.push(e);
@@ -6564,7 +6589,7 @@
 			this.pf = a.B() != 0;
 			this.J = [];
 			for (var c = a.B(), d = 0; c > d; d++) {
-				var e = new B;
+				var e = new Vertex;
 				e.ja(a);
 				e.ud = d;
 				this.J.push(e);
@@ -6572,35 +6597,35 @@
 			this.U = [];
 			c = a.B();
 			for (d = 0; c > d; d++) {
-				e = new E;
+				e = new Segment;
 				e.ja(a, this.J);
 				this.U.push(e);
 			}
 			this.qa = [];
 			c = a.B();
 			for (d = 0; c > d; d++) {
-				e = new L;
+				e = new Plane;
 				e.ja(a);
 				this.qa.push(e);
 			}
 			this.tc = [];
 			c = a.B();
 			for (d = 0; c > d; d++) {
-				e = new sb;
+				e = new Goal;
 				e.ja(a);
 				this.tc.push(e);
 			}
 			this.F = [];
 			c = a.B();
 			for (d = 0; c > d; d++) {
-				e = new ua;
+				e = new Disc;
 				e.ja(a);
 				this.F.push(e);
 			}
 			this.pb = [];
 			c = a.B();
 			for (d = 0; c > d; d++) {
-				e = new nb;
+				e = new Joint;
 				e.ja(a);
 				this.pb.push(e);
 			}
@@ -6614,10 +6639,10 @@
 			return this.Bh != 255;
 		}, be: (a, b, c) => {
 			a = a[b];
-			return a != null ? r.G(a, z) : c;
+			return a != null ? ObjectCastUtil.G(a, objNumber) : c;
 		}, op: (a, b, c) => {
 			a = a[b];
-			return a != null ? r.G(a, oc) : c;
+			return a != null ? ObjectCastUtil.G(a, objBoolean) : c;
 		}, se: function () {
 			return JSON.stringify(this.Hr());
 		}, Hr: function () {
@@ -6629,25 +6654,25 @@
 				var f = e[d];
 				++d;
 				f.ud = b++;
-				c.push(h.Tr(f));
+				c.push(Stadium.Tr(f));
 			}
-			d = new E;
+			d = new Segment;
 			b = [];
 			e = 0;
 			for (f = this.U; f.length > e; e++)
-				b.push(h.fr(f[e], d));
+				b.push(Stadium.fr(f[e], d));
 			d = [];
 			e = 0;
 			for (f = this.qa; f.length > e; e++)
-				d.push(h.gq(f[e]));
+				d.push(Stadium.gq(f[e]));
 			for (var e = [], f = 0, g = this.tc; g.length > f; f++)
-				e.push(h.Jo(g[f]));
-			for (var f = h.jq(this.ge), k = new ua, g = [], l = 0, t = this.F; t.length > l; l++)
-				g.push(h.mo(t[l], k));
+				e.push(Stadium.Jo(g[f]));
+			for (var f = Stadium.jq(this.ge), k = new Disc, g = [], l = 0, t = this.F; t.length > l; l++)
+				g.push(Stadium.mo(t[l], k));
 			k = [];
 			l = 0;
 			for (t = this.pb; t.length > l; l++)
-				k.push(h.ap(t[l]));
+				k.push(Stadium.ap(t[l]));
 			for (var l = [], t = 0, m = this.Dd; m.length > t; t++) {
 				var n = m[t];
 				l.push([n.x, n.y]);
@@ -6661,16 +6686,16 @@
 			c = {
 				name: this.w, width: this.$b, height: this.qc, bg: a, vertexes: c, segments: b, planes: d, goals: e, discs: g, playerPhysics: f, ballPhysics: 'disc0'
 			};
-			h.ka(c, 'maxViewWidth', this.Ye, 0);
-			h.ka(c, 'cameraFollow', this.Ge == 1 ? 'player' : '', '');
-			h.ka(c, 'spawnDistance', this.kc, 200);
+			Stadium.ka(c, 'maxViewWidth', this.Ye, 0);
+			Stadium.ka(c, 'cameraFollow', this.Ge == 1 ? 'player' : '', '');
+			Stadium.ka(c, 'spawnDistance', this.kc, 200);
 			if (k.length != 0)
 				c.joints = k;
 			if (l.length != 0)
 				c.redSpawnPoints = l;
 			if (t.length != 0)
 				c.blueSpawnPoints = t;
-			h.ka(c, 'kickOffReset', this.pf ? 'full' : 'partial', 'partial');
+			Stadium.ka(c, 'kickOffReset', this.pf ? 'full' : 'partial', 'partial');
 			switch (this.ld) {
 				case 1:
 					b = 'grass';
@@ -6681,19 +6706,19 @@
 				default:
 					b = 'none';
 			}
-			h.ka(a, 'type', b, 'none');
-			h.ka(a, 'width', this.Td, 0);
-			h.ka(a, 'height', this.Sd, 0);
-			h.ka(a, 'kickOffRadius', this.kd, 0);
-			h.ka(a, 'cornerRadius', this.Uc, 0);
-			h.qg(a, this.jd, 7441498);
-			h.ka(a, 'goalLine', this.Fe, 0);
+			Stadium.ka(a, 'type', b, 'none');
+			Stadium.ka(a, 'width', this.Td, 0);
+			Stadium.ka(a, 'height', this.Sd, 0);
+			Stadium.ka(a, 'kickOffRadius', this.kd, 0);
+			Stadium.ka(a, 'cornerRadius', this.Uc, 0);
+			Stadium.qg(a, this.jd, 7441498);
+			Stadium.ka(a, 'goalLine', this.Fe, 0);
 			return c;
 		}, Lk: function (a) {
 			function b(a) {
-				var b = r.G(a[0], z);
-				a = r.G(a[1], z);
-				return new H(b, a);
+				var b = ObjectCastUtil.G(a[0], objNumber);
+				a = ObjectCastUtil.G(a[1], objNumber);
+				return new Point(b, a);
 			}
 
 			function c(a, b, c, d) {
@@ -6701,15 +6726,15 @@
 					d = false;
 				var f = e[b];
 				if (!d || f != null) {
-					if (d = r.G(f, Array), d != null) {
+					if (d = ObjectCastUtil.G(f, Array), d != null) {
 						for (f = 0; d.length > f; f++) {
 							var k = d[f];
 							try {
-								h.wn(k, g);
+								Stadium.wn(k, g);
 								a.push(c(k));
 							}
 							catch (wc) {
-								throw new q(new Bb('Error in "' + b + '" index: ' + a.length));
+								throw new GlobalError(new Dbb('Error in "' + b + '" index: ' + a.length));
 							}
 						}
 					}
@@ -6724,16 +6749,16 @@
 			this.tc = [];
 			this.F = [];
 			this.pb = [];
-			this.w = r.G(e.name, String);
-			this.$b = r.G(e.width, z);
-			this.qc = r.G(e.height, z);
+			this.w = ObjectCastUtil.G(e.name, String);
+			this.$b = ObjectCastUtil.G(e.width, objNumber);
+			this.qc = ObjectCastUtil.G(e.height, objNumber);
 			this.Ye = this.be(e, 'maxViewWidth', 0) | 0;
 			if (e.cameraFollow == 'player')
 				this.Ge = 1;
 			this.kc = 200;
 			a = e.spawnDistance;
 			if (a != null)
-				this.kc = r.G(a, z);
+				this.kc = ObjectCastUtil.G(a, objNumber);
 			a = e.bg;
 			var f;
 			switch (a.type) {
@@ -6753,7 +6778,7 @@
 			this.Uc = this.be(a, 'cornerRadius', 0);
 			this.jd = 7441498;
 			if (a.color != null)
-				this.jd = h.$f(a.color);
+				this.jd = Stadium.$f(a.color);
 			this.Fe = this.be(a, 'goalLine', 0);
 			this.Lf = this.op(e, 'canBeStored', true);
 			this.pf = e.kickOffReset == 'full';
@@ -6761,31 +6786,31 @@
 			a = e.ballPhysics;
 			if (a != 'disc0')
 				if (a != null) {
-					a = h.Mk(a, this.dg());
+					a = Stadium.Mk(a, this.dg());
 					a.v |= 192;
 					this.F.push(a);
 				}
 				else
 					this.F.push(this.dg());
-			c(this.J, 'vertexes', h.np);
-			c(this.U, 'segments', a => h.mp(a, d.J));
-			c(this.tc, 'goals', h.ip);
-			c(this.F, 'discs', a => h.Mk(a, new ua));
-			c(this.qa, 'planes', h.kp);
-			c(this.pb, 'joints', a => h.jp(a, d.F), true);
+			c(this.J, 'vertexes', Stadium.np);
+			c(this.U, 'segments', a => Stadium.mp(a, d.J));
+			c(this.tc, 'goals', Stadium.ip);
+			c(this.F, 'discs', a => Stadium.Mk(a, new Disc));
+			c(this.qa, 'planes', Stadium.kp);
+			c(this.pb, 'joints', a => Stadium.jp(a, d.F), true);
 			c(this.Dd, 'redSpawnPoints', b, true);
 			c(this.md, 'blueSpawnPoints', b, true);
 			a = e.playerPhysics;
 			if (a != null)
-				this.ge = h.lp(a);
+				this.ge = Stadium.lp(a);
 			if (this.J.length > 255 || this.U.length > 255 || this.qa.length > 255 || this.tc.length > 255 || this.F.length > 255)
-				throw new q('Error');
+				throw new GlobalError('Error');
 			this.he();
 		}, Sj: function () {
-			var a = h.Fr;
+			var a = Stadium.streamWriterInst;
 			a.a = 0;
 			this.ga(a);
-			var b = new dc;
+			var b = new HashDc;
 			b.Yr(a.Sb());
 			b.hash = (b.hash += b.hash << 3) ^ b.hash >>> 11;
 			b.hash += b.hash << 15;
@@ -6808,7 +6833,7 @@
 				if (f)
 					return e.qe;
 			}
-			return p.Ia;
+			return Team.spec;
 		}, ad: function (a, b, c, d, e, f, g, k) {
 			if (k == null)
 				k = 0;
@@ -6825,107 +6850,107 @@
 			this.kc = .75 * d;
 			if (this.kc > 400)
 				this.kc = 400;
-			a = new L;
+			a = new Plane;
 			var l = a.wa;
 			l.x = 0;
 			l.y = 1;
 			a.Ua = -c;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			l = a.wa;
 			l.x = 0;
 			l.y = -1;
 			a.Ua = -c;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			l = a.wa;
 			l.x = 1;
 			l.y = 0;
 			a.Ua = -b;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			l = a.wa;
 			l.x = -1;
 			l.y = 0;
 			a.Ua = -b;
 			a.m = 0;
 			this.qa.push(a);
-			this.eg(d, 1, f, 13421823, p.xa);
-			this.eg(-d, -1, f, 16764108, p.fa);
+			this.eg(d, 1, f, 13421823, Team.blue);
+			this.eg(-d, -1, f, 16764108, Team.red);
 			this.Rk(g, c);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = 0;
 			c.y = 1;
 			b.Ua = -e;
 			b.h = 1;
 			this.qa.push(b);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = 0;
 			c.y = -1;
 			b.Ua = -e;
 			b.h = 1;
 			this.qa.push(b);
-			b = new B;
+			b = new Vertex;
 			c = b.a;
 			c.x = -d;
 			c.y = -e;
 			b.h = 0;
-			c = new B;
+			c = new Vertex;
 			g = c.a;
 			g.x = d;
 			g.y = -e;
 			c.h = 0;
-			g = new B;
+			g = new Vertex;
 			a = g.a;
 			a.x = d;
 			a.y = -f;
 			g.h = 0;
-			a = new B;
+			a = new Vertex;
 			l = a.a;
 			l.x = d;
 			l.y = f;
 			a.h = 0;
-			var l = new B;
+			var l = new Vertex;
 			var h = l.a;
 			h.x = d;
 			h.y = e;
 			l.h = 0;
-			var h = new B;
+			var h = new Vertex;
 			var m = h.a;
 			m.x = -d;
 			m.y = e;
 			h.h = 0;
-			var m = new B;
+			var m = new Vertex;
 			var n = m.a;
 			n.x = -d;
 			n.y = f;
 			m.h = 0;
-			var n = new B;
+			var n = new Vertex;
 			var q = n.a;
 			q.x = -d;
 			q.y = -f;
 			n.h = 0;
-			f = new E;
+			f = new Segment;
 			f.W = c;
 			f.ca = g;
 			f.h = 1;
 			f.Za = false;
-			q = new E;
+			q = new Segment;
 			q.W = a;
 			q.ca = l;
 			q.h = 1;
 			q.Za = false;
-			var r = new E;
+			var r = new Segment;
 			r.W = h;
 			r.ca = m;
 			r.h = 1;
 			r.Za = false;
-			var u = new E;
+			var u = new Segment;
 			u.W = n;
 			u.ca = b;
 			u.h = 1;
@@ -6958,59 +6983,59 @@
 			this.kc = .75 * (d - g);
 			if (this.kc > 400)
 				this.kc = 400;
-			a = new L;
+			a = new Plane;
 			var h = a.wa;
 			h.x = 0;
 			h.y = 1;
 			a.Ua = -c;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			h = a.wa;
 			h.x = 0;
 			h.y = -1;
 			a.Ua = -c;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			h = a.wa;
 			h.x = 1;
 			h.y = 0;
 			a.Ua = -b;
 			a.m = 0;
 			this.qa.push(a);
-			a = new L;
+			a = new Plane;
 			h = a.wa;
 			h.x = -1;
 			h.y = 0;
 			a.Ua = -b;
 			a.m = 0;
 			this.qa.push(a);
-			this.eg(d - g, 1, f, 13421823, p.xa, 63);
-			this.eg(-d + g, -1, f, 16764108, p.fa, 63);
+			this.eg(d - g, 1, f, 13421823, Team.blue, 63);
+			this.eg(-d + g, -1, f, 16764108, Team.red, 63);
 			this.Rk(k, c);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = 0;
 			c.y = 1;
 			b.Ua = -e;
 			b.h = 1;
 			this.qa.push(b);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = 0;
 			c.y = -1;
 			b.Ua = -e;
 			b.h = 1;
 			this.qa.push(b);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = 1;
 			c.y = 0;
 			b.Ua = -d;
 			b.h = 1;
 			this.qa.push(b);
-			b = new L;
+			b = new Plane;
 			c = b.wa;
 			c.x = -1;
 			c.y = 0;
@@ -7024,30 +7049,30 @@
 				g = 32;
 			if (f == null)
 				f = 1;
-			var k = new B;
+			var k = new Vertex;
 			var l = k.a;
 			l.x = a + 8 * b;
 			l.y = -c;
-			var l = new B;
+			var l = new Vertex;
 			var h = l.a;
 			h.x = a + 8 * b;
 			h.y = c;
-			var m = new B;
+			var m = new Vertex;
 			var h = m.a;
 			h.x = k.a.x + 22 * b;
 			h.y = k.a.y + 22;
-			var n = new B;
+			var n = new Vertex;
 			var h = n.a;
 			h.x = l.a.x + 22 * b;
 			h.y = l.a.y - 22;
-			h = new E;
+			h = new Segment;
 			h.W = k;
 			h.ca = m;
 			h.Oc(90 * b);
-			var p = new E;
+			var p = new Segment;
 			p.W = n;
 			p.ca = m;
-			var q = new E;
+			var q = new Segment;
 			q.W = n;
 			q.ca = l;
 			q.Oc(90 * b);
@@ -7074,7 +7099,7 @@
 				this.U[l].v = g;
 				this.U[l].m = .1;
 			}
-			f = new ua;
+			f = new Disc;
 			g = f.a;
 			g.x = a;
 			g.y = -c;
@@ -7082,7 +7107,7 @@
 			f.Z = 8;
 			f.R = d;
 			this.F.push(f);
-			f = new ua;
+			f = new Disc;
 			g = f.a;
 			g.x = a;
 			g.y = c;
@@ -7090,7 +7115,7 @@
 			f.Z = 8;
 			f.R = d;
 			this.F.push(f);
-			d = new sb;
+			d = new Goal;
 			f = d.W;
 			f.x = a;
 			f.y = -c;
@@ -7100,49 +7125,49 @@
 			d.qe = e;
 			this.tc.push(d);
 		}, Rk: function (a, b) {
-			var c = new B;
+			var c = new Vertex;
 			var d = c.a;
 			d.x = 0;
 			d.y = -b;
 			c.m = .1;
 			c.v = 24;
 			c.h = 6;
-			var d = new B;
+			var d = new Vertex;
 			var e = d.a;
 			e.x = 0;
 			e.y = -a;
 			d.m = .1;
 			d.v = 24;
 			d.h = 6;
-			var e = new B;
+			var e = new Vertex;
 			var f = e.a;
 			f.x = 0;
 			f.y = a;
 			e.m = .1;
 			e.v = 24;
 			e.h = 6;
-			var f = new B;
+			var f = new Vertex;
 			var g = f.a;
 			g.x = 0;
 			g.y = b;
 			f.m = .1;
 			f.v = 24;
 			f.h = 6;
-			g = new E;
+			g = new Segment;
 			g.W = c;
 			g.ca = d;
 			g.v = 24;
 			g.h = 6;
 			g.Za = false;
 			g.m = .1;
-			var k = new E;
+			var k = new Segment;
 			k.W = e;
 			k.ca = f;
 			k.v = 24;
 			k.h = 6;
 			k.Za = false;
 			k.m = .1;
-			var l = new E;
+			var l = new Segment;
 			l.W = d;
 			l.ca = e;
 			l.v = 8;
@@ -7150,7 +7175,7 @@
 			l.Za = false;
 			l.Oc(180);
 			l.m = .1;
-			var h = new E;
+			var h = new Segment;
 			h.W = e;
 			h.ca = d;
 			h.v = 16;
@@ -7168,68 +7193,68 @@
 			this.U.push(h);
 		}, Pk: function (a, b, c) {
 			if (c > 0) {
-				var d = new B;
+				var d = new Vertex;
 				var e = d.a;
 				e.x = -a + c;
 				e.y = -b;
 				d.h = 0;
-				var e = new B;
+				var e = new Vertex;
 				var f = e.a;
 				f.x = -a;
 				f.y = -b + c;
 				e.h = 0;
-				var f = new B;
+				var f = new Vertex;
 				var g = f.a;
 				g.x = -a + c;
 				g.y = b;
 				f.h = 0;
-				var g = new B;
+				var g = new Vertex;
 				var k = g.a;
 				k.x = -a;
 				k.y = b - c;
 				g.h = 0;
-				var k = new B;
+				var k = new Vertex;
 				var l = k.a;
 				l.x = a - c;
 				l.y = b;
 				k.h = 0;
-				var l = new B;
+				var l = new Vertex;
 				var h = l.a;
 				h.x = a;
 				h.y = b - c;
 				l.h = 0;
-				var h = new B;
+				var h = new Vertex;
 				var m = h.a;
 				m.x = a - c;
 				m.y = -b;
 				h.h = 0;
-				var m = new B;
+				var m = new Vertex;
 				var n = m.a;
 				n.x = a;
 				n.y = -b + c;
 				m.h = 0;
-				a = new E;
+				a = new Segment;
 				a.W = d;
 				a.ca = e;
 				a.h = 1;
 				a.Za = false;
 				a.m = 1;
 				a.Oc(-90);
-				b = new E;
+				b = new Segment;
 				b.W = f;
 				b.ca = g;
 				b.h = 1;
 				b.Za = false;
 				b.m = 1;
 				b.Oc(90);
-				c = new E;
+				c = new Segment;
 				c.W = k;
 				c.ca = l;
 				c.h = 1;
 				c.Za = false;
 				c.m = 1;
 				c.Oc(-90);
-				n = new E;
+				n = new Segment;
 				n.W = h;
 				n.ca = m;
 				n.h = 1;
@@ -7249,10 +7274,10 @@
 				this.U.push(c);
 				this.U.push(n);
 			}
-		}, f: h
+		}, f: Stadium
 	};
-	ka.b = true;
-	ka.prototype = {
+	TeamColors.b = true;
+	TeamColors.prototype = {
 		ga: function (a) {
 			a.l(this.hd);
 			a.O(this.ed);
@@ -7264,19 +7289,19 @@
 			this.ed = a.M();
 			var b = a.B();
 			if (b > 3)
-				throw new q('too many');
+				throw new GlobalError('too many');
 			this.fb = [];
 			for (var c = 0; b > c;) {
 				++c;
 				this.fb.push(a.M());
 			}
-		}, f: ka
+		}, f: TeamColors
 	};
-	p.b = true;
-	p.prototype = {f: p};
-	fa.b = true;
-	fa.Rd = [Ta, cc];
-	fa.qd = (a, b) => {
+	Team.b = true;
+	Team.prototype = {f: Team};
+	Room.b = true;
+	Room.Rd = [Dta, Mcc];
+	Room.qd = (a, b) => {
 		a.jc = b.jc;
 		if (b.I == null)
 			a.I = null;
@@ -7300,10 +7325,10 @@
 		a.S = b.S;
 		a.kb = b.kb;
 	};
-	fa.prototype = {
+	Room.prototype = {
 		yr: function (a) {
 			if (this.K == null) {
-				this.K = new O;
+				this.K = new Game;
 				for (var b = 0, c = this.I; c.length > b; b++) {
 					var d = c[b];
 					d.H = null;
@@ -7316,11 +7341,11 @@
 		}, Mf: function (a, b, c) {
 			if (c != b.ea) {
 				b.ea = c;
-				D.remove(this.I, b);
+				StringOpsSubstr.remove(this.I, b);
 				this.I.push(b);
 				if (this.K != null) {
 					if (b.H != null) {
-						D.remove(this.K.ta.F, b.H);
+						StringOpsSubstr.remove(this.K.ta.F, b.H);
 						b.H = null;
 					}
 					this.K.Ck(b);
@@ -7336,7 +7361,7 @@
 					}
 					b.Jb = d;
 				}
-				Cb.i(this.xl, a, b, c);
+				Dcb.i(this.xl, a, b, c);
 			}
 		}, na: function (a) {
 			for (var b = 0, c = this.I; c.length > b; b++) {
@@ -7373,17 +7398,17 @@
 			this.ce = a.ni();
 			this.Zc = a.B();
 			this.yd = a.B();
-			this.S = h.ja(a);
+			this.S = Stadium.ja(a);
 			var b = a.B() != 0;
 			this.K = null;
 			if (b) {
-				this.K = new O;
+				this.K = new Game;
 				this.K.ja(a, this);
 			}
 			for (var b = this.K == null ? null : this.K.ta.F, c = a.B(), d = this.I; c < d.length;)
 				d.pop();
 			for (d = 0; c > d;) {
-				var e = new ea;
+				var e = new FullPlayer;
 				e.va(a, b);
 				this.I[d++] = e;
 			}
@@ -7391,18 +7416,18 @@
 			this.kb[2].ja(a);
 		}, uk: function () {
 			var a = 0;
-			var b = w.ha();
+			var b = StreamWriter.ha();
 			this.ga(b);
 			for (b = b.Gr(); b.o.byteLength - b.a >= 4;)
 				a ^= b.M();
 			return a;
 		}, Ao: function () {
-			var a = w.ha(4);
+			var a = StreamWriter.ha(4);
 			a.O(this.uk());
 			return a.Kg();
 		}, Sn: function (a) {
-			a = (new F(new DataView(a))).M();
-			y.i(this.ko, a != this.uk());
+			a = (new StreamReader(new DataView(a))).M();
+			Yyy.i(this.ko, a != this.uk());
 		}, km: function (a) {
 			this.Ol = a;
 		}, Lb: function (a) {
@@ -7415,22 +7440,22 @@
 			this.Zc = c < 0 ? 0 : c > 255 ? 255 : c;
 			d = d < 0 ? 0 : d > 100 ? 100 : d;
 			this.ce = this.Zc * d;
-			vb.i(this.Hk, a, this.yd, this.Zc, d);
+			FunM.i(this.Hk, a, this.yd, this.Zc, d);
 		}, sc: function () {
-			var a = ya.zc;
+			var a = Mya.zc;
 			var b = this.gc;
 			if (a != this.hc) {
 				if (b == null)
-					this.gc = b = new fa;
+					this.gc = b = new Room;
 				this.hc = a;
-				fa.qd(b, this);
+				Room.qd(b, this);
 			}
 			return b;
-		}, f: fa
+		}, f: Room
 	};
-	ea.b = true;
-	ea.Rd = [Ta];
-	ea.$r = (a, b) => {
+	FullPlayer.b = true;
+	FullPlayer.Rd = [Dta];
+	FullPlayer.$r = (a, b) => {
 		a.cb = b.cb;
 		a.Jb = b.Jb;
 		a.Xb = b.Xb;
@@ -7448,7 +7473,7 @@
 		a.H = b.H == null ? null : b.H.sc();
 		a.ea = b.ea;
 	};
-	ea.prototype = {
+	FullPlayer.prototype = {
 		ua: function (a) {
 			a.l(this.cb ? 1 : 0);
 			a.O(this.Jb);
@@ -7480,100 +7505,100 @@
 			this.yc = a.ni();
 			this.Sc = a.B();
 			var c = a.lf();
-			this.ea = c == 1 ? p.fa : c == 2 ? p.xa : p.Ia;
+			this.ea = c == 1 ? Team.red : c == 2 ? Team.blue : Team.spec;
 			c = a.ni();
 			this.H = c < 0 ? null : b[c];
 		}, hs: function () {
-			var a = ya.zc;
+			var a = Mya.zc;
 			var b = this.an;
 			if (a != this.zc) {
 				if (b == null)
-					this.an = b = new ea;
+					this.an = b = new FullPlayer;
 				this.zc = a;
-				ea.$r(b, this);
+				FullPlayer.$r(b, this);
 			}
 			return b;
-		}, f: ea
+		}, f: FullPlayer
 	};
-	ta.b = true;
-	ta.la = a => {
-		var b = new ta;
+	Mta.b = true;
+	Mta.la = a => {
+		var b = new Mta;
 		b.Yg = a;
 		return b;
 	};
-	ta.ma = m;
-	ta.prototype = C(m.prototype, {
+	Mta.ma = Manager;
+	Mta.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			var b = a.na(this.P);
 			if (b != null && b.Ld != this.Yg) {
 				b.Ld = this.Yg;
-				y.i(a.sl, b);
+				Yyy.i(a.sl, b);
 			}
 		}, ua: function (a) {
 			a.l(this.Yg ? 1 : 0);
 		}, va: function (a) {
 			this.Yg = a.B() != 0;
-		}, f: ta
+		}, f: Mta
 	});
-	rb.b = true;
-	rb.ma = m;
-	rb.prototype = C(m.prototype, {
+	Mrb.b = true;
+	Mrb.ma = Manager;
+	Mrb.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0)
-				vb.i(a.Vl, this.Tc, this.color, this.style, this.fn);
+				FunM.i(a.Vl, this.Tc, this.color, this.style, this.fn);
 		}, ua: function (a) {
-			a.mc(U.Qc(this.Tc, 1000));
+			a.mc(StringOpsLimit.Qc(this.Tc, 1000));
 			a.O(this.color);
 			a.l(this.style);
 			a.l(this.fn);
 		}, va: function (a) {
 			this.Tc = a.ic();
 			if (this.Tc.length > 1000)
-				throw new q('message too long');
+				throw new GlobalError('message too long');
 			this.color = a.M();
 			this.style = a.B();
 			this.fn = a.B();
-		}, f: rb
+		}, f: Mrb
 	});
-	Qa.b = true;
-	Qa.ma = m;
-	Qa.prototype = C(m.prototype, {
+	Dqa.b = true;
+	Dqa.ma = Manager;
+	Dqa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 1)) {
 				for (var b = a.na(this.P), c = a.I, d = [], e = 0, f = 0, g = 0; c.length > g; g++) {
 					var k = c[g];
-					if (p.Ia == k.ea)
+					if (Team.spec == k.ea)
 						d.push(k);
-					if (p.fa == k.ea)
+					if (Team.red == k.ea)
 						++e;
-					else if (p.xa == k.ea)
+					else if (Team.blue == k.ea)
 						++f;
 				}
 				c = d.length;
 				if (c != 0) {
 					if (e == f) {
 						if (c >= 2) {
-							a.Mf(b, d[0], p.fa);
-							a.Mf(b, d[1], p.xa);
+							a.Mf(b, d[0], Team.red);
+							a.Mf(b, d[1], Team.blue);
 						}
 					}
 					else
-						a.Mf(b, d[0], e < f ? p.fa : p.xa);
+						a.Mf(b, d[0], e < f ? Team.red : Team.blue);
 				}
 			}
 		}, ua: () => {
 		}, va: () => {
-		}, f: Qa
+		}, f: Dqa
 	});
-	da.b = true;
-	da.la = (a, b) => {
-		var c = new da;
+	Mda.b = true;
+	Mda.la = (a, b) => {
+		var c = new Mda;
 		c.rj = a;
 		c.newValue = b;
 		return c;
 	};
-	da.ma = m;
-	da.prototype = C(m.prototype, {
+	Mda.ma = Manager;
+	Mda.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 2) && a.K == null) switch (this.rj) {
 				case 0:
@@ -7590,17 +7615,17 @@
 		}, va: function (a) {
 			this.rj = a.M();
 			this.newValue = a.M();
-		}, f: da
+		}, f: Mda
 	});
-	sa.b = true;
-	sa.la = (a, b) => {
-		var c = new sa;
+	Msa.b = true;
+	Msa.la = (a, b) => {
+		var c = new Msa;
 		c.Md = a;
 		c.Xg = b;
 		return c;
 	};
-	sa.ma = m;
-	sa.prototype = C(m.prototype, {
+	Msa.ma = Manager;
+	Msa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 4)) {
 				var b = a.na(this.P);
@@ -7617,16 +7642,16 @@
 		}, va: function (a) {
 			this.Md = a.M();
 			this.Xg = a.B() != 0;
-		}, f: sa
+		}, f: Msa
 	});
-	ra.b = true;
-	ra.la = a => {
-		var b = new ra;
+	Mra.b = true;
+	Mra.la = a => {
+		var b = new Mra;
 		b.Zb = a;
 		return b;
 	};
-	ra.ma = m;
-	ra.prototype = C(m.prototype, {
+	Mra.ma = Manager;
+	Mra.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			a = a.na(this.P);
 			if (a != null)
@@ -7636,18 +7661,18 @@
 		}, va: function (a) {
 			this.Zb = a.zb();
 			if (this.Zb != null)
-				this.Zb = U.Qc(this.Zb, 2);
-		}, f: ra
+				this.Zb = StringOpsLimit.Qc(this.Zb, 2);
+		}, f: Mra
 	});
-	S.b = true;
-	S.la = (a, b) => {
-		var c = new S;
+	Dss.b = true;
+	Dss.la = (a, b) => {
+		var c = new Dss;
 		c.Md = a;
 		c.jj = b;
 		return c;
 	};
-	S.ma = m;
-	S.prototype = C(m.prototype, {
+	Dss.ma = Manager;
+	Dss.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			var b = a.na(this.Md);
 			if (b != null) {
@@ -7662,17 +7687,17 @@
 		}, va: function (a) {
 			this.Md = a.M();
 			a = a.lf();
-			this.jj = a == 1 ? p.fa : a == 2 ? p.xa : p.Ia;
-		}, f: S
+			this.jj = a == 1 ? Team.red : a == 2 ? Team.blue : Team.spec;
+		}, f: Dss
 	});
-	qa.b = true;
-	qa.la = a => {
-		var b = new qa;
+	Mqa.b = true;
+	Mqa.la = a => {
+		var b = new Mqa;
 		b.Pd = a;
 		return b;
 	};
-	qa.ma = m;
-	qa.prototype = C(m.prototype, {
+	Mqa.ma = Manager;
+	Mqa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 8)) {
 				var b = a.na(this.P);
@@ -7683,40 +7708,40 @@
 				}
 			}
 		}, ua: function (a) {
-			var b = w.ha();
+			var b = StreamWriter.ha();
 			this.Pd.ga(b);
 			b = pako.deflateRaw(b.Sb());
 			a.Ub(b.byteLength);
 			a.Vb(b);
 		}, va: function (a) {
 			a = pako.inflateRaw(a.sb(a.Ob()));
-			this.Pd = h.ja(new F(new DataView(a.buffer, a.byteOffset, a.byteLength)));
-		}, f: qa
+			this.Pd = Stadium.ja(new StreamReader(new DataView(a.buffer, a.byteOffset, a.byteLength)));
+		}, f: Mqa
 	});
-	Pa.b = true;
-	Pa.ma = m;
-	Pa.prototype = C(m.prototype, {
+	TeamColorsUtil.b = true;
+	TeamColorsUtil.ma = Manager;
+	TeamColorsUtil.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			if (a.Lb(this.P, 2) && p.Ia != this.ea)
+			if (a.Lb(this.P, 2) && Team.spec != this.ea)
 				a.kb[this.ea.$] = this.Sg;
 		}, ua: function (a) {
 			a.l(this.ea.$);
 			this.Sg.ga(a);
 		}, va: function (a) {
 			var b = a.lf();
-			this.ea = b == 1 ? p.fa : b == 2 ? p.xa : p.Ia;
-			this.Sg = new ka;
+			this.ea = b == 1 ? Team.red : b == 2 ? Team.blue : Team.spec;
+			this.Sg = new TeamColors;
 			this.Sg.ja(a);
-		}, f: Pa
+		}, f: TeamColorsUtil
 	});
-	pa.b = true;
-	pa.la = a => {
-		var b = new pa;
+	Mpa.b = true;
+	Mpa.la = a => {
+		var b = new Mpa;
 		b.newValue = a;
 		return b;
 	};
-	pa.ma = m;
-	pa.prototype = C(m.prototype, {
+	Mpa.ma = Manager;
+	Mpa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 2))
 				a.Pc = this.newValue;
@@ -7725,22 +7750,22 @@
 				1 : 0);
 		}, va: function (a) {
 			this.newValue = a.B() != 0;
-		}, f: pa
+		}, f: Mpa
 	});
-	oa.b = true;
-	oa.la = (a, b, c, d) => {
-		var e = new oa;
+	Moa.b = true;
+	Moa.la = (a, b, c, d) => {
+		var e = new Moa;
 		e.V = a;
 		e.name = b;
 		e.cj = c;
 		e.Xb = d;
 		return e;
 	};
-	oa.ma = m;
-	oa.prototype = C(m.prototype, {
+	Moa.ma = Manager;
+	Moa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0) {
-				var b = new ea;
+				var b = new FullPlayer;
 				b.V = this.V;
 				b.w = this.name;
 				b.Kd = this.cj;
@@ -7760,11 +7785,11 @@
 			this.name = a.zb();
 			this.cj = a.zb();
 			this.Xb = a.zb();
-		}, f: oa
+		}, f: Moa
 	});
-	qb.b = true;
-	qb.ma = m;
-	qb.prototype = C(m.prototype, {
+	Mqb.b = true;
+	Mqb.ma = Manager;
+	Mqb.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			a = a.na(this.ze);
 			if (a != null && this.P == 0)
@@ -7776,12 +7801,12 @@
 			this.Zb = a.zb();
 			this.ze = a.M();
 			if (this.Zb != null)
-				this.Zb = U.Qc(this.Zb, 2);
-		}, f: qb
+				this.Zb = StringOpsLimit.Qc(this.Zb, 2);
+		}, f: Mqb
 	});
-	Oa.b = true;
-	Oa.ma = m;
-	Oa.prototype = C(m.prototype, {
+	Doa.b = true;
+	Doa.ma = Manager;
+	Doa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			var b = a.K;
 			if (b != null && a.Lb(this.P, 16)) {
@@ -7793,17 +7818,17 @@
 				else if (b.Oa == 120)
 					b.Oa = 119;
 				if (this.Bf != d)
-					Cb.i(a.ml, c, this.Bf, e);
+					Dcb.i(a.ml, c, this.Bf, e);
 			}
 		}, ua: function (a) {
 			a.l(this.Bf ? 1 : 0);
 		}, va: function (a) {
 			this.Bf = a.B() != 0;
-		}, f: Oa
+		}, f: Doa
 	});
-	Na.b = true;
-	Na.ma = m;
-	Na.prototype = C(m.prototype, {
+	Dna.b = true;
+	Dna.ma = Manager;
+	Dna.prototype = Extend(Manager.prototype, {
 		$m: function (a) {
 			if (a.hq != null) {
 				var b = a.na(this.P);
@@ -7813,18 +7838,18 @@
 		}, apply: function (a) {
 			var b = a.na(this.P);
 			if (b != null)
-				ia.i(a.rl, b, this.Tc);
+				Mia.i(a.rl, b, this.Tc);
 		}, ua: function (a) {
-			a.mc(U.Qc(this.Tc, 140));
+			a.mc(StringOpsLimit.Qc(this.Tc, 140));
 		}, va: function (a) {
 			this.Tc = a.ic();
 			if (this.Tc.length > 140)
-				throw new q('message too long');
-		}, f: Na
+				throw new GlobalError('message too long');
+		}, f: Dna
 	});
-	Ga.b = true;
-	Ga.ma = m;
-	Ga.prototype = C(m.prototype, {
+	Dga.b = true;
+	Dga.ma = Manager;
+	Dga.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			var b = a.na(this.P);
 			if (b != null) {
@@ -7839,77 +7864,77 @@
 			a.tb(this.input);
 		}, va: function (a) {
 			this.input = a.hb();
-		}, f: Ga
+		}, f: Dga
 	});
-	na.b = true;
-	na.la = a => {
-		var b = new na;
+	Mna.b = true;
+	Mna.la = a => {
+		var b = new Mna;
 		b.sj = a;
 		return b;
 	};
-	na.ma = m;
-	na.prototype = C(m.prototype, {
+	Mna.ma = Manager;
+	Mna.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			var b = a.na(this.P);
 			if (b != null)
-				ia.i(a.wl, b, this.sj);
+				Mia.i(a.wl, b, this.sj);
 		}, ua: function (a) {
 			a.l(this.sj);
 		}, va: function (a) {
 			this.sj = a.B();
-		}, f: na
+		}, f: Mna
 	});
-	kc.b = true;
-	kc.fj = () => {
-		m.Ha(rb);
-		m.Ha(na);
-		m.Ha(Ua);
-		m.Ha(Ga);
-		m.Ha(Na);
-		m.Ha(oa);
-		m.Ha(Y);
-		m.Ha(Ma);
-		m.Ha(La);
-		m.Ha(Oa);
-		m.Ha(da);
-		m.Ha(qa);
-		m.Ha(S);
-		m.Ha(pa);
-		m.Ha(sa);
-		m.Ha(Qa);
-		m.Ha(ta);
-		m.Ha(la);
-		m.Ha(ra);
-		m.Ha(Pa);
-		m.Ha(pb);
-		m.Ha(ma);
-		m.Ha(qb);
-		m.Ha(ob);
+	Mkc.b = true;
+	Mkc.fj = () => {
+		Manager.Ha(Mrb);
+		Manager.Ha(Mna);
+		Manager.Ha(Dua);
+		Manager.Ha(Dga);
+		Manager.Ha(Dna);
+		Manager.Ha(Moa);
+		Manager.Ha(Dyy);
+		Manager.Ha(Dma);
+		Manager.Ha(Dla);
+		Manager.Ha(Doa);
+		Manager.Ha(Mda);
+		Manager.Ha(Mqa);
+		Manager.Ha(Dss);
+		Manager.Ha(Mpa);
+		Manager.Ha(Msa);
+		Manager.Ha(Dqa);
+		Manager.Ha(Mta);
+		Manager.Ha(Mla);
+		Manager.Ha(Mra);
+		Manager.Ha(TeamColorsUtil);
+		Manager.Ha(Mpb);
+		Manager.Ha(Mma);
+		Manager.Ha(Mqb);
+		Manager.Ha(Mob);
 	};
-	Y.b = true;
-	Y.la = (a, b, c) => {
-		var d = new Y;
+	Dyy.b = true;
+	Dyy.la = (a, b, c) => {
+		var d = new Dyy;
 		d.V = a;
 		d.fd = b;
 		d.Qg = c;
 		return d;
 	};
-	Y.ma = m;
-	Y.prototype = C(m.prototype, {
+	Dyy.ma = Manager;
+	Dyy.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.V != 0 && a.Lb(this.P, 128)) {
 				var b = a.na(this.V);
 				if (b != null) {
 					var c = a.na(this.P);
-					D.remove(a.I, b);
+					StringOpsSubstr.remove(a.I, b);
 					if (a.K != null)
-						D.remove(a.K.ta.F, b.H);
-					vb.i(a.ul, b, this.fd, this.Qg, c);
+						StringOpsSubstr.remove(a.K.ta.F, b.H);
+					FunM.i(a.ul, b, this.fd, this.Qg, c);
 				}
 			}
 		}, ua: function (a) {
 			if (this.fd != null)
-				this.fd = U.Qc(this.fd, 100);
+				this.fd = StringOpsLimit.Qc(this.fd, 100);
 			a.O(this.V);
 			a.Db(this.fd);
 			a.l(this.Qg ? 1 : 0);
@@ -7918,12 +7943,12 @@
 			this.fd = a.zb();
 			this.Qg = a.B() != 0;
 			if (this.fd != null && this.fd.length > 100)
-				throw new q('string too long');
-		}, f: Y
+				throw new GlobalError('string too long');
+		}, f: Dyy
 	});
-	pb.b = true;
-	pb.ma = m;
-	pb.prototype = C(m.prototype, {
+	Mpb.b = true;
+	Mpb.ma = Manager;
+	Mpb.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0) {
 				for (var b = new Map, c = 0, d = a.I; d.length > c; c++) {
@@ -7961,11 +7986,11 @@
 			for (var c = 0; b > c; c++) {
 				this.Zg.push(a.M());
 			}
-		}, f: pb
+		}, f: Mpb
 	});
-	ob.b = true;
-	ob.ma = m;
-	ob.prototype = C(m.prototype, {
+	Mob.b = true;
+	Mob.ma = Manager;
+	Mob.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0) {
 				var b = a.K;
@@ -8056,18 +8081,18 @@
 					this.Rc[d] = a.M();
 				b >>>= 1;
 			}
-		}, f: ob
+		}, f: Mob
 	});
-	ma.b = true;
-	ma.la = (a, b, c) => {
-		var d = new ma;
+	Mma.b = true;
+	Mma.la = (a, b, c) => {
+		var d = new Mma;
 		d.min = a;
 		d.nj = b;
 		d.aj = c;
 		return d;
 	};
-	ma.ma = m;
-	ma.prototype = C(m.prototype, {
+	Mma.ma = Manager;
+	Mma.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 2))
 				a.mr(a.na(this.P), this.min, this.nj, this.aj);
@@ -8079,21 +8104,21 @@
 			this.min = a.M();
 			this.nj = a.M();
 			this.aj = a.M();
-		}, f: ma
+		}, f: Mma
 	});
-	Ma.b = true;
-	Ma.ma = m;
-	Ma.prototype = C(m.prototype, {
+	Dma.b = true;
+	Dma.ma = Manager;
+	Dma.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 32))
 				a.yr(a.na(this.P), 0);
 		}, ua: () => {
 		}, va: () => {
-		}, f: Ma
+		}, f: Dma
 	});
-	La.b = true;
-	La.ma = m;
-	La.prototype = C(m.prototype, {
+	Dla.b = true;
+	Dla.ma = Manager;
+	Dla.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 32)) {
 				var b = a.na(this.P);
@@ -8110,19 +8135,19 @@
 			}
 		}, ua: () => {
 		}, va: () => {
-		}, f: La
+		}, f: Dla
 	});
-	la.b = true;
-	la.la = a => {
-		for (var b = new la, c = a.T.I, d = [], e = 0; c.length > e;) {
+	Mla.b = true;
+	Mla.la = a => {
+		for (var b = new Mla, c = a.T.I, d = [], e = 0; c.length > e;) {
 			var f = a.Ie.get(c[e++].V);
 			d.push(f == null ? 0 : f.yb);
 		}
 		b.we = d;
 		return b;
 	};
-	la.ma = m;
-	la.prototype = C(m.prototype, {
+	Mla.ma = Manager;
+	Mla.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0) {
 				a = a.I;
@@ -8143,11 +8168,11 @@
 				++c;
 				this.we.push(a.Ab());
 			}
-		}, f: la
+		}, f: Mla
 	});
-	ca.b = true;
-	ca.Rd = [Ta];
-	ca.qd = (a, b) => {
+	DynamicDisc.b = true;
+	DynamicDisc.Rd = [Dta];
+	DynamicDisc.qd = (a, b) => {
 		a.Z = b.Z;
 		a.m = b.m;
 		a.aa = b.aa;
@@ -8169,7 +8194,7 @@
 		c.x = d.x;
 		c.y = d.y;
 	};
-	ca.prototype = {
+	DynamicDisc.prototype = {
 		ga: function (a) {
 			var b = this.a;
 			a.s(b.x);
@@ -8302,20 +8327,20 @@
 				}
 			}
 		}, sc: function () {
-			var a = ya.zc;
+			var a = Mya.zc;
 			var b = this.gc;
 			if (a != this.hc) {
 				if (b == null)
-					this.gc = b = new ca;
+					this.gc = b = new DynamicDisc;
 				this.hc = a;
-				ca.qd(b, this);
+				DynamicDisc.qd(b, this);
 			}
 			return b;
-		}, f: ca
+		}, f: DynamicDisc
 	};
-	nb.b = true;
-	nb.Rd = [Ta];
-	nb.prototype = {
+	Joint.b = true;
+	Joint.Rd = [Dta];
+	Joint.prototype = {
 		ga: function (a) {
 			a.l(this.Yd);
 			a.l(this.Zd);
@@ -8384,11 +8409,11 @@
 					}
 				}
 			}
-		}, f: nb
+		}, f: Joint
 	};
-	Fa.b = true;
-	Fa.Rd = [Ta];
-	Fa.qd = (a, b) => {
+	DynamicObjectsUtil.b = true;
+	DynamicObjectsUtil.Rd = [Dta];
+	DynamicObjectsUtil.qd = (a, b) => {
 		if (b.F == null)
 			a.F = null;
 		else {
@@ -8406,7 +8431,7 @@
 		a.qa = b.qa;
 		a.pb = b.pb;
 	};
-	Fa.prototype = {
+	DynamicObjectsUtil.prototype = {
 		ga: function (a) {
 			a.l(this.F.length);
 			for (var b = 0, c = this.F.length; c > b;) {
@@ -8419,7 +8444,7 @@
 			this.F = [];
 			for (var b = a.B(), c = 0; b > c;) {
 				++c;
-				var d = new ca;
+				var d = new DynamicDisc;
 				d.ja(a);
 				this.F.push(d);
 			}
@@ -8507,19 +8532,19 @@
 					c[b].C(this.F);
 			}
 		}, sc: function () {
-			var a = ya.zc;
+			var a = Mya.zc;
 			var b = this.gc;
 			if (a != this.hc) {
 				if (b == null)
-					this.gc = b = new Fa;
+					this.gc = b = new DynamicObjectsUtil;
 				this.hc = a;
-				Fa.qd(b, this);
+				DynamicObjectsUtil.qd(b, this);
 			}
 			return b;
-		}, f: Fa
+		}, f: DynamicObjectsUtil
 	};
-	L.b = true;
-	L.prototype = {
+	Plane.b = true;
+	Plane.prototype = {
 		ga: function (a) {
 			var b = this.wa;
 			a.s(b.x);
@@ -8536,10 +8561,10 @@
 			this.m = a.u();
 			this.h = a.M();
 			this.v = a.M();
-		}, f: L
+		}, f: Plane
 	};
-	E.b = true;
-	E.prototype = {
+	Segment.b = true;
+	Segment.prototype = {
 		ga: function (a) {
 			var b = 0;
 			var c = a.a;
@@ -8584,7 +8609,7 @@
 				this.ca = b;
 				this.Cc = -this.Cc;
 			}
-			if (E.mn < a && E.ln > a)
+			if (Segment.segVal1 < a && Segment.segVal2 > a)
 				this.vb = 1 / Math.tan(a / 2);
 		}, Co: function () {
 			return 0 * this.vb != 0 ? 0 : 114.59155902616465 * Math.atan(1 / this.vb);
@@ -8596,7 +8621,7 @@
 				var a = .5 * (a.y - b.y);
 				var b = this.W.a;
 				var d = this.vb;
-				this.Xd = new H(b.x + c + -a * d, b.y + a + c * d);
+				this.Xd = new Point(b.x + c + -a * d, b.y + a + c * d);
 				a = this.W.a;
 				b = this.Xd;
 				c = a.x - b.x;
@@ -8604,10 +8629,10 @@
 				this.Yj = Math.sqrt(c * c + a * a);
 				c = this.W.a;
 				a = this.Xd;
-				this.Hg = new H(-(c.y - a.y), c.x - a.x);
+				this.Hg = new Point(-(c.y - a.y), c.x - a.x);
 				c = this.Xd;
 				a = this.ca.a;
-				this.Ig = new H(-(c.y - a.y), c.x - a.x);
+				this.Ig = new Point(-(c.y - a.y), c.x - a.x);
 				if (this.vb <= 0) {
 					a = c = this.Hg;
 					c.x = -a.x;
@@ -8623,12 +8648,12 @@
 				c = a.x - b.x;
 				a = -(a.y - b.y);
 				b = Math.sqrt(a * a + c * c);
-				this.wa = new H(a / b, c / b);
+				this.wa = new Point(a / b, c / b);
 			}
-		}, f: E
+		}, f: Segment
 	};
-	B.b = true;
-	B.prototype = {
+	Vertex.b = true;
+	Vertex.prototype = {
 		ga: function (a) {
 			var b = this.a;
 			a.s(b.x);
@@ -8643,15 +8668,15 @@
 			this.m = a.u();
 			this.h = a.M();
 			this.v = a.M();
-		}, f: B
+		}, f: Vertex
 	};
-	N.b = true;
-	N.lc = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
-	N.Gi = (a, b) => {
+	MajorCanvas.b = true;
+	MajorCanvas.lc = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
+	MajorCanvas.Gi = (a, b) => {
 		a.imageSmoothingEnabled = b;
 		a.mozImageSmoothingEnabled = b;
 	};
-	N.prototype = {
+	MajorCanvas.prototype = {
 		Po: function (a, b) {
 			var c = this.dd.get(a.V);
 			if (c != null) switch (b) {
@@ -8676,7 +8701,7 @@
 			this.$c = c;
 			this.Jg.clear();
 			this.Pr();
-			N.Gi(this.c, true);
+			MajorCanvas.Gi(this.c, true);
 			this.c.resetTransform();
 			if (a.K != null) {
 				var c = a.K;
@@ -8699,7 +8724,7 @@
 					if (r.H != null) {
 						var u = this.dd.get(r.V);
 						if (u == null) {
-							u = new Ea;
+							u = new PlayerBallCanvas;
 							this.dd.set(r.V, u);
 						}
 						u.C(r, a);
@@ -8845,13 +8870,13 @@
 			a.closePath();
 		}, Sq: function (a) {
 			var b = this;
-			N.Gi(this.c, false);
+			MajorCanvas.Gi(this.c, false);
 			var c = a.Td;
 			var d = a.Sd;
 			if (a.ld == 1) {
 				this.c.save();
 				this.c.resetTransform();
-				this.c.fillStyle = N.lc(a.jd);
+				this.c.fillStyle = MajorCanvas.lc(a.jd);
 				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
 				this.c.restore();
 				this.c.strokeStyle = '#C7E6BD';
@@ -8910,13 +8935,13 @@
 			else {
 				this.c.save();
 				this.c.resetTransform();
-				this.c.fillStyle = N.lc(a.jd);
+				this.c.fillStyle = MajorCanvas.lc(a.jd);
 				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
 				this.c.restore();
 			}
-			N.Gi(this.c, true);
+			MajorCanvas.Gi(this.c, true);
 		}, Nq: function (a, b) {
-			for (var c = n.A.Ak.L(), d = 0, e = a.I; e.length > d;) {
+			for (var c = ConnectionConstants.buildsStorageMInst.Ak.L(), d = 0, e = a.I; e.length > d;) {
 				var f = e[d];
 				++d;
 				var g = f.H;
@@ -8924,7 +8949,7 @@
 					var g = g.a;
 					var h = this.dd.get(f.V);
 					if (c && h.Xf)
-						this.c.drawImage(n.Dm, g.x - .5 * n.Dm.width, g.y - 35);
+						this.c.drawImage(ConnectionConstants.Dm, g.x - .5 * ConnectionConstants.Dm.width, g.y - 35);
 					if (b != f)
 						h.so(this.c, g.x, g.y + 50);
 				}
@@ -8932,7 +8957,7 @@
 		}, Ll: function (a, b) {
 			this.c.beginPath();
 			if (b == null) {
-				this.c.fillStyle = N.lc(a.R);
+				this.c.fillStyle = MajorCanvas.lc(a.R);
 				this.c.strokeStyle = 'black';
 			}
 			else {
@@ -8962,7 +8987,7 @@
 		}, Mq: function (a, b) {
 			if (a.R >= 0) {
 				this.c.beginPath();
-				this.c.strokeStyle = N.lc(a.R);
+				this.c.strokeStyle = MajorCanvas.lc(a.R);
 				var c = b[a.Yd];
 				var d = b[a.Zd];
 				if (c != null && d != null) {
@@ -8976,7 +9001,7 @@
 		}, Qq: function (a) {
 			if (a.Za) {
 				this.c.beginPath();
-				this.c.strokeStyle = N.lc(a.R);
+				this.c.strokeStyle = MajorCanvas.lc(a.R);
 				var b = a.W.a;
 				var c = a.ca.a;
 				if (0 * a.vb != 0) {
@@ -9017,7 +9042,7 @@
 			if (f * f + a * a > 900) {
 				this.c.fillStyle = 'rgba(0,0,0,0.5)';
 				this.pk(c + 2, d + 2, Math.atan2(a, f));
-				this.c.fillStyle = N.lc(b);
+				this.c.fillStyle = MajorCanvas.lc(b);
 				this.pk(c - 2, d - 2, Math.atan2(a, f));
 			}
 		}, pk: function (a, b, c) {
@@ -9037,10 +9062,10 @@
 				var b = a.next();
 				c.Xf = false;
 			}
-		}, f: N
+		}, f: MajorCanvas
 	};
-	R.b = true;
-	R.prototype = {
+	BigAnimatedText.b = true;
+	BigAnimatedText.prototype = {
 		zo: function () {
 			return 2.31 + .1155 * (this.We.length - 1);
 		}, Kc: function (a, b) {
@@ -9051,8 +9076,8 @@
 				var g = f[e];
 				++e;
 				var h = c - .05 * d;
-				var l = 180 * R.kn.eval(h) * ((d & 1) != 0 ? -1 : 1);
-				a.globalAlpha = R.jn.eval(h);
+				var l = 180 * BigAnimatedText.keyFrames2.eval(h) * ((d & 1) != 0 ? -1 : 1);
+				a.globalAlpha = BigAnimatedText.keyFrames1.eval(h);
 				a.drawImage(g, l - .5 * g.width, 35 * -(this.We.length - 1) + 70 * d - .5 * g.height);
 				a.globalAlpha = 1;
 				++d;
@@ -9082,10 +9107,10 @@
 			d.fillStyle = this.lc(b);
 			d.fillText(a, 0, 45);
 			return c;
-		}, f: R
+		}, f: BigAnimatedText
 	};
-	Sb.b = true;
-	Sb.prototype = {
+	BigTextUtil.b = true;
+	BigTextUtil.prototype = {
 		Pa: function (a) {
 			this.ab.push(a);
 		}, Nn: function () {
@@ -9102,10 +9127,10 @@
 		}, Kc: function (a) {
 			if (this.ab.length > 0)
 				this.ab[0].Kc(a, this.xc);
-		}, f: Sb
+		}, f: BigTextUtil
 	};
-	Ea.b = true;
-	Ea.Ln = (a, b) => {
+	PlayerBallCanvas.b = true;
+	PlayerBallCanvas.Ln = (a, b) => {
 		if (b.hd != a.hd || b.ed != a.ed)
 			return false;
 		var c = a.fb;
@@ -9119,12 +9144,12 @@
 		}
 		return true;
 	};
-	Ea.ao = (a, b) => {
+	PlayerBallCanvas.ao = (a, b) => {
 		a.hd = b.hd;
 		a.ed = b.ed;
 		a.fb = b.fb.slice(0);
 	};
-	Ea.prototype = {
+	PlayerBallCanvas.prototype = {
 		fo: function () {
 			var a = window.document.createElement('canvas');
 			a.width = 160;
@@ -9149,11 +9174,11 @@
 			a.drawImage(this.vl.canvas, 0, 0, 160, 34, b - 40, c - 34, 80, 17);
 		}, C: function (a, b) {
 			if (a.H != null) {
-				var c = n.A.xm.L() ? b.kb[a.ea.$] : a.ea.wm;
+				var c = ConnectionConstants.buildsStorageMInst.xm.L() ? b.kb[a.ea.$] : a.ea.wm;
 				var d = a.Jd != null ? a.Jd : a.Xb;
-				var e = n.A.lm.L() && d != null;
-				if (!Ea.Ln(this.kb, c) || !e && this.uh != a.Jb || e && d != this.Jf) {
-					Ea.ao(this.kb, c);
+				var e = ConnectionConstants.buildsStorageMInst.lm.L() && d != null;
+				if (!PlayerBallCanvas.Ln(this.kb, c) || !e && this.uh != a.Jb || e && d != this.Jf) {
+					PlayerBallCanvas.ao(this.kb, c);
 					if (e) {
 						this.Jf = d;
 						this.uh = -1;
@@ -9177,28 +9202,28 @@
 				this.rb.translate(32, 32);
 				this.rb.rotate(3.141592653589793 * this.kb.hd / 128);
 				for (var c = -32, d = 64 / b.length, e = 0; b.length > e;) {
-					this.rb.fillStyle = N.lc(b[e++]);
+					this.rb.fillStyle = MajorCanvas.lc(b[e++]);
 					this.rb.fillRect(c, -32, d + 4, 64);
 					c += d;
 				}
 				this.rb.restore();
-				this.rb.fillStyle = N.lc(this.kb.ed);
+				this.rb.fillStyle = MajorCanvas.lc(this.kb.ed);
 				this.rb.textAlign = 'center';
 				this.rb.textBaseline = 'alphabetic';
 				this.rb.font = '900 34px \'Arial Black\',\'Arial Bold\',Gadget,sans-serif';
 				this.rb.fillText(a, 32, 44);
 				this.Ij = this.rb.createPattern(this.rb.canvas, 'no-repeat');
 			}
-		}, f: Ea
+		}, f: PlayerBallCanvas
 	};
-	mb.b = true;
-	mb.prototype = {
+	ChangeLocationView.b = true;
+	ChangeLocationView.prototype = {
 		ki: function (a) {
-			for (var b = this, c = 0, d = Ha.ab.length >> 2; d > c;) {
+			for (var b = this, c = 0, d = Dha.ab.length >> 2; d > c;) {
 				var e = c++;
 				var f = [e];
-				var g = Ha.ab[e << 2];
-				var e = Ha.ab[(e << 2) + 1].toLowerCase();
+				var g = Dha.ab[e << 2];
+				var e = Dha.ab[(e << 2) + 1].toLowerCase();
 				var h = [window.document.createElement('div')];
 				h[0].className = 'elem';
 				h[0].innerHTML = '<div class="flagico f-' + e + '"></div> ' + g;
@@ -9213,23 +9238,23 @@
 				h[0].ondblclick = (a => () => b.Zl(a[0]))(f);
 			}
 		}, Zl: function (a) {
-			var b = new T;
-			b.ub = Ha.ab[(a << 2) + 1].toLowerCase();
-			b.Ec = Ha.ab[(a << 2) + 2];
-			b.Gc = Ha.ab[(a << 2) + 3];
-			n.A.Ne.Xa(b);
-			A.i(this.qb);
-		}, f: mb
+			var b = new GeoLocation;
+			b.ub = Dha.ab[(a << 2) + 1].toLowerCase();
+			b.Ec = Dha.ab[(a << 2) + 2];
+			b.Gc = Dha.ab[(a << 2) + 3];
+			ConnectionConstants.buildsStorageMInst.Ne.Xa(b);
+			Daa.i(this.qb);
+		}, f: ChangeLocationView
 	};
-	Da.b = true;
-	Da.Yo = a => a == a.parentElement.querySelector(':hover');
-	Da.prototype = {
+	ChatboxView.b = true;
+	ChatboxView.Yo = a => a == a.parentElement.querySelector(':hover');
+	ChatboxView.prototype = {
 		pp: function (a, b, c) {
 			var d = window.document.createElement('p');
 			d.className = 'announcement';
 			d.textContent = a;
 			if (b >= 0)
-				d.style.color = N.lc(b);
+				d.style.color = MajorCanvas.lc(b);
 			switch (c) {
 				case 1:
 				case 4:
@@ -9248,7 +9273,7 @@
 			this.Ok(d);
 		}, Ok: function (a) {
 			var b = this.dc.clientHeight;
-			var b = .5 * -b <= this.dc.scrollTop + b - this.dc.scrollHeight || !Da.Yo(this.dc);
+			var b = .5 * -b <= this.dc.scrollTop + b - this.dc.scrollHeight || !ChatboxView.Yo(this.dc);
 			this.dc.appendChild(a);
 			if (b)
 				this.dc.scrollTop = a.offsetTop;
@@ -9263,18 +9288,18 @@
 			this.Ok(c);
 		}, Gb: function (a) {
 			this.ba(a, 'notice');
-		}, f: Da
+		}, f: ChatboxView
 	};
-	lb.b = true;
-	lb.vo = a => '.$^{[(|)*+?\\'.indexOf(a) != -1 ? '\\' + a : a;
-	lb.prototype = {
+	Mention.b = true;
+	Mention.vo = a => '.$^{[(|)*+?\\'.indexOf(a) != -1 ? '\\' + a : a;
+	Mention.prototype = {
 		Qh: function () {
 			this.Ui(null);
 		}, Hn: function (a, b) {
-			var c = this.Iq.exec(D.substr(a, 0, b));
+			var c = this.Iq.exec(StringOpsSubstr.substr(a, 0, b));
 			if (c != null) {
 				var d = c[0];
-				var e = new RegExp(D.substr(d, 1, null).split('').map(lb.vo).join('.*?'), 'i');
+				var e = new RegExp(StringOpsSubstr.substr(d, 1, null).split('').map(Mention.vo).join('.*?'), 'i');
 				this.Ek = d.charAt(0) == '#';
 				this.si = c.index;
 				this.Vq = d.length;
@@ -9295,13 +9320,13 @@
 			else
 				this.Ui(null);
 		}, lk: function (a) {
-			a = this.Ek ? '#' + a.$ : '@' + J.replace(a.w, ' ', '_');
-			this.Rp(D.substr(this.Ml, 0, this.si) + a + ' ' + D.substr(this.Ml, this.si + this.Vq, null), this.si + a.length + 1);
+			a = this.Ek ? '#' + a.$ : '@' + StringOps3.replace(a.w, ' ', '_');
+			this.Rp(StringOpsSubstr.substr(this.Ml, 0, this.si) + a + ' ' + StringOpsSubstr.substr(this.Ml, this.si + this.Vq, null), this.si + a.length + 1);
 		}, Ui: function (a) {
 			var b = this;
 			var c = a != null && a.length != 0;
 			if (!this.Mb.hidden)
-				v.Cf(this.Mb);
+				ViewUtil.Cf(this.Mb);
 			this.Wc = null;
 			this.Mb.hidden = !c;
 			if (c) {
@@ -9349,27 +9374,27 @@
 				this.lk(this.Wc[this.wc].item);
 				this.Qh();
 			}
-		}, f: lb
+		}, f: Mention
 	};
-	kb.b = true;
-	kb.prototype = {
+	ChooseNicknameView.b = true;
+	ChooseNicknameView.prototype = {
 		Dc: function () {
 			var a = this.Cb.value;
 			return a.length <= 25 ? a.length > 0 : false;
 		}, C: function () {
 			this.af.disabled = !this.Dc();
-		}, f: kb
+		}, f: ChooseNicknameView
 	};
-	jb.b = true;
-	jb.prototype = {
+	ConnectingView.b = true;
+	ConnectingView.prototype = {
 		ba: function (a) {
 			var b = window.document.createElement('p');
 			b.textContent = a;
 			this.dc.appendChild(b);
-		}, f: jb
+		}, f: ConnectingView
 	};
-	ib.b = true;
-	ib.prototype = {
+	CreateRoomView.b = true;
+	CreateRoomView.prototype = {
 		Fj: function (a) {
 			this.Fm = a;
 			this.Em.textContent = 'Show in room list: ' + (a ? 'No' : 'Yes');
@@ -9378,12 +9403,12 @@
 			return a.length <= 40 ? a.length > 0 : false;
 		}, C: function () {
 			this.Wj.disabled = !this.Dc();
-		}, f: ib
+		}, f: CreateRoomView
 	};
-	Ka.b = true;
-	Ka.prototype = {f: Ka};
-	hb.b = true;
-	hb.prototype = {
+	DisconnectedView.b = true;
+	DisconnectedView.prototype = {f: DisconnectedView};
+	GameStateView.b = true;
+	GameStateView.prototype = {
 		Gg: function (a) {
 			this.g.classList.toggle('restricted', a);
 		}, C: function (a) {
@@ -9395,10 +9420,10 @@
 				this.Pb.set(b.Pb);
 				this.Eb.Kc(a, this.Nb);
 			}
-		}, f: hb
+		}, f: GameStateView
 	};
-	Rb.b = true;
-	Rb.prototype = {
+	GameTimerView.b = true;
+	GameTimerView.prototype = {
 		Wd: (a, b) => {
 			var c = window.document.createElement('span');
 			c.textContent = a;
@@ -9434,21 +9459,21 @@
 				this.g.className = a ? 'game-timer-view time-warn' : 'game-timer-view';
 				this.ik = a;
 			}
-		}, f: Rb
+		}, f: GameTimerView
 	};
-	ja.b = true;
-	ja.prototype = {
+	GameView.b = true;
+	GameView.prototype = {
 		C: function (a) {
 			if (a.T.K == null)
 				this.me(true);
-			A.i(this.yl);
+			Daa.i(this.yl);
 			this.bi.disabled = a.T.K == null;
 			if (this.Gd)
 				this.Wa.C(a.T, a.T.na(a.uc));
 			else {
 				a = a.Sf();
 				this.Fb.C(a);
-				n.Na.Xj.Ls(a);
+				ConnectionConstants.Na.Xj.Ls(a);
 			}
 		}, me: function (a) {
 			if (a != this.Gd) {
@@ -9461,9 +9486,9 @@
 					this.Wa.g.remove();
 				}
 			}
-		}, Zo: () => ja.kq != null, bb: function (a, b) {
-			v.Cf(this.hf);
-			ja.kq = a;
+		}, Zo: () => GameView.kq != null, bb: function (a, b) {
+			ViewUtil.Cf(this.hf);
+			GameView.kq = a;
 			if (a != null) {
 				this.hf.style.display = 'flex';
 				this.hf.appendChild(a);
@@ -9473,19 +9498,19 @@
 				this.hf.style.display = 'none';
 				this.yl = null;
 			}
-		}, f: ja
+		}, f: GameView
 	};
-	gb.b = true;
-	gb.prototype = {
+	KickPlayerView.b = true;
+	KickPlayerView.prototype = {
 		Aj: function (a) {
 			this.Jj = a;
 			this.An.textContent = a ? 'Yes' : 'No';
-		}, f: gb
+		}, f: KickPlayerView
 	};
-	fb.b = true;
-	fb.prototype = {f: fb};
-	eb.b = true;
-	eb.prototype = {
+	LeaveRoomView.b = true;
+	LeaveRoomView.prototype = {f: LeaveRoomView};
+	PickStadiumView.b = true;
+	PickStadiumView.prototype = {
 		Lg: function () {
 			this.hi.disabled = this.jb == null;
 			this.bk.disabled = this.jb == null || this.jb.Lm == null;
@@ -9514,26 +9539,26 @@
 			};
 			return e;
 		}, ki: function (a) {
-			for (var b = this, c = h.Kh(), d = 0; c.length > d;) {
+			for (var b = this, c = Stadium.Kh(), d = 0; c.length > d;) {
 				var e = [c[d]];
 				++d;
 				e = this.Sk(e[0].w, (a => () => Promise.resolve(a[0]))(e), null);
 				a.appendChild(e);
 			}
-			Z.getAll().then(c => {
+			Dzz.getAll().then(c => {
 				for (var d = 0; c.length > d;) {
 					var e = c[d];
 					++d;
 					var f = [e.id];
-					var e = b.Sk(e.name, (a => () => Z.get(a[0]))(f), (a => () => Z.delete(a[0]))(f));
+					var e = b.Sk(e.name, (a => () => Dzz.get(a[0]))(f), (a => () => Dzz.delete(a[0]))(f));
 					a.appendChild(e);
 				}
 				b.vg.update();
 			});
-		}, f: eb
+		}, f: PickStadiumView
 	};
-	Qb.b = true;
-	Qb.prototype = {
+	PingGraph.b = true;
+	PingGraph.prototype = {
 		tn: function (a) {
 			if (a < 0) {
 				a = 150;
@@ -9553,14 +9578,14 @@
 			this.Eh.clearRect(0, 0, b, c);
 			this.Eh.drawImage(this.sa, b - d - 1, 0);
 			this.Eh.drawImage(this.sa, -d - 1, 0);
-		}, f: Qb
+		}, f: PingGraph
 	};
-	db.b = true;
-	db.prototype = {
+	PlayerMenuView.b = true;
+	PlayerMenuView.prototype = {
 		C: function (a, b) {
 			var c = a.na(this.Nb);
 			if (c == null)
-				A.i(this.qb);
+				Daa.i(this.qb);
 			else {
 				this.Nr(c);
 				this.Hf.disabled = !b || this.Nb == 0;
@@ -9577,10 +9602,10 @@
 		}, Dj: function (a) {
 			this.ql = a;
 			this.Hf.textContent = a ? 'Remove Admin' : 'Give Admin';
-		}, f: db
+		}, f: PlayerMenuView
 	};
-	cb.b = true;
-	cb.prototype = {
+	PlayerListItem.b = true;
+	PlayerListItem.prototype = {
 		C: function (a, b) {
 			this.g.draggable = b;
 			if (a.yb != this.yb) {
@@ -9592,10 +9617,10 @@
 		}, em: function (a) {
 			this.un = a;
 			this.g.className = 'player-list-item' + (a ? ' admin' : '');
-		}, f: cb
+		}, f: PlayerListItem
 	};
-	za.b = true;
-	za.prototype = {
+	PlayerListView.b = true;
+	PlayerListView.prototype = {
 		C: function (a, b, c, d) {
 			var e = this;
 			this.Vh.disabled = b || c;
@@ -9611,8 +9636,8 @@
 				f = a[c];
 				g = this.xd.get(f.V);
 				if (g == null) {
-					g = new cb(f);
-					g.ff = a => y.i(e.ff, a);
+					g = new PlayerListItem(f);
+					g.ff = a => Yyy.i(e.ff, a);
 					this.xd.set(f.V, g);
 					this.ab.appendChild(g.g);
 				}
@@ -9634,42 +9659,42 @@
 				if (f != c.nextSibling)
 					this.ab.insertBefore(c, f);
 			}
-		}, f: za
+		}, f: PlayerListView
 	};
-	Q.b = true;
-	Q.prototype = {f: Q};
-	ha.b = true;
-	ha.Wk = a => {
+	CaptchaDialogView.b = true;
+	CaptchaDialogView.prototype = {f: CaptchaDialogView};
+	ReplayControlsView.b = true;
+	ReplayControlsView.Wk = a => {
 		a = a / 1000 | 0;
-		return (a / 60 | 0) + ':' + J.Af(K.ye(a % 60));
+		return (a / 60 | 0) + ':' + StringOps3.Af(StringOpsInt.ye(a % 60));
 	};
-	ha.prototype = {
+	ReplayControlsView.prototype = {
 		C: function () {
-			this.Er.textContent = ha.Wk(this.ti.Qb);
+			this.Er.textContent = ReplayControlsView.Wk(this.ti.Qb);
 			this.Aq.style.width = 100 * this.ti.Go() + '%';
 			if (this.Wf && this.ti.Fd <= 0) {
 				this.Wf = false;
 				this.Up();
 			}
-		}, f: ha
+		}, f: ReplayControlsView
 	};
-	bb.b = true;
-	bb.prototype = {
+	RoomLinkView.b = true;
+	RoomLinkView.prototype = {
 		nr: function (a) {
 			if (a != this.gk) {
 				this.gk = a;
 				this.Zf.value = a;
 			}
-		}, f: bb
+		}, f: RoomLinkView
 	};
-	ab.b = true;
-	ab.prototype = {f: ab};
-	Aa.b = true;
-	Aa.As = a => Promise.race([
+	RoomListHeader.b = true;
+	RoomListHeader.prototype = {f: RoomListHeader};
+	RoomListView.b = true;
+	RoomListView.As = a => Promise.race([
 		new Promise((resolve, reject) => window.setTimeout(() => reject(null), 5000)),
 		a
 	]);
-	Aa.prototype = {
+	RoomListView.prototype = {
 		Om: function () {
 			function a() {
 				b.pj.disabled = false;
@@ -9679,23 +9704,23 @@
 			var b = this;
 			this.en(null);
 			this.pj.disabled = true;
-			v.Cf(this.gj);
+			ViewUtil.Cf(this.gj);
 			var c = [];
 			this.dj = [];
-			Aa.As(va.get().then(a => c = a).catch(() => ({}))).then(a).catch(a);
+			RoomListView.As(RoomListOps.get().then(a => c = a).catch(() => ({}))).then(a).catch(a);
 		}, bn: function (a) {
 			var b = this;
 			this.dj = a;
-			va.Hs(this.gs, a);
+			RoomListOps.Hs(this.gs, a);
 			a.sort((a, b) => a.Le - b.Le);
-			v.Cf(this.gj);
+			ViewUtil.Cf(this.gj);
 			for (var c = 0, d = 0, e = !this.fs.Ta, f = !this.zs.Ta, g = 0; a.length > g;) {
 				var h = [a[g]];
 				++g;
 				var l = h[0].vd;
 				if (!(e && l.Xe <= l.I || f && l.Ib)) {
-					var m = [new ab(h[0])];
-					m[0].Ja.ondblclick = (a => () => y.i(b.Ym, a[0]))(h);
+					var m = [new RoomListHeader(h[0])];
+					m[0].Ja.ondblclick = (a => () => Yyy.i(b.Ym, a[0]))(h);
 					m[0].Ja.onclick = (a => () => b.en(a[0]))(m);
 					this.gj.appendChild(m[0].Ja);
 					c += l.I;
@@ -9711,43 +9736,43 @@
 			if (this.Od != null)
 				this.Od.Ja.classList.add('selected');
 			this.Tm.disabled = this.Od == null;
-		}, f: Aa
+		}, f: RoomListView
 	};
-	$a.b = true;
-	$a.prototype = {
+	Notice.b = true;
+	Notice.prototype = {
 		Il: function () {
 			var a = this;
-			M.tk(n.Ee + 'api/notice').then(b => {
+			WebserverApiOps.tk(ConnectionConstants.rsUrl + 'api/notice').then(b => {
 				var c = b.content;
-				if (c != null && c != '' && c != $a.On) {
+				if (c != null && c != '' && c != Notice.On) {
 					a.$n.innerHTML = c;
 					a.Xk.hidden = false;
 					a.nd.onclick = () => {
-						$a.On = c;
+						Notice.On = c;
 						return a.Xk.hidden = true;
 					};
 				}
 			});
-		}, f: $a
+		}, f: Notice
 	};
-	Za.b = true;
-	Za.prototype = {
+	PasswordView.b = true;
+	PasswordView.prototype = {
 		Dc: function () {
 			var a = this.Cb.value;
 			return a.length <= 30 ? a.length > 0 : false;
 		}, C: function () {
 			this.af.disabled = !this.Dc();
-		}, f: Za
+		}, f: PasswordView
 	};
-	Ya.b = true;
-	Ya.prototype = {
+	RoomMenuView.b = true;
+	RoomMenuView.prototype = {
 		Th: function (a, b, c, d) {
 			var e = this;
-			v.xe(a, b.g);
-			b.mg = (a, b) => ia.i(e.mg, a, b);
-			b.ee = a => y.i(e.ee, a);
-			b.Kp = a => ia.i(e.mg, d, a);
-			b.ff = a => y.i(e.ff, a);
+			ViewUtil.xe(a, b.g);
+			b.mg = (a, b) => Mia.i(e.mg, a, b);
+			b.ee = a => Yyy.i(e.ee, a);
+			b.Kp = a => Mia.i(e.mg, d, a);
+			b.ff = a => Yyy.i(e.ff, a);
 		}, Tk: a => {
 			for (var b = [], c = 0; a > c; c++) {
 				var d = c;
@@ -9786,9 +9811,9 @@
 			this.rm.textContent = a.S.w;
 			this.rm.classList.toggle('custom', !a.S.Pe());
 			var e = a.Pc;
-			this.Hl.C(a.I.filter(a => p.fa == a.ea), e, d, c);
-			this.Lj.C(a.I.filter(a => p.xa == a.ea), e, d, c);
-			this.qm.C(a.I.filter(a => p.Ia == a.ea), e, d, c);
+			this.Hl.C(a.I.filter(a => Team.red == a.ea), e, d, c);
+			this.Lj.C(a.I.filter(a => Team.blue == a.ea), e, d, c);
+			this.qm.C(a.I.filter(a => Team.spec == a.ea), e, d, c);
 			this.Rl.disabled = d;
 			if (a.Pc != this.Xh)
 				this.Bj(a.Pc);
@@ -9803,38 +9828,38 @@
 		}, Cj: function (a) {
 			this.ll = a;
 			this.gi.innerHTML = '<i class=\'icon-pause\'></i>' + (this.ll ? 'Resume (P)' : 'Pause (P)');
-		}, f: Ya
+		}, f: RoomMenuView
 	};
-	aa.b = true;
-	aa.prototype = {f: aa};
-	P.b = true;
-	P.prototype = {f: P};
-	Xa.b = true;
-	Xa.prototype = {
+	SettingsView.b = true;
+	SettingsView.prototype = {f: SettingsView};
+	SimpleDialogView.b = true;
+	SimpleDialogView.prototype = {f: SimpleDialogView};
+	StatsView.b = true;
+	StatsView.prototype = {
 		qr: function (a) {
 			this.rg.textContent = a == null ? 'null' : '' + a;
 		}, or: function (a) {
 			this.wp.textContent = '' + a;
 		}, hm: function (a) {
 			this.wo.textContent = a == null ? 'null' : '' + a;
-		}, f: Xa
+		}, f: StatsView
 	};
-	Wa.b = true;
-	Wa.prototype = {f: Wa};
-	q.b = true;
-	q.ma = Error;
-	q.prototype = C(Error.prototype, {f: q});
-	r.b = true;
-	r.Nm = a => {
+	UnsupportedBrowserView.b = true;
+	UnsupportedBrowserView.prototype = {f: UnsupportedBrowserView};
+	GlobalError.b = true;
+	GlobalError.ma = Error;
+	GlobalError.prototype = Extend(Error.prototype, {f: GlobalError});
+	ObjectCastUtil.b = true;
+	ObjectCastUtil.Nm = a => {
 		if (a instanceof Array && a.eb == null)
 			return Array;
 		var b = a.f;
 		if (b != null)
 			return b;
-		a = r.wj(a);
-		return a != null ? r.rn(a) : null;
+		a = ObjectCastUtil.wj(a);
+		return a != null ? ObjectCastUtil.rn(a) : null;
 	};
-	r.Be = (a, b) => {
+	ObjectCastUtil.Be = (a, b) => {
 		if (a == null)
 			return 'null';
 		if (b.length >= 5)
@@ -9847,7 +9872,7 @@
 				return '<function>';
 			case 'object':
 				if (a.eb) {
-					var d = Ab[a.eb];
+					var d = BasnetArr[a.eb];
 					var c = d.nh[a.nb];
 					var e = d[c];
 					if (e.Ae) {
@@ -9855,7 +9880,7 @@
 						for (var c = c + '(', d = [], f = 0, e = e.Ae; e.length > f;) {
 							var g = e[f];
 							++f;
-							d.push(r.Be(a[g], b));
+							d.push(ObjectCastUtil.Be(a[g], b));
 						}
 						return c + d.join(',') + ')';
 					}
@@ -9867,7 +9892,7 @@
 					b += '\t';
 					for (f = 0; c > f; f++) {
 						e = f;
-						d += (e > 0 ? ',' : '') + r.Be(a[e], b);
+						d += (e > 0 ? ',' : '') + ObjectCastUtil.Be(a[e], b);
 					}
 					return d + ']';
 				}
@@ -9887,7 +9912,7 @@
 					if ((!f || a.hasOwnProperty(c)) && c != 'prototype' && c != '__class__' && c != '__super__' && c != '__interfaces__' && c != '__properties__') {
 						if (d.length != 2)
 							d += ', \n';
-						d += b + c + ' : ' + r.Be(a[c], b);
+						d += b + c + ' : ' + ObjectCastUtil.Be(a[c], b);
 					}
 				}
 				b = b.substring(1);
@@ -9898,7 +9923,7 @@
 				return String(a);
 		}
 	};
-	r.ph = (a, b) => {
+	ObjectCastUtil.ph = (a, b) => {
 		if (a == null)
 			return false;
 		if (b == a)
@@ -9907,61 +9932,61 @@
 		if (c != null) {
 			for (var d = 0, e = c.length; e > d; d++) {
 				var f = c[d];
-				if (b == f || r.ph(f, b))
+				if (b == f || ObjectCastUtil.ph(f, b))
 					return true;
 			}
 		}
-		return r.ph(a.ma, b);
+		return ObjectCastUtil.ph(a.ma, b);
 	};
-	r.pn = (a, b) => {
+	ObjectCastUtil.pn = (a, b) => {
 		if (b == null)
 			return false;
 		switch (b) {
 			case Array:
 				return a instanceof Array ? a.eb == null : false;
-			case oc:
+			case objBoolean:
 				return typeof a == 'boolean';
-			case sc:
+			case object2:
 				return true;
-			case z:
+			case objNumber:
 				return typeof a == 'number';
-			case Pb:
+			case object1:
 				return typeof a == 'number' ? a === (a | 0) : false;
 			case String:
 				return typeof a == 'string';
 			default:
 				if (a != null) if (typeof b == 'function') {
-					if (a instanceof b || r.ph(r.Nm(a), b))
+					if (a instanceof b || ObjectCastUtil.ph(ObjectCastUtil.Nm(a), b))
 						return true;
 				}
 				else {
-					if (typeof b == 'object' && r.qn(b) && a instanceof b)
+					if (typeof b == 'object' && ObjectCastUtil.qn(b) && a instanceof b)
 						return true;
 				}
 				else
 					return false;
-				return tc == b && a.b != null || uc == b && a.Gf != null ? true : b == Ab[a.eb];
+				return object3 == b && a.b != null || object4 == b && a.Gf != null ? true : b == BasnetArr[a.eb];
 		}
 	};
-	r.G = (a, b) => {
-		if (r.pn(a, b))
+	ObjectCastUtil.G = (a, b) => {
+		if (ObjectCastUtil.pn(a, b))
 			return a;
-		throw new q('Cannot cast ' + K.ye(a) + ' to ' + K.ye(b));
+		throw new GlobalError('Cannot cast ' + StringOpsInt.ye(a) + ' to ' + StringOpsInt.ye(b));
 	};
-	r.wj = a => {
-		a = r.sn.call(a).slice(8, -1);
+	ObjectCastUtil.wj = a => {
+		a = ObjectCastUtil.toStringObj.call(a).slice(8, -1);
 		return a == 'Object' || a == 'Function' || a == 'Math' || a == 'JSON' ? null : a;
 	};
-	r.qn = a => r.wj(a) != null;
-	r.rn = a => qc[a];
-	hc.b = true;
-	hc.Is = function (a, b) {
+	ObjectCastUtil.qn = a => ObjectCastUtil.wj(a) != null;
+	ObjectCastUtil.rn = a => qc[a];
+	Mhc.b = true;
+	Mhc.sliceBuffer = function (a, b) {
 		var c = new Uint8Array(this, a, b == null ? null : b - a);
 		var d = new Uint8Array(c.byteLength);
 		d.set(c);
 		return d.buffer;
 	};
-	var rc = 0;
+	var rcCounter = 0;
 	if (String.fromCodePoint == null) {
 		String.fromCodePoint = a => a < 65536 ? String.fromCharCode(a) : String.fromCharCode((a >> 10) + 55232) + String.fromCharCode((a & 1023) + 56320);
 	}
@@ -9970,103 +9995,103 @@
 	Array.b = true;
 	Date.prototype.f = Date;
 	Date.b = 'Date';
-	var Pb = {};
-	var sc = {};
-	var z = Number;
-	var oc = Boolean;
-	var tc = {};
-	var uc = {};
-	p.Ia = new p(0, 16777215, 0, -1, 'Spectators', 't-spec', 0, 0);
-	p.fa = new p(1, 15035990, -1, 8, 'Red', 't-red', 0, 2);
-	p.xa = new p(2, 5671397, 1, 16, 'Blue', 't-blue', 0, 4);
-	p.Ia.pg = p.Ia;
-	p.fa.pg = p.xa;
-	p.xa.pg = p.fa;
-	Object.defineProperty(q.prototype, 'message', {
+	var object1 = {};
+	var object2 = {};
+	var objNumber = Number;
+	var objBoolean = Boolean;
+	var object3 = {};
+	var object4 = {};
+	Team.spec = new Team(0, 16777215, 0, -1, 'Spectators', 't-spec', 0, 0);
+	Team.red = new Team(1, 15035990, -1, 8, 'Red', 't-red', 0, 2);
+	Team.blue = new Team(2, 5671397, 1, 16, 'Blue', 't-blue', 0, 4);
+	Team.spec.enemyTeam = Team.spec;
+	Team.red.enemyTeam = Team.blue;
+	Team.blue.enemyTeam = Team.red;
+	Object.defineProperty(GlobalError.prototype, 'message', {
 		get: function () {
 			return String(this.Ta);
 		}
 	});
 	if (ArrayBuffer.prototype.slice == null)
-		ArrayBuffer.prototype.slice = hc.Is;
-	Va.Yn = {mandatory: {OfferToReceiveAudio: false, OfferToReceiveVideo: false}};
-	I.qh = {name: 'ECDSA', namedCurve: 'P-256'};
-	I.mm = {name: 'ECDSA', hash: {name: 'SHA-256'}};
-	Ba.Uo = ['click-rail', 'drag-thumb', 'wheel', 'touch'];
-	m.Qm = new Map;
-	m.yf = 0;
-	Ua.za = m.Fa({Ba: false, Aa: false});
-	ya.zc = 0;
-	Zb.Km = [{name: 'ro', reliable: true, kj: true}, {name: 'ru', reliable: true, kj: false}, {name: 'uu', reliable: false, kj: false}];
-	M.vj = 'application/x-www-form-urlencoded';
-	Ha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
-	n.Vr = 'wss://p2p.haxball.com/';
-	n.Ee = 'https://www.haxball.com/rs/';
-	n.Vf = [{urls: 'stun:stun.l.google.com:19302'}];
-	n.A = new Yb;
-	O.Yk = (() => {
+		ArrayBuffer.prototype.slice = Mhc.sliceBuffer;
+	IceVa.mediaConstraints = {mandatory: {OfferToReceiveAudio: false, OfferToReceiveVideo: false}};
+	Dii.ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-256'};
+	Dii.ecdsaParams = {name: 'ECDSA', hash: {name: 'SHA-256'}};
+	Dba.scrollHandlers = ['click-rail', 'drag-thumb', 'wheel', 'touch'];
+	Manager.yfMap = new Map;
+	Manager.yf = 0;
+	Dua.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mya.zc = 0;
+	RoRuUu.Km = [{name: 'ro', reliable: true, kj: true}, {name: 'ru', reliable: true, kj: false}, {name: 'uu', reliable: false, kj: false}];
+	WebserverApiOps.vj = 'application/x-www-form-urlencoded';
+	Dha.ab = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
+	ConnectionConstants.p2pWss = 'wss://p2p.haxball.com/';
+	ConnectionConstants.rsUrl = 'https://www.haxball.com/rs/';
+	ConnectionConstants.stuns = [{urls: 'stun:stun.l.google.com:19302'}];
+	ConnectionConstants.buildsStorageMInst = new BuildsStorageM;
+	Game.pointsMaxArray = (() => {
 		for (var a = [], b = 0; b < 256; b++)
-			a.push(new H(0, 0));
+			a.push(new Point(0, 0));
 		return a;
 	})(this);
-	O.dk = (() => {
+	Game.idsMaxArray = (() => {
 		for (var a = [], b = 0; b < 256; b++)
 			a.push(0);
 		return a;
 	})(this);
-	h.Fr = w.ha(1024);
-	ta.za = m.Fa({Ba: false, Aa: false});
-	rb.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
-	Qa.za = m.Fa({Ba: false, Aa: false});
-	da.za = m.Fa({Ba: false, Aa: false});
-	sa.za = m.Fa({Ba: false, Aa: false});
-	ra.za = m.Fa({Ba: false, Aa: false});
-	S.za = m.Fa({Ba: false, Aa: false});
-	qa.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 2000}});
-	Pa.za = m.Fa({Ba: false, Aa: false});
-	pa.za = m.Fa({Ba: false, Aa: false});
-	oa.za = m.Fa({Ba: false, Aa: false});
-	qb.za = m.Fa({Ba: false, Aa: false});
-	Oa.za = m.Fa({});
-	Na.za = m.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
-	Ga.za = m.Fa({});
-	na.za = m.Fa({Ba: false, Aa: false});
-	Y.za = m.Fa({Ba: false, Aa: false});
-	pb.za = m.Fa({Ba: false, Aa: false});
-	ob.za = m.Fa({Ba: false, Aa: false});
-	ma.za = m.Fa({Ba: false, Aa: false});
-	Ma.za = m.Fa({Ba: false, Aa: false});
-	La.za = m.Fa({Ba: false, Aa: false});
-	la.za = m.Fa({Ba: false, Aa: false});
-	E.mn = .17435839227423353;
-	E.ln = 5.934119456780721;
-	R.jn = new Ib([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
-	R.kn = new Ib([0, -1, 3, 0, 0, .35, 0, 0, 0, 0, .65, 0, 0, 1, 3, 1]);
-	mb.N = '<div class=\'dialog change-location-view\'><h1>Change Location</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'change\'>Change</button><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
-	Da.N = '<div class=\'chatbox-view\'><div data-hook=\'log\' class=\'log\'><p>Controls:<br/>Move: WASD or Arrows<br/>Kick: X, Space, Ctrl, Shift, Numpad 0<br/>View: Numbers 1 to 4</p></div><div class=\'autocompletebox\' data-hook=\'autocompletebox\'></div><div class=\'input\'><input data-hook=\'input\' type=\'text\' /><button data-hook=\'send\'>Send</button></div></div>';
-	kb.N = '<div class=\'choose-nickname-view\'><img src="images/haxball.png" /><div class=\'dialog\'><h1>Choose nickname</h1><div class=\'label-input\'><label>Nick:</label><input data-hook=\'input\' type=\'text\' /></div><button data-hook=\'ok\'>Ok</button></div></div>';
-	jb.N = '<div class=\'connecting-view\'><div class=\'dialog\'><h1>Connecting</h1><div class=\'connecting-view-log\' data-hook=\'log\'></div><button data-hook=\'cancel\'>Cancel</button></div></div>';
-	ib.N = '<div class=\'create-room-view\'><div class=\'dialog\'><h1>Create room</h1><div class=\'label-input\'><label>Room name:</label><input data-hook=\'name\' required /></div><div class=\'label-input\'><label>Password:</label><input data-hook=\'pass\' /></div><div class=\'label-input\'><label>Max players:</label><select data-hook=\'max-pl\'></select></div><button data-hook=\'unlisted\'></button><div class=\'row\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'create\'>Create</button></div></div></div>';
-	Ka.N = '<div class=\'disconnected-view\'><div class=\'dialog basic-dialog\'><h1>Disconnected</h1><p data-hook=\'reason\'></p><div class=\'buttons\'><button data-hook=\'ok\'>Ok</button><button data-hook=\'replay\'>Save replay</button></div></div></div>';
-	hb.N = '<div class=\'game-state-view\'><div class=\'bar-container\'><div class=\'bar\'><div class=\'scoreboard\'><div class=\'teamicon red\'></div><div class=\'score\' data-hook=\'red-score\'>0</div><div>-</div><div class=\'score\' data-hook=\'blue-score\'>0</div><div class=\'teamicon blue\'></div></div><div data-hook=\'timer\'></div></div></div><div class=\'canvas\' data-hook=\'canvas\'></div></div>';
-	ja.N = '<div class=\'game-view\' tabindex=\'-1\'><div class=\'top-section\' data-hook=\'gameplay-section\'></div><div class=\'bottom-section\'><div data-hook=\'stats\'></div><div data-hook=\'chatbox\'></div><div class=\'buttons\'><button data-hook=\'menu\'><i class=\'icon-menu\'></i>Menu<span class=\'tooltip\'>Toggle room menu [Escape]</span></button><button data-hook=\'settings\'><i class=\'icon-cog\'></i>Settings</button></div></div><div data-hook=\'popups\'></div></div>';
-	gb.N = '<div class=\'dialog kick-player-view\'><h1 data-hook=\'title\'></h1><div class=label-input><label>Reason: </label><input type=\'text\' data-hook=\'reason\' /></div><button data-hook=\'ban-btn\'><i class=\'icon-block\'></i>Ban from rejoining: <span data-hook=\'ban-text\'></span></button><div class="row"><button data-hook=\'close\'>Cancel</button><button data-hook=\'kick\'>Kick</button></div></div>';
-	fb.N = '<div class=\'dialog basic-dialog leave-room-view\'><h1>Leave room?</h1><p>Are you sure you want to leave the room?</p><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'leave\'><i class=\'icon-logout\'></i>Leave</button></div></div>';
-	eb.N = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
-	db.N = '<div class=\'dialog\' style=\'min-width:200px\'><h1 data-hook=\'name\'></h1><button data-hook=\'admin\'></button><button data-hook=\'kick\'>Kick</button><button data-hook=\'close\'>Close</button></div>';
-	cb.N = '<div class=\'player-list-item\'><div data-hook=\'flag\' class=\'flagico\'></div><div data-hook=\'name\'></div><div data-hook=\'ping\'></div></div>';
-	za.N = '<div class=\'player-list-view\'><div class=\'buttons\'><button data-hook=\'join-btn\'>Join</button><button data-hook=\'reset-btn\' class=\'admin-only\'></button></div><div class=\'list\' data-hook=\'list\'></div></div>';
-	ha.N = '<div class=\'replay-controls-view\'><button data-hook=\'reset\'><i class=\'icon-to-start\'></i></button><button data-hook=\'play\'><i data-hook=\'playicon\'></i></button><div data-hook=\'spd\'>1x</div><button data-hook=\'spddn\'>-</button><button data-hook=\'spdup\'>+</button><div data-hook=\'time\'>00:00</div><div class=\'timebar\' data-hook=\'timebar\'><div class=\'barbg\'><div class=\'bar\' data-hook=\'progbar\'></div></div><div class=\'timetooltip\' data-hook=\'timetooltip\'></div></div><button data-hook=\'leave\'>Leave</button></div>';
-	bb.N = '<div class=\'dialog basic-dialog room-link-view\'><h1>Room link</h1><p>Use this url to link others directly into this room.</p><input data-hook=\'link\' readonly></input><div class=\'buttons\'><button data-hook=\'close\'>Close</button><button data-hook=\'copy\'>Copy to clipboard</button></div></div>';
-	ab.tj = '<tr><td><span data-hook=\'tag\'></span><span data-hook=\'name\'></span></td><td data-hook=\'players\'></td><td data-hook=\'pass\'></td><td><div data-hook=\'flag\' class=\'flagico\'></div><span data-hook=\'distance\'></span></td></tr>';
-	Aa.tj = '<div class=\'roomlist-view\'><div class=\'notice\' data-hook=\'notice\' hidden><div data-hook=\'notice-contents\'>Testing the notice.</div><div data-hook=\'notice-close\'><i class=\'icon-cancel\'></i></div></div><div class=\'dialog\'><h1>Room list</h1><p>Tip: Join rooms near you to reduce lag.</p><div class=\'splitter\'><div class=\'list\'><table class=\'header\'><colgroup><col><col><col><col></colgroup><thead><tr><td>Name</td><td>Players</td><td>Pass</td><td>Distance</td></tr></thead></table><div class=\'separator\'></div><div class=\'content\' data-hook=\'listscroll\'><table><colgroup><col><col><col><col></colgroup><tbody data-hook=\'list\'></tbody></table></div><div class=\'filters\'><span class=\'bool\' data-hook=\'fil-pass\'>Show locked <i></i></span><span class=\'bool\' data-hook=\'fil-full\'>Show full <i></i></span></div></div><div class=\'buttons\'><button data-hook=\'refresh\'><i class=\'icon-cw\'></i><div>Refresh</div></button><button data-hook=\'join\'><i class=\'icon-login\'></i><div>Join Room</div></button><button data-hook=\'create\'><i class=\'icon-plus\'></i><div>Create Room</div></button><div class=\'spacer\'></div><div class=\'file-btn\'><label for=\'replayfile\'><i class=\'icon-play\'></i><div>Replays</div></label><input id=\'replayfile\' type=\'file\' accept=\'.hbr2\' data-hook=\'replayfile\'/></div><button data-hook=\'settings\'><i class=\'icon-cog\'></i><div>Settings</div></button><button data-hook=\'changenick\'><i class=\'icon-cw\'></i><div>Change Nick</div></button></div></div><p data-hook=\'count\'></p></div></div>';
-	Za.N = '<div class=\'room-password-view\'><div class=\'dialog\'><h1>Password required</h1><div class=\'label-input\'><label>Password:</label><input data-hook=\'input\' /></div><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'ok\'>Ok</button></div></div></div>';
-	Ya.N = '<div class=\'room-view\'><div class=\'container\'><h1 data-hook=\'room-name\'></h1><div class=\'header-btns\'><button data-hook=\'rec-btn\'><i class=\'icon-circle\'></i>Rec</button><button data-hook=\'link-btn\'><i class=\'icon-link\'></i>Link</button><button data-hook=\'leave-btn\'><i class=\'icon-logout\'></i>Leave</button></div><div class=\'teams\'><div class=\'tools admin-only\'><button data-hook=\'auto-btn\'>Auto</button><button data-hook=\'rand-btn\'>Rand</button><button data-hook=\'lock-btn\'>Lock</button><button data-hook=\'reset-all-btn\'>Reset</button></div><div data-hook=\'red-list\'></div><div data-hook=\'spec-list\'></div><div data-hook=\'blue-list\'></div><div class=\'spacer admin-only\'></div></div><div class=\'settings\'><div><label class=\'lbl\'>Time limit</label><select data-hook=\'time-limit-sel\'></select></div><div><label class=\'lbl\'>Score limit</label><select data-hook=\'score-limit-sel\'></select></div><div><label class=\'lbl\'>Stadium</label><label class=\'val\' data-hook=\'stadium-name\'>testing the stadium name</label><button class=\'admin-only\' data-hook=\'stadium-pick\'>Pick</button></div></div><div class=\'controls admin-only\'><button data-hook=\'start-btn\'><i class=\'icon-play\'></i>Start game</button><button data-hook=\'stop-btn\'><i class=\'icon-stop\'></i>Stop game</button><button data-hook=\'pause-btn\'><i class=\'icon-pause\'></i>Pause</button></div></div></div>';
-	aa.N = '<div class=\'dialog settings-view\'><h1>Settings</h1><button data-hook=\'close\'>Close</button><div class=\'tabs\'><button data-hook=\'soundbtn\'>Sound</button><button data-hook=\'videobtn\'>Video</button><button data-hook=\'inputbtn\'>Input</button><button data-hook=\'miscbtn\'>Misc</button></div><div data-hook=\'presskey\' tabindex=\'-1\'><div>Press a key</div></div><div class=\'tabcontents\'><div class=\'section\' data-hook=\'miscsec\'><div class=\'loc\' data-hook=\'loc\'></div><div class=\'loc\' data-hook=\'loc-ovr\'></div><button data-hook=\'loc-ovr-btn\'></button></div><div class=\'section\' data-hook=\'soundsec\'><div data-hook="tsound-main">Sounds enabled</div><div data-hook="tsound-chat">Chat sound enabled</div><div data-hook="tsound-highlight">Nick highlight sound enabled</div><div data-hook="tsound-crowd">Crowd sound enabled</div></div><div class=\'section\' data-hook=\'inputsec\'></div><div class=\'section\' data-hook=\'videosec\'><div>Viewport Mode:<select data-hook=\'viewmode\'><option>Dynamic</option><option>Restricted 840x410</option><option>Full 1x Zoom</option><option>Full 1.25x Zoom</option><option>Full 1.5x Zoom</option><option>Full 1.75x Zoom</option><option>Full 2x Zoom</option><option>Full 2.25x Zoom</option><option>Full 2.5x Zoom</option></select></div><div>FPS Limit:<select data-hook=\'fps\'><option>None (Recommended)</option><option>30</option></select></div><div>Resolution Scaling:<select data-hook=\'resscale\'><option>100%</option><option>75%</option><option>50%</option><option>25%</option></select></div><div data-hook="tvideo-teamcol">Custom team colors enabled</div><div data-hook="tvideo-showindicators">Show chat indicators</div><div data-hook="tvideo-showavatars">Show player avatars</div></div></div></div>';
-	aa.$l = 0;
-	P.N = '<div class=\'simple-dialog-view\'><div class=\'dialog basic-dialog\'><h1 data-hook=\'title\'></h1><p data-hook=\'content\'></p><div class=\'buttons\' data-hook=\'buttons\'></div></div></div>';
-	Xa.N = '<div class=\'stats-view\'><p>Ping: <span data-hook=\'ping\'></span></p><p>Max Ping: <span data-hook=\'max-ping\'></span></p><p>Fps: <span data-hook=\'fps\'></span></p><div data-hook=\'graph\'></div></div>';
-	Wa.N = '<div class=\'unsupported-browser-view\'><div class=\'dialog\'><h1>Unsupported Browser</h1><p>Sorry! Your browser doesn\'t yet implement some features which are required for HaxBall to work.</p><p>The missing features are: <span data-hook=\'features\'></span></p><h2>Recommended browsers:</h2><div><a href="https://www.mozilla.org/firefox/new/"><img src="images/firefox-icon.png"/>Firefox</a></div><div><a href="https://www.google.com/chrome/"><img src="images/chrome-icon.png"/>Chrome</a></div><div><a href="http://www.opera.com/"><img src="images/opera-icon.png"/>Opera</a></div></div></div>';
-	r.sn = {}.toString;
-	u.qp();
+	Stadium.streamWriterInst = StreamWriter.ha(1024);
+	Mta.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mrb.configProp = Manager.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
+	Dqa.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mda.configProp = Manager.Fa({Ba: false, Aa: false});
+	Msa.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mra.configProp = Manager.Fa({Ba: false, Aa: false});
+	Dss.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mqa.configProp = Manager.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 2000}});
+	TeamColorsUtil.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mpa.configProp = Manager.Fa({Ba: false, Aa: false});
+	Moa.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mqb.configProp = Manager.Fa({Ba: false, Aa: false});
+	Doa.configProp = Manager.Fa({});
+	Dna.configProp = Manager.Fa({Ba: false, Aa: false, oj: {$i: 10, uj: 900}});
+	Dga.configProp = Manager.Fa({});
+	Mna.configProp = Manager.Fa({Ba: false, Aa: false});
+	Dyy.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mpb.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mob.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mma.configProp = Manager.Fa({Ba: false, Aa: false});
+	Dma.configProp = Manager.Fa({Ba: false, Aa: false});
+	Dla.configProp = Manager.Fa({Ba: false, Aa: false});
+	Mla.configProp = Manager.Fa({Ba: false, Aa: false});
+	Segment.segVal1 = .17435839227423353;
+	Segment.segVal2 = 5.934119456780721;
+	BigAnimatedText.keyFrames1 = new KeyFramesManager([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
+	BigAnimatedText.keyFrames2 = new KeyFramesManager([0, -1, 3, 0, 0, .35, 0, 0, 0, 0, .65, 0, 0, 1, 3, 1]);
+	ChangeLocationView.htmlContents = '<div class=\'dialog change-location-view\'><h1>Change Location</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'change\'>Change</button><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
+	ChatboxView.htmlContents = '<div class=\'chatbox-view\'><div data-hook=\'log\' class=\'log\'><p>Controls:<br/>Move: WASD or Arrows<br/>Kick: X, Space, Ctrl, Shift, Numpad 0<br/>View: Numbers 1 to 4</p></div><div class=\'autocompletebox\' data-hook=\'autocompletebox\'></div><div class=\'input\'><input data-hook=\'input\' type=\'text\' /><button data-hook=\'send\'>Send</button></div></div>';
+	ChooseNicknameView.htmlContents = '<div class=\'choose-nickname-view\'><img src="images/haxball.png" /><div class=\'dialog\'><h1>Choose nickname</h1><div class=\'label-input\'><label>Nick:</label><input data-hook=\'input\' type=\'text\' /></div><button data-hook=\'ok\'>Ok</button></div></div>';
+	ConnectingView.htmlContents = '<div class=\'connecting-view\'><div class=\'dialog\'><h1>Connecting</h1><div class=\'connecting-view-log\' data-hook=\'log\'></div><button data-hook=\'cancel\'>Cancel</button></div></div>';
+	CreateRoomView.htmlContents = '<div class=\'create-room-view\'><div class=\'dialog\'><h1>Create room</h1><div class=\'label-input\'><label>Room name:</label><input data-hook=\'name\' required /></div><div class=\'label-input\'><label>Password:</label><input data-hook=\'pass\' /></div><div class=\'label-input\'><label>Max players:</label><select data-hook=\'max-pl\'></select></div><button data-hook=\'unlisted\'></button><div class=\'row\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'create\'>Create</button></div></div></div>';
+	DisconnectedView.htmlContents = '<div class=\'disconnected-view\'><div class=\'dialog basic-dialog\'><h1>Disconnected</h1><p data-hook=\'reason\'></p><div class=\'buttons\'><button data-hook=\'ok\'>Ok</button><button data-hook=\'replay\'>Save replay</button></div></div></div>';
+	GameStateView.htmlContents = '<div class=\'game-state-view\'><div class=\'bar-container\'><div class=\'bar\'><div class=\'scoreboard\'><div class=\'teamicon red\'></div><div class=\'score\' data-hook=\'red-score\'>0</div><div>-</div><div class=\'score\' data-hook=\'blue-score\'>0</div><div class=\'teamicon blue\'></div></div><div data-hook=\'timer\'></div></div></div><div class=\'canvas\' data-hook=\'canvas\'></div></div>';
+	GameView.htmlContents = '<div class=\'game-view\' tabindex=\'-1\'><div class=\'top-section\' data-hook=\'gameplay-section\'></div><div class=\'bottom-section\'><div data-hook=\'stats\'></div><div data-hook=\'chatbox\'></div><div class=\'buttons\'><button data-hook=\'menu\'><i class=\'icon-menu\'></i>Menu<span class=\'tooltip\'>Toggle room menu [Escape]</span></button><button data-hook=\'settings\'><i class=\'icon-cog\'></i>Settings</button></div></div><div data-hook=\'popups\'></div></div>';
+	KickPlayerView.htmlContents = '<div class=\'dialog kick-player-view\'><h1 data-hook=\'title\'></h1><div class=label-input><label>Reason: </label><input type=\'text\' data-hook=\'reason\' /></div><button data-hook=\'ban-btn\'><i class=\'icon-block\'></i>Ban from rejoining: <span data-hook=\'ban-text\'></span></button><div class="row"><button data-hook=\'close\'>Cancel</button><button data-hook=\'kick\'>Kick</button></div></div>';
+	LeaveRoomView.htmlContents = '<div class=\'dialog basic-dialog leave-room-view\'><h1>Leave room?</h1><p>Are you sure you want to leave the room?</p><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'leave\'><i class=\'icon-logout\'></i>Leave</button></div></div>';
+	PickStadiumView.htmlContents = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
+	PlayerMenuView.htmlContents = '<div class=\'dialog\' style=\'min-width:200px\'><h1 data-hook=\'name\'></h1><button data-hook=\'admin\'></button><button data-hook=\'kick\'>Kick</button><button data-hook=\'close\'>Close</button></div>';
+	PlayerListItem.htmlContents = '<div class=\'player-list-item\'><div data-hook=\'flag\' class=\'flagico\'></div><div data-hook=\'name\'></div><div data-hook=\'ping\'></div></div>';
+	PlayerListView.htmlContents = '<div class=\'player-list-view\'><div class=\'buttons\'><button data-hook=\'join-btn\'>Join</button><button data-hook=\'reset-btn\' class=\'admin-only\'></button></div><div class=\'list\' data-hook=\'list\'></div></div>';
+	ReplayControlsView.htmlContents = '<div class=\'replay-controls-view\'><button data-hook=\'reset\'><i class=\'icon-to-start\'></i></button><button data-hook=\'play\'><i data-hook=\'playicon\'></i></button><div data-hook=\'spd\'>1x</div><button data-hook=\'spddn\'>-</button><button data-hook=\'spdup\'>+</button><div data-hook=\'time\'>00:00</div><div class=\'timebar\' data-hook=\'timebar\'><div class=\'barbg\'><div class=\'bar\' data-hook=\'progbar\'></div></div><div class=\'timetooltip\' data-hook=\'timetooltip\'></div></div><button data-hook=\'leave\'>Leave</button></div>';
+	RoomLinkView.htmlContents = '<div class=\'dialog basic-dialog room-link-view\'><h1>Room link</h1><p>Use this url to link others directly into this room.</p><input data-hook=\'link\' readonly></input><div class=\'buttons\'><button data-hook=\'close\'>Close</button><button data-hook=\'copy\'>Copy to clipboard</button></div></div>';
+	RoomListHeader.tj = '<tr><td><span data-hook=\'tag\'></span><span data-hook=\'name\'></span></td><td data-hook=\'players\'></td><td data-hook=\'pass\'></td><td><div data-hook=\'flag\' class=\'flagico\'></div><span data-hook=\'distance\'></span></td></tr>';
+	RoomListView.tj = '<div class=\'roomlist-view\'><div class=\'notice\' data-hook=\'notice\' hidden><div data-hook=\'notice-contents\'>Testing the notice.</div><div data-hook=\'notice-close\'><i class=\'icon-cancel\'></i></div></div><div class=\'dialog\'><h1>Room list</h1><p>Tip: Join rooms near you to reduce lag.</p><div class=\'splitter\'><div class=\'list\'><table class=\'header\'><colgroup><col><col><col><col></colgroup><thead><tr><td>Name</td><td>Players</td><td>Pass</td><td>Distance</td></tr></thead></table><div class=\'separator\'></div><div class=\'content\' data-hook=\'listscroll\'><table><colgroup><col><col><col><col></colgroup><tbody data-hook=\'list\'></tbody></table></div><div class=\'filters\'><span class=\'bool\' data-hook=\'fil-pass\'>Show locked <i></i></span><span class=\'bool\' data-hook=\'fil-full\'>Show full <i></i></span></div></div><div class=\'buttons\'><button data-hook=\'refresh\'><i class=\'icon-cw\'></i><div>Refresh</div></button><button data-hook=\'join\'><i class=\'icon-login\'></i><div>Join Room</div></button><button data-hook=\'create\'><i class=\'icon-plus\'></i><div>Create Room</div></button><div class=\'spacer\'></div><div class=\'file-btn\'><label for=\'replayfile\'><i class=\'icon-play\'></i><div>Replays</div></label><input id=\'replayfile\' type=\'file\' accept=\'.hbr2\' data-hook=\'replayfile\'/></div><button data-hook=\'settings\'><i class=\'icon-cog\'></i><div>Settings</div></button><button data-hook=\'changenick\'><i class=\'icon-cw\'></i><div>Change Nick</div></button></div></div><p data-hook=\'count\'></p></div></div>';
+	PasswordView.htmlContents = '<div class=\'room-password-view\'><div class=\'dialog\'><h1>Password required</h1><div class=\'label-input\'><label>Password:</label><input data-hook=\'input\' /></div><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'ok\'>Ok</button></div></div></div>';
+	RoomMenuView.htmlContents = '<div class=\'room-view\'><div class=\'container\'><h1 data-hook=\'room-name\'></h1><div class=\'header-btns\'><button data-hook=\'rec-btn\'><i class=\'icon-circle\'></i>Rec</button><button data-hook=\'link-btn\'><i class=\'icon-link\'></i>Link</button><button data-hook=\'leave-btn\'><i class=\'icon-logout\'></i>Leave</button></div><div class=\'teams\'><div class=\'tools admin-only\'><button data-hook=\'auto-btn\'>Auto</button><button data-hook=\'rand-btn\'>Rand</button><button data-hook=\'lock-btn\'>Lock</button><button data-hook=\'reset-all-btn\'>Reset</button></div><div data-hook=\'red-list\'></div><div data-hook=\'spec-list\'></div><div data-hook=\'blue-list\'></div><div class=\'spacer admin-only\'></div></div><div class=\'settings\'><div><label class=\'lbl\'>Time limit</label><select data-hook=\'time-limit-sel\'></select></div><div><label class=\'lbl\'>Score limit</label><select data-hook=\'score-limit-sel\'></select></div><div><label class=\'lbl\'>Stadium</label><label class=\'val\' data-hook=\'stadium-name\'>testing the stadium name</label><button class=\'admin-only\' data-hook=\'stadium-pick\'>Pick</button></div></div><div class=\'controls admin-only\'><button data-hook=\'start-btn\'><i class=\'icon-play\'></i>Start game</button><button data-hook=\'stop-btn\'><i class=\'icon-stop\'></i>Stop game</button><button data-hook=\'pause-btn\'><i class=\'icon-pause\'></i>Pause</button></div></div></div>';
+	SettingsView.htmlContents = '<div class=\'dialog settings-view\'><h1>Settings</h1><button data-hook=\'close\'>Close</button><div class=\'tabs\'><button data-hook=\'soundbtn\'>Sound</button><button data-hook=\'videobtn\'>Video</button><button data-hook=\'inputbtn\'>Input</button><button data-hook=\'miscbtn\'>Misc</button></div><div data-hook=\'presskey\' tabindex=\'-1\'><div>Press a key</div></div><div class=\'tabcontents\'><div class=\'section\' data-hook=\'miscsec\'><div class=\'loc\' data-hook=\'loc\'></div><div class=\'loc\' data-hook=\'loc-ovr\'></div><button data-hook=\'loc-ovr-btn\'></button></div><div class=\'section\' data-hook=\'soundsec\'><div data-hook="tsound-main">Sounds enabled</div><div data-hook="tsound-chat">Chat sound enabled</div><div data-hook="tsound-highlight">Nick highlight sound enabled</div><div data-hook="tsound-crowd">Crowd sound enabled</div></div><div class=\'section\' data-hook=\'inputsec\'></div><div class=\'section\' data-hook=\'videosec\'><div>Viewport Mode:<select data-hook=\'viewmode\'><option>Dynamic</option><option>Restricted 840x410</option><option>Full 1x Zoom</option><option>Full 1.25x Zoom</option><option>Full 1.5x Zoom</option><option>Full 1.75x Zoom</option><option>Full 2x Zoom</option><option>Full 2.25x Zoom</option><option>Full 2.5x Zoom</option></select></div><div>FPS Limit:<select data-hook=\'fps\'><option>None (Recommended)</option><option>30</option></select></div><div>Resolution Scaling:<select data-hook=\'resscale\'><option>100%</option><option>75%</option><option>50%</option><option>25%</option></select></div><div data-hook="tvideo-teamcol">Custom team colors enabled</div><div data-hook="tvideo-showindicators">Show chat indicators</div><div data-hook="tvideo-showavatars">Show player avatars</div></div></div></div>';
+	SettingsView.$l = 0;
+	SimpleDialogView.htmlContents = '<div class=\'simple-dialog-view\'><div class=\'dialog basic-dialog\'><h1 data-hook=\'title\'></h1><p data-hook=\'content\'></p><div class=\'buttons\' data-hook=\'buttons\'></div></div></div>';
+	StatsView.htmlContents = '<div class=\'stats-view\'><p>Ping: <span data-hook=\'ping\'></span></p><p>Max Ping: <span data-hook=\'max-ping\'></span></p><p>Fps: <span data-hook=\'fps\'></span></p><div data-hook=\'graph\'></div></div>';
+	UnsupportedBrowserView.htmlContents = '<div class=\'unsupported-browser-view\'><div class=\'dialog\'><h1>Unsupported Browser</h1><p>Sorry! Your browser doesn\'t yet implement some features which are required for HaxBall to work.</p><p>The missing features are: <span data-hook=\'features\'></span></p><h2>Recommended browsers:</h2><div><a href="https://www.mozilla.org/firefox/new/"><img src="images/firefox-icon.png"/>Firefox</a></div><div><a href="https://www.google.com/chrome/"><img src="images/chrome-icon.png"/>Chrome</a></div><div><a href="http://www.opera.com/"><img src="images/opera-icon.png"/>Opera</a></div></div></div>';
+	ObjectCastUtil.toStringObj = {}.toString;
+	Muu.qpDisplay();
 })(typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : typeof self != 'undefined' ? self : this);
