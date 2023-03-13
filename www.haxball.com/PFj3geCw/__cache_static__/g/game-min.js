@@ -1256,9 +1256,9 @@
 
 	function Ub(a) {
 		function b(b) {
-			return new Promise((d, f) => {
+			return new Promise((resolve, reject) => {
 				var e = a.file(b).asArrayBuffer();
-				return c.c.decodeAudioData(e, d, f);
+				return c.c.decodeAudioData(e, resolve, reject);
 			});
 		}
 
@@ -1267,11 +1267,19 @@
 		this.ag = this.c.createGain();
 		this.im(n.A.pm.L() ? 1 : 0);
 		this.ag.connect(this.c.destination);
-		this.ro = Promise.all([b('sounds/chat.ogg').then(a => c.Rj = a), b('sounds/highlight.wav').then(a => c.zk = a), b('sounds/kick.ogg').then(a => c.bp = a), b('sounds/goal.ogg').then(a => c.Io = a), b('sounds/join.ogg').then(a => c.$o = a), b('sounds/leave.ogg').then(a => c.ep = a), b('sounds/crowd.ogg').then(a => {
-			c.ho = a;
-			c.Xj = new Tb(c.ho, c.c);
-			c.Xj.connect(c.ag);
-		})]);
+		this.ro = Promise.all([
+			b('sounds/chat.ogg').then(a => c.Rj = a),
+			b('sounds/highlight.wav').then(a => c.zk = a),
+			b('sounds/kick.ogg').then(a => c.bp = a),
+			b('sounds/goal.ogg').then(a => c.Io = a),
+			b('sounds/join.ogg').then(a => c.$o = a),
+			b('sounds/leave.ogg').then(a => c.ep = a),
+			b('sounds/crowd.ogg').then(a => {
+				c.ho = a;
+				c.Xj = new Tb(c.ho, c.c);
+				c.Xj.connect(c.ag);
+			})
+		]);
 	}
 
 	function Z() {
@@ -1921,8 +1929,8 @@
 		this.Vc = [];
 		var d = this;
 		this.Ra = new RTCPeerConnection({iceServers: b}, Va.Yn);
-		this.Sh = new Promise(a => {
-			d.Vo = a;
+		this.Sh = new Promise(resolve => {
+			d.Vo = resolve;
 		});
 		this.Ra.onicecandidate = a => {
 			if (a.candidate == null) {
@@ -3081,16 +3089,16 @@
 	Ja.gp = () => {
 		if (Ja.li != null)
 			return Ja.li;
-		Ja.li = new Promise((a, b) => {
+		Ja.li = new Promise((resolve, reject) => {
 			var c = window.grecaptcha;
 			if (c != null)
-				a(c);
+				resolve(c);
 			else {
 				c = window.document.createElement('script');
 				c.src = 'https://www.google.com/recaptcha/api.js?onload=___recaptchaload&render=explicit';
 				window.document.head.appendChild(c);
-				window.___recaptchaload = () => a(window.grecaptcha);
-				c.onerror = () => b(null);
+				window.___recaptchaload = () => resolve(window.grecaptcha);
+				c.onerror = () => reject(null);
 			}
 		});
 		return Ja.li;
@@ -3114,11 +3122,11 @@
 			var d = a.createAnswer;
 			a.createOffer = function (a) {
 				var b = this;
-				return new Promise((d, e) => c.call(b, d, e, a));
+				return new Promise((resolve, reject) => c.call(b, resolve, reject, a));
 			};
 			a.createAnswer = function (a) {
 				var b = this;
-				return new Promise((c, e) => d.call(b, c, e, a));
+				return new Promise((resolve, reject) => d.call(b, resolve, reject, a));
 			};
 		}
 	};
@@ -3170,19 +3178,19 @@
 		}
 	};
 	zb.b = true;
-	zb.eh = a => new Promise((b, c) => {
-		a.onsuccess = () => b(a.result);
-		a.onerror = c;
+	zb.eh = a => new Promise((resolve, reject) => {
+		a.onsuccess = () => resolve(a.result);
+		a.onerror = reject;
 	});
 	lc.b = true;
-	lc.Dr = (a, b) => new Promise((c, d) => {
-		var e = window.setTimeout(() => d('Timed out'), b);
+	lc.Dr = (a, b) => new Promise((resolve, reject) => {
+		var e = window.setTimeout(() => reject('Timed out'), b);
 		a.then(a => {
 			window.clearTimeout(e);
-			c(a);
+			resolve(a);
 		}, a => {
 			window.clearTimeout(e);
-			d(a);
+			reject(a);
 		});
 	});
 	m.b = true;
@@ -4045,21 +4053,21 @@
 	H.b = true;
 	H.prototype = {f: H};
 	M.b = true;
-	M.Pl = (a, b, c, d, e) => new Promise((f, g) => {
+	M.Pl = (a, b, c, d, e) => new Promise((resolve, reject) => {
 		var k = new XMLHttpRequest;
 		k.open(b, a);
 		k.responseType = c;
 		k.onload = () => {
 			if (k.status >= 200 && k.status < 300) {
 				if (k.response != null)
-					f(k.response);
+					resolve(k.response);
 				else
-					g(null);
+					reject(null);
 			}
 			else
-				g('status: ' + k.status);
+				reject('status: ' + k.status);
 		};
-		k.onerror = a => g(a);
+		k.onerror = a => reject(a);
 		if (e != null)
 			k.setRequestHeader('Content-type', e);
 		k.send(d);
@@ -5156,16 +5164,16 @@
 			return true;
 		}
 	};
-	x.Wg = a => new Promise((b, c) => {
+	x.Wg = a => new Promise((resolve, reject) => {
 		var d = window.document.createElement('img');
 		d.onload = () => {
 			URL.revokeObjectURL(d.src);
 			d.onload = null;
-			b(d);
+			resolve(d);
 		};
 		d.onerror = () => {
 			URL.revokeObjectURL(d.src);
-			c(null);
+			reject(null);
 		};
 		return d.src = URL.createObjectURL(new Blob([a], {type: 'image/png'}));
 	});
@@ -5179,11 +5187,20 @@
 				}
 				else
 					b = Promise.resolve(null);
-				return Promise.all([M.L('res.dat', 'arraybuffer').then(a => {
-					a = new JSZip(a);
-					n.Na = new Ub(a);
-					return Promise.all([n.Na.ro, x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a), x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a), x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a), x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)]);
-				}), b]).then(() => x.us(a));
+				return Promise.all([
+					M.L('res.dat', 'arraybuffer').then(a => {
+						a = new JSZip(a);
+						n.Na = new Ub(a);
+						return Promise.all([
+							n.Na.ro,
+							x.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => n.Ko = a),
+							x.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => n.Vn = a),
+							x.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => n.Tn = a),
+							x.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => n.Dm = a)
+						]);
+					}),
+					b
+				]).then(() => x.us(a));
 			});
 		}
 	};
@@ -5345,12 +5362,12 @@
 	};
 	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), false)));
 	Z.b = true;
-	Z['delete'] = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((b, c) => {
+	Z['delete'] = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
-		d.onblocked = d.onerror = c;
+		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
 			var b = d.result;
-			b.onerror = c;
+			b.onerror = reject;
 			if (a.oldVersion < 1) {
 				b.createObjectStore('files', {autoIncrement: true});
 				b.createObjectStore('meta', {keyPath: 'id'});
@@ -5358,26 +5375,26 @@
 		};
 		d.onsuccess = () => {
 			var e = d.result;
-			e.onerror = c;
+			e.onerror = reject;
 			var f = e.transaction(['meta', 'files'], 'readwrite');
 			f.onerror = f.onabort = a => {
-				c(a);
+				reject(a);
 				e.close();
 			};
 			f.oncomplete = () => {
-				b(0);
+				resolve(0);
 				e.close();
 			};
 			f.objectStore('files')['delete'](a);
 			f.objectStore('meta')['delete'](a);
 		};
 	});
-	Z.get = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((b, c) => {
+	Z.get = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
-		d.onblocked = d.onerror = c;
+		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
 			var b = d.result;
-			b.onerror = c;
+			b.onerror = reject;
 			if (a.oldVersion < 1) {
 				b.createObjectStore('files', {autoIncrement: true});
 				b.createObjectStore('meta', {keyPath: 'id'});
@@ -5385,10 +5402,10 @@
 		};
 		d.onsuccess = () => {
 			var e = d.result;
-			e.onerror = c;
+			e.onerror = reject;
 			var f = e.transaction(['files']);
 			f.onerror = f.onabort = a => {
-				c(a);
+				reject(a);
 				e.close();
 			};
 			f.oncomplete = () => e.close();
@@ -5396,20 +5413,20 @@
 				try {
 					var d = new h;
 					d.Lk(a);
-					b(d);
+					resolve(d);
 				}
 				catch (l) {
-					c(l instanceof q ? l.Ta : l);
+					reject(l instanceof q ? l.Ta : l);
 				}
-			}, c);
+			}, reject);
 		};
 	});
-	Z.getAll = () => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((a, b) => {
+	Z.getAll = () => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var c = window.indexedDB.open('stadiums', 1);
-		c.onblocked = c.onerror = b;
+		c.onblocked = c.onerror = reject;
 		c.onupgradeneeded = a => {
 			var d = c.result;
-			d.onerror = b;
+			d.onerror = reject;
 			if (a.oldVersion < 1) {
 				d.createObjectStore('files', {autoIncrement: true});
 				d.createObjectStore('meta', {keyPath: 'id'});
@@ -5417,14 +5434,14 @@
 		};
 		c.onsuccess = () => {
 			var d = c.result;
-			d.onerror = b;
+			d.onerror = reject;
 			var e = d.transaction(['meta']);
 			e.onerror = e.onabort = a => {
-				b(a);
+				reject(a);
 				d.close();
 			};
 			e.oncomplete = () => d.close();
-			zb.eh(e.objectStore('meta').getAll()).then(a, b);
+			zb.eh(e.objectStore('meta').getAll()).then(resolve, reject);
 		};
 	});
 	Z.Es = () => {
@@ -5438,12 +5455,12 @@
 			return Promise.resolve(false);
 		}
 	};
-	Z.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((b, c) => {
+	Z.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
-		d.onblocked = d.onerror = c;
+		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
 			var b = d.result;
-			b.onerror = c;
+			b.onerror = reject;
 			if (a.oldVersion < 1) {
 				b.createObjectStore('files', {autoIncrement: true});
 				b.createObjectStore('meta', {keyPath: 'id'});
@@ -5451,24 +5468,24 @@
 		};
 		d.onsuccess = () => {
 			var e = d.result;
-			e.onerror = c;
+			e.onerror = reject;
 			var f = e.transaction(['files', 'meta'], 'readwrite');
 			f.onerror = f.onabort = a => {
-				c(a);
+				reject(a);
 				e.close();
 			};
 			f.oncomplete = () => {
-				b(0);
+				resolve(0);
 				e.close();
 			};
 			try {
 				zb.eh(f.objectStore('files').add(a.se())).then(b => {
 					b = {name: a.w, id: b};
 					return zb.eh(f.objectStore('meta').add(b));
-				})['catch'](c);
+				})['catch'](reject);
 			}
 			catch (g) {
-				c(0);
+				reject(0);
 			}
 		};
 	});
@@ -9641,7 +9658,10 @@
 	ab.b = true;
 	ab.prototype = {f: ab};
 	Aa.b = true;
-	Aa.As = a => Promise.race([new Promise((a, c) => window.setTimeout(() => c(null), 5000)), a]);
+	Aa.As = a => Promise.race([
+		new Promise((resolve, reject) => window.setTimeout(() => reject(null), 5000)),
+		a
+	]);
 	Aa.prototype = {
 		Om: function () {
 			function a() {
