@@ -305,14 +305,14 @@
 	}
 
 	function Aa(a) {
-		function b(a) {
+		function b(a, checkedByDefault = true) {
 			function b() {
 				e.className = f.Ta ? 'icon-ok' : 'icon-cancel';
 			}
 
 			a = d.get(a);
 			var e = a.querySelector('i');
-			var f = {Ta: true};
+			var f = {Ta: checkedByDefault};
 			b();
 			a.onclick = () => {
 				f.Ta = !f.Ta;
@@ -345,8 +345,8 @@
 				b.readAsArrayBuffer(a);
 			}
 		};
-		this.fs = b('fil-full');
-		this.zs = b('fil-pass');
+		this.fs = b('fil-full', true);
+		this.zs = b('fil-pass', false);
 		this.ns = d.get('listscroll');
 		this.Bs = Ba.cg(this.ns);
 		this.gj = d.get('list');
