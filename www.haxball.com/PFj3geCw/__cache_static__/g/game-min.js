@@ -4331,7 +4331,8 @@
 					if (f.Pe())
 						this.ba('Can\'t store default stadium.');
 					else {
-						Z.Es().then(() => Z.add(f))
+						Z.Es()
+							.then(() => Z.add(f))
 							.then(() => b.ba('Stadium stored'))
 							.catch(() => b.ba('Couldn\'t store stadium'));
 					}
@@ -5459,7 +5460,8 @@
 	};
 	Z.add = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
-		d.onblocked = d.onerror = reject;
+		d.onerror = reject;
+		d.onblocked = d.onerror;
 		d.onupgradeneeded = a => {
 			var b = d.result;
 			b.onerror = reject;
@@ -5472,18 +5474,19 @@
 			var e = d.result;
 			e.onerror = reject;
 			var f = e.transaction(['files', 'meta'], 'readwrite');
-			f.onerror = f.onabort = a => {
+			f.onabort = a => {
 				reject(a);
 				e.close();
 			};
+			f.onerror = f.onabort;
 			f.oncomplete = () => {
 				resolve(0);
 				e.close();
 			};
 			try {
-				zb.eh(f.objectStore('files').add(a.se())).then(b => {
-					b = {name: a.w, id: b};
-					return zb.eh(f.objectStore('meta').add(b));
+				zb.eh(f.objectStore('files').add(a.se())).then(id => {
+					let bObj = {name: a.w, id: id};
+					return zb.eh(f.objectStore('meta').add(bObj));
 				}).catch(reject);
 			}
 			catch (g) {
@@ -6618,8 +6621,10 @@
 		}, se: function () {
 			return JSON.stringify(this.Hr());
 		}, Hr: function () {
-			if (!this.Lf)
-				throw new q(0);
+			if (!this.Lf) {
+				//throw new q(0); // disabled canBeStored check
+				console.debug(this.w + ' canBeStored bypassed');
+			}
 			for (var a = {}, b = 0, c = [], d = 0, e = this.J; e.length > d;) {
 				var f = e[d];
 				++d;
