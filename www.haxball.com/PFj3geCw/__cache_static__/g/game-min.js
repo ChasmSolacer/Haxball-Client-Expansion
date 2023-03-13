@@ -2267,7 +2267,7 @@
 				for (var g = 0; b.length > g;)
 					d.yj(b[g++]);
 				return lc.Dr(d.Sh, c).then(e, e);
-			}).then(a => d.di(a))['catch'](() => d.Tf());
+			}).then(a => d.di(a)).catch(() => d.Tf());
 		}, co: function (a) {
 			var b = this;
 			var c = {id: this.Vc.length, negotiated: true, ordered: a.kj};
@@ -2413,7 +2413,7 @@
 					case 'recaptcha':
 						b(a);
 				}
-			})['catch'](() => d.Mh(true));
+			}).catch(() => d.Mh(true));
 		}, So: function () {
 			var a = this;
 			if (this.Mc != null)
@@ -2484,10 +2484,10 @@
 				this.od.set(a, h);
 				h.bd = () => {
 					g.Nc(0, h, null);
-					g.od['delete'](h.$);
+					g.od.delete(h.$);
 				};
 				h.zd = () => {
-					g.od['delete'](h.$);
+					g.od.delete(h.$);
 					g.Nc(0, h, null);
 					if (g.bl != null)
 						g.bl(new Nb(h));
@@ -2699,7 +2699,7 @@
 		}
 		else
 			throw new q('Cannot decode UTF8 character at offset ' + b + ': charCode (' + c + ') is invalid');
-		return {'char': c, length: b - l};
+		return {char: c, length: b - l};
 	};
 	F.prototype = {
 		sb: function (a) {
@@ -2754,7 +2754,7 @@
 			for (a = b + a; a > b;) {
 				c = F.jo(this.o, b);
 				b += c.length;
-				d += String.fromCodePoint(c['char']);
+				d += String.fromCodePoint(c.char);
 			}
 			if (a != b)
 				throw new q('Actual string length differs from the specified: ' + (b - a) + ' bytes');
@@ -3113,7 +3113,7 @@
 		a.RTCSessionDescription = a.webkitRTCSessionDescription || a.mozRTCSessionDescription || a.RTCSessionDescription;
 		var b = new RTCPeerConnection({iceServers: []});
 		try {
-			b.createAnswer()['catch'](() => {
+			b.createAnswer().catch(() => {
 			});
 		}
 		catch (e) {
@@ -3188,7 +3188,7 @@
 		a.then(a => {
 			window.clearTimeout(e);
 			resolve(a);
-		}, a => {
+		}).catch(a => {
 			window.clearTimeout(e);
 			reject(a);
 		});
@@ -3555,7 +3555,7 @@
 			var c = Promise.resolve(null);
 			if (this.Je != null)
 				c = this.Je.wr(a);
-			c['catch'](() => null).then(a => b.ir(a));
+			c.catch(() => null).then(a => b.ir(a));
 		}, qq: function (a) {
 			a = pako.inflateRaw(a.sb());
 			a = new F(new DataView(a.buffer, a.byteOffset, a.byteLength));
@@ -3795,7 +3795,7 @@
 				};
 				a.cf = () => {
 					D.remove(b.ac, c);
-					b.Ie['delete'](c.$);
+					b.Ie.delete(c.$);
 					y.i(b.Ip, c.$);
 				};
 				a = w.ha(1 + c.He.byteLength);
@@ -3862,7 +3862,7 @@
 			var e = a.sb(a.Ab());
 			var f = b.He;
 			b.He = null;
-			I.Rr(d, f)['catch'](() => null).then(a => {
+			I.Rr(d, f).catch(() => null).then(a => {
 				try {
 					if (c.ac.indexOf(b) != -1) {
 						b.Ns = a;
@@ -3906,7 +3906,7 @@
 			}
 		}, xk: function (a, b) {
 			window.console.log(b);
-			this.Ie['delete'](a.$);
+			this.Ie.delete(a.$);
 			D.remove(this.ac, a);
 			if (a.yg && this.$k != null)
 				this.$k(a.$);
@@ -4331,7 +4331,9 @@
 					if (f.Pe())
 						this.ba('Can\'t store default stadium.');
 					else {
-						Z.Es().then(() => Z.add(f)).then(() => b.ba('Stadium stored'), () => b.ba('Couldn\'t store stadium'));
+						Z.Es().then(() => Z.add(f))
+							.then(() => b.ba('Stadium stored'))
+							.catch(() => b.ba('Couldn\'t store stadium'));
 					}
 					break;
 				default:
@@ -4760,7 +4762,7 @@
 		}, L: function (a) {
 			return this.Yc.get(a);
 		}, Jq: function (a) {
-			this.Yc['delete'](a);
+			this.Yc.delete(a);
 		}, Eo: function (a) {
 			for (var b = [], c = this.Yc.keys(), d = c.next(); !d.done;) {
 				var e = d.value;
@@ -4792,9 +4794,9 @@
 		if (a == null) I.yo().then(a => {
 			u.Je = a;
 			n.A.Gj.Xa(a.Ir());
-		})['catch'](() => ({}));
+		}).catch(() => ({}));
 		else
-			I.xo(a).then(a => u.Je = a)['catch'](() => ({}));
+			I.xo(a).then(a => u.Je = a).catch(() => ({}));
 	};
 	u.Bo = () => {
 		var a = Xb.Pm();
@@ -4846,7 +4848,7 @@
 					default:
 						throw new q(null);
 				}
-			})['catch'](() => c());
+			}).catch(() => c());
 		e(a, '');
 	};
 	u.xq = () => {
@@ -5183,7 +5185,7 @@
 				kc.fj();
 				var b;
 				if (n.A.Me.L() == null) {
-					T.Fo().then(a => n.A.Me.Xa(a), () => ({}));
+					T.Fo().then(a => n.A.Me.Xa(a)).catch(() => ({}));
 				}
 				else
 					b = Promise.resolve(null);
@@ -5362,7 +5364,7 @@
 	};
 	va.get = () => M.L(n.Ee + 'api/list', 'arraybuffer').then(a => va.parse(new F(new DataView(a), false)));
 	Z.b = true;
-	Z['delete'] = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
+	Z.delete = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
 		var d = window.indexedDB.open('stadiums', 1);
 		d.onblocked = d.onerror = reject;
 		d.onupgradeneeded = a => {
@@ -5385,8 +5387,8 @@
 				resolve(0);
 				e.close();
 			};
-			f.objectStore('files')['delete'](a);
-			f.objectStore('meta')['delete'](a);
+			f.objectStore('files').delete(a);
+			f.objectStore('meta').delete(a);
 		};
 	});
 	Z.get = a => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
@@ -5418,7 +5420,7 @@
 				catch (l) {
 					reject(l instanceof q ? l.Ta : l);
 				}
-			}, reject);
+			}).catch(reject);
 		};
 	});
 	Z.getAll = () => window.indexedDB == null ? Promise.reject('IndexedDB not supported by browser.') : new Promise((resolve, reject) => {
@@ -5449,7 +5451,7 @@
 		if (a == null || a.persist == null)
 			return Promise.resolve(false);
 		try {
-			return a.persisted().then(b => b ? true : a.persist())['catch'](() => false);
+			return a.persisted().then(b => b ? true : a.persist()).catch(() => false);
 		}
 		catch (b) {
 			return Promise.resolve(false);
@@ -5482,7 +5484,7 @@
 				zb.eh(f.objectStore('files').add(a.se())).then(b => {
 					b = {name: a.w, id: b};
 					return zb.eh(f.objectStore('meta').add(b));
-				})['catch'](reject);
+				}).catch(reject);
 			}
 			catch (g) {
 				reject(0);
@@ -7929,7 +7931,7 @@
 					var f = e[d];
 					var g = b.get(f);
 					if (g != null) {
-						b['delete'](f);
+						b.delete(f);
 						c.push(g);
 					}
 				}
@@ -8750,7 +8752,7 @@
 				var d = a.value;
 				a = c.next();
 				if (!b.has(d))
-					this.dd['delete'](d);
+					this.dd.delete(d);
 			}
 		}, Mr: function (a, b, c, d, e) {
 			var f;
@@ -9518,7 +9520,7 @@
 					var e = c[d];
 					++d;
 					var f = [e.id];
-					var e = b.Sk(e.name, (a => () => Z.get(a[0]))(f), (a => () => Z['delete'](a[0]))(f));
+					var e = b.Sk(e.name, (a => () => Z.get(a[0]))(f), (a => () => Z.delete(a[0]))(f));
 					a.appendChild(e);
 				}
 				b.vg.update();
@@ -9610,14 +9612,14 @@
 					this.ab.appendChild(g.g);
 				}
 				g.C(f, d);
-				b['delete'](f.V);
+				b.delete(f.V);
 			}
 			d = b.values();
 			for (b = d.next(); !b.done;) {
 				c = b.value;
 				b = d.next();
 				this.xd.get(c).g.remove();
-				this.xd['delete'](c);
+				this.xd.delete(c);
 			}
 			d = 0;
 			for (b = a.length - 1; b > d; d++) {
@@ -9675,7 +9677,7 @@
 			v.Cf(this.gj);
 			var c = [];
 			this.dj = [];
-			Aa.As(va.get().then(a => c = a, () => ({}))).then(a, a);
+			Aa.As(va.get().then(a => c = a).catch(() => ({}))).then(a).catch(a);
 		}, bn: function (a) {
 			var b = this;
 			this.dj = a;
