@@ -12,24 +12,24 @@
 	}
 
 	function UnsupportedBrowserView(a) {
-		this.g = ViewUtil.buildHtmlContents(UnsupportedBrowserView.htmlContents);
-		ViewUtil.Ea(this.g).get('features').textContent = a.join(', ');
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(UnsupportedBrowserView.htmlContents);
+		ViewUtil.getDataHookMap(this.g).get('features').textContent = a.join(', ');
 	}
 
 	function StatsView() {
 		this.nl = new PingGraph;
-		this.g = ViewUtil.buildHtmlContents(StatsView.htmlContents);
-		var a = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(StatsView.htmlContents);
+		var a = ViewUtil.getDataHookMap(this.g);
 		this.rg = a.get('ping');
 		this.wp = a.get('max-ping');
 		this.wo = a.get('fps');
-		ViewUtil.xe(a.get('graph'), this.nl.g);
+		ViewUtil.replaceParentsChild(a.get('graph'), this.nl.g);
 	}
 
 	function SimpleDialogView(a, b, c) {
 		var d = this;
-		this.g = ViewUtil.buildHtmlContents(SimpleDialogView.htmlContents);
-		var e = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(SimpleDialogView.htmlContents);
+		var e = ViewUtil.getDataHookMap(this.g);
 		e.get('ok');
 		e.get('cancel');
 		this.Vd = e.get('content');
@@ -45,6 +45,8 @@
 	}
 
 	function SettingsView(a) {
+		let tArr = [];
+
 		function settingsBFun(a) {
 			var b = window.document.createElement('div');
 			b.className = 'inputrow';
@@ -64,7 +66,7 @@
 				g.className = 'icon-cancel';
 				g.onclick = ((a, b) => () => {
 					p.Jq(b[0]);
-					ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.Xa(p);
+					ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.setLSItem(p);
 					a[0].remove();
 				})(f, e);
 				f[0].appendChild(g);
@@ -81,7 +83,7 @@
 					b = b.code;
 					if (p.L(b) == null) {
 						p.Pa(b, a);
-						ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.Xa(p);
+						ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.setLSItem(p);
 						r();
 					}
 				};
@@ -90,7 +92,7 @@
 		}
 
 		function settingsFlagFun(a, b, c) {
-			a = l.get(a);
+			a = dataHookMap.get(a);
 			if (c == null)
 				a.hidden = true;
 			else {
@@ -106,67 +108,64 @@
 			}
 		}
 
-		function settingsDFun(a, b, c, d) {
-			var e = l.get(a);
-			e.selectedIndex = d(b.L());
+		function settingsDFun(lsKey, lsUnit, cFun, dFun) {
+			var e = dataHookMap.get(lsKey);
+			e.selectedIndex = dFun(lsUnit.getLSUValue());
 			e.onchange = () => {
-				var a = c(e.selectedIndex);
-				b.Xa(a);
+				var a = cFun(e.selectedIndex);
+				lsUnit.setLSItem(a);
 			};
 		}
 
-		function settingsOkCancelFun(a, b, c) {
+		function settingsOkCancelFun(tKey, lsUnit, cFun) {
 			function d(a) {
 				e.classList.toggle('icon-ok', a);
 				e.classList.toggle('icon-cancel', !a);
 			}
 
-			a = l.get(a);
-			a.classList.add('toggle');
+			tKey = dataHookMap.get(tKey);
+			tKey.classList.add('toggle');
 			var e = window.document.createElement('i');
 			e.classList.add('icon-ok');
-			a.insertBefore(e, a.firstChild);
-			a.onclick = () => {
-				var a = !b.L();
-				b.Xa(a);
+			tKey.insertBefore(e, tKey.firstChild);
+			tKey.onclick = () => {
+				var a = !lsUnit.getLSUValue();
+				lsUnit.setLSItem(a);
 				d(a);
-				if (c != null)
-					c(a);
+				if (cFun != null)
+					cFun(a);
 			};
-			d(b.L());
+			d(lsUnit.getLSUValue());
 		}
 
 		function settingsBtnSecFun(a) {
-			var b = {Jm: l.get(a + 'btn'), bh: l.get(a + 'sec')};
-			t.push(b);
+			const b = {Jm: dataHookMap.get(a + 'btn'), bh: dataHookMap.get(a + 'sec')};
+			tArr.push(b);
 			b.Jm.onclick = () => settingsSelectedFun(b);
 		}
 
 		function settingsSelectedFun(a) {
-			for (var b = 0, c = 0; t.length > c;) {
-				var d = t[c];
-				++c;
+			for (var b = 0, c = 0; tArr.length > c; b++, c++) {
+				var d = tArr[c];
 				var e = a == d;
 				if (e)
 					SettingsView.$l = b;
 				d.bh.classList.toggle('selected', e);
 				d.Jm.classList.toggle('selected', e);
-				++b;
 			}
 		}
 
 		if (a == null)
 			a = false;
-		var k = this;
-		this.g = ViewUtil.buildHtmlContents(SettingsView.htmlContents);
-		var l = ViewUtil.Ea(this.g);
-		this.nd = l.get('close');
-		var t = [];
+		const selfSettingsView = this;
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(SettingsView.htmlContents);
+		var dataHookMap = ViewUtil.getDataHookMap(this.g);
+		this.closeBtnField = dataHookMap.get('close');
 		settingsBtnSecFun('sound');
 		settingsBtnSecFun('video');
 		settingsBtnSecFun('misc');
 		settingsBtnSecFun('input');
-		settingsSelectedFun(t[SettingsView.$l]);
+		settingsSelectedFun(tArr[SettingsView.$l]);
 		settingsOkCancelFun('tsound-main', ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit, a => ConnectionConstants.Na.im(a ? 1 : 0));
 		settingsOkCancelFun('tsound-chat', ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit);
 		settingsOkCancelFun('tsound-highlight', ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit);
@@ -183,32 +182,31 @@
 		settingsOkCancelFun('tvideo-teamcol', ConnectionConstants.localStorageWrapperInst.teamColorsStorageUnit);
 		settingsOkCancelFun('tvideo-showindicators', ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit);
 		settingsOkCancelFun('tvideo-showavatars', ConnectionConstants.localStorageWrapperInst.showAvatarsStorageUnit);
-		var m = null;
 		var m = () => {
-			var b = ConnectionConstants.localStorageWrapperInst.Ne.L();
-			settingsFlagFun('loc', 'Detected location', ConnectionConstants.localStorageWrapperInst.Me.L());
+			var b = ConnectionConstants.localStorageWrapperInst.Ne.getLSUValue();
+			settingsFlagFun('loc', 'Detected location', ConnectionConstants.localStorageWrapperInst.Me.getLSUValue());
 			settingsFlagFun('loc-ovr', 'Location override', b);
-			var d = l.get('loc-ovr-btn');
+			var d = dataHookMap.get('loc-ovr-btn');
 			d.disabled = !a;
 			if (b == null) {
 				d.textContent = 'Override location';
-				d.onclick = () => Daa.i(k.Ep);
+				d.onclick = () => Daa.i(selfSettingsView.Ep);
 			}
 			else {
 				d.textContent = 'Remove override';
 				d.onclick = () => {
-					ConnectionConstants.localStorageWrapperInst.Ne.Xa(null);
+					ConnectionConstants.localStorageWrapperInst.Ne.setLSItem(null);
 					m();
 				};
 			}
 		};
 		m();
-		var p = ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.L();
-		var q = l.get('presskey');
+		var p = ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.getLSUValue();
+		var q = dataHookMap.get('presskey');
 		var r;
-		var u = l.get('inputsec');
+		var u = dataHookMap.get('inputsec');
 		r = () => {
-			ViewUtil.Cf(u);
+			ViewUtil.removeFirstChildren(u);
 			var a = settingsBFun('Up');
 			u.appendChild(a);
 			a = settingsBFun('Down');
@@ -221,7 +219,7 @@
 			u.appendChild(a);
 		};
 		r();
-		this.nd.onclick = () => Daa.i(k.qb);
+		this.closeBtnField.onclick = () => Daa.i(selfSettingsView.qb);
 	}
 
 	function RoomMenuView(a) {
@@ -230,8 +228,8 @@
 		this.Lj = new PlayerListView(Team.blue);
 		this.Hl = new PlayerListView(Team.red);
 		var b = this;
-		this.g = ViewUtil.buildHtmlContents(RoomMenuView.htmlContents);
-		var c = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(RoomMenuView.htmlContents);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.jc = c.get('room-name');
 		this.tm = c.get('start-btn');
 		this.vm = c.get('stop-btn');
@@ -276,8 +274,8 @@
 
 	function PasswordView() {
 		var a = this;
-		this.g = ViewUtil.buildHtmlContents(PasswordView.htmlContents);
-		var b = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(PasswordView.htmlContents);
+		var b = ViewUtil.getDataHookMap(this.g);
 		this.Cb = b.get('input');
 		this.af = b.get('ok');
 		b.get('cancel').onclick = () => {
@@ -300,7 +298,7 @@
 	function Notice(a) {
 		this.Xk = a.get('notice');
 		this.$n = a.get('notice-contents');
-		this.nd = a.get('notice-close');
+		this.closeBtnField = a.get('notice-close');
 		this.Il();
 	}
 
@@ -325,8 +323,8 @@
 		this.dj = [];
 		var c = this;
 		this.gs = a;
-		this.Ja = ViewUtil.buildHtmlContents(RoomListView.tj);
-		var d = ViewUtil.Ea(this.Ja);
+		this.Ja = ViewUtil.getFirstElemChildFromHtmlContents(RoomListView.tj);
+		var d = ViewUtil.getDataHookMap(this.Ja);
 		var e = new Notice(d);
 		this.pj = d.get('refresh');
 		this.Tm = d.get('join');
@@ -362,8 +360,8 @@
 	}
 
 	function RoomListHeader(a) {
-		this.Ja = ViewUtil.buildHtmlContents(RoomListHeader.tj, 'tbody');
-		var b = ViewUtil.Ea(this.Ja);
+		this.Ja = ViewUtil.getFirstElemChildFromHtmlContents(RoomListHeader.tj, 'tbody');
+		var b = ViewUtil.getDataHookMap(this.Ja);
 		var c = b.get('name');
 		var d = b.get('players');
 		var e = b.get('distance');
@@ -387,8 +385,8 @@
 	function RoomLinkView() {
 		this.gk = null;
 		var a = this;
-		this.g = ViewUtil.buildHtmlContents(RoomLinkView.htmlContents);
-		var b = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(RoomLinkView.htmlContents);
+		var b = ViewUtil.getDataHookMap(this.g);
 		this.Zf = b.get('link');
 		var c = b.get('copy');
 		var b = b.get('close');
@@ -409,8 +407,8 @@
 
 		this.Wf = false;
 		var c = this;
-		this.g = ViewUtil.buildHtmlContents(ReplayControlsView.htmlContents);
-		var d = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ReplayControlsView.htmlContents);
+		var d = ViewUtil.getDataHookMap(this.g);
 		this.ti = a;
 		d.get('reset').onclick = () => {
 			a.ui();
@@ -496,9 +494,9 @@
 	function PlayerListView(a) {
 		this.xd = new Map;
 		var b = this;
-		this.g = ViewUtil.buildHtmlContents(PlayerListView.htmlContents);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(PlayerListView.htmlContents);
 		this.g.className += ' ' + a.io;
-		var c = ViewUtil.Ea(this.g);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.ab = c.get('list');
 		this.Vh = c.get('join-btn');
 		this.vi = c.get('reset-btn');
@@ -527,8 +525,8 @@
 		this.w = a.w;
 		this.yb = a.yb;
 		this.$ = a.V;
-		this.g = ViewUtil.buildHtmlContents(PlayerListItem.htmlContents);
-		var c = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(PlayerListItem.htmlContents);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.Ze = c.get('name');
 		this.rg = c.get('ping');
 		try {
@@ -548,15 +546,15 @@
 
 	function PlayerMenuView(a, b) {
 		var c = this;
-		this.g = ViewUtil.buildHtmlContents(PlayerMenuView.htmlContents);
-		var d = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(PlayerMenuView.htmlContents);
+		var d = ViewUtil.getDataHookMap(this.g);
 		this.Ze = d.get('name');
 		this.Hf = d.get('admin');
 		this.Qe = d.get('kick');
-		this.nd = d.get('close');
+		this.closeBtnField = d.get('close');
 		this.Hf.onclick = () => Mia.i(c.Cp, c.Nb, !c.ql);
 		this.Qe.onclick = () => Yyy.i(c.ei, c.Nb);
-		this.nd.onclick = () => Daa.i(c.qb);
+		this.closeBtnField.onclick = () => Daa.i(c.qb);
 		this.Nb = a.V;
 		this.Ej(a.w);
 		this.Dj(a.cb);
@@ -588,8 +586,8 @@
 	function PickStadiumView() {
 		this.jb = null;
 		var a = this;
-		this.g = ViewUtil.buildHtmlContents(PickStadiumView.htmlContents);
-		var b = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(PickStadiumView.htmlContents);
+		var b = ViewUtil.getDataHookMap(this.g);
 		b.get('cancel').onclick = () => Daa.i(a.ci);
 		this.hi = b.get('pick');
 		this.bk = b.get('delete');
@@ -656,24 +654,24 @@
 
 	function LeaveRoomView() {
 		var a = this;
-		this.g = ViewUtil.buildHtmlContents(LeaveRoomView.htmlContents);
-		var b = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(LeaveRoomView.htmlContents);
+		var b = ViewUtil.getDataHookMap(this.g);
 		b.get('cancel').onclick = () => Yyy.i(a.qb, false);
 		b.get('leave').onclick = () => Yyy.i(a.qb, true);
 	}
 
 	function KickPlayerView(a) {
 		var b = this;
-		this.g = ViewUtil.buildHtmlContents(KickPlayerView.htmlContents);
-		var c = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(KickPlayerView.htmlContents);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.Ze = c.get('title');
 		this.oi = c.get('reason');
 		this.yn = c.get('ban-btn');
 		this.An = c.get('ban-text');
 		this.Qe = c.get('kick');
-		this.nd = c.get('close');
+		this.closeBtnField = c.get('close');
 		this.yn.onclick = () => b.Aj(!b.Jj);
-		this.nd.onclick = () => Daa.i(b.qb);
+		this.closeBtnField.onclick = () => Daa.i(b.qb);
 		this.Qe.onclick = () => Dcb.i(b.ei, b.Nb, b.oi.value, b.Jj);
 		this.oi.onkeydown = a => a.stopPropagation();
 		this.oi.maxLength = 100;
@@ -690,13 +688,13 @@
 		var b = this;
 		this.Wa = new RoomMenuView(a);
 		this.Fb.Nb = a;
-		this.g = ViewUtil.buildHtmlContents(GameView.htmlContents);
-		a = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(GameView.htmlContents);
+		a = ViewUtil.getDataHookMap(this.g);
 		this.Jh = a.get('gameplay-section');
 		this.hf = a.get('popups');
 		this.hf.style.display = 'none';
-		ViewUtil.xe(a.get('chatbox'), this.Qa.g);
-		ViewUtil.xe(a.get('stats'), this.pe.g);
+		ViewUtil.replaceParentsChild(a.get('chatbox'), this.Qa.g);
+		ViewUtil.replaceParentsChild(a.get('stats'), this.pe.g);
 		this.bi = a.get('menu');
 		this.bi.onclick = () => {
 			b.me(!b.Gd);
@@ -751,18 +749,18 @@
 		this.Nb = -1;
 		this.Eb = new MajorCanvas;
 		this.xc = new GameTimerView;
-		this.g = ViewUtil.buildHtmlContents(GameStateView.htmlContents);
-		var a = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(GameStateView.htmlContents);
+		var a = ViewUtil.getDataHookMap(this.g);
 		this.Pb = new ScoreUtil(a.get('red-score'), 0);
 		this.Kb = new ScoreUtil(a.get('blue-score'), 0);
-		ViewUtil.xe(a.get('timer'), this.xc.g);
-		ViewUtil.xe(a.get('canvas'), this.Eb.sa);
+		ViewUtil.replaceParentsChild(a.get('timer'), this.xc.g);
+		ViewUtil.replaceParentsChild(a.get('canvas'), this.Eb.sa);
 	}
 
 	function DisconnectedView(a, b) {
 		var c = this;
-		this.g = ViewUtil.buildHtmlContents(DisconnectedView.htmlContents);
-		var d = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(DisconnectedView.htmlContents);
+		var d = ViewUtil.getDataHookMap(this.g);
 		this.Bp = d.get('ok');
 		this.Bp.onclick = () => Daa.i(c.Va);
 		this.Nl = d.get('replay');
@@ -776,8 +774,8 @@
 
 	function CreateRoomView(a) {
 		var b = this;
-		this.g = ViewUtil.buildHtmlContents(CreateRoomView.htmlContents);
-		var c = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(CreateRoomView.htmlContents);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.vh = c.get('cancel');
 		this.Wj = c.get('create');
 		this.$e = c.get('name');
@@ -809,8 +807,8 @@
 	}
 
 	function ConnectingView() {
-		this.g = ViewUtil.buildHtmlContents(ConnectingView.htmlContents);
-		var a = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ConnectingView.htmlContents);
+		var a = ViewUtil.getDataHookMap(this.g);
 		this.dc = a.get('log');
 		this.vh = a.get('cancel');
 	}
@@ -822,8 +820,8 @@
 		}
 
 		var c = this;
-		this.g = ViewUtil.buildHtmlContents(ChooseNicknameView.htmlContents);
-		var d = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ChooseNicknameView.htmlContents);
+		var d = ViewUtil.getDataHookMap(this.g);
 		this.Cb = d.get('input');
 		this.af = d.get('ok');
 		this.Cb.maxLength = 25;
@@ -854,8 +852,8 @@
 		}
 
 		var b = this;
-		this.g = ViewUtil.buildHtmlContents(ChatboxView.htmlContents);
-		var c = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ChatboxView.htmlContents);
+		var c = ViewUtil.getDataHookMap(this.g);
 		this.dc = c.get('log');
 		this.vg = Dba.cg(this.dc);
 		this.gb = c.get('input');
@@ -907,8 +905,8 @@
 	function ChangeLocationView() {
 		this.rf = null;
 		var a = this;
-		this.g = ViewUtil.buildHtmlContents(ChangeLocationView.htmlContents);
-		var b = ViewUtil.Ea(this.g);
+		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ChangeLocationView.htmlContents);
+		var b = ViewUtil.getDataHookMap(this.g);
 		b.get('cancel').onclick = () => Daa.i(a.qb);
 		this.wh = b.get('change');
 		this.wh.disabled = true;
@@ -1280,7 +1278,7 @@
 		var c = this;
 		this.c = new AudioContext;
 		this.ag = this.c.createGain();
-		this.im(ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit.L() ? 1 : 0);
+		this.im(ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit.getLSUValue() ? 1 : 0);
 		this.ag.connect(this.c.destination);
 		this.ro = Promise.all([
 			b('sounds/chat.ogg').then(a => c.Rj = a),
@@ -1306,7 +1304,7 @@
 	function Dfb() {
 	}
 
-	function ReplayVb(a) {
+	function ReplayUtil(a) {
 		this.$c = window.performance.now();
 		this.De = 0;
 		this.sd = 0;
@@ -1315,14 +1313,14 @@
 		this.j = new GameView(a.uc);
 		var c = new MentionUtil(this.j);
 		c.ri(a.T);
-		window.document.addEventListener('keydown', handleEvent(this, this.Bd));
+		window.document.addEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
 		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
 		window.requestAnimationFrame(handleEvent(this, this.bf));
 		this.Gh = window.setInterval(() => {
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
-		this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L());
+		this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
 		this.j.g.classList.add('replayer');
 		this.je = new ReplayControlsView(a);
 		this.je.Vp = () => c.Lr(a.T);
@@ -1350,14 +1348,14 @@
 		this.Yc = new Map;
 	}
 
-	function LocalStorageUnit(lsKey, localStorageInst, funC, funD) {
+	function LocalStorageUnit(lsKey, localStorageInst, processingFun, funD) {
 		this.w = lsKey;
-		this.Ur = funD;
+		this.lsuFunDField = funD;
 		this.localStorageInstField = localStorageInst;
 		funD = null;
 		if (localStorageInst != null)
 			funD = localStorageInst.getItem(lsKey);
-		this.lsUnitValue = funC(funD);
+		this.lsUnitValue = processingFun(funD);
 	}
 
 	function LocalStorageUtil() {
@@ -1365,13 +1363,13 @@
 
 	function LocalStorageWrapper() {
 		var localStorage1 = LocalStorageUtil.Pm();
-		
-		function lsGeoFun(key) {
-			return new LocalStorageUnit(key, localStorage1, a => {
-				if (a == null)
+
+		function buildGeoLSU(key) {
+			return new LocalStorageUnit(key, localStorage1, jsonString => {
+				if (jsonString == null)
 					return null;
 				try {
-					return GeoLocation.Hh(a);
+					return GeoLocation.Hh(jsonString);
 				}
 				catch (k) {
 					return null;
@@ -1388,40 +1386,40 @@
 			});
 		}
 
-		function lsbFun(a) {
-			return new LocalStorageUnit(a, localStorage1, a => a != null ? a != '0' : true, a => a ? '1' : '0');
+		function buildBinaryLSU(key) {
+			return new LocalStorageUnit(key, localStorage1, a => a != null ? a != '0' : true, a => a ? '1' : '0');
 		}
 
-		function lscFun(a, b) {
-			return new LocalStorageUnit(a, localStorage1, a => {
-				var c = b;
+		function buildLSUWithDefVal(key, defaultValue) {
+			return new LocalStorageUnit(key, localStorage1, a => {
+				let defaultValue1 = defaultValue;
 				try {
 					if (a != null)
-						c = StringOpsInt.parseInt(a);
+						defaultValue1 = StringOpsInt.parseInt(a);
 				}
 				catch (t) {
 				}
-				return c;
+				return defaultValue1;
 			}, a => '' + a);
 		}
 
-		function buildLSUd(key, defaultValue, maxLen) {
+		function buildLSUWithDefValAndMaxLen(key, defaultValue, maxLen) {
 			return new LocalStorageUnit(key, localStorage1, a => a == null ? defaultValue : StringOpsLimit.Qc(a, maxLen), a => a);
 		}
-		
-		this.fe = buildLSUd('player_name', '', 25);
-		this.viewModeStorageUnit = lscFun('view_mode', -1);
-		this.fpsLimitStorageUnit = lscFun('fps_limit', 0);
-		this.avatarStorageUnit = buildLSUd('avatar', null, 2);
-		buildLSUd('rctoken', null, 1024);
-		this.teamColorsStorageUnit = lsbFun('team_colors');
-		this.showIndicatorsStorageUnit = lsbFun('show_indicators');
-		this.soundMainStorageUnit = lsbFun('sound_main');
-		this.soundChatStorageUnit = lsbFun('sound_chat');
-		this.soundHighlightStorageUnit = lsbFun('sound_highlight');
-		this.soundCrowdStorageUnit = lsbFun('sound_crowd');
-		this.playerAuthKeyStorageUnit = buildLSUd('player_auth_key', null, 1024);
-		this.rd = lscFun('extrapolation', 0);
+
+		this.fe = buildLSUWithDefValAndMaxLen('player_name', '', 25);
+		this.viewModeStorageUnit = buildLSUWithDefVal('view_mode', -1);
+		this.fpsLimitStorageUnit = buildLSUWithDefVal('fps_limit', 0);
+		this.avatarStorageUnit = buildLSUWithDefValAndMaxLen('avatar', null, 2);
+		buildLSUWithDefValAndMaxLen('rctoken', null, 1024);
+		this.teamColorsStorageUnit = buildBinaryLSU('team_colors');
+		this.showIndicatorsStorageUnit = buildBinaryLSU('show_indicators');
+		this.soundMainStorageUnit = buildBinaryLSU('sound_main');
+		this.soundChatStorageUnit = buildBinaryLSU('sound_chat');
+		this.soundHighlightStorageUnit = buildBinaryLSU('sound_highlight');
+		this.soundCrowdStorageUnit = buildBinaryLSU('sound_crowd');
+		this.playerAuthKeyStorageUnit = buildLSUWithDefValAndMaxLen('player_auth_key', null, 1024);
+		this.rd = buildLSUWithDefVal('extrapolation', 0);
 		this.resolutionScaleStorageUnit = ((key, bNum) => new LocalStorageUnit(key, localStorage1, a => {
 			var cNum = bNum;
 			try {
@@ -1432,9 +1430,9 @@
 			}
 			return cNum;
 		}, a => '' + a))('resolution_scale', 1);
-		this.showAvatarsStorageUnit = lsbFun('show_avatars');
-		this.Me = lsGeoFun('geo');
-		this.Ne = lsGeoFun('geo_override');
+		this.showAvatarsStorageUnit = buildBinaryLSU('show_avatars');
+		this.Me = buildGeoLSU('geo');
+		this.Ne = buildGeoLSU('geo_override');
 		this.playerKeysStorageUnit = (() => new LocalStorageUnit('player_keys', localStorage1, a => {
 			if (a == null)
 				return DwwMap.$j();
@@ -1501,7 +1499,7 @@
 		this.Ih.ri(a.T);
 		this.j.Qa.fl = handleEvent(this, this.Gp);
 		this.j.Qa.ig = handleEvent(this, this.Fp);
-		window.document.addEventListener('keydown', handleEvent(this, this.Bd));
+		window.document.addEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
 		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
 		window.onbeforeunload = () => 'Are you sure you want to leave the room?';
 		this.ob.ng = b => a.ra(b);
@@ -1566,10 +1564,10 @@
 		}, 1000);
 		this.Qr = window.setInterval(() => a.C(), 50);
 		this.uf();
-		var c = ConnectionConstants.localStorageWrapperInst.rd.L();
+		var c = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
 		if (c != 0) {
-			var d = ConnectionConstants.localStorageWrapperInst.rd.L();
+			var d = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
 			a.gm(d);
 			this.j.Qa.Gb('Extrapolation set to ' + c + ' msec');
 		}
@@ -3186,25 +3184,26 @@
 		}, f: ScoreUtil
 	};
 	ViewUtil.b = true;
-	ViewUtil.Ea = a => {
-		var b = new Map;
-		var c = 0;
-		for (a = a.querySelectorAll('[data-hook]'); a.length > c; c++) {
-			var d = a[c];
-			b.set(d.getAttribute('data-hook'), d);
+	ViewUtil.getDataHookMap = element => {
+		const dataHookMap = new Map;
+		const dataHooks = element.querySelectorAll('[data-hook]');
+		for (let c = 0; c < dataHooks.length; c++) {
+			const dataHook = dataHooks[c];
+			dataHookMap.set(dataHook.getAttribute('data-hook'), dataHook);
 		}
-		return b;
+		return dataHookMap;
 	};
-	ViewUtil.buildHtmlContents = (htmlContents, baseHtmlTag = 'div') => {
-		var c = window.document.createElement(baseHtmlTag);
-		c.innerHTML = htmlContents;
-		return c.firstElementChild;
+	ViewUtil.getFirstElemChildFromHtmlContents = (htmlContents, baseHtmlTag = 'div') => {
+		const element = window.document.createElement(baseHtmlTag);
+		element.innerHTML = htmlContents;
+		return element.firstElementChild;
 	};
-	ViewUtil.xe = (a, b) => a.parentElement.replaceChild(b, a);
-	ViewUtil.Cf = a => {
-		for (var b = a.firstChild; b != null;) {
-			a.removeChild(b);
-			b = a.firstChild;
+	ViewUtil.replaceParentsChild = (a, b) => a.parentElement.replaceChild(b, a);
+	ViewUtil.removeFirstChildren = element => {
+		let firstChild = element.firstChild;
+		while (firstChild != null) {
+			element.removeChild(firstChild);
+			firstChild = element.firstChild;
 		}
 	};
 	Mzb.b = true;
@@ -4284,7 +4283,7 @@
 					if (a.length == 2) {
 						a = StringOpsInt.parseInt(a[1]);
 						if (a != null && a >= -200 && a <= 200) {
-							ConnectionConstants.localStorageWrapperInst.rd.Xa(a);
+							ConnectionConstants.localStorageWrapperInst.rd.setLSItem(a);
 							this.ya.gm(a);
 							this.ba('Extrapolation set to ' + a + ' msec');
 						}
@@ -4374,7 +4373,7 @@
 		}, fm: function (a) {
 			if (a != null)
 				a = StringOpsLimit.Qc(a, 2);
-			ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.Xa(a);
+			ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.setLSItem(a);
 			this.ya.ra(Mra.la(a));
 		}, f: CommandUtil
 	};
@@ -4426,7 +4425,7 @@
 			};
 			this.j.bb(a.g);
 		}, ia: function () {
-			window.document.removeEventListener('keydown', handleEvent(this, this.Bd));
+			window.document.removeEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
 			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
@@ -4450,7 +4449,7 @@
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
 				this.uf();
@@ -4487,45 +4486,45 @@
 				a.Bf = this.ya.T.K.Oa != 120;
 				this.ya.ra(a);
 			}
-		}, Bd: function (a) {
-			switch (a.keyCode) {
-				case 9:
-				case 13:
+		}, handleKeyboardEvent: function (kbEvent) {
+			switch (kbEvent.keyCode) {
+				case 9: // tab
+				case 13: // enter
 					this.j.Qa.gb.focus();
-					a.preventDefault();
+					kbEvent.preventDefault();
 					break;
-				case 27:
+				case 27: // esc
 					if (this.j.Zo())
 						this.j.bb(null);
 					else {
 						var b = this.j;
 						b.me(!b.Gd);
 					}
-					a.preventDefault();
+					kbEvent.preventDefault();
 					break;
-				case 49:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(1);
+				case 49: // 1
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(1);
 					break;
-				case 50:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(2);
+				case 50: // 2
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(2);
 					break;
-				case 51:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(3);
+				case 51: // 3
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(3);
 					break;
-				case 52:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(0);
+				case 52: // 4
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(0);
 					break;
-				case 80:
+				case 80: // p
 					this.Bm();
 					break;
 				default:
-					this.ob.Bd(a.code);
+					this.ob.handleKeyCode(kbEvent.code);
 			}
 		}, uf: function () {
-			var a = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L();
+			var a = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue();
 			var b = this.j.Fb;
 			var c = b.Eb;
-			c.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.L();
+			c.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.getLSUValue();
 			if (a == 0) {
 				b.Gg(true);
 				c.kf = 1;
@@ -4584,14 +4583,14 @@
 			a.rl = (a, b) => {
 				var d = c.Rh != null && b.indexOf(c.Rh) != -1;
 				c.j.Qa.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
-				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.L() && d)
+				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.getLSUValue() && d)
 					ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
-				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.L())
+				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue())
 					ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 			};
 			a.Vl = (a, b, f, g) => {
 				c.j.Qa.pp(a, b, f);
-				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.L()) switch (g) {
+				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue()) switch (g) {
 					case 1:
 						ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 						break;
@@ -4665,8 +4664,8 @@
 		}, f: MentionUtil
 	};
 	Dra.b = true;
-	Dra.Fk = a => {
-		switch (ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.L().L(a)) {
+	Dra.Fk = keyCode => {
+		switch (ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.getLSUValue().L(keyCode)) {
 			case 'Down':
 				return 2;
 			case 'Kick':
@@ -4692,8 +4691,8 @@
 				b.input = a;
 				this.ng(b);
 			}
-		}, Bd: function (a) {
-			this.$d |= Dra.Fk(a);
+		}, handleKeyCode: function (keyCode) {
+			this.$d |= Dra.Fk(keyCode);
 		}, Cd: function (a) {
 			this.$d &= ~Dra.Fk(a);
 		}, al: function () {
@@ -4706,13 +4705,13 @@
 		}, f: Dra
 	};
 	GeoLocation.b = true;
-	GeoLocation.Hh = a => GeoLocation.Rf(JSON.parse(a));
-	GeoLocation.Rf = a => {
-		var b = new GeoLocation;
-		b.Ec = a.lat;
-		b.Gc = a.lon;
-		b.ub = a.code.toLowerCase();
-		return b;
+	GeoLocation.Hh = jsonString => GeoLocation.Rf(JSON.parse(jsonString));
+	GeoLocation.Rf = geoJson => {
+		const geoLocation = new GeoLocation;
+		geoLocation.Ec = geoJson.lat;
+		geoLocation.Gc = geoJson.lon;
+		geoLocation.ub = geoJson.code.toLowerCase();
+		return geoLocation;
 	};
 	GeoLocation.Fo = () => WebserverApiOps.tk(ConnectionConstants.rsUrl + 'api/geo').then(a => GeoLocation.Rf(a));
 	GeoLocation.prototype = {
@@ -4723,7 +4722,7 @@
 	LocalStorageWrapper.b = true;
 	LocalStorageWrapper.prototype = {
 		Lh: function () {
-			return this.Ne.L() != null ? this.Ne.L() : this.Me.L() != null ? this.Me.L() : new GeoLocation;
+			return this.Ne.getLSUValue() != null ? this.Ne.getLSUValue() : this.Me.getLSUValue() != null ? this.Me.getLSUValue() : new GeoLocation;
 		}, f: LocalStorageWrapper
 	};
 	LocalStorageUtil.b = true;
@@ -4744,18 +4743,20 @@
 	};
 	LocalStorageUnit.b = true;
 	LocalStorageUnit.prototype = {
-		L: function () {
+		getLSUValue: function () {
 			return this.lsUnitValue;
-		}, Xa: function (a) {
-			this.lsUnitValue = a;
-			if (this.localStorageInstField != null) try {
-				var b = this.Ur(a);
-				if (b == null)
-					this.localStorageInstField.removeItem(this.w);
-				else
-					this.localStorageInstField.setItem(this.w, b);
-			}
-			catch (c) {
+		}, setLSItem: function (num) {
+			this.lsUnitValue = num;
+			if (this.localStorageInstField != null) {
+				try {
+					var b = this.lsuFunDField(num);
+					if (b == null)
+						this.localStorageInstField.removeItem(this.w);
+					else
+						this.localStorageInstField.setItem(this.w, b);
+				}
+				catch (c) {
+				}
 			}
 		}, f: LocalStorageUnit
 	};
@@ -4821,10 +4822,10 @@
 		Muu.hp();
 	};
 	Muu.hp = () => {
-		var a = ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.L();
+		var a = ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.getLSUValue();
 		if (a == null) Dii.yo().then(a => {
 			Muu.Je = a;
-			ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.Xa(a.Ir());
+			ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.setLSItem(a.Ir());
 		}).catch(() => ({}));
 		else
 			Dii.xo(a).then(a => Muu.Je = a).catch(() => ({}));
@@ -4834,9 +4835,9 @@
 		return a != null ? a.getItem('crappy_router') != null : false;
 	};
 	Muu.jk = a => {
-		var b = new ChooseNicknameView(ConnectionConstants.localStorageWrapperInst.fe.L());
+		var b = new ChooseNicknameView(ConnectionConstants.localStorageWrapperInst.fe.getLSUValue());
 		b.cl = b => {
-			ConnectionConstants.localStorageWrapperInst.fe.Xa(b);
+			ConnectionConstants.localStorageWrapperInst.fe.setLSItem(b);
 			ConnectionConstants.Na.Tl();
 			a();
 		};
@@ -4949,7 +4950,7 @@
 	};
 	Muu.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
 	Muu.oo = () => {
-		var a = ConnectionConstants.localStorageWrapperInst.fe.L();
+		var a = ConnectionConstants.localStorageWrapperInst.fe.getLSUValue();
 		var b = new CreateRoomView('' + a + '\'s room');
 		DisplayUtil.La(b.g);
 		b.ci = () => Muu.xb();
@@ -4981,7 +4982,7 @@
 			k.w = a;
 			k.cb = true;
 			k.Kd = f.ub;
-			k.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.L();
+			k.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.getLSUValue();
 			g.I.push(k);
 			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: g, version: 9});
 			l.fg = b.qs - 1;
@@ -5058,7 +5059,7 @@
 	};
 	Muu.po = a => {
 		try {
-			var b = new ReplayVb(new HasStreamReader(new Uint8Array(a), new Room, 3));
+			var b = new ReplayUtil(new HasStreamReader(new Uint8Array(a), new Room, 3));
 			b.je.de = () => {
 				b.ia();
 				Muu.xb();
@@ -5094,9 +5095,9 @@
 			var d = Muu.Bo();
 			var e = new Room;
 			var f = StreamWriter.ha();
-			f.mc(ConnectionConstants.localStorageWrapperInst.fe.L());
+			f.mc(ConnectionConstants.localStorageWrapperInst.fe.getLSUValue());
 			f.mc(ConnectionConstants.localStorageWrapperInst.Lh().ub);
-			f.Db(ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.L());
+			f.Db(ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.getLSUValue());
 			var g = ConnectionConstants.stuns;
 			var k = ConnectionConstants.p2pWss;
 			var l = f.Kg();
@@ -5215,8 +5216,8 @@
 			DisplayUtil.es(() => {
 				Mkc.fj();
 				var b;
-				if (ConnectionConstants.localStorageWrapperInst.Me.L() == null) {
-					GeoLocation.Fo().then(a => ConnectionConstants.localStorageWrapperInst.Me.Xa(a)).catch(() => ({}));
+				if (ConnectionConstants.localStorageWrapperInst.Me.getLSUValue() == null) {
+					GeoLocation.Fo().then(a => ConnectionConstants.localStorageWrapperInst.Me.setLSItem(a)).catch(() => ({}));
 				}
 				else
 					b = Promise.resolve(null);
@@ -5274,10 +5275,10 @@
 			DisplayUtil.Vm = a;
 		}
 	};
-	ReplayVb.b = true;
-	ReplayVb.prototype = {
+	ReplayUtil.b = true;
+	ReplayUtil.prototype = {
 		ia: function () {
-			window.document.removeEventListener('keydown', handleEvent(this, this.Bd));
+			window.document.removeEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
 			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
@@ -5289,31 +5290,31 @@
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
-				this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L());
+				this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
 				if (this.ya.Fd <= 0)
 					this.j.C(this.ya);
 			}
-		}, Bd: function (a) {
-			switch (a.keyCode) {
-				case 27:
-					var b = this.j;
-					b.me(!b.Gd);
-					a.preventDefault();
+		}, handleKeyboardEvent: function (kbEvent) {
+			switch (kbEvent.keyCode) {
+				case 27: // esc
+					const gameView = this.j;
+					gameView.me(!gameView.Gd);
+					kbEvent.preventDefault();
 					break;
-				case 49:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(1);
+				case 49: // 1
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(1);
 					break;
-				case 50:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(2);
+				case 50: // 2
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(2);
 					break;
-				case 51:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(3);
+				case 51: // 3
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(3);
 					break;
-				case 52:
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(0);
+				case 52: // 4
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(0);
 			}
 		}, uf: function (a) {
 			var b = this.j.Fb;
@@ -5328,7 +5329,7 @@
 				b.Eb.kf = 1 + 0.25 * (a - 1);
 			}
 		}, Cd: () => {
-		}, f: ReplayVb
+		}, f: ReplayUtil
 	};
 	Dfb.b = true;
 	Dfb.prototype = {
@@ -5552,7 +5553,7 @@
 				this.gh = null;
 				this.ve = 0;
 			}
-			this.Tg.gain.value = ConnectionConstants.localStorageWrapperInst.soundCrowdStorageUnit.L() ? this.ve : 0;
+			this.Tg.gain.value = ConnectionConstants.localStorageWrapperInst.soundCrowdStorageUnit.getLSUValue() ? this.ve : 0;
 		}, qj: function (a) {
 			var b = this;
 			this.dh = a;
@@ -8946,7 +8947,7 @@
 			}
 			MajorCanvas.Gi(this.c, true);
 		}, Nq: function (a, b) {
-			for (var c = ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit.L(), d = 0, e = a.I; e.length > d;) {
+			for (var c = ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit.getLSUValue(), d = 0, e = a.I; e.length > d;) {
 				var f = e[d];
 				++d;
 				var g = f.H;
@@ -9179,9 +9180,9 @@
 			a.drawImage(this.vl.canvas, 0, 0, 160, 34, b - 40, c - 34, 80, 17);
 		}, C: function (a, b) {
 			if (a.H != null) {
-				var c = ConnectionConstants.localStorageWrapperInst.teamColorsStorageUnit.L() ? b.kb[a.ea.$] : a.ea.wm;
+				var c = ConnectionConstants.localStorageWrapperInst.teamColorsStorageUnit.getLSUValue() ? b.kb[a.ea.$] : a.ea.wm;
 				var d = a.Jd != null ? a.Jd : a.Xb;
-				var e = ConnectionConstants.localStorageWrapperInst.showAvatarsStorageUnit.L() && d != null;
+				var e = ConnectionConstants.localStorageWrapperInst.showAvatarsStorageUnit.getLSUValue() && d != null;
 				if (!PlayerBallCanvas.Ln(this.kb, c) || !e && this.uh != a.Jb || e && d != this.Jf) {
 					PlayerBallCanvas.ao(this.kb, c);
 					if (e) {
@@ -9247,7 +9248,7 @@
 			b.ub = Dha.ab[(a << 2) + 1].toLowerCase();
 			b.Ec = Dha.ab[(a << 2) + 2];
 			b.Gc = Dha.ab[(a << 2) + 3];
-			ConnectionConstants.localStorageWrapperInst.Ne.Xa(b);
+			ConnectionConstants.localStorageWrapperInst.Ne.setLSItem(b);
 			Daa.i(this.qb);
 		}, f: ChangeLocationView
 	};
@@ -9331,7 +9332,7 @@
 			var b = this;
 			var c = a != null && a.length != 0;
 			if (!this.Mb.hidden)
-				ViewUtil.Cf(this.Mb);
+				ViewUtil.removeFirstChildren(this.Mb);
 			this.Wc = null;
 			this.Mb.hidden = !c;
 			if (c) {
@@ -9492,7 +9493,7 @@
 				}
 			}
 		}, Zo: () => GameView.kq != null, bb: function (a, b) {
-			ViewUtil.Cf(this.hf);
+			ViewUtil.removeFirstChildren(this.hf);
 			GameView.kq = a;
 			if (a != null) {
 				this.hf.style.display = 'flex';
@@ -9709,7 +9710,7 @@
 			var b = this;
 			this.en(null);
 			this.pj.disabled = true;
-			ViewUtil.Cf(this.gj);
+			ViewUtil.removeFirstChildren(this.gj);
 			var c = [];
 			this.dj = [];
 			RoomListView.As(RoomListOps.get().then(a => c = a).catch(() => ({}))).then(a).catch(a);
@@ -9718,7 +9719,7 @@
 			this.dj = a;
 			RoomListOps.Hs(this.gs, a);
 			a.sort((a, b) => a.Le - b.Le);
-			ViewUtil.Cf(this.gj);
+			ViewUtil.removeFirstChildren(this.gj);
 			for (var c = 0, d = 0, e = !this.fs.Ta, f = !this.zs.Ta, g = 0; a.length > g;) {
 				var h = [a[g]];
 				++g;
@@ -9752,7 +9753,7 @@
 				if (c != null && c != '' && c != Notice.On) {
 					a.$n.innerHTML = c;
 					a.Xk.hidden = false;
-					a.nd.onclick = () => {
+					a.closeBtnField.onclick = () => {
 						Notice.On = c;
 						return a.Xk.hidden = true;
 					};
@@ -9773,7 +9774,7 @@
 	RoomMenuView.prototype = {
 		Th: function (a, b, c, d) {
 			var e = this;
-			ViewUtil.xe(a, b.g);
+			ViewUtil.replaceParentsChild(a, b.g);
 			b.mg = (a, b) => Mia.i(e.mg, a, b);
 			b.ee = a => Yyy.i(e.ee, a);
 			b.Kp = a => Mia.i(e.mg, d, a);
