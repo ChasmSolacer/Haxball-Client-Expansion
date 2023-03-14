@@ -64,7 +64,7 @@
 				g.className = 'icon-cancel';
 				g.onclick = ((a, b) => () => {
 					p.Jq(b[0]);
-					ConnectionConstants.buildsStorageMInst.tg.Xa(p);
+					ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.Xa(p);
 					a[0].remove();
 				})(f, e);
 				f[0].appendChild(g);
@@ -81,7 +81,7 @@
 					b = b.code;
 					if (p.L(b) == null) {
 						p.Pa(b, a);
-						ConnectionConstants.buildsStorageMInst.tg.Xa(p);
+						ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.Xa(p);
 						r();
 					}
 				};
@@ -167,26 +167,26 @@
 		settingsBtnSecFun('misc');
 		settingsBtnSecFun('input');
 		settingsSelectedFun(t[SettingsView.$l]);
-		settingsOkCancelFun('tsound-main', ConnectionConstants.buildsStorageMInst.pm, a => ConnectionConstants.Na.im(a ? 1 : 0));
-		settingsOkCancelFun('tsound-chat', ConnectionConstants.buildsStorageMInst.Hi);
-		settingsOkCancelFun('tsound-highlight', ConnectionConstants.buildsStorageMInst.om);
-		settingsOkCancelFun('tsound-crowd', ConnectionConstants.buildsStorageMInst.nm);
-		settingsDFun('viewmode', ConnectionConstants.buildsStorageMInst.Tb, a => a - 1, a => a + 1);
-		settingsDFun('fps', ConnectionConstants.buildsStorageMInst.Fh, a => a, a => a);
+		settingsOkCancelFun('tsound-main', ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit, a => ConnectionConstants.Na.im(a ? 1 : 0));
+		settingsOkCancelFun('tsound-chat', ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit);
+		settingsOkCancelFun('tsound-highlight', ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit);
+		settingsOkCancelFun('tsound-crowd', ConnectionConstants.localStorageWrapperInst.soundCrowdStorageUnit);
+		settingsDFun('viewmode', ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit, a => a - 1, a => a + 1);
+		settingsDFun('fps', ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit, a => a, a => a);
 		var h = [1, 0.75, 0.5, 0.25];
-		settingsDFun('resscale', ConnectionConstants.buildsStorageMInst.Sl, a => h[a], a => {
+		settingsDFun('resscale', ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit, a => h[a], a => {
 			for (var b = 0, c = h.length - 1; c > b && !(a >= h[b]);) {
 				++b;
 			}
 			return b;
 		});
-		settingsOkCancelFun('tvideo-teamcol', ConnectionConstants.buildsStorageMInst.xm);
-		settingsOkCancelFun('tvideo-showindicators', ConnectionConstants.buildsStorageMInst.Ak);
-		settingsOkCancelFun('tvideo-showavatars', ConnectionConstants.buildsStorageMInst.lm);
+		settingsOkCancelFun('tvideo-teamcol', ConnectionConstants.localStorageWrapperInst.teamColorsStorageUnit);
+		settingsOkCancelFun('tvideo-showindicators', ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit);
+		settingsOkCancelFun('tvideo-showavatars', ConnectionConstants.localStorageWrapperInst.showAvatarsStorageUnit);
 		var m = null;
 		var m = () => {
-			var b = ConnectionConstants.buildsStorageMInst.Ne.L();
-			settingsFlagFun('loc', 'Detected location', ConnectionConstants.buildsStorageMInst.Me.L());
+			var b = ConnectionConstants.localStorageWrapperInst.Ne.L();
+			settingsFlagFun('loc', 'Detected location', ConnectionConstants.localStorageWrapperInst.Me.L());
 			settingsFlagFun('loc-ovr', 'Location override', b);
 			var d = l.get('loc-ovr-btn');
 			d.disabled = !a;
@@ -197,13 +197,13 @@
 			else {
 				d.textContent = 'Remove override';
 				d.onclick = () => {
-					ConnectionConstants.buildsStorageMInst.Ne.Xa(null);
+					ConnectionConstants.localStorageWrapperInst.Ne.Xa(null);
 					m();
 				};
 			}
 		};
 		m();
-		var p = ConnectionConstants.buildsStorageMInst.tg.L();
+		var p = ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.L();
 		var q = l.get('presskey');
 		var r;
 		var u = l.get('inputsec');
@@ -1280,7 +1280,7 @@
 		var c = this;
 		this.c = new AudioContext;
 		this.ag = this.c.createGain();
-		this.im(ConnectionConstants.buildsStorageMInst.pm.L() ? 1 : 0);
+		this.im(ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit.L() ? 1 : 0);
 		this.ag.connect(this.c.destination);
 		this.ro = Promise.all([
 			b('sounds/chat.ogg').then(a => c.Rj = a),
@@ -1322,7 +1322,7 @@
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
-		this.uf(ConnectionConstants.buildsStorageMInst.Tb.L());
+		this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L());
 		this.j.g.classList.add('replayer');
 		this.je = new ReplayControlsView(a);
 		this.je.Vp = () => c.Lr(a.T);
@@ -1350,22 +1350,24 @@
 		this.Yc = new Map;
 	}
 
-	function StorageM(a, b, c, d) {
-		this.w = a;
-		this.Ur = d;
-		this.Yh = b;
-		d = null;
-		if (b != null)
-			d = b.getItem(a);
-		this.Hm = c(d);
+	function LocalStorageUnit(lsKey, localStorageInst, funC, funD) {
+		this.w = lsKey;
+		this.Ur = funD;
+		this.localStorageInstField = localStorageInst;
+		funD = null;
+		if (localStorageInst != null)
+			funD = localStorageInst.getItem(lsKey);
+		this.lsUnitValue = funC(funD);
 	}
 
 	function LocalStorageUtil() {
 	}
 
-	function BuildsStorageM() {
-		function a(a) {
-			return new StorageM(a, e, a => {
+	function LocalStorageWrapper() {
+		var localStorage1 = LocalStorageUtil.Pm();
+		
+		function lsGeoFun(key) {
+			return new LocalStorageUnit(key, localStorage1, a => {
 				if (a == null)
 					return null;
 				try {
@@ -1386,12 +1388,12 @@
 			});
 		}
 
-		function b(a) {
-			return new StorageM(a, e, a => a != null ? a != '0' : true, a => a ? '1' : '0');
+		function lsbFun(a) {
+			return new LocalStorageUnit(a, localStorage1, a => a != null ? a != '0' : true, a => a ? '1' : '0');
 		}
 
-		function c(a, b) {
-			return new StorageM(a, e, a => {
+		function lscFun(a, b) {
+			return new LocalStorageUnit(a, localStorage1, a => {
 				var c = b;
 				try {
 					if (a != null)
@@ -1403,38 +1405,37 @@
 			}, a => '' + a);
 		}
 
-		function d(a, b, c) {
-			return new StorageM(a, e, a => a == null ? b : StringOpsLimit.Qc(a, c), a => a);
+		function buildLSUd(key, defaultValue, maxLen) {
+			return new LocalStorageUnit(key, localStorage1, a => a == null ? defaultValue : StringOpsLimit.Qc(a, maxLen), a => a);
 		}
-
-		var e = LocalStorageUtil.Pm();
-		this.fe = d('player_name', '', 25);
-		this.Tb = c('view_mode', -1);
-		this.Fh = c('fps_limit', 0);
-		this.sh = d('avatar', null, 2);
-		d('rctoken', null, 1024);
-		this.xm = b('team_colors');
-		this.Ak = b('show_indicators');
-		this.pm = b('sound_main');
-		this.Hi = b('sound_chat');
-		this.om = b('sound_highlight');
-		this.nm = b('sound_crowd');
-		this.Gj = d('player_auth_key', null, 1024);
-		this.rd = c('extrapolation', 0);
-		this.Sl = ((a, b) => new StorageM(a, e, a => {
-			var c = b;
+		
+		this.fe = buildLSUd('player_name', '', 25);
+		this.viewModeStorageUnit = lscFun('view_mode', -1);
+		this.fpsLimitStorageUnit = lscFun('fps_limit', 0);
+		this.avatarStorageUnit = buildLSUd('avatar', null, 2);
+		buildLSUd('rctoken', null, 1024);
+		this.teamColorsStorageUnit = lsbFun('team_colors');
+		this.showIndicatorsStorageUnit = lsbFun('show_indicators');
+		this.soundMainStorageUnit = lsbFun('sound_main');
+		this.soundChatStorageUnit = lsbFun('sound_chat');
+		this.soundHighlightStorageUnit = lsbFun('sound_highlight');
+		this.soundCrowdStorageUnit = lsbFun('sound_crowd');
+		this.playerAuthKeyStorageUnit = buildLSUd('player_auth_key', null, 1024);
+		this.rd = lscFun('extrapolation', 0);
+		this.resolutionScaleStorageUnit = ((key, bNum) => new LocalStorageUnit(key, localStorage1, a => {
+			var cNum = bNum;
 			try {
 				if (a != null)
-					c = parseFloat(a);
+					cNum = parseFloat(a);
 			}
 			catch (t) {
 			}
-			return c;
+			return cNum;
 		}, a => '' + a))('resolution_scale', 1);
-		this.lm = b('show_avatars');
-		this.Me = a('geo');
-		this.Ne = a('geo_override');
-		this.tg = (() => new StorageM('player_keys', e, a => {
+		this.showAvatarsStorageUnit = lsbFun('show_avatars');
+		this.Me = lsGeoFun('geo');
+		this.Ne = lsGeoFun('geo_override');
+		this.playerKeysStorageUnit = (() => new LocalStorageUnit('player_keys', localStorage1, a => {
 			if (a == null)
 				return DwwMap.$j();
 			try {
@@ -1460,7 +1461,8 @@
 	}
 
 	function Dra() {
-		this.$d = this.Yf = 0;
+		this.Yf = 0;
+		this.$d = 0;
 		window.document.addEventListener('focusout', handleEvent(this, this.al));
 	}
 
@@ -1564,10 +1566,10 @@
 		}, 1000);
 		this.Qr = window.setInterval(() => a.C(), 50);
 		this.uf();
-		var c = ConnectionConstants.buildsStorageMInst.rd.L();
+		var c = ConnectionConstants.localStorageWrapperInst.rd.L();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
 		if (c != 0) {
-			var d = ConnectionConstants.buildsStorageMInst.rd.L();
+			var d = ConnectionConstants.localStorageWrapperInst.rd.L();
 			a.gm(d);
 			this.j.Qa.Gb('Extrapolation set to ' + c + ' msec');
 		}
@@ -1763,9 +1765,12 @@
 
 	function VMajor(a) {
 		this.Ri = new Dia;
-		this.te = this.cc = 0;
+		this.cc = 0;
+		this.te = 0;
 		this.le = new Dia;
-		this.uc = this.bc = this.rd = 0;
+		this.rd = 0;
+		this.bc = 0;
+		this.uc = 0;
 		this.Ac = 0.06;
 		this.mh = 16.666666666666668;
 		this.Ff = 120;
@@ -4279,7 +4284,7 @@
 					if (a.length == 2) {
 						a = StringOpsInt.parseInt(a[1]);
 						if (a != null && a >= -200 && a <= 200) {
-							ConnectionConstants.buildsStorageMInst.rd.Xa(a);
+							ConnectionConstants.localStorageWrapperInst.rd.Xa(a);
 							this.ya.gm(a);
 							this.ba('Extrapolation set to ' + a + ' msec');
 						}
@@ -4369,7 +4374,7 @@
 		}, fm: function (a) {
 			if (a != null)
 				a = StringOpsLimit.Qc(a, 2);
-			ConnectionConstants.buildsStorageMInst.sh.Xa(a);
+			ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.Xa(a);
 			this.ya.ra(Mra.la(a));
 		}, f: CommandUtil
 	};
@@ -4445,7 +4450,7 @@
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			if (ConnectionConstants.buildsStorageMInst.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.L() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
 				this.uf();
@@ -4499,16 +4504,16 @@
 					a.preventDefault();
 					break;
 				case 49:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(1);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(1);
 					break;
 				case 50:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(2);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(2);
 					break;
 				case 51:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(3);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(3);
 					break;
 				case 52:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(0);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(0);
 					break;
 				case 80:
 					this.Bm();
@@ -4517,10 +4522,10 @@
 					this.ob.Bd(a.code);
 			}
 		}, uf: function () {
-			var a = ConnectionConstants.buildsStorageMInst.Tb.L();
+			var a = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L();
 			var b = this.j.Fb;
 			var c = b.Eb;
-			c.zg = ConnectionConstants.buildsStorageMInst.Sl.L();
+			c.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.L();
 			if (a == 0) {
 				b.Gg(true);
 				c.kf = 1;
@@ -4579,14 +4584,14 @@
 			a.rl = (a, b) => {
 				var d = c.Rh != null && b.indexOf(c.Rh) != -1;
 				c.j.Qa.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
-				if (ConnectionConstants.buildsStorageMInst.om.L() && d)
+				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.L() && d)
 					ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
-				else if (ConnectionConstants.buildsStorageMInst.Hi.L())
+				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.L())
 					ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 			};
 			a.Vl = (a, b, f, g) => {
 				c.j.Qa.pp(a, b, f);
-				if (ConnectionConstants.buildsStorageMInst.Hi.L()) switch (g) {
+				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.L()) switch (g) {
 					case 1:
 						ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
 						break;
@@ -4661,7 +4666,7 @@
 	};
 	Dra.b = true;
 	Dra.Fk = a => {
-		switch (ConnectionConstants.buildsStorageMInst.tg.L().L(a)) {
+		switch (ConnectionConstants.localStorageWrapperInst.playerKeysStorageUnit.L().L(a)) {
 			case 'Down':
 				return 2;
 			case 'Kick':
@@ -4715,44 +4720,44 @@
 			return JSON.stringify({lat: this.Ec, lon: this.Gc, code: this.ub});
 		}, f: GeoLocation
 	};
-	BuildsStorageM.b = true;
-	BuildsStorageM.prototype = {
+	LocalStorageWrapper.b = true;
+	LocalStorageWrapper.prototype = {
 		Lh: function () {
 			return this.Ne.L() != null ? this.Ne.L() : this.Me.L() != null ? this.Me.L() : new GeoLocation;
-		}, f: BuildsStorageM
+		}, f: LocalStorageWrapper
 	};
 	LocalStorageUtil.b = true;
 	LocalStorageUtil.Pm = () => {
 		try {
-			var a = window.localStorage;
-			a.getItem('');
-			if (a.length == 0) {
-				var b = '_hx_' + Math.random();
-				a.setItem(b, b);
-				a.removeItem(b);
+			var localStorage1 = window.localStorage;
+			localStorage1.getItem('');
+			if (localStorage1.length == 0) {
+				var hxRandom = '_hx_' + Math.random();
+				localStorage1.setItem(hxRandom, hxRandom);
+				localStorage1.removeItem(hxRandom);
 			}
-			return a;
+			return localStorage1;
 		}
 		catch (c) {
 			return null;
 		}
 	};
-	StorageM.b = true;
-	StorageM.prototype = {
+	LocalStorageUnit.b = true;
+	LocalStorageUnit.prototype = {
 		L: function () {
-			return this.Hm;
+			return this.lsUnitValue;
 		}, Xa: function (a) {
-			this.Hm = a;
-			if (this.Yh != null) try {
+			this.lsUnitValue = a;
+			if (this.localStorageInstField != null) try {
 				var b = this.Ur(a);
 				if (b == null)
-					this.Yh.removeItem(this.w);
+					this.localStorageInstField.removeItem(this.w);
 				else
-					this.Yh.setItem(this.w, b);
+					this.localStorageInstField.setItem(this.w, b);
 			}
 			catch (c) {
 			}
-		}, f: StorageM
+		}, f: LocalStorageUnit
 	};
 	DwwMap.b = true;
 	DwwMap.Rf = a => {
@@ -4816,10 +4821,10 @@
 		Muu.hp();
 	};
 	Muu.hp = () => {
-		var a = ConnectionConstants.buildsStorageMInst.Gj.L();
+		var a = ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.L();
 		if (a == null) Dii.yo().then(a => {
 			Muu.Je = a;
-			ConnectionConstants.buildsStorageMInst.Gj.Xa(a.Ir());
+			ConnectionConstants.localStorageWrapperInst.playerAuthKeyStorageUnit.Xa(a.Ir());
 		}).catch(() => ({}));
 		else
 			Dii.xo(a).then(a => Muu.Je = a).catch(() => ({}));
@@ -4829,9 +4834,9 @@
 		return a != null ? a.getItem('crappy_router') != null : false;
 	};
 	Muu.jk = a => {
-		var b = new ChooseNicknameView(ConnectionConstants.buildsStorageMInst.fe.L());
+		var b = new ChooseNicknameView(ConnectionConstants.localStorageWrapperInst.fe.L());
 		b.cl = b => {
-			ConnectionConstants.buildsStorageMInst.fe.Xa(b);
+			ConnectionConstants.localStorageWrapperInst.fe.Xa(b);
 			ConnectionConstants.Na.Tl();
 			a();
 		};
@@ -4896,7 +4901,7 @@
 		}
 	};
 	Muu.xb = () => {
-		var a = new RoomListView(ConnectionConstants.buildsStorageMInst.Lh());
+		var a = new RoomListView(ConnectionConstants.localStorageWrapperInst.Lh());
 		DisplayUtil.La(a.Ja);
 		a.Ym = b => {
 			if (b.vd.Id != 9) {
@@ -4944,7 +4949,7 @@
 	};
 	Muu.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
 	Muu.oo = () => {
-		var a = ConnectionConstants.buildsStorageMInst.fe.L();
+		var a = ConnectionConstants.localStorageWrapperInst.fe.L();
 		var b = new CreateRoomView('' + a + '\'s room');
 		DisplayUtil.La(b.g);
 		b.ci = () => Muu.xb();
@@ -4969,14 +4974,14 @@
 
 			DisplayUtil.La((new SimpleDialogView('Creating room', 'Connecting...', [])).g);
 			var e = null;
-			var f = ConnectionConstants.buildsStorageMInst.Lh();
+			var f = ConnectionConstants.localStorageWrapperInst.Lh();
 			var g = new Room;
 			g.jc = b.name;
 			var k = new FullPlayer;
 			k.w = a;
 			k.cb = true;
 			k.Kd = f.ub;
-			k.Xb = ConnectionConstants.buildsStorageMInst.sh.L();
+			k.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.L();
 			g.I.push(k);
 			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: g, version: 9});
 			l.fg = b.qs - 1;
@@ -5089,9 +5094,9 @@
 			var d = Muu.Bo();
 			var e = new Room;
 			var f = StreamWriter.ha();
-			f.mc(ConnectionConstants.buildsStorageMInst.fe.L());
-			f.mc(ConnectionConstants.buildsStorageMInst.Lh().ub);
-			f.Db(ConnectionConstants.buildsStorageMInst.sh.L());
+			f.mc(ConnectionConstants.localStorageWrapperInst.fe.L());
+			f.mc(ConnectionConstants.localStorageWrapperInst.Lh().ub);
+			f.Db(ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.L());
 			var g = ConnectionConstants.stuns;
 			var k = ConnectionConstants.p2pWss;
 			var l = f.Kg();
@@ -5210,8 +5215,8 @@
 			DisplayUtil.es(() => {
 				Mkc.fj();
 				var b;
-				if (ConnectionConstants.buildsStorageMInst.Me.L() == null) {
-					GeoLocation.Fo().then(a => ConnectionConstants.buildsStorageMInst.Me.Xa(a)).catch(() => ({}));
+				if (ConnectionConstants.localStorageWrapperInst.Me.L() == null) {
+					GeoLocation.Fo().then(a => ConnectionConstants.localStorageWrapperInst.Me.Xa(a)).catch(() => ({}));
 				}
 				else
 					b = Promise.resolve(null);
@@ -5284,10 +5289,10 @@
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			if (ConnectionConstants.buildsStorageMInst.Fh.L() != 1 || a - this.$c >= 28.333333333333336) {
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.L() != 1 || a - this.$c >= 28.333333333333336) {
 				this.$c = a;
 				this.sd++;
-				this.uf(ConnectionConstants.buildsStorageMInst.Tb.L());
+				this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.L());
 				if (this.ya.Fd <= 0)
 					this.j.C(this.ya);
 			}
@@ -5299,16 +5304,16 @@
 					a.preventDefault();
 					break;
 				case 49:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(1);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(1);
 					break;
 				case 50:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(2);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(2);
 					break;
 				case 51:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(3);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(3);
 					break;
 				case 52:
-					ConnectionConstants.buildsStorageMInst.Tb.Xa(0);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.Xa(0);
 			}
 		}, uf: function (a) {
 			var b = this.j.Fb;
@@ -5547,7 +5552,7 @@
 				this.gh = null;
 				this.ve = 0;
 			}
-			this.Tg.gain.value = ConnectionConstants.buildsStorageMInst.nm.L() ? this.ve : 0;
+			this.Tg.gain.value = ConnectionConstants.localStorageWrapperInst.soundCrowdStorageUnit.L() ? this.ve : 0;
 		}, qj: function (a) {
 			var b = this;
 			this.dh = a;
@@ -8941,7 +8946,7 @@
 			}
 			MajorCanvas.Gi(this.c, true);
 		}, Nq: function (a, b) {
-			for (var c = ConnectionConstants.buildsStorageMInst.Ak.L(), d = 0, e = a.I; e.length > d;) {
+			for (var c = ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit.L(), d = 0, e = a.I; e.length > d;) {
 				var f = e[d];
 				++d;
 				var g = f.H;
@@ -9174,9 +9179,9 @@
 			a.drawImage(this.vl.canvas, 0, 0, 160, 34, b - 40, c - 34, 80, 17);
 		}, C: function (a, b) {
 			if (a.H != null) {
-				var c = ConnectionConstants.buildsStorageMInst.xm.L() ? b.kb[a.ea.$] : a.ea.wm;
+				var c = ConnectionConstants.localStorageWrapperInst.teamColorsStorageUnit.L() ? b.kb[a.ea.$] : a.ea.wm;
 				var d = a.Jd != null ? a.Jd : a.Xb;
-				var e = ConnectionConstants.buildsStorageMInst.lm.L() && d != null;
+				var e = ConnectionConstants.localStorageWrapperInst.showAvatarsStorageUnit.L() && d != null;
 				if (!PlayerBallCanvas.Ln(this.kb, c) || !e && this.uh != a.Jb || e && d != this.Jf) {
 					PlayerBallCanvas.ao(this.kb, c);
 					if (e) {
@@ -9242,7 +9247,7 @@
 			b.ub = Dha.ab[(a << 2) + 1].toLowerCase();
 			b.Ec = Dha.ab[(a << 2) + 2];
 			b.Gc = Dha.ab[(a << 2) + 3];
-			ConnectionConstants.buildsStorageMInst.Ne.Xa(b);
+			ConnectionConstants.localStorageWrapperInst.Ne.Xa(b);
 			Daa.i(this.qb);
 		}, f: ChangeLocationView
 	};
@@ -10028,7 +10033,7 @@
 	ConnectionConstants.p2pWss = 'wss://p2p.haxball.com/';
 	ConnectionConstants.rsUrl = 'https://www.haxball.com/rs/';
 	ConnectionConstants.stuns = [{urls: 'stun:stun.l.google.com:19302'}];
-	ConnectionConstants.buildsStorageMInst = new BuildsStorageM;
+	ConnectionConstants.localStorageWrapperInst = new LocalStorageWrapper;
 	Game.pointsMaxArray = (() => {
 		for (var a = [], b = 0; b < 256; b++)
 			a.push(new Point(0, 0));
