@@ -4514,11 +4514,24 @@
 				case 52: // 4
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(0);
 					break;
+				case 53: // 5
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(4);
+					break;
+				case 54: // 6
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(5);
+					break;
+				case 55: // 7
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(6);
+					break;
+				case 56: // 8
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(7);
+					break;
 				case 80: // p
 					this.Bm();
 					break;
 				default:
 					this.ob.handleKeyCode(kbEvent.code);
+					break;
 			}
 		}, uf: function () {
 			var a = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue();
@@ -5315,6 +5328,19 @@
 					break;
 				case 52: // 4
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(0);
+					break;
+				case 53: // 5
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(4);
+					break;
+				case 54: // 6
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(5);
+					break;
+				case 55: // 7
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(6);
+					break;
+				case 56: // 8
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(7);
+					break;
 			}
 		}, uf: function (a) {
 			var b = this.j.Fb;
