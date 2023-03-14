@@ -1517,7 +1517,7 @@
 		};
 		this.j.Wa.Yp = () => a.ra(new Dma);
 		this.j.Wa.Zp = () => a.ra(new Dla);
-		this.j.Wa.Mp = () => b.Bm();
+		this.j.Wa.Mp = () => b.handleGamePause();
 		this.j.Wa.mg = (b, c) => {
 			var d = Dss.la(b, c);
 			a.ra(d);
@@ -4480,11 +4480,11 @@
 				this.ya.ra(Mna.la(a ? 0 : 1));
 				this.Ik = a;
 			}
-		}, Bm: function () {
+		}, handleGamePause: function () {
 			if (this.ya.T.K != null) {
-				var a = new Doa;
-				a.Bf = this.ya.T.K.Oa != 120;
-				this.ya.ra(a);
+				const doa1 = new Doa;
+				doa1.Bf = this.ya.T.K.Oa != 120;
+				this.ya.ra(doa1);
 			}
 		}, handleKeyboardEvent: function (kbEvent) {
 			switch (kbEvent.keyCode) {
@@ -4527,7 +4527,7 @@
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(7);
 					break;
 				case 80: // p
-					this.Bm();
+					this.handleGamePause();
 					break;
 				default:
 					this.ob.handleKeyCode(kbEvent.code);
@@ -8997,6 +8997,9 @@
 				this.c.strokeStyle = b.lo;
 			}
 			this.c.beginPath();
+			// It's possible to specify negative radius in hbs file
+			if (a.Z < 0)
+				a.Z = 0;
 			this.c.arc(a.a.x, a.a.y, a.Z, 0, 2 * Math.PI, false);
 			if (b != null) {
 				this.c.save();
