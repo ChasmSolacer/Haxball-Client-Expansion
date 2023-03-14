@@ -1408,7 +1408,7 @@
 		}
 
 		this.fe = buildLSUWithDefValAndMaxLen('player_name', '', 25);
-		this.viewModeStorageUnit = buildLSUWithDefVal('view_mode', -1);
+		this.viewModeStorageUnit = buildLSUWithDefVal('view_mode', 1);
 		this.fpsLimitStorageUnit = buildLSUWithDefVal('fps_limit', 0);
 		this.avatarStorageUnit = buildLSUWithDefValAndMaxLen('avatar', null, 2);
 		buildLSUWithDefValAndMaxLen('rctoken', null, 1024);
