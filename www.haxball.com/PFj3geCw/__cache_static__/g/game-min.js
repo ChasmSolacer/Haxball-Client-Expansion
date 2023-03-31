@@ -166,7 +166,7 @@
 		settingsBtnSecFun('misc');
 		settingsBtnSecFun('input');
 		settingsSelectedFun(tArr[SettingsView.$l]);
-		settingsOkCancelFun('tsound-main', ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit, a => ConnectionConstants.Na.im(a ? 1 : 0));
+		settingsOkCancelFun('tsound-main', ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit, a => ConnectionConstants.audioUtilInst.im(a ? 1 : 0));
 		settingsOkCancelFun('tsound-chat', ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit);
 		settingsOkCancelFun('tsound-highlight', ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit);
 		settingsOkCancelFun('tsound-crowd', ConnectionConstants.localStorageWrapperInst.soundCrowdStorageUnit);
@@ -567,19 +567,21 @@
 		this.vp = 400;
 		this.yk = 64;
 		this.Vi = 32;
-		this.sa = window.document.createElement('canvas');
-		this.Qf = window.document.createElement('canvas');
+		this.pingCanvasField1 = window.document.createElement('canvas');
+		this.pingCanvasField2 = window.document.createElement('canvas');
 		this.g = window.document.createElement('div');
-		this.Qf.width = this.sa.width = this.Vi;
-		this.Qf.height = this.sa.height = this.yk;
-		this.Eh = this.Qf.getContext('2d', null);
-		this.c = this.sa.getContext('2d', null);
+		this.pingCanvasField1.width = this.Vi;
+		this.pingCanvasField2.width = this.Vi;
+		this.pingCanvasField1.height = this.yk;
+		this.pingCanvasField2.height = this.yk;
+		this.Eh = this.pingCanvasField2.getContext('2d', null);
+		this.c = this.pingCanvasField1.getContext('2d', null);
 		this.c.fillStyle = 'green';
 		for (var a = [], b = 0, c = this.Vi; c > b; b++) {
 			a.push(0);
 		}
 		this.fq = a;
-		this.g.appendChild(this.Qf);
+		this.g.appendChild(this.pingCanvasField2);
 		this.g.className = 'graph';
 	}
 
@@ -754,7 +756,7 @@
 		this.Pb = new ScoreUtil(a.get('red-score'), 0);
 		this.Kb = new ScoreUtil(a.get('blue-score'), 0);
 		ViewUtil.replaceParentsChild(a.get('timer'), this.xc.g);
-		ViewUtil.replaceParentsChild(a.get('canvas'), this.Eb.sa);
+		ViewUtil.replaceParentsChild(a.get('canvas'), this.Eb.canvasElemField);
 	}
 
 	function DisconnectedView(a, b) {
@@ -952,22 +954,22 @@
 	}
 
 	function MajorCanvas() {
-		this.$c = window.performance.now();
-		this.Jg = new Map;
-		this.dd = new Map;
+		this.$cPerf = window.performance.now();
+		this.jgMap = new Map;
+		this.ddMap = new Map;
 		this.zg = 1;
 		this.xf = 35;
 		this.jf = 0;
 		this.kf = 1.5;
-		this.Ya = new Point(0, 0);
+		this.yaPoint = new Point(0, 0);
 		this.Dk = false;
 		this.td = new BigTextUtil;
-		this.sa = window.document.createElement('canvas');
-		this.sa.mozOpaque = true;
-		this.c = this.sa.getContext('2d', {alpha: false});
-		this.Lo = this.c.createPattern(ConnectionConstants.Ko, null);
-		this.Wn = this.c.createPattern(ConnectionConstants.Vn, null);
-		this.Un = this.c.createPattern(ConnectionConstants.Tn, null);
+		this.canvasElemField = window.document.createElement('canvas');
+		this.canvasElemField.mozOpaque = true;
+		this.c = this.canvasElemField.getContext('2d', {alpha: false});
+		this.Lo = this.c.createPattern(ConnectionConstants.grassImage, null);
+		this.Wn = this.c.createPattern(ConnectionConstants.concreteImage, null);
+		this.Un = this.c.createPattern(ConnectionConstants.concrete2Image, null);
 	}
 
 	function Vertex() {
@@ -979,9 +981,13 @@
 	}
 
 	function Segment() {
-		this.Hg = this.Ig = this.wa = null;
+		this.wa = null;
+		this.Ig = null;
+		this.Hg = null;
 		this.Yj = 0;
-		this.ca = this.W = this.Xd = null;
+		this.Xd = null;
+		this.W = null;
+		this.ca = null;
 		this.Cc = 0;
 		this.m = 1;
 		this.h = 63;
@@ -1305,7 +1311,7 @@
 	}
 
 	function ReplayUtil(a) {
-		this.$c = window.performance.now();
+		this.$cPerf = window.performance.now();
 		this.De = 0;
 		this.sd = 0;
 		var b = this;
@@ -1320,7 +1326,7 @@
 			b.j.pe.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
-		this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
+		this.updateViewport(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
 		this.j.g.classList.add('replayer');
 		this.je = new ReplayControlsView(a);
 		this.je.Vp = () => c.Lr(a.T);
@@ -1475,7 +1481,7 @@
 		this.Nf = null;
 		this.zh = false;
 		this.Ik = false;
-		this.$c = window.performance.now();
+		this.$cPerf = window.performance.now();
 		this.Ed = null;
 		this.De = 0;
 		this.Jn = new Mtb(3, 1000);
@@ -1563,7 +1569,7 @@
 			b.sd = 0;
 		}, 1000);
 		this.Qr = window.setInterval(() => a.C(), 50);
-		this.uf();
+		this.updateViewport();
 		var c = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
 		if (c != 0) {
@@ -4450,10 +4456,10 @@
 			this.Kc();
 		}, Kc: function () {
 			var a = window.performance.now();
-			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$c >= 28.333333333333336) {
-				this.$c = a;
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$cPerf >= 28.333333333333336) {
+				this.$cPerf = a;
 				this.sd++;
-				this.uf();
+				this.updateViewport();
 				a = this.ya.T.na(this.ya.uc);
 				if (a != null)
 					this.xi = a.cb;
@@ -4527,6 +4533,12 @@
 				case 56: // 8
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(7);
 					break;
+				case 57: // 9
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(15);
+					break;
+				case 48: // 0
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-1.2);
+					break;
 				case 80: // p
 					this.handleGamePause();
 					break;
@@ -4534,25 +4546,25 @@
 					this.ob.handleKeyCode(kbEvent.code);
 					break;
 			}
-		}, uf: function () {
-			var a = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue();
-			var b = this.j.Fb;
-			var c = b.Eb;
-			c.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.getLSUValue();
-			if (a == 0) {
-				b.Gg(true);
-				c.kf = 1;
-				c.jf = 0;
-				c.xf = 0;
+		}, updateViewport: function () {
+			const currentViewMode = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue();
+			const gameStateView = this.j.Fb;
+			const majorCanvas1 = gameStateView.Eb;
+			majorCanvas1.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.getLSUValue();
+			if (currentViewMode == 0) {
+				gameStateView.Gg(true);
+				majorCanvas1.kf = 1;
+				majorCanvas1.jf = 0;
+				majorCanvas1.xf = 0;
 			}
 			else {
-				b.Gg(false);
-				c.xf = 35;
-				if (a == -1)
-					c.jf = 450;
+				gameStateView.Gg(false);
+				majorCanvas1.xf = 35;
+				if (currentViewMode == -1)
+					majorCanvas1.jf = 450;
 				else {
-					c.jf = 0;
-					c.kf = 1 + 0.25 * (a - 1);
+					majorCanvas1.jf = 0;
+					majorCanvas1.kf = 1 + 0.25 * (currentViewMode - 1);
 				}
 			}
 		}, Cd: function (a) {
@@ -4579,7 +4591,7 @@
 			this.Ti(a);
 			a.tl = b => {
 				c.j.Qa.Gb('' + b.w + ' has joined');
-				ConnectionConstants.Na.cd(ConnectionConstants.Na.$o);
+				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.$o);
 				c.Ti(a);
 			};
 			a.ul = (d, e, f, g) => {
@@ -4591,30 +4603,30 @@
 					d = '' + d.w + ' was ' + (f ? 'banned' : 'kicked') + b(g) + (e != '' ? ' (' + e + ')' : '');
 				}
 				c.j.Qa.Gb(d);
-				ConnectionConstants.Na.cd(ConnectionConstants.Na.ep);
+				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.ep);
 				c.Ti(a);
 			};
 			a.rl = (a, b) => {
 				var d = c.Rh != null && b.indexOf(c.Rh) != -1;
 				c.j.Qa.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
 				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.getLSUValue() && d)
-					ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
+					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.zk);
 				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue())
-					ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
+					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
 			};
 			a.Vl = (a, b, f, g) => {
 				c.j.Qa.pp(a, b, f);
 				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue()) switch (g) {
 					case 1:
-						ConnectionConstants.Na.cd(ConnectionConstants.Na.Rj);
+						ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
 						break;
 					case 2:
-						ConnectionConstants.Na.cd(ConnectionConstants.Na.zk);
+						ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.zk);
 				}
 			};
-			a.ji = () => ConnectionConstants.Na.cd(ConnectionConstants.Na.bp);
+			a.ji = () => ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.bp);
 			a.Ni = a => {
-				ConnectionConstants.Na.cd(ConnectionConstants.Na.Io);
+				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Io);
 				var b = c.j.Fb.Eb.td;
 				b.Pa(a == Team.red ? b.Fq : b.Bn);
 			};
@@ -4852,7 +4864,7 @@
 		var b = new ChooseNicknameView(ConnectionConstants.localStorageWrapperInst.fe.getLSUValue());
 		b.cl = b => {
 			ConnectionConstants.localStorageWrapperInst.fe.setLSItem(b);
-			ConnectionConstants.Na.Tl();
+			ConnectionConstants.audioUtilInst.Tl();
 			a();
 		};
 		DisplayUtil.La(b.g);
@@ -5238,13 +5250,13 @@
 				return Promise.all([
 					WebserverApiOps.L('res.dat', 'arraybuffer').then(a => {
 						a = new JSZip(a);
-						ConnectionConstants.Na = new AudioUtil(a);
+						ConnectionConstants.audioUtilInst = new AudioUtil(a);
 						return Promise.all([
-							ConnectionConstants.Na.ro,
-							DisplayUtil.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => ConnectionConstants.Ko = a),
-							DisplayUtil.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => ConnectionConstants.Vn = a),
-							DisplayUtil.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => ConnectionConstants.Tn = a),
-							DisplayUtil.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => ConnectionConstants.Dm = a)
+							ConnectionConstants.audioUtilInst.ro,
+							DisplayUtil.Wg(a.file('images/grass.png').asArrayBuffer()).then(a => ConnectionConstants.grassImage = a),
+							DisplayUtil.Wg(a.file('images/concrete.png').asArrayBuffer()).then(a => ConnectionConstants.concreteImage = a),
+							DisplayUtil.Wg(a.file('images/concrete2.png').asArrayBuffer()).then(a => ConnectionConstants.concrete2Image = a),
+							DisplayUtil.Wg(a.file('images/typing.png').asArrayBuffer()).then(a => ConnectionConstants.typingImage = a)
 						]);
 					}),
 					b
@@ -5275,7 +5287,7 @@
 		window.document.body.appendChild(DisplayUtil.Pg);
 		var b = null;
 		var b = () => {
-			ConnectionConstants.Na.Tl();
+			ConnectionConstants.audioUtilInst.Tl();
 			window.document.removeEventListener('click', b, true);
 		};
 		window.document.addEventListener('click', b, true);
@@ -5304,10 +5316,10 @@
 		}, Kc: function () {
 			this.je.C();
 			var a = window.performance.now();
-			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$c >= 28.333333333333336) {
-				this.$c = a;
+			if (ConnectionConstants.localStorageWrapperInst.fpsLimitStorageUnit.getLSUValue() != 1 || a - this.$cPerf >= 28.333333333333336) {
+				this.$cPerf = a;
 				this.sd++;
-				this.uf(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
+				this.updateViewport(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
 				if (this.ya.Fd <= 0)
 					this.j.C(this.ya);
 			}
@@ -5342,8 +5354,14 @@
 				case 56: // 8
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(7);
 					break;
+				case 57: // 9
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(15);
+					break;
+				case 48: // 0
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-1.2);
+					break;
 			}
-		}, uf: function (a) {
+		}, updateViewport: function (a) {
 			var b = this.j.Fb;
 			if (a <= 0) {
 				b.Gg(true);
@@ -8704,14 +8722,14 @@
 		}, f: Vertex
 	};
 	MajorCanvas.b = true;
-	MajorCanvas.lc = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
-	MajorCanvas.Gi = (a, b) => {
-		a.imageSmoothingEnabled = b;
-		a.mozImageSmoothingEnabled = b;
+	MajorCanvas.rgbaStringFromInt = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
+	MajorCanvas.setCtxImageSmoothing = (context, smoothingEnabled) => {
+		context.imageSmoothingEnabled = smoothingEnabled;
+		context.mozImageSmoothingEnabled = smoothingEnabled;
 	};
 	MajorCanvas.prototype = {
 		Po: function (a, b) {
-			var c = this.dd.get(a.V);
+			const c = this.ddMap.get(a.V);
 			if (c != null) switch (b) {
 				case 0:
 					c.Xf = true;
@@ -8719,54 +8737,56 @@
 				case 1:
 					c.Xf = false;
 			}
-		}, Pr: function () {
-			if (this.sa.parentElement != null) {
-				var a = window.devicePixelRatio * this.zg;
-				var b = this.sa.getBoundingClientRect();
-				var c = Math.round(b.width * a);
-				var a = Math.round(b.height * a);
-				if (c != this.sa.width || a != this.sa.height)
-					this.sa.width = c, this.sa.height = a;
+		}, fixCanvasDimensions: function () {
+			if (this.canvasElemField.parentElement != null) {
+				const ratio = window.devicePixelRatio * this.zg;
+				const boundingClientRect = this.canvasElemField.getBoundingClientRect();
+				const width = Math.round(boundingClientRect.width * ratio);
+				const height = Math.round(boundingClientRect.height * ratio);
+				if (width != this.canvasElemField.width || height != this.canvasElemField.height) {
+					this.canvasElemField.width = width;
+					this.canvasElemField.height = height;
+				}
 			}
 		}, Kc: function (a, b) {
-			var c = window.performance.now();
-			var d = (c - this.$c) / 1000;
-			this.$c = c;
-			this.Jg.clear();
-			this.Pr();
-			MajorCanvas.Gi(this.c, true);
+			const perf = window.performance.now();
+			const secondsElapsed = (perf - this.$cPerf) / 1000;
+			this.$cPerf = perf;
+			this.jgMap.clear();
+			this.fixCanvasDimensions();
+			MajorCanvas.setCtxImageSmoothing(this.c, true);
 			this.c.resetTransform();
 			if (a.K != null) {
 				var c = a.K;
 				var e = c.ta;
 				var f = a.na(b);
 				var g = f != null ? f.H : null;
-				var k = this.jf != 0 ? this.sa.height / this.jf : this.kf * window.devicePixelRatio * this.zg;
+				var k = this.jf != 0 ? this.canvasElemField.height / this.jf : this.kf * window.devicePixelRatio * this.zg;
 				var h = this.xf * this.zg;
 				var m = c.S.Ye;
-				var n = this.sa.width / k;
+				var n = this.canvasElemField.width / k;
 				if (m > 0 && m < n) {
 					n = m;
-					k = this.sa.width / m;
+					k = this.canvasElemField.width / m;
 				}
-				m = (this.sa.height - h) / k;
-				this.Mr(c, g, n, m, d);
+				m = (this.canvasElemField.height - h) / k;
+				this.Mr(c, g, n, m, secondsElapsed);
 				for (var p = 0, q = a.I; q.length > p;) {
 					var r = q[p];
 					++p;
 					if (r.H != null) {
-						var u = this.dd.get(r.V);
+						var u = this.ddMap.get(r.V);
 						if (u == null) {
 							u = new PlayerBallCanvas;
-							this.dd.set(r.V, u);
+							this.ddMap.set(r.V, u);
 						}
 						u.C(r, a);
-						this.Jg.set(r.H, u);
+						this.jgMap.set(r.H, u);
 					}
 				}
-				this.c.translate(this.sa.width / 2, (this.sa.height + h) / 2);
+				this.c.translate(this.canvasElemField.width / 2, (this.canvasElemField.height + h) / 2);
 				this.c.scale(k, k);
-				this.c.translate(-this.Ya.x, -this.Ya.y);
+				this.c.translate(-this.yaPoint.x, -this.yaPoint.y);
 				this.c.lineWidth = 3;
 				this.Sq(c.S);
 				this.Rq(c.S);
@@ -8777,7 +8797,7 @@
 				this.Lq(a, n, m);
 				this.Nq(a, f);
 				if (g != null)
-					this.Pq(g.a);
+					this.drawMarkerCircle(g.a);
 				this.c.lineWidth = 2;
 				f = 0;
 				for (g = a.I; g.length > f;) {
@@ -8785,24 +8805,24 @@
 					++f;
 					m = n.H;
 					if (m != null)
-						this.Ll(m, this.dd.get(n.V));
+						this.Ll(m, this.ddMap.get(n.V));
 				}
 				f = 0;
 				for (e = e.F; e.length > f;) {
 					g = e[f];
 					++f;
-					if (this.Jg.get(g) == null)
+					if (this.jgMap.get(g) == null)
 						this.Ll(g, null);
 				}
 				this.c.lineWidth = 3;
 				this.c.resetTransform();
-				this.c.translate(this.sa.width / 2, this.sa.height / 2);
-				this.Oq(c);
+				this.c.translate(this.canvasElemField.width / 2, this.canvasElemField.height / 2);
+				this.drawUnpauseBar(c);
 				if (c.Oa <= 0) {
-					this.td.C(d);
+					this.td.C(secondsElapsed);
 					this.td.Kc(this.c);
 				}
-				this.Jg.clear();
+				this.jgMap.clear();
 				this.Kq(a);
 			}
 		}, Kq: function (a) {
@@ -8810,12 +8830,12 @@
 			var c = 0;
 			for (a = a.I; a.length > c;)
 				b.add(a[c++].V);
-			c = this.dd.keys();
+			c = this.ddMap.keys();
 			for (a = c.next(); !a.done;) {
 				var d = a.value;
 				a = c.next();
 				if (!b.has(d))
-					this.dd.delete(d);
+					this.ddMap.delete(d);
 			}
 		}, Mr: function (a, b, c, d, e) {
 			var f;
@@ -8841,7 +8861,8 @@
 			n = 60 * e;
 			if (n > 1)
 				n = 1;
-			b = e = this.Ya;
+			e = this.yaPoint;
+			b = this.yaPoint;
 			n *= 0.04;
 			h = b.x;
 			b = b.y;
@@ -8850,31 +8871,31 @@
 			this.Xn(c, d, a.S);
 		}, Xn: function (a, b, c) {
 			if (2 * c.$b < a)
-				this.Ya.x = 0;
+				this.yaPoint.x = 0;
 			else {
-				if (c.$b < this.Ya.x + 0.5 * a)
-					this.Ya.x = c.$b - 0.5 * a;
-				else if (-c.$b > this.Ya.x - 0.5 * a)
-					this.Ya.x = -c.$b + 0.5 * a;
+				if (c.$b < this.yaPoint.x + 0.5 * a)
+					this.yaPoint.x = c.$b - 0.5 * a;
+				else if (-c.$b > this.yaPoint.x - 0.5 * a)
+					this.yaPoint.x = -c.$b + 0.5 * a;
 			}
 			if (2 * c.qc < b)
-				this.Ya.y = 0;
+				this.yaPoint.y = 0;
 			else {
-				if (c.qc < this.Ya.y + 0.5 * b)
-					this.Ya.y = c.qc - 0.5 * b;
-				else if (-c.qc > this.Ya.y - 0.5 * b)
-					this.Ya.y = -c.qc + 0.5 * b;
+				if (c.qc < this.yaPoint.y + 0.5 * b)
+					this.yaPoint.y = c.qc - 0.5 * b;
+				else if (-c.qc > this.yaPoint.y - 0.5 * b)
+					this.yaPoint.y = -c.qc + 0.5 * b;
 			}
-		}, Pq: function (a) {
+		}, drawMarkerCircle: function (point) {
 			this.c.beginPath();
 			this.c.strokeStyle = 'white';
 			this.c.globalAlpha = 0.3;
-			this.c.arc(a.x, a.y, 25, 0, 2 * Math.PI, false);
+			this.c.arc(point.x, point.y, 25, 0, 2 * Math.PI, false);
 			this.c.stroke();
 			this.c.globalAlpha = 1;
-		}, Oq: function (a) {
+		}, drawUnpauseBar: function (a) {
 			var b = a.Oa > 0;
-			this.lr(b);
+			this.adjustGrayscale(b);
 			if (b) {
 				if (a.Oa != 120) {
 					a = a.Oa / 120 * 200;
@@ -8883,9 +8904,9 @@
 				}
 				this.td.eq.Tq(this.c);
 			}
-		}, lr: function (a) {
+		}, adjustGrayscale: function (a) {
 			if (a != this.Dk) {
-				this.sa.style.filter = a ? 'grayscale(70%)' : '';
+				this.canvasElemField.style.filter = a ? 'grayscale(70%)' : '';
 				this.Dk = a;
 			}
 		}, Wl: (a, b, c, d, e, f) => {
@@ -8903,14 +8924,14 @@
 			a.closePath();
 		}, Sq: function (a) {
 			var b = this;
-			MajorCanvas.Gi(this.c, false);
+			MajorCanvas.setCtxImageSmoothing(this.c, false);
 			var c = a.Td;
 			var d = a.Sd;
 			if (a.ld == 1) {
 				this.c.save();
 				this.c.resetTransform();
-				this.c.fillStyle = MajorCanvas.lc(a.jd);
-				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
+				this.c.fillStyle = MajorCanvas.rgbaStringFromInt(a.jd);
+				this.c.fillRect(0, 0, this.canvasElemField.width, this.canvasElemField.height);
 				this.c.restore();
 				this.c.strokeStyle = '#C7E6BD';
 				this.c.fillStyle = this.Lo;
@@ -8930,7 +8951,7 @@
 				this.c.strokeStyle = '#E9CC6E';
 				this.c.save();
 				this.c.beginPath();
-				this.c.rect(this.Ya.x - 10000, this.Ya.y - 10000, 20000, 20000);
+				this.c.rect(this.yaPoint.x - 10000, this.yaPoint.y - 10000, 20000, 20000);
 				this.c.scale(2, 2);
 				this.c.fillStyle = this.Un;
 				this.c.fill();
@@ -8968,11 +8989,11 @@
 			else {
 				this.c.save();
 				this.c.resetTransform();
-				this.c.fillStyle = MajorCanvas.lc(a.jd);
-				this.c.fillRect(0, 0, this.sa.width, this.sa.height);
+				this.c.fillStyle = MajorCanvas.rgbaStringFromInt(a.jd);
+				this.c.fillRect(0, 0, this.canvasElemField.width, this.canvasElemField.height);
 				this.c.restore();
 			}
-			MajorCanvas.Gi(this.c, true);
+			MajorCanvas.setCtxImageSmoothing(this.c, true);
 		}, Nq: function (a, b) {
 			for (var c = ConnectionConstants.localStorageWrapperInst.showIndicatorsStorageUnit.getLSUValue(), d = 0, e = a.I; e.length > d;) {
 				var f = e[d];
@@ -8980,9 +9001,9 @@
 				var g = f.H;
 				if (g != null) {
 					var g = g.a;
-					var h = this.dd.get(f.V);
+					var h = this.ddMap.get(f.V);
 					if (c && h.Xf)
-						this.c.drawImage(ConnectionConstants.Dm, g.x - 0.5 * ConnectionConstants.Dm.width, g.y - 35);
+						this.c.drawImage(ConnectionConstants.typingImage, g.x - 0.5 * ConnectionConstants.typingImage.width, g.y - 35);
 					if (b != f)
 						h.so(this.c, g.x, g.y + 50);
 				}
@@ -8990,7 +9011,7 @@
 		}, Ll: function (a, b) {
 			this.c.beginPath();
 			if (b == null) {
-				this.c.fillStyle = MajorCanvas.lc(a.R);
+				this.c.fillStyle = MajorCanvas.rgbaStringFromInt(a.R);
 				this.c.strokeStyle = 'black';
 			}
 			else {
@@ -9023,7 +9044,7 @@
 		}, Mq: function (a, b) {
 			if (a.R >= 0) {
 				this.c.beginPath();
-				this.c.strokeStyle = MajorCanvas.lc(a.R);
+				this.c.strokeStyle = MajorCanvas.rgbaStringFromInt(a.R);
 				var c = b[a.Yd];
 				var d = b[a.Zd];
 				if (c != null && d != null) {
@@ -9037,7 +9058,7 @@
 		}, Qq: function (a) {
 			if (a.Za) {
 				this.c.beginPath();
-				this.c.strokeStyle = MajorCanvas.lc(a.R);
+				this.c.strokeStyle = MajorCanvas.rgbaStringFromInt(a.R);
 				var b = a.W.a;
 				var c = a.ca.a;
 				if (0 * a.vb != 0) {
@@ -9065,12 +9086,12 @@
 		}, nk: function (a, b, c, d) {
 			c = 0.5 * c - 25;
 			d = 0.5 * d - 25;
-			var e = this.Ya;
+			var e = this.yaPoint;
 			var f = a.x - e.x;
 			var e = a.y - e.y;
 			var g = -c;
 			var h = -d;
-			var l = this.Ya;
+			var l = this.yaPoint;
 			c = l.x + (c < f ? c : g > f ? g : f);
 			d = l.y + (d < e ? d : h > e ? h : e);
 			f = a.x - c;
@@ -9078,7 +9099,7 @@
 			if (f * f + a * a > 900) {
 				this.c.fillStyle = 'rgba(0,0,0,0.5)';
 				this.pk(c + 2, d + 2, Math.atan2(a, f));
-				this.c.fillStyle = MajorCanvas.lc(b);
+				this.c.fillStyle = MajorCanvas.rgbaStringFromInt(b);
 				this.pk(c - 2, d - 2, Math.atan2(a, f));
 			}
 		}, pk: function (a, b, c) {
@@ -9093,7 +9114,7 @@
 			this.c.fill();
 			this.c.restore();
 		}, Xq: function () {
-			for (var a = this.dd.values(), b = a.next(); !b.done;) {
+			for (var a = this.ddMap.values(), b = a.next(); !b.done;) {
 				var c = b.value;
 				var b = a.next();
 				c.Xf = false;
@@ -9129,7 +9150,7 @@
 				++b;
 			}
 			a.imageSmoothingEnabled = false;
-		}, lc: a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)', sp: function (a, b) {
+		}, rgbaStringFromInt: a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)', sp: function (a, b) {
 			var c = window.document.createElement('canvas');
 			var d = c.getContext('2d', null);
 			d.font = '900 70px Arial Black,Arial Bold,Gadget,sans-serif';
@@ -9140,7 +9161,7 @@
 			d.textBaseline = 'middle';
 			d.fillStyle = 'black';
 			d.fillText(a, 7, 52);
-			d.fillStyle = this.lc(b);
+			d.fillStyle = this.rgbaStringFromInt(b);
 			d.fillText(a, 0, 45);
 			return c;
 		}, f: BigAnimatedText
@@ -9238,12 +9259,12 @@
 				this.rb.translate(32, 32);
 				this.rb.rotate(3.141592653589793 * this.kb.hd / 128);
 				for (var c = -32, d = 64 / b.length, e = 0; b.length > e;) {
-					this.rb.fillStyle = MajorCanvas.lc(b[e++]);
+					this.rb.fillStyle = MajorCanvas.rgbaStringFromInt(b[e++]);
 					this.rb.fillRect(c, -32, d + 4, 64);
 					c += d;
 				}
 				this.rb.restore();
-				this.rb.fillStyle = MajorCanvas.lc(this.kb.ed);
+				this.rb.fillStyle = MajorCanvas.rgbaStringFromInt(this.kb.ed);
 				this.rb.textAlign = 'center';
 				this.rb.textBaseline = 'alphabetic';
 				this.rb.font = '900 34px \'Arial Black\',\'Arial Bold\',Gadget,sans-serif';
@@ -9290,7 +9311,7 @@
 			d.className = 'announcement';
 			d.textContent = a;
 			if (b >= 0)
-				d.style.color = MajorCanvas.lc(b);
+				d.style.color = MajorCanvas.rgbaStringFromInt(b);
 			switch (c) {
 				case 1:
 				case 4:
@@ -9509,7 +9530,7 @@
 			else {
 				a = a.Sf();
 				this.Fb.C(a);
-				ConnectionConstants.Na.Xj.Ls(a);
+				ConnectionConstants.audioUtilInst.Xj.Ls(a);
 			}
 		}, me: function (a) {
 			if (a != this.Gd) {
@@ -9612,8 +9633,8 @@
 			a = a * c / this.vp;
 			this.c.fillRect(d, c - a, 1, a);
 			this.Eh.clearRect(0, 0, b, c);
-			this.Eh.drawImage(this.sa, b - d - 1, 0);
-			this.Eh.drawImage(this.sa, -d - 1, 0);
+			this.Eh.drawImage(this.pingCanvasField1, b - d - 1, 0);
+			this.Eh.drawImage(this.pingCanvasField1, -d - 1, 0);
 		}, f: PingGraph
 	};
 	PlayerMenuView.b = true;
