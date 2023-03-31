@@ -4536,7 +4536,7 @@
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(15);
 					break;
 				case 48: // 0
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-2);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-1.2);
 					break;
 				case 80: // p
 					this.handleGamePause();
@@ -5357,7 +5357,7 @@
 					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(15);
 					break;
 				case 48: // 0
-					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-2);
+					ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.setLSItem(-1.2);
 					break;
 			}
 		}, updateViewport: function (a) {
