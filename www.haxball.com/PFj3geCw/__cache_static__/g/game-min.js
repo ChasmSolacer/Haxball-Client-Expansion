@@ -3851,7 +3851,8 @@
 			b.tb(a.ue);
 			Manager.lj(a, b);
 		}, Ci: function () {
-			if (this.Y - this.Kk > 0 && this.ac.length != 0) {
+			// Don't negate – this.Kk can be undefined
+			if (!(this.Y - this.Kk <= 0) && this.ac.length != 0) {
 				var a = StreamWriter.ha();
 				a.l(3);
 				a.tb(this.Y);
