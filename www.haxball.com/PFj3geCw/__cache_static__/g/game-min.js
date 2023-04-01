@@ -1,4 +1,6 @@
 (function (qc) {
+	window.parent.g = {};
+	
 	function Mhc() {
 	}
 
@@ -683,53 +685,53 @@
 	}
 
 	function GameView(a) {
-		this.Fb = new GameStateView;
+		this.gameStateViewInstField = new GameStateView;
 		this.Gd = false;
-		this.pe = new StatsView;
-		this.Qa = new ChatboxView;
-		var b = this;
-		this.Wa = new RoomMenuView(a);
-		this.Fb.Nb = a;
+		this.statsViewInstField = new StatsView;
+		this.chatboxViewInstField = new ChatboxView;
+		const selfGameView = this;
+		this.roomMenuViewInstField = new RoomMenuView(a);
+		this.gameStateViewInstField.Nb = a;
 		this.g = ViewUtil.getFirstElemChildFromHtmlContents(GameView.htmlContents);
-		a = ViewUtil.getDataHookMap(this.g);
-		this.Jh = a.get('gameplay-section');
-		this.hf = a.get('popups');
+		const dataHookMap = ViewUtil.getDataHookMap(this.g);
+		this.Jh = dataHookMap.get('gameplay-section');
+		this.hf = dataHookMap.get('popups');
 		this.hf.style.display = 'none';
-		ViewUtil.replaceParentsChild(a.get('chatbox'), this.Qa.g);
-		ViewUtil.replaceParentsChild(a.get('stats'), this.pe.g);
-		this.bi = a.get('menu');
+		ViewUtil.replaceParentsChild(dataHookMap.get('chatbox'), this.chatboxViewInstField.g);
+		ViewUtil.replaceParentsChild(dataHookMap.get('stats'), this.statsViewInstField.g);
+		this.bi = dataHookMap.get('menu');
 		this.bi.onclick = () => {
-			b.me(!b.Gd);
-			b.bi.blur();
+			selfGameView.me(!selfGameView.Gd);
+			selfGameView.bi.blur();
 		};
-		a.get('settings').onclick = () => {
+		dataHookMap.get('settings').onclick = () => {
 			var a = new SettingsView;
-			a.qb = () => b.bb(null);
-			b.bb(a.g);
+			a.qb = () => selfGameView.bb(null);
+			selfGameView.bb(a.g);
 		};
-		this.Jh.appendChild(this.Fb.g);
-		this.Wa.de = () => {
+		this.Jh.appendChild(this.gameStateViewInstField.g);
+		this.roomMenuViewInstField.de = () => {
 			var a = new LeaveRoomView;
 			a.qb = a => {
-				b.bb(null);
+				selfGameView.bb(null);
 				if (a)
-					Daa.i(b.de);
+					Daa.i(selfGameView.de);
 			};
-			b.bb(a.g);
+			selfGameView.bb(a.g);
 		};
-		this.Wa.Xp = () => {
+		this.roomMenuViewInstField.Xp = () => {
 			var a = new PickStadiumView;
-			a.ci = () => b.bb(null);
+			a.ci = () => selfGameView.bb(null);
 			a.og = a => {
-				Yyy.i(b.og, a);
-				b.bb(null);
+				Yyy.i(selfGameView.og, a);
+				selfGameView.bb(null);
 			};
 			a.fi = a => {
 				a = new SimpleDialogView('Error loading stadium', a, ['Ok']);
-				a.Va = () => b.bb(null);
-				b.bb(a.g);
+				a.Va = () => selfGameView.bb(null);
+				selfGameView.bb(a.g);
 			};
-			b.bb(a.g);
+			selfGameView.bb(a.g);
 		};
 	}
 
@@ -811,7 +813,7 @@
 	function ConnectingView() {
 		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ConnectingView.htmlContents);
 		var a = ViewUtil.getDataHookMap(this.g);
-		this.dc = a.get('log');
+		this.logNodeField = a.get('log');
 		this.vh = a.get('cancel');
 	}
 
@@ -846,62 +848,63 @@
 	}
 
 	function ChatboxView() {
-		function a() {
-			if (b.fl != null && b.gb.value != '')
-				b.fl(b.gb.value);
-			b.gb.value = '';
-			b.gb.blur();
+		const selfChatBoxView = this;
+
+		function handleSend() {
+			if (selfChatBoxView.flSendChat != null && selfChatBoxView.chatInputField.value != '')
+				selfChatBoxView.flSendChat(selfChatBoxView.chatInputField.value);
+			selfChatBoxView.chatInputField.value = '';
+			selfChatBoxView.chatInputField.blur();
 		}
 
-		var b = this;
 		this.g = ViewUtil.getFirstElemChildFromHtmlContents(ChatboxView.htmlContents);
-		var c = ViewUtil.getDataHookMap(this.g);
-		this.dc = c.get('log');
-		this.vg = Dba.cg(this.dc);
-		this.gb = c.get('input');
-		this.gb.maxLength = 140;
-		c.get('send').onclick = a;
-		this.Bc = new Mention(c.get('autocompletebox'), (a, c) => {
-			b.gb.value = a;
-			b.gb.setSelectionRange(c, c);
+		const dataHookMap = ViewUtil.getDataHookMap(this.g);
+		this.logNodeField = dataHookMap.get('log');
+		this.vg = Dba.cg(this.logNodeField);
+		this.chatInputField = dataHookMap.get('input');
+		this.chatInputField.maxLength = 140;
+		dataHookMap.get('send').onclick = handleSend;
+		this.Bc = new Mention(dataHookMap.get('autocompletebox'), (a, c) => {
+			selfChatBoxView.chatInputField.value = a;
+			selfChatBoxView.chatInputField.setSelectionRange(c, c);
 		});
-		this.gb.onkeydown = c => {
+		this.chatInputField.onkeydown = c => {
 			switch (c.keyCode) {
-				case 9:
-					if (!b.Bc.Mb.hidden) {
-						b.Bc.qo();
+				case 9: // Tab
+					if (!selfChatBoxView.Bc.Mb.hidden) {
+						selfChatBoxView.Bc.qo();
 						c.preventDefault();
 					}
 					break;
-				case 13:
-					a();
+				case 13: // Enter
+					handleSend();
 					break;
-				case 27:
-					if (b.Bc.Mb.hidden) {
-						b.gb.value = '';
-						b.gb.blur();
+				case 27: // Esc
+					if (selfChatBoxView.Bc.Mb.hidden) {
+						selfChatBoxView.chatInputField.value = '';
+						selfChatBoxView.chatInputField.blur();
 					}
 					else
-						b.Bc.Qh();
+						selfChatBoxView.Bc.Qh();
 					break;
-				case 38:
-					b.Bc.Qj(-1);
+				case 38: // up
+					selfChatBoxView.Bc.Qj(-1);
 					break;
-				case 40:
-					b.Bc.Qj(1);
+				case 40: // down
+					selfChatBoxView.Bc.Qj(1);
 			}
 			c.stopPropagation();
 		};
-		this.gb.onfocus = () => {
-			if (b.ig != null)
-				b.ig(true);
+		this.chatInputField.onfocus = () => {
+			if (selfChatBoxView.igShowChatIndicator != null)
+				selfChatBoxView.igShowChatIndicator(true);
 		};
-		this.gb.onblur = () => {
-			if (b.ig != null)
-				b.ig(false);
-			b.Bc.Qh();
+		this.chatInputField.onblur = () => {
+			if (selfChatBoxView.igShowChatIndicator != null)
+				selfChatBoxView.igShowChatIndicator(false);
+			selfChatBoxView.Bc.Qh();
 		};
-		this.gb.oninput = () => b.Bc.Hn(b.gb.value, b.gb.selectionStart);
+		this.chatInputField.oninput = () => selfChatBoxView.Bc.Hn(selfChatBoxView.chatInputField.value, selfChatBoxView.chatInputField.selectionStart);
 	}
 
 	function ChangeLocationView() {
@@ -1319,11 +1322,11 @@
 		this.j = new GameView(a.uc);
 		var c = new MentionUtil(this.j);
 		c.ri(a.T);
-		window.document.addEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
-		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
-		window.requestAnimationFrame(handleEvent(this, this.bf));
+		window.document.addEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
+		window.document.addEventListener('keyup', createHandlerFromInstance(this, this.Cd));
+		window.requestAnimationFrame(createHandlerFromInstance(this, this.bf));
 		this.Gh = window.setInterval(() => {
-			b.j.pe.hm(b.sd);
+			b.j.statsViewInstField.hm(b.sd);
 			b.sd = 0;
 		}, 1000);
 		this.updateViewport(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
@@ -1334,7 +1337,7 @@
 			b.j.me(a.T.K == null);
 			c.ri(a.T);
 		};
-		this.je.el = () => b.j.Fb.Eb.Xq();
+		this.je.el = () => b.j.gameStateViewInstField.Eb.Xq();
 		this.j.g.appendChild(this.je.g);
 	}
 
@@ -1467,17 +1470,17 @@
 	function Dra() {
 		this.Yf = 0;
 		this.$d = 0;
-		window.document.addEventListener('focusout', handleEvent(this, this.al));
+		window.document.addEventListener('focusout', createHandlerFromInstance(this, this.al));
 	}
 
-	function MentionUtil(a, b) {
+	function MentionUtil(gameViewInst, b) {
 		this.Rh = null;
-		this.j = a;
+		this.j = gameViewInst;
 		if (b != null)
 			this.Rh = '@' + StringOps3.replace(b, ' ', '_');
 	}
 
-	function ConnBa(a) {
+	function ConnBa(majorInst) {
 		this.Nf = null;
 		this.zh = false;
 		this.Ik = false;
@@ -1490,101 +1493,109 @@
 		this.am = false;
 		this.xi = false;
 		this.sd = 0;
-		var b = this;
-		this.Of = new CommandUtil(a, a => b.j.Qa.Gb(a));
-		this.ya = a;
-		a.T.ko = c => {
-			if (c != b.am) {
-				b.am = c;
+		const selfConnBa = this;
+		this.Of = new CommandUtil(majorInst, text => selfConnBa.j.chatboxViewInstField.addNoticeToLogAndHandle(text));
+		this.ya = majorInst;
+		majorInst.T.ko = c => {
+			if (c != selfConnBa.am) {
+				selfConnBa.am = c;
 				c = Mta.la(c);
-				a.ra(c);
+				majorInst.ra(c);
 			}
 		};
-		this.j = new GameView(a.uc);
-		this.Ih = new MentionUtil(this.j, a.T.na(a.uc).w);
-		this.Ih.ri(a.T);
-		this.j.Qa.fl = handleEvent(this, this.Gp);
-		this.j.Qa.ig = handleEvent(this, this.Fp);
-		window.document.addEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
-		window.document.addEventListener('keyup', handleEvent(this, this.Cd));
+		this.j = new GameView(majorInst.uc);
+		this.Ih = new MentionUtil(this.j, majorInst.T.na(majorInst.uc).w);
+		this.Ih.ri(majorInst.T);
+		this.j.chatboxViewInstField.flSendChat = createHandlerFromInstance(this, this.Gp);
+		this.j.chatboxViewInstField.igShowChatIndicator = createHandlerFromInstance(this, this.Fp);
+		
+		// Exposing global fields begin
+		window.parent.g.sendChat = this.j.chatboxViewInstField.flSendChat;
+		window.parent.g.showChatIndicator = this.j.chatboxViewInstField.igShowChatIndicator;
+		window.parent.g.majorInst = this.ya;
+		window.parent.g.setAvatar = text => this.Of.fmSetPlayerAvatar(text);
+		// Exposing global fields end
+
+		window.document.addEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
+		window.document.addEventListener('keyup', createHandlerFromInstance(this, this.Cd));
 		window.onbeforeunload = () => 'Are you sure you want to leave the room?';
-		this.ob.ng = b => a.ra(b);
-		this.j.Wa.aq = b => {
+		this.ob.ng = b => majorInst.ra(b);
+		this.j.roomMenuViewInstField.aq = b => {
 			b = Mda.la(1, b);
-			a.ra(b);
+			majorInst.ra(b);
 		};
-		this.j.Wa.Tp = b => {
+		this.j.roomMenuViewInstField.Tp = b => {
 			b = Mda.la(0, b);
-			a.ra(b);
+			majorInst.ra(b);
 		};
 		this.j.og = b => {
 			b = Mqa.la(b);
-			a.ra(b);
+			majorInst.ra(b);
 		};
-		this.j.Wa.Yp = () => a.ra(new Dma);
-		this.j.Wa.Zp = () => a.ra(new Dla);
-		this.j.Wa.Mp = () => b.handleGamePause();
-		this.j.Wa.mg = (b, c) => {
+		this.j.roomMenuViewInstField.Yp = () => majorInst.ra(new Dma);
+		this.j.roomMenuViewInstField.Zp = () => majorInst.ra(new Dla);
+		this.j.roomMenuViewInstField.Mp = () => selfConnBa.handleGamePause();
+		this.j.roomMenuViewInstField.mg = (b, c) => {
 			var d = Dss.la(b, c);
-			a.ra(d);
+			majorInst.ra(d);
 		};
-		this.j.Wa.ee = handleEvent(this, this.Wq);
-		this.j.Wa.Dp = () => a.ra(new Dqa);
-		this.j.Wa.Pp = () => ConnBa.Bq(a);
-		this.j.Wa.$p = b => {
+		this.j.roomMenuViewInstField.ee = createHandlerFromInstance(this, this.Wq);
+		this.j.roomMenuViewInstField.Dp = () => majorInst.ra(new Dqa);
+		this.j.roomMenuViewInstField.Pp = () => ConnBa.Bq(majorInst);
+		this.j.roomMenuViewInstField.$p = b => {
 			b = Mpa.la(b);
-			a.ra(b);
+			majorInst.ra(b);
 		};
-		this.j.Wa.ff = c => {
-			var d = a.T.na(c);
+		this.j.roomMenuViewInstField.ff = c => {
+			var d = majorInst.T.na(c);
 			if (d != null) {
-				var e = new PlayerMenuView(d, b.xi);
-				e.qb = () => b.j.bb(null);
+				var e = new PlayerMenuView(d, selfConnBa.xi);
+				e.qb = () => selfConnBa.j.bb(null);
 				e.Cp = (b, c) => {
 					var d = Msa.la(b, c);
-					a.ra(d);
+					majorInst.ra(d);
 				};
-				e.ei = () => b.vr(d);
-				b.j.bb(e.g, () => e.C(a.T, b.xi));
+				e.ei = () => selfConnBa.vr(d);
+				selfConnBa.j.bb(e.g, () => e.C(majorInst.T, selfConnBa.xi));
 			}
 		};
-		this.j.Wa.Wp = () => {
+		this.j.roomMenuViewInstField.Wp = () => {
 			var a = new RoomLinkView;
-			a.qb = () => b.j.bb(null);
-			b.j.bb(a.g, () => a.nr(b.Bg));
+			a.qb = () => selfConnBa.j.bb(null);
+			selfConnBa.j.bb(a.g, () => a.nr(selfConnBa.Bg));
 		};
-		this.j.Wa.Qp = () => {
-			if (b.Ed == null)
-				b.zr();
+		this.j.roomMenuViewInstField.Qp = () => {
+			if (selfConnBa.Ed == null)
+				selfConnBa.zr();
 			else {
-				var a = b.Ed.stop();
-				b.Ed = null;
+				var a = selfConnBa.Ed.stop();
+				selfConnBa.Ed = null;
 				ConnBa.Yl(a);
 			}
-			b.j.Wa.rr(b.Ed != null);
+			selfConnBa.j.roomMenuViewInstField.rr(selfConnBa.Ed != null);
 		};
-		window.requestAnimationFrame(handleEvent(this, this.bf));
+		window.requestAnimationFrame(createHandlerFromInstance(this, this.bf));
 		this.Gh = window.setInterval(() => {
-			b.j.pe.hm(b.sd);
-			b.sd = 0;
+			selfConnBa.j.statsViewInstField.hm(selfConnBa.sd);
+			selfConnBa.sd = 0;
 		}, 1000);
-		this.Qr = window.setInterval(() => a.C(), 50);
+		this.Qr = window.setInterval(() => majorInst.C(), 50);
 		this.updateViewport();
 		var c = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
 		var c = c < -200 ? -200 : c > 200 ? 200 : c;
 		if (c != 0) {
 			var d = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
-			a.gm(d);
-			this.j.Qa.Gb('Extrapolation set to ' + c + ' msec');
+			majorInst.gm(d);
+			this.j.chatboxViewInstField.addNoticeToLogAndHandle('Extrapolation set to ' + c + ' msec');
 		}
 	}
 
 	function Dha() {
 	}
 
-	function CommandUtil(a, b) {
-		this.ya = a;
-		this.ba = b;
+	function CommandUtil(majorInst, addParagraphFun) {
+		this.ya = majorInst;
+		this.ba = addParagraphFun;
 	}
 
 	function Dhb() {
@@ -1685,7 +1696,7 @@
 		this.Jk = 0;
 		this.Li = window.performance.now();
 		this.Ic = new IceSa(this.tp, a.iceServers, RoRuUu.Km, a.gn);
-		this.Ic.Vj = handleEvent(this, this.Oo);
+		this.Ic.Vj = createHandlerFromInstance(this, this.Oo);
 		this.Ic.bl = a => b.Lp(a);
 		this.Ic.kg = a => Yyy.i(b.kg, a);
 		this.Ic.ef = (a, d) => {
@@ -2009,13 +2020,13 @@
 				if (!g.yh)
 					g.Oe(Ob.Error);
 			};
-			g.X.onmessage = handleEvent(g, g.Ph);
+			g.X.onmessage = createHandlerFromInstance(g, g.Ph);
 			g.X.onopen = () => {
 				if (g.gl != null)
 					g.gl();
 				g.pa.Mi();
 				g.Bi(g.jr, g.pa.Uf, e);
-				g.pa.jg = handleEvent(g, g.yi);
+				g.pa.jg = createHandlerFromInstance(g, g.yi);
 				g.pa.Sh.then(() => g.Nc(0, null));
 			};
 		};
@@ -2059,19 +2070,19 @@
 		return c;
 	}
 
-	function handleEvent(a, b) {
+	function createHandlerFromInstance(instance, b) {
 		if (b == null)
 			return null;
 		if (b.oh == null)
 			b.oh = rcCounter++;
 		var c;
-		if (a.ej == null)
-			a.ej = {};
+		if (instance.ej == null)
+			instance.ej = {};
 		else
-			c = a.ej[b.oh];
+			c = instance.ej[b.oh];
 		if (c == null) {
-			c = b.bind(a);
-			a.ej[b.oh] = c;
+			c = b.bind(instance);
+			instance.ej[b.oh] = c;
 		}
 		return c;
 	}
@@ -2117,15 +2128,15 @@
 		if (c == c)
 			return c;
 	};
-	StringOpsSubstr.substr = (a, b, c) => {
-		if (c == null)
-			c = a.length;
-		else if (c < 0)
-			if (b == 0)
-				c = a.length + c;
+	StringOpsSubstr.substr = (text, from, length) => {
+		if (length == null)
+			length = text.length;
+		else if (length < 0)
+			if (from == 0)
+				length = text.length + length;
 			else
 				return '';
-		return a.substr(b, c);
+		return text.substr(from, length);
 	};
 	StringOpsSubstr.remove = (a, b) => {
 		var c = a.indexOf(b);
@@ -2287,7 +2298,7 @@
 			if (a == null)
 				a = 10000;
 			window.clearTimeout(this.re);
-			this.re = window.setTimeout(handleEvent(this, this.To), a);
+			this.re = window.setTimeout(createHandlerFromInstance(this, this.To), a);
 		}, bo: function (a, b) {
 			var c = this;
 			this.ck(this.Ra.setRemoteDescription(a).then(() => c.Ra.createAnswer()), b, 500);
@@ -2435,7 +2446,7 @@
 				d.X.onopen = () => d.So();
 				d.X.onclose = a => d.Mh(a.code != 4001);
 				d.X.onerror = () => d.Mh(true);
-				d.X.onmessage = handleEvent(d, d.Ph);
+				d.X.onmessage = createHandlerFromInstance(d, d.Ph);
 			}
 
 			if (a == null)
@@ -4225,33 +4236,33 @@
 		return b;
 	};
 	CommandUtil.prototype = {
-		gf: function (a) {
-			var b = this;
-			if (a.charAt(0) != '/')
+		gf: function (text) {
+			const selfCommandUtil = this;
+			if (text.charAt(0) != '/')
 				return false;
-			if (a.length == 1)
+			if (text.length == 1)
 				return true;
-			a = StringOps3.Gs(StringOpsSubstr.substr(a, 1, null)).split(' ');
-			var c = a[0];
-			switch (c) {
+			var cmdArray = StringOps3.Gs(StringOpsSubstr.substr(text, 1, null)).split(' ');
+			var cmdName = cmdArray[0];
+			switch (cmdName) {
 				case 'avatar':
-					if (a.length == 2) {
-						this.fm(a[1]);
+					if (cmdArray.length == 2) {
+						this.fmSetPlayerAvatar(cmdArray[1]);
 						this.ba('Avatar set');
 					}
 					break;
 				case 'checksum':
 					var d = this.ya.T.S;
-					a = d.w;
+					cmdArray = d.w;
 					if (d.Pe())
-						this.ba('Current stadium is original: "' + a + '"');
+						this.ba('Current stadium is original: "' + cmdArray + '"');
 					else {
 						d = StringOps3.Vg(d.Sj(), 8);
-						this.ba('Stadium: "' + a + '" (checksum: ' + d + ')');
+						this.ba('Stadium: "' + cmdArray + '" (checksum: ' + d + ')');
 					}
 					break;
 				case 'clear_avatar':
-					this.fm(null);
+					this.fmSetPlayerAvatar(null);
 					this.ba('Avatar cleared');
 					break;
 				case 'clear_bans':
@@ -4272,27 +4283,27 @@
 					break;
 				case 'colors':
 					try {
-						d = CommandUtil.cq(a);
+						d = CommandUtil.cq(cmdArray);
 						this.ya.ra(d);
 					}
 					catch (g) {
 						if (g instanceof GlobalError) {
-							a = g.Ta;
-							typeof a == 'string' && this.ba(a);
+							cmdArray = g.Ta;
+							typeof cmdArray == 'string' && this.ba(cmdArray);
 						}
 						else {
-							a = g;
-							typeof a == 'string' && this.ba(a);
+							cmdArray = g;
+							typeof cmdArray == 'string' && this.ba(cmdArray);
 						}
 					}
 					break;
 				case 'extrapolation':
-					if (a.length == 2) {
-						a = StringOpsInt.parseInt(a[1]);
-						if (a != null && a >= -200 && a <= 200) {
-							ConnectionConstants.localStorageWrapperInst.rd.setLSItem(a);
-							this.ya.gm(a);
-							this.ba('Extrapolation set to ' + a + ' msec');
+					if (cmdArray.length == 2) {
+						cmdArray = StringOpsInt.parseInt(cmdArray[1]);
+						if (cmdArray != null && cmdArray >= -200 && cmdArray <= 200) {
+							ConnectionConstants.localStorageWrapperInst.rd.setLSItem(cmdArray);
+							this.ya.gm(cmdArray);
+							this.ba('Extrapolation set to ' + cmdArray + ' msec');
 						}
 						else
 							this.ba('Extrapolation must be a value between -200 and 50 milliseconds');
@@ -4301,11 +4312,11 @@
 						this.ba('Extrapolation requires a value in milliseconds.');
 					break;
 				case 'handicap':
-					if (a.length == 2) {
-						a = StringOpsInt.parseInt(a[1]);
-						if (a != null && a >= 0 && a <= 300) {
-							this.ya.kr(a);
-							this.ba('Ping handicap set to ' + a + ' msec');
+					if (cmdArray.length == 2) {
+						cmdArray = StringOpsInt.parseInt(cmdArray[1]);
+						if (cmdArray != null && cmdArray >= 0 && cmdArray <= 300) {
+							this.ya.kr(cmdArray);
+							this.ba('Ping handicap set to ' + cmdArray + ' msec');
 						}
 						else
 							this.ba('Ping handicap must be a value between 0 and 300 milliseconds');
@@ -4314,16 +4325,16 @@
 						this.ba('Ping handicap requires a value in milliseconds.');
 					break;
 				case 'kick_ratelimit':
-					if (a.length < 4)
+					if (cmdArray.length < 4)
 						this.ba('Usage: /kick_ratelimit <min> <rate> <burst>');
 					else {
-						var d = StringOpsInt.parseInt(a[1]);
-						var e = StringOpsInt.parseInt(a[2]);
-						a = StringOpsInt.parseInt(a[3]);
-						if (d == null || e == null || a == null)
+						var d = StringOpsInt.parseInt(cmdArray[1]);
+						var e = StringOpsInt.parseInt(cmdArray[2]);
+						cmdArray = StringOpsInt.parseInt(cmdArray[3]);
+						if (d == null || e == null || cmdArray == null)
 							this.ba('Invalid arguments');
 						else
-							this.ya.ra(Mma.la(d, e, a));
+							this.ya.ra(Mma.la(d, e, cmdArray));
 					}
 					break;
 				case 'recaptcha':
@@ -4331,8 +4342,8 @@
 						this.ba('Only the host can set recaptcha mode');
 					else
 						try {
-							if (a.length == 2) {
-								switch (a[1]) {
+							if (cmdArray.length == 2) {
+								switch (cmdArray[1]) {
 									case 'off':
 										e = false;
 										break;
@@ -4353,11 +4364,11 @@
 						}
 					break;
 				case 'set_password':
-					if (a.length == 2) {
+					if (cmdArray.length == 2) {
 						if (this.Fg == null)
 							this.ba('Only the host can change the password');
 						else {
-							this.Fg(a[1]);
+							this.Fg(cmdArray[1]);
 							this.ba('Password set');
 						}
 					}
@@ -4369,19 +4380,19 @@
 					else {
 						Dzz.Es()
 							.then(() => Dzz.add(f))
-							.then(() => b.ba('Stadium stored'))
-							.catch(() => b.ba('Couldn\'t store stadium'));
+							.then(() => selfCommandUtil.ba('Stadium stored'))
+							.catch(() => selfCommandUtil.ba('Couldn\'t store stadium'));
 					}
 					break;
 				default:
-					this.ba('Unrecognized command: "' + c + '"');
+					this.ba('Unrecognized command: "' + cmdName + '"');
 			}
 			return true;
-		}, fm: function (a) {
-			if (a != null)
-				a = StringOpsLimit.Qc(a, 2);
-			ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.setLSItem(a);
-			this.ya.ra(Mra.la(a));
+		}, fmSetPlayerAvatar: function (text) {
+			if (text != null)
+				text = StringOpsLimit.Qc(text, 2);
+			ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.setLSItem(text);
+			this.ya.ra(Mra.la(text));
 		}, f: CommandUtil
 	};
 	Dha.b = true;
@@ -4432,8 +4443,8 @@
 			};
 			this.j.bb(a.g);
 		}, ia: function () {
-			window.document.removeEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
-			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
+			window.document.removeEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
+			window.document.removeEventListener('keyup', createHandlerFromInstance(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
 			this.ob.ia();
@@ -4450,7 +4461,7 @@
 			for (a = 0; b.length > a;)
 				this.ya.ra(b[a++]);
 		}, bf: function () {
-			this.De = window.requestAnimationFrame(handleEvent(this, this.bf));
+			this.De = window.requestAnimationFrame(createHandlerFromInstance(this, this.bf));
 			this.ob.C();
 			this.ya.C();
 			this.Kc();
@@ -4465,12 +4476,12 @@
 					this.xi = a.cb;
 				this.j.C(this.ya);
 			}
-		}, Gp: function (a) {
-			var b = this;
-			this.Of.gf(a) || this.Jn.Zn(1, () => {
+		}, Gp: function (str) {
+			var selfConnBa = this;
+			this.Of.gf(str) || this.Jn.Zn(1, () => {
 				var c = new Dna;
-				c.Tc = a;
-				b.ya.ra(c);
+				c.Tc = str;
+				selfConnBa.ya.ra(c);
 			});
 		}, Fp: function (a) {
 			var b = this;
@@ -4497,7 +4508,7 @@
 			switch (kbEvent.keyCode) {
 				case 9: // tab
 				case 13: // enter
-					this.j.Qa.gb.focus();
+					this.j.chatboxViewInstField.chatInputField.focus();
 					kbEvent.preventDefault();
 					break;
 				case 27: // esc
@@ -4548,7 +4559,7 @@
 			}
 		}, updateViewport: function () {
 			const currentViewMode = ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue();
-			const gameStateView = this.j.Fb;
+			const gameStateView = this.j.gameStateViewInstField;
 			const majorCanvas1 = gameStateView.Eb;
 			majorCanvas1.zg = ConnectionConstants.localStorageWrapperInst.resolutionScaleStorageUnit.getLSUValue();
 			if (currentViewMode == 0) {
@@ -4574,7 +4585,7 @@
 	MentionUtil.b = true;
 	MentionUtil.prototype = {
 		Ti: function (a) {
-			var b = this.j.Qa.Bc;
+			var b = this.j.chatboxViewInstField.Bc;
 			var c = [];
 			var d = 0;
 			for (a = a.I; a.length > d; d++) {
@@ -4587,35 +4598,35 @@
 				return a == null ? '' : ' by ' + a.w;
 			}
 
-			var c = this;
+			const selfMentionUtil = this;
 			this.Ti(a);
 			a.tl = b => {
-				c.j.Qa.Gb('' + b.w + ' has joined');
+				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + b.w + ' has joined');
 				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.$o);
-				c.Ti(a);
+				selfMentionUtil.Ti(a);
 			};
 			a.ul = (d, e, f, g) => {
-				Yyy.i(c.Op, d.V);
+				Yyy.i(selfMentionUtil.Op, d.V);
 				if (e == null)
 					d = '' + d.w + ' has left';
 				else {
-					FunM.i(c.Np, d.V, e, g != null ? g.w : null, f);
+					FunM.i(selfMentionUtil.Np, d.V, e, g != null ? g.w : null, f);
 					d = '' + d.w + ' was ' + (f ? 'banned' : 'kicked') + b(g) + (e != '' ? ' (' + e + ')' : '');
 				}
-				c.j.Qa.Gb(d);
+				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle(d);
 				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.ep);
-				c.Ti(a);
+				selfMentionUtil.Ti(a);
 			};
 			a.rl = (a, b) => {
-				var d = c.Rh != null && b.indexOf(c.Rh) != -1;
-				c.j.Qa.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
+				var d = selfMentionUtil.Rh != null && b.indexOf(selfMentionUtil.Rh) != -1;
+				selfMentionUtil.j.chatboxViewInstField.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
 				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.getLSUValue() && d)
 					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.zk);
 				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue())
 					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
 			};
 			a.Vl = (a, b, f, g) => {
-				c.j.Qa.pp(a, b, f);
+				selfMentionUtil.j.chatboxViewInstField.addAnnouncementToLogAndHandle(a, b, f);
 				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue()) switch (g) {
 					case 1:
 						ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
@@ -4627,48 +4638,48 @@
 			a.ji = () => ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.bp);
 			a.Ni = a => {
 				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Io);
-				var b = c.j.Fb.Eb.td;
+				var b = selfMentionUtil.j.gameStateViewInstField.Eb.td;
 				b.Pa(a == Team.red ? b.Fq : b.Bn);
 			};
 			a.Oi = a => {
-				var b = c.j.Fb.Eb.td;
+				var b = selfMentionUtil.j.gameStateViewInstField.Eb.td;
 				b.Pa(a == Team.red ? b.Gq : b.Cn);
-				c.j.Qa.Gb('' + a.w + ' team won the match');
+				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + a.w + ' team won the match');
 			};
 			a.ml = (a, e, f) => {
 				if (e && !f)
-					c.j.Qa.Gb('Game paused' + b(a));
+					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game paused' + b(a));
 			};
 			a.Pi = () => {
-				var a = c.j.Fb.Eb.td;
+				var a = selfMentionUtil.j.gameStateViewInstField.Eb.td;
 				a.Pa(a.Ar);
 			};
 			a.Ki = a => {
-				c.j.me(false);
-				c.j.Fb.Eb.td.Nn();
-				c.j.Qa.Gb('Game started' + b(a));
+				selfMentionUtil.j.me(false);
+				selfMentionUtil.j.gameStateViewInstField.Eb.td.Nn();
+				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game started' + b(a));
 			};
 			a.vf = a => {
 				if (a != null)
-					c.j.Qa.Gb('Game stopped' + b(a));
+					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game stopped' + b(a));
 			};
 			a.Ii = (a, e) => {
 				if (!e.Pe()) {
 					var d = StringOps3.Vg(e.Sj(), 8);
-					c.j.Qa.Gb('Stadium "' + e.w + '" (' + d + ') loaded' + b(a));
+					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Stadium "' + e.w + '" (' + d + ') loaded' + b(a));
 				}
 			};
-			a.sl = a => c.j.Qa.Gb('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
+			a.sl = a => selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
 			a.xl = (d, e, f) => {
 				if (a.K != null)
-					c.j.Qa.Gb('' + e.w + ' was moved to ' + f.w + b(d));
+					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + e.w + ' was moved to ' + f.w + b(d));
 			};
 			a.ii = (a, e) => {
 				var d = e.w;
-				c.j.Qa.Gb((e.cb ? '' + d + ' was given admin rights' : '' + d + '\'s admin rights were taken away') + b(a));
+				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle((e.cb ? '' + d + ' was given admin rights' : '' + d + '\'s admin rights were taken away') + b(a));
 			};
-			a.wl = (a, b) => c.j.Fb.Eb.Po(a, b);
-			a.Hk = (a, e, f, g) => c.j.Qa.Gb('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(a));
+			a.wl = (a, b) => selfMentionUtil.j.gameStateViewInstField.Eb.Po(a, b);
+			a.Hk = (a, e, f, g) => selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(a));
 		}, Lr: a => {
 			a.tl = null;
 			a.ul = null;
@@ -4708,7 +4719,7 @@
 	};
 	Dra.prototype = {
 		ia: function () {
-			window.document.removeEventListener('focusout', handleEvent(this, this.al));
+			window.document.removeEventListener('focusout', createHandlerFromInstance(this, this.al));
 		}, C: function () {
 			var a = this.$d;
 			if (this.ng != null && this.Yf != a) {
@@ -5075,7 +5086,7 @@
 					t.Bg = Muu.$h(e, l.Ib != null);
 			};
 			t.Of.jm = a => l.Ei(a);
-			t.Of.Ud = handleEvent(l, l.Ud);
+			t.Of.Ud = createHandlerFromInstance(l, l.Ud);
 		};
 	};
 	Muu.Dh = a => {
@@ -5149,9 +5160,9 @@
 			}, r = () => {
 				var b = new ConnBa(t);
 				t.dl = a => {
-					b.j.pe.qr((10 * t.sg.$g(.5) | 0) / 10);
-					b.j.pe.or((10 * t.sg.max() | 0) / 10);
-					b.j.pe.nl.tn(a);
+					b.j.statsViewInstField.qr((10 * t.sg.$g(.5) | 0) / 10);
+					b.j.statsViewInstField.or((10 * t.sg.max() | 0) / 10);
+					b.j.statsViewInstField.nl.tn(a);
 				};
 				b.Bg = Muu.$h(a, false);
 				DisplayUtil.La(b.j.g);
@@ -5304,13 +5315,13 @@
 	ReplayUtil.b = true;
 	ReplayUtil.prototype = {
 		ia: function () {
-			window.document.removeEventListener('keydown', handleEvent(this, this.handleKeyboardEvent));
-			window.document.removeEventListener('keyup', handleEvent(this, this.Cd));
+			window.document.removeEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
+			window.document.removeEventListener('keyup', createHandlerFromInstance(this, this.Cd));
 			window.onbeforeunload = null;
 			window.cancelAnimationFrame(this.De);
 			window.clearInterval(this.Gh);
 		}, bf: function () {
-			this.De = window.requestAnimationFrame(handleEvent(this, this.bf));
+			this.De = window.requestAnimationFrame(createHandlerFromInstance(this, this.bf));
 			this.ya.C();
 			this.Kc();
 		}, Kc: function () {
@@ -5362,16 +5373,16 @@
 					break;
 			}
 		}, updateViewport: function (a) {
-			var b = this.j.Fb;
+			var gameStateView = this.j.gameStateViewInstField;
 			if (a <= 0) {
-				b.Gg(true);
-				b.Eb.kf = 1;
-				b.Eb.xf = 0;
+				gameStateView.Gg(true);
+				gameStateView.Eb.kf = 1;
+				gameStateView.Eb.xf = 0;
 			}
 			else {
-				b.Gg(false);
-				b.Eb.xf = 35;
-				b.Eb.kf = 1 + 0.25 * (a - 1);
+				gameStateView.Gg(false);
+				gameStateView.Eb.xf = 35;
+				gameStateView.Eb.kf = 1 + 0.25 * (a - 1);
 			}
 		}, Cd: () => {
 		}, f: ReplayUtil
@@ -7696,10 +7707,10 @@
 		}, f: Msa
 	});
 	Mra.b = true;
-	Mra.la = a => {
-		var b = new Mra;
-		b.Zb = a;
-		return b;
+	Mra.la = text => {
+		const mra1 = new Mra;
+		mra1.Zb = text;
+		return mra1;
 	};
 	Mra.ma = Manager;
 	Mra.prototype = Extend(Manager.prototype, {
@@ -9306,45 +9317,45 @@
 	ChatboxView.b = true;
 	ChatboxView.Yo = a => a == a.parentElement.querySelector(':hover');
 	ChatboxView.prototype = {
-		pp: function (a, b, c) {
-			var d = window.document.createElement('p');
-			d.className = 'announcement';
-			d.textContent = a;
-			if (b >= 0)
-				d.style.color = MajorCanvas.rgbaStringFromInt(b);
-			switch (c) {
+		addAnnouncementToLogAndHandle: function (text, bColor, cStyle) {
+			const paragraphElement = window.document.createElement('p');
+			paragraphElement.className = 'announcement';
+			paragraphElement.textContent = text;
+			if (bColor >= 0)
+				paragraphElement.style.color = MajorCanvas.rgbaStringFromInt(bColor);
+			switch (cStyle) {
 				case 1:
 				case 4:
-					d.style.fontWeight = 'bold';
+					paragraphElement.style.fontWeight = 'bold';
 					break;
 				case 2:
 				case 5:
-					d.style.fontStyle = 'italic';
+					paragraphElement.style.fontStyle = 'italic';
 			}
-			switch (c) {
+			switch (cStyle) {
 				case 3:
 				case 4:
 				case 5:
-					d.style.fontSize = '12px';
+					paragraphElement.style.fontSize = '12px';
 			}
-			this.Ok(d);
-		}, Ok: function (a) {
-			var b = this.dc.clientHeight;
-			var b = 0.5 * -b <= this.dc.scrollTop + b - this.dc.scrollHeight || !ChatboxView.Yo(this.dc);
-			this.dc.appendChild(a);
-			if (b)
-				this.dc.scrollTop = a.offsetTop;
-			for (a = b ? 50 : 100; a < this.dc.childElementCount;)
-				this.dc.firstElementChild.remove();
+			this.addElementToLogAndHandle(paragraphElement);
+		}, addElementToLogAndHandle: function (element) {
+			var logHeight = this.logNodeField.clientHeight;
+			var bool = 0.5 * -logHeight <= this.logNodeField.scrollTop + logHeight - this.logNodeField.scrollHeight || !ChatboxView.Yo(this.logNodeField);
+			this.logNodeField.appendChild(element);
+			if (bool)
+				this.logNodeField.scrollTop = element.offsetTop;
+			for (element = bool ? 50 : 100; element < this.logNodeField.childElementCount;)
+				this.logNodeField.firstElementChild.remove();
 			this.vg.update();
-		}, ba: function (a, b) {
-			var c = window.document.createElement('p');
-			if (b != null)
-				c.className = b;
-			c.textContent = a;
-			this.Ok(c);
-		}, Gb: function (a) {
-			this.ba(a, 'notice');
+		}, ba: function (text, paragraphType) {
+			const paragraphElement = window.document.createElement('p');
+			if (paragraphType != null)
+				paragraphElement.className = paragraphType;
+			paragraphElement.textContent = text;
+			this.addElementToLogAndHandle(paragraphElement);
+		}, addNoticeToLogAndHandle: function (text) {
+			this.ba(text, 'notice');
 		}, f: ChatboxView
 	};
 	Mention.b = true;
@@ -9447,7 +9458,7 @@
 		ba: function (a) {
 			var b = window.document.createElement('p');
 			b.textContent = a;
-			this.dc.appendChild(b);
+			this.logNodeField.appendChild(b);
 		}, f: ConnectingView
 	};
 	CreateRoomView.b = true;
@@ -9526,21 +9537,21 @@
 			Daa.i(this.yl);
 			this.bi.disabled = a.T.K == null;
 			if (this.Gd)
-				this.Wa.C(a.T, a.T.na(a.uc));
+				this.roomMenuViewInstField.C(a.T, a.T.na(a.uc));
 			else {
 				a = a.Sf();
-				this.Fb.C(a);
+				this.gameStateViewInstField.C(a);
 				ConnectionConstants.audioUtilInst.Xj.Ls(a);
 			}
 		}, me: function (a) {
 			if (a != this.Gd) {
 				if (this.Gd = a) {
-					this.Jh.appendChild(this.Wa.g);
-					this.Fb.g.remove();
+					this.Jh.appendChild(this.roomMenuViewInstField.g);
+					this.gameStateViewInstField.g.remove();
 				}
 				else {
-					this.Jh.appendChild(this.Fb.g);
-					this.Wa.g.remove();
+					this.Jh.appendChild(this.gameStateViewInstField.g);
+					this.roomMenuViewInstField.g.remove();
 				}
 			}
 		}, Zo: () => GameView.kq != null, bb: function (a, b) {
