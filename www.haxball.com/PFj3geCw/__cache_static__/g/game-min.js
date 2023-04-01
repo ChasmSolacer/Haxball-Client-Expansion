@@ -1,6 +1,6 @@
 (function (qc) {
 	window.parent.g = {};
-	
+
 	function Mhc() {
 	}
 
@@ -1235,7 +1235,7 @@
 	function Game() {
 		this.hc = -1;
 		this.gc = null;
-		this.Oa = 0;
+		this.OaFramesField = 0;
 		this.Hc = 0;
 		this.Kb = 0;
 		this.Pb = 0;
@@ -1290,15 +1290,15 @@
 		this.im(ConnectionConstants.localStorageWrapperInst.soundMainStorageUnit.getLSUValue() ? 1 : 0);
 		this.ag.connect(this.c.destination);
 		this.ro = Promise.all([
-			b('sounds/chat.ogg').then(a => c.Rj = a),
-			b('sounds/highlight.wav').then(a => c.zk = a),
-			b('sounds/kick.ogg').then(a => c.bp = a),
-			b('sounds/goal.ogg').then(a => c.Io = a),
-			b('sounds/join.ogg').then(a => c.$o = a),
-			b('sounds/leave.ogg').then(a => c.ep = a),
+			b('sounds/chat.ogg').then(a => c.chatSoundField = a),
+			b('sounds/highlight.wav').then(a => c.highlightSoundField = a),
+			b('sounds/kick.ogg').then(a => c.kickSoundField = a),
+			b('sounds/goal.ogg').then(a => c.goalSoundField = a),
+			b('sounds/join.ogg').then(a => c.joinSoundField = a),
+			b('sounds/leave.ogg').then(a => c.leaveSoundField = a),
 			b('sounds/crowd.ogg').then(a => {
-				c.ho = a;
-				c.Xj = new AudioTb(c.ho, c.c);
+				c.crowdSoundField = a;
+				c.Xj = new AudioTb(c.crowdSoundField, c.c);
 				c.Xj.connect(c.ag);
 			})
 		]);
@@ -1320,7 +1320,7 @@
 		var b = this;
 		this.ya = a;
 		this.j = new GameView(a.uc);
-		var c = new MentionUtil(this.j);
+		var c = new ImportantUtil(this.j);
 		c.ri(a.T);
 		window.document.addEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
 		window.document.addEventListener('keyup', createHandlerFromInstance(this, this.Cd));
@@ -1332,7 +1332,7 @@
 		this.updateViewport(ConnectionConstants.localStorageWrapperInst.viewModeStorageUnit.getLSUValue());
 		this.j.g.classList.add('replayer');
 		this.je = new ReplayControlsView(a);
-		this.je.Vp = () => c.Lr(a.T);
+		this.je.Vp = () => c.resetRoomEventHandlers(a.T);
 		this.je.Up = () => {
 			b.j.me(a.T.K == null);
 			c.ri(a.T);
@@ -1473,7 +1473,7 @@
 		window.document.addEventListener('focusout', createHandlerFromInstance(this, this.al));
 	}
 
-	function MentionUtil(gameViewInst, b) {
+	function ImportantUtil(gameViewInst, b) {
 		this.Rh = null;
 		this.j = gameViewInst;
 		if (b != null)
@@ -1504,18 +1504,10 @@
 			}
 		};
 		this.j = new GameView(majorInst.uc);
-		this.Ih = new MentionUtil(this.j, majorInst.T.na(majorInst.uc).w);
+		this.Ih = new ImportantUtil(this.j, majorInst.T.getFullPlayerById(majorInst.uc).w);
 		this.Ih.ri(majorInst.T);
 		this.j.chatboxViewInstField.flSendChat = createHandlerFromInstance(this, this.Gp);
 		this.j.chatboxViewInstField.igShowChatIndicator = createHandlerFromInstance(this, this.Fp);
-		
-		// Exposing global fields begin
-		window.parent.g.sendChat = this.j.chatboxViewInstField.flSendChat;
-		window.parent.g.showChatIndicator = this.j.chatboxViewInstField.igShowChatIndicator;
-		window.parent.g.majorInst = this.ya;
-		window.parent.g.setAvatar = text => this.Of.fmSetPlayerAvatar(text);
-		// Exposing global fields end
-
 		window.document.addEventListener('keydown', createHandlerFromInstance(this, this.handleKeyboardEvent));
 		window.document.addEventListener('keyup', createHandlerFromInstance(this, this.Cd));
 		window.onbeforeunload = () => 'Are you sure you want to leave the room?';
@@ -1547,7 +1539,7 @@
 			majorInst.ra(b);
 		};
 		this.j.roomMenuViewInstField.ff = c => {
-			var d = majorInst.T.na(c);
+			var d = majorInst.T.getFullPlayerById(c);
 			if (d != null) {
 				var e = new PlayerMenuView(d, selfConnBa.xi);
 				e.qb = () => selfConnBa.j.bb(null);
@@ -1588,6 +1580,143 @@
 			majorInst.gm(d);
 			this.j.chatboxViewInstField.addNoticeToLogAndHandle('Extrapolation set to ' + c + ' msec');
 		}
+
+		// Exposing global fields begin
+		const theRoom = majorInst.T;
+
+		/**
+		 * @param {DynamicDisc} dynDisc
+		 * @return {{}}
+		 */
+		function getDiscObject(dynDisc) {
+			return dynDisc == null ? null : {
+				x: dynDisc.a.x,
+				y: dynDisc.a.y,
+				xspeed: dynDisc.D.x,
+				yspeed: dynDisc.D.y,
+				xgravity: dynDisc.oa.x,
+				ygravity: dynDisc.oa.y,
+				radius: dynDisc.Z,
+				bCoeff: dynDisc.m,
+				invMass: dynDisc.aa,
+				damping: dynDisc.Ca,
+				color: dynDisc.R,
+				cMask: dynDisc.h,
+				cGroup: dynDisc.v
+			};
+		}
+
+		function getScoresObject() {
+			const currentGame = theRoom.K;
+			return currentGame == null ? null : {
+				red: currentGame.Pb,
+				blue: currentGame.Kb,
+				time: currentGame.Hc,
+				scoreLimit: currentGame.ib,
+				timeLimit: 60 * currentGame.Da,
+				state: currentGame.Bb
+			};
+		}
+
+		/**
+		 * @param {FullPlayer} fullPlayer
+		 * @return {{}}
+		 */
+		function getPlayerObject(fullPlayer) {
+			if (fullPlayer == null)
+				return null;
+			let pos = null;
+			const playerDisc = fullPlayer.H;
+			if (playerDisc != null) {
+				pos = {
+					x: playerDisc.a.x,
+					y: playerDisc.a.y
+				};
+			}
+			return {
+				name: fullPlayer.w,
+				team: fullPlayer.ea.$,
+				id: fullPlayer.V,
+				admin: fullPlayer.cb,
+				position: pos,
+				avatar: fullPlayer.Xb,
+				flag: fullPlayer.Kd,
+				isBlinking: fullPlayer.Wb,
+				//inputKey: fullPlayer.inputKey,
+				ping: fullPlayer.yb,
+				desynchronized: fullPlayer.Ld
+			};
+		}
+
+		function getRoomPropertiesObject() {
+			return {
+				name: theRoom.jc
+				//maxPlayers: faMajor1.cap,
+				//public: !roomHidden,
+				//flag: hostGeo.flagCode,
+				//lat: hostGeo.latitude,
+				//lon: hostGeo.longitude
+			};
+		}
+
+		window.parent.g.majorInst = this.ya;
+
+		window.parent.g.sendChat = this.j.chatboxViewInstField.flSendChat;
+		window.parent.g.showChatIndicator = this.j.chatboxViewInstField.igShowChatIndicator;
+		window.parent.g.setAvatar = text => this.Of.fmSetPlayerAvatar(text);
+
+		window.parent.g.getPlayer = playerId => {
+			const fullPlayer = theRoom.getFullPlayerById(playerId);
+			return fullPlayer == null ? null : getPlayerObject(fullPlayer);
+		};
+		window.parent.g.getPlayerList = () => {
+			const playerList = [];
+			const fullPlayers = theRoom.I;
+			for (let i = 0; i < fullPlayers.length; i++)
+				playerList.push(getPlayerObject(fullPlayers[i]));
+			return playerList;
+		};
+		window.parent.g.getScores = () => getScoresObject();
+		window.parent.g.getBallPosition = () => {
+			const currentGame = theRoom.K;
+			if (currentGame == null)
+				return null;
+			const xy = currentGame.ta.F[0].a;
+			return {
+				x: xy.x,
+				y: xy.y
+			};
+		};
+		window.parent.g.getDiscProperties = discIndex => {
+			const currentGame = theRoom.K;
+			return currentGame == null ? null : getDiscObject(currentGame.ta.F[discIndex]);
+		};
+		window.parent.g.getPlayerDiscProperties = playerId => {
+			if (theRoom.K == null)
+				return null;
+			const fullPlayer = theRoom.getFullPlayerById(playerId);
+			return fullPlayer == null ? null : getDiscObject(fullPlayer.H);
+		};
+		window.parent.g.getDiscCount = () => {
+			const currentGame = theRoom.K;
+			return currentGame == null ? 0 : currentGame.ta.F.length;
+		};
+		window.parent.g.CollisionFlags = {
+			ball: 1,
+			red: 2,
+			blue: 4,
+			redKO: 8,
+			blueKO: 16,
+			wall: 32,
+			kick: 64,
+			score: 128,
+			c0: 268435456,
+			c1: 536870912,
+			c2: 1073741824,
+			c3: -2147483648, // 2^31
+			all: 63
+		};
+		// Exposing global fields end
 	}
 
 	function Dha() {
@@ -4471,7 +4600,7 @@
 				this.$cPerf = a;
 				this.sd++;
 				this.updateViewport();
-				a = this.ya.T.na(this.ya.uc);
+				a = this.ya.T.getFullPlayerById(this.ya.uc);
 				if (a != null)
 					this.xi = a.cb;
 				this.j.C(this.ya);
@@ -4501,7 +4630,7 @@
 		}, handleGamePause: function () {
 			if (this.ya.T.K != null) {
 				const doa1 = new Doa;
-				doa1.Bf = this.ya.T.K.Oa != 120;
+				doa1.Bf = this.ya.T.K.OaFramesField != 120;
 				this.ya.ra(doa1);
 			}
 		}, handleKeyboardEvent: function (kbEvent) {
@@ -4582,123 +4711,264 @@
 			this.ob.Cd(a.code);
 		}, f: ConnBa
 	};
-	MentionUtil.b = true;
-	MentionUtil.prototype = {
-		Ti: function (a) {
-			var b = this.j.chatboxViewInstField.Bc;
-			var c = [];
-			var d = 0;
-			for (a = a.I; a.length > d; d++) {
-				var e = a[d];
-				c.push({w: e.w, $: e.V});
+	ImportantUtil.b = true;
+	ImportantUtil.prototype = {
+		updateMentions: function (roomInst) {
+			const mention = this.j.chatboxViewInstField.Bc;
+			const nameIdArr = [];
+			let dNum = 0;
+			for (let fullPlayers = roomInst.I; fullPlayers.length > dNum; dNum++) {
+				const fullPlayer = fullPlayers[dNum];
+				nameIdArr.push({w: fullPlayer.w, $: fullPlayer.V});
 			}
-			b.Hj = c;
-		}, ri: function (a) {
-			function b(a) {
-				return a == null ? '' : ' by ' + a.w;
+			mention.Hj = nameIdArr;
+		}, ri: function (roomInst) {
+			function byPlayerNameText(fullPlayer) {
+				return fullPlayer == null ? '' : ' by ' + fullPlayer.w;
 			}
 
-			const selfMentionUtil = this;
-			this.Ti(a);
-			a.tl = b => {
-				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + b.w + ' has joined');
-				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.$o);
-				selfMentionUtil.Ti(a);
+			/**
+			 * @param {FullPlayer} fullPlayer
+			 * @return {{}}
+			 */
+			function getPlayerObject(fullPlayer) {
+				if (fullPlayer == null)
+					return null;
+				let pos = null;
+				const playerDisc = fullPlayer.H;
+				if (playerDisc != null) {
+					pos = {
+						x: playerDisc.a.x,
+						y: playerDisc.a.y
+					};
+				}
+				return {
+					name: fullPlayer.w,
+					team: fullPlayer.ea.$,
+					id: fullPlayer.V,
+					admin: fullPlayer.cb,
+					position: pos,
+					avatar: fullPlayer.Xb,
+					flag: fullPlayer.Kd,
+					isBlinking: fullPlayer.Wb,
+					//inputKey: fullPlayer.inputKey,
+					ping: fullPlayer.yb,
+					desynchronized: fullPlayer.Ld
+				};
+			}
+
+			const selfImportantUtil = this;
+			this.updateMentions(roomInst);
+			
+			roomInst.onPlayerJoinFun = fullPlayer => {
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + fullPlayer.w + ' has joined');
+				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.joinSoundField);
+				selfImportantUtil.updateMentions(roomInst);
+				
+				if (window.parent.g.onPlayerJoin != null) {
+					const player = getPlayerObject(fullPlayer);
+					window.parent.g.onPlayerJoin(player);
+				}
 			};
-			a.ul = (d, e, f, g) => {
-				Yyy.i(selfMentionUtil.Op, d.V);
-				if (e == null)
-					d = '' + d.w + ' has left';
+			roomInst.onPlayerLeaveFun = (fullPlayer, reason, ban, byFullPlayer) => {
+				Yyy.i(selfImportantUtil.Op, fullPlayer.V);
+
+				if (window.parent.g.onPlayerLeave != null) {
+					const player = getPlayerObject(fullPlayer);
+					window.parent.g.onPlayerLeave(player);
+				}
+
+				if (reason == null)
+					fullPlayer = '' + fullPlayer.w + ' has left';
 				else {
-					FunM.i(selfMentionUtil.Np, d.V, e, g != null ? g.w : null, f);
-					d = '' + d.w + ' was ' + (f ? 'banned' : 'kicked') + b(g) + (e != '' ? ' (' + e + ')' : '');
+					FunM.i(selfImportantUtil.Np, fullPlayer.V, reason, byFullPlayer != null ? byFullPlayer.w : null, ban);
+					fullPlayer = '' + fullPlayer.w + ' was ' + (ban ? 'banned' : 'kicked') + byPlayerNameText(byFullPlayer) + (reason != '' ? ' (' + reason + ')' : '');
+
+					if (window.parent.g.onPlayerKicked != null) {
+						const player = getPlayerObject(fullPlayer);
+						const byPlayer = getPlayerObject(byFullPlayer);
+						window.parent.g.onPlayerKicked(player, reason, ban, byPlayer);
+					}
 				}
-				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle(d);
-				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.ep);
-				selfMentionUtil.Ti(a);
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle(fullPlayer);
+				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.leaveSoundField);
+				selfImportantUtil.updateMentions(roomInst);
 			};
-			a.rl = (a, b) => {
-				var d = selfMentionUtil.Rh != null && b.indexOf(selfMentionUtil.Rh) != -1;
-				selfMentionUtil.j.chatboxViewInstField.ba('' + a.w + ': ' + b, d ? 'highlight' : null);
+			roomInst.onPlayerChatFun = (fullPlayer, message) => {
+				const d = selfImportantUtil.Rh != null && message.indexOf(selfImportantUtil.Rh) != -1;
+				selfImportantUtil.j.chatboxViewInstField.ba('' + fullPlayer.w + ': ' + message, d ? 'highlight' : null);
 				if (ConnectionConstants.localStorageWrapperInst.soundHighlightStorageUnit.getLSUValue() && d)
-					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.zk);
+					ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.highlightSoundField);
 				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue())
-					ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
-			};
-			a.Vl = (a, b, f, g) => {
-				selfMentionUtil.j.chatboxViewInstField.addAnnouncementToLogAndHandle(a, b, f);
-				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue()) switch (g) {
-					case 1:
-						ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Rj);
-						break;
-					case 2:
-						ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.zk);
+					ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.chatSoundField);
+				
+				if (window.parent.g.onPlayerChat != null) {
+					const player = getPlayerObject(fullPlayer);
+					window.parent.g.onPlayerChat(player, message);
 				}
 			};
-			a.ji = () => ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.bp);
-			a.Ni = a => {
-				ConnectionConstants.audioUtilInst.cd(ConnectionConstants.audioUtilInst.Io);
-				var b = selfMentionUtil.j.gameStateViewInstField.Eb.td;
-				b.Pa(a == Team.red ? b.Fq : b.Bn);
-			};
-			a.Oi = a => {
-				var b = selfMentionUtil.j.gameStateViewInstField.Eb.td;
-				b.Pa(a == Team.red ? b.Gq : b.Cn);
-				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + a.w + ' team won the match');
-			};
-			a.ml = (a, e, f) => {
-				if (e && !f)
-					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game paused' + b(a));
-			};
-			a.Pi = () => {
-				var a = selfMentionUtil.j.gameStateViewInstField.Eb.td;
-				a.Pa(a.Ar);
-			};
-			a.Ki = a => {
-				selfMentionUtil.j.me(false);
-				selfMentionUtil.j.gameStateViewInstField.Eb.td.Nn();
-				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game started' + b(a));
-			};
-			a.vf = a => {
-				if (a != null)
-					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game stopped' + b(a));
-			};
-			a.Ii = (a, e) => {
-				if (!e.Pe()) {
-					var d = StringOps3.Vg(e.Sj(), 8);
-					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Stadium "' + e.w + '" (' + d + ') loaded' + b(a));
+			roomInst.onAnnouncementFun = (message, color, style, sound) => {
+				selfImportantUtil.j.chatboxViewInstField.addAnnouncementToLogAndHandle(message, color, style);
+				if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue()) {
+					switch (sound) {
+						case 1:
+							ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.chatSoundField);
+							break;
+						case 2:
+							ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.highlightSoundField);
+					}
+				}
+				if (window.parent.g.onAnnouncement != null) {
+					window.parent.g.onAnnouncement(message, color, style, sound);
 				}
 			};
-			a.sl = a => selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + a.w + ' ' + (a.Ld ? 'has desynchronized' : 'is back in sync'));
-			a.xl = (d, e, f) => {
-				if (a.K != null)
-					selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + e.w + ' was moved to ' + f.w + b(d));
+			roomInst.onPlayerBallKickFun = byFullPlayer => {
+				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.kickSoundField);
+				
+				if (window.parent.g.onPlayerBallKick != null) {
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onPlayerBallKick(byPlayer);
+				}
 			};
-			a.ii = (a, e) => {
-				var d = e.w;
-				selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle((e.cb ? '' + d + ' was given admin rights' : '' + d + '\'s admin rights were taken away') + b(a));
+			roomInst.onTeamGoalFun = team => {
+				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.goalSoundField);
+				const bigTextUtilInst = selfImportantUtil.j.gameStateViewInstField.Eb.td;
+				bigTextUtilInst.Pa(team == Team.red ? bigTextUtilInst.Fq : bigTextUtilInst.Bn);
+				
+				if (window.parent.g.onTeamGoal != null) {
+					const teamId = team.$
+					window.parent.g.onTeamGoal(teamId);
+				}
 			};
-			a.wl = (a, b) => selfMentionUtil.j.gameStateViewInstField.Eb.Po(a, b);
-			a.Hk = (a, e, f, g) => selfMentionUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(a));
-		}, Lr: a => {
-			a.tl = null;
-			a.ul = null;
-			a.rl = null;
-			a.Vl = null;
-			a.ji = null;
-			a.Ni = null;
-			a.Oi = null;
-			a.ml = null;
-			a.Pi = null;
-			a.Ki = null;
-			a.vf = null;
-			a.Ii = null;
-			a.sl = null;
-			a.xl = null;
-			a.ii = null;
-			a.wl = null;
-			a.Hk = null;
-		}, f: MentionUtil
+			roomInst.onTeamVictoryFun = team => {
+				const bigTextUtilInst = selfImportantUtil.j.gameStateViewInstField.Eb.td;
+				bigTextUtilInst.Pa(team == Team.red ? bigTextUtilInst.Gq : bigTextUtilInst.Cn);
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + team.w + ' team won the match');
+
+				if (window.parent.g.onTeamVictory != null) {
+					const teamId = team.$
+					window.parent.g.onTeamVictory(teamId);
+				}
+			};
+			roomInst.onGamePauseFun = (byFullPlayer, isPaused, isBeingResumed) => {
+				if (isPaused && !isBeingResumed) {
+					selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game paused' + byPlayerNameText(byFullPlayer));
+
+					if (window.parent.g.onGamePause != null) {
+						const byPlayer = getPlayerObject(byFullPlayer);
+						window.parent.g.onGamePause(byPlayer, isPaused);
+					}
+				}
+			};
+			roomInst.onTimeIsUpFun = () => {
+				const bigTextUtilInst = selfImportantUtil.j.gameStateViewInstField.Eb.td;
+				bigTextUtilInst.Pa(bigTextUtilInst.Ar);
+
+				if (window.parent.g.onTimeIsUp != null) {
+					window.parent.g.onTimeIsUp();
+				}
+			};
+			roomInst.onPositionsResetFun = () => {
+				if (window.parent.g.onPositionsReset != null) {
+					window.parent.g.onPositionsReset();
+				}
+			};
+			roomInst.onGameStartFun = byFullPlayer => {
+				selfImportantUtil.j.me(false);
+				selfImportantUtil.j.gameStateViewInstField.Eb.td.Nn();
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game started' + byPlayerNameText(byFullPlayer));
+
+				if (window.parent.g.onGameStart != null) {
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onGameStart(byPlayer);
+				}
+			};
+			roomInst.onGameStopFun = byFullPlayer => {
+				if (byFullPlayer != null)
+					selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Game stopped' + byPlayerNameText(byFullPlayer));
+
+				if (window.parent.g.onGameStop != null) {
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onGameStop(byPlayer);
+				}
+			};
+			roomInst.onStadiumChangeFun = (byFullPlayer, stadium) => {
+				let checksum = null;
+				// If it isn't a default stadium
+				if (!stadium.Pe()) {
+					checksum = StringOps3.Vg(stadium.Sj(), 8);
+					selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Stadium "' + stadium.w + '" (' + checksum + ') loaded' + byPlayerNameText(byFullPlayer));
+				}
+
+				if (window.parent.g.onStadiumChange != null) {
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onStadiumChange(byPlayer, stadium.w, checksum);
+				}
+			};
+			roomInst.onPlayerDesyncChangeFun = fullPlayer => {
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + fullPlayer.w + ' ' + (fullPlayer.Ld ? 'has desynchronized' : 'is back in sync'));
+
+				if (window.parent.g.onPlayerDesyncChange != null) {
+					const player = getPlayerObject(fullPlayer);
+					window.parent.g.onPlayerDesyncChange(player, fullPlayer.Ld);
+				}
+			};
+			roomInst.onPlayerTeamChangeFun = (byFullPlayer, fullPlayer, team) => {
+				if (roomInst.K != null)
+					selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + fullPlayer.w + ' was moved to ' + team.w + byPlayerNameText(byFullPlayer));
+
+				if (window.parent.g.onPlayerTeamChange != null) {
+					const player = getPlayerObject(fullPlayer);
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onPlayerTeamChange(player, byPlayer, team.$);
+				}
+			};
+			roomInst.onPlayerAdminChangeFun = (byFullPlayer, fullPlayer) => {
+				const playerName = fullPlayer.w;
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle((fullPlayer.cb ? '' + playerName + ' was given admin rights' : '' + playerName + '\'s admin rights were taken away') + byPlayerNameText(byFullPlayer));
+
+				if (window.parent.g.onPlayerAdminChange != null) {
+					const player = getPlayerObject(fullPlayer);
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onPlayerAdminChange(player, byPlayer, fullPlayer.cb);
+				}
+			};
+			roomInst.onChatIndicatorStateChangeFun = (fullPlayer, chatIndicatorState) => {
+				selfImportantUtil.j.gameStateViewInstField.Eb.Po(fullPlayer, chatIndicatorState);
+
+				if (window.parent.g.onChatIndicatorStateChange != null) {
+					const player = getPlayerObject(fullPlayer);
+					const chatIndicatorShown = chatIndicatorState === 0;
+					window.parent.g.onChatIndicatorStateChange(player, chatIndicatorShown);
+				}
+			};
+			roomInst.onKickRateLimitSetFun = (byFullPlayer, min, rate, burst) => {
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('Kick Rate Limit set to (min: ' + min + ', rate: ' + rate + ', burst: ' + burst + ')' + byPlayerNameText(byFullPlayer));
+
+				if (window.parent.g.onKickRateLimitSet != null) {
+					const byPlayer = getPlayerObject(byFullPlayer);
+					window.parent.g.onKickRateLimitSet(min, rate, burst, byPlayer);
+				}
+			};
+		}, resetRoomEventHandlers: roomInstance => {
+			roomInstance.onPlayerJoinFun = null;
+			roomInstance.onPlayerLeaveFun = null;
+			roomInstance.onPlayerChatFun = null;
+			roomInstance.onAnnouncementFun = null;
+			roomInstance.onPlayerBallKickFun = null;
+			roomInstance.onTeamGoalFun = null;
+			roomInstance.onTeamVictoryFun = null;
+			roomInstance.onGamePauseFun = null;
+			roomInstance.onTimeIsUpFun = null;
+			roomInstance.onGameStartFun = null;
+			roomInstance.onGameStopFun = null;
+			roomInstance.onStadiumChangeFun = null;
+			roomInstance.onPlayerDesyncChangeFun = null;
+			roomInstance.onPlayerTeamChangeFun = null;
+			roomInstance.onPlayerAdminChangeFun = null;
+			roomInstance.onChatIndicatorStateChangeFun = null;
+			roomInstance.onKickRateLimitSetFun = null;
+		}, f: ImportantUtil
 	};
 	Dra.b = true;
 	Dra.Fk = keyCode => {
@@ -4996,13 +5266,13 @@
 				if (!b.Ks) {
 					var a = new Dfb;
 					a.Id = 9;
-					a.w = g.jc;
-					a.I = g.I.length;
+					a.w = gRoom.jc;
+					a.I = gRoom.I.length;
 					a.Xe = l.fg + 1;
-					a.ub = f.ub;
+					a.ub = fGeo.ub;
 					a.Ib = l.Ib != null;
-					a.Ec = f.Ec;
-					a.Gc = f.Gc;
+					a.Ec = fGeo.Ec;
+					a.Gc = fGeo.Gc;
 					var c = StreamWriter.ha(16);
 					a.ga(c);
 					a = c.Kg();
@@ -5012,16 +5282,16 @@
 
 			DisplayUtil.La((new SimpleDialogView('Creating room', 'Connecting...', [])).g);
 			var e = null;
-			var f = ConnectionConstants.localStorageWrapperInst.Lh();
-			var g = new Room;
-			g.jc = b.name;
-			var k = new FullPlayer;
-			k.w = a;
-			k.cb = true;
-			k.Kd = f.ub;
-			k.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.getLSUValue();
-			g.I.push(k);
-			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: g, version: 9});
+			var fGeo = ConnectionConstants.localStorageWrapperInst.Lh();
+			var gRoom = new Room;
+			gRoom.jc = b.name;
+			var kFullPlayer = new FullPlayer;
+			kFullPlayer.w = a;
+			kFullPlayer.cb = true;
+			kFullPlayer.Kd = fGeo.ub;
+			kFullPlayer.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.getLSUValue();
+			gRoom.I.push(kFullPlayer);
+			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: gRoom, version: 9});
 			l.fg = b.qs - 1;
 			l.Ib = b.password;
 			c();
@@ -5038,7 +5308,7 @@
 				l.ra(a);
 			}, 3000);
 			l.$k = a => {
-				if (g.na(a) != null) {
+				if (gRoom.getFullPlayerById(a) != null) {
 					a = Dyy.la(a, 'Bad actor', false);
 					l.ra(a);
 				}
@@ -5058,7 +5328,7 @@
 				c();
 			};
 			l.Ip = a => {
-				if (g.na(a) != null) {
+				if (gRoom.getFullPlayerById(a) != null) {
 					a = Dyy.la(a, null, false);
 					l.ra(a);
 				}
@@ -5585,7 +5855,7 @@
 	AudioUtil.prototype = {
 		Tl: function () {
 			this.c.resume();
-		}, cd: function (a) {
+		}, cdPlaySound: function (a) {
 			var b = this.c.createBufferSource();
 			b.buffer = a;
 			b.connect(this.ag);
@@ -5624,7 +5894,7 @@
 			var b = a.K;
 			if (b != null)
 				if (b.Bb == 2) {
-					if (b.Oa <= 0)
+					if (b.OaFramesField <= 0)
 						this.qj(1);
 				}
 				else if (b.Bb == 1) {
@@ -5666,7 +5936,7 @@
 							}
 						}
 					}
-					if (l != null && e != null && b.Oa <= 0) {
+					if (l != null && e != null && b.OaFramesField <= 0) {
 						if (l.a.x < f.a.x && l.a.x < c.a.x && c.a.x > 20)
 							this.qj(.3);
 						if (e.a.x > t.a.x && e.a.x > c.a.x && c.a.x < -20)
@@ -5749,7 +6019,7 @@
 		a.Pb = b.Pb;
 		a.Kb = b.Kb;
 		a.Hc = b.Hc;
-		a.Oa = b.Oa;
+		a.OaFramesField = b.OaFramesField;
 		a.S = b.S;
 		a.ae = b.ae;
 	};
@@ -5806,11 +6076,19 @@
 				b.y = c.y;
 			}
 		}, C: function (a) {
-			if (this.Oa > 0) {
-				if (this.Oa < 120)
-					this.Oa--;
+			// If game is paused
+			if (this.OaFramesField > 0) {
+				if (this.OaFramesField < 120)
+					this.OaFramesField--;
 			}
+			// If game is running
 			else {
+				// Exposing global fields begin
+				const onGameTickFun = window.parent.g.onGameTick;
+				if (onGameTickFun != null)
+					onGameTickFun(this);
+				// Exposing global fields end
+
 				var b = this.Ma.Os;
 				if (b != null)
 					b();
@@ -5853,9 +6131,10 @@
 									}
 								}
 							}
+							// If ball kick was successful
 							if (f) {
-								if (this.Ma.ji != null)
-									this.Ma.ji(d);
+								if (this.Ma.onPlayerBallKickFun != null)
+									this.Ma.onPlayerBallKickFun(d);
 								d.Wb = false;
 								d.Sc = this.Ma.yd;
 								d.yc -= this.Ma.Zc;
@@ -5926,24 +6205,24 @@
 					}
 					d = Team.spec;
 					b = this.ta.F;
-					for (a = 0; c > a && (d = a++, d = this.S.Kn(b[Game.idsMaxArray[d]].a, Game.pointsMaxArray[d]), Team.spec == d);) ;
-					if (Team.spec != d) {
+					for (a = 0; c > a && (d = a++, d = this.S.Kn(b[Game.idsMaxArray[d]].a, Game.pointsMaxArray[d]), d == Team.spec);) ;
+					if (d != Team.spec) {
 						this.Bb = 2;
 						this.vc = 150;
 						this.ae = d;
-						if (Team.red == d)
+						if (d == Team.red)
 							this.Kb++;
 						else
 							this.Pb++;
-						if (this.Ma.Ni != null)
-							this.Ma.Ni(d.enemyTeam);
+						if (this.Ma.onTeamGoalFun != null)
+							this.Ma.onTeamGoalFun(d.enemyTeam);
 						if (this.Ma.Ol != null)
 							this.Ma.Ol(d.$);
 					}
 					else {
-						if (this.Da > 0 && 60 * this.Da <= this.Hc && this.Kb != this.Pb) {
-							if (this.Ma.Pi != null)
-								this.Ma.Pi();
+						if (this.Da > 0 && this.Hc >= 60 * this.Da && this.Kb != this.Pb) {
+							if (this.Ma.onTimeIsUpFun != null)
+								this.Ma.onTimeIsUpFun();
 							this.um();
 						}
 					}
@@ -5955,8 +6234,8 @@
 							this.um();
 						else {
 							this.Gk();
-							if (this.Ma.lq != null)
-								this.Ma.lq();
+							if (this.Ma.onPositionsResetFun != null)
+								this.Ma.onPositionsResetFun();
 						}
 					}
 				}
@@ -5969,15 +6248,15 @@
 						d.H = null;
 						d.Jb = 0;
 					}
-					if (b.vf != null)
-						b.vf(null);
+					if (b.onGameStopFun != null)
+						b.onGameStopFun(null);
 				}
 			}
 		}, um: function () {
 			this.vc = 300;
 			this.Bb = 3;
-			if (this.Ma.Oi != null)
-				this.Ma.Oi(this.Kb < this.Pb ? Team.red : Team.blue);
+			if (this.Ma.onTeamVictoryFun != null)
+				this.Ma.onTeamVictoryFun(this.Kb < this.Pb ? Team.red : Team.blue);
 		}, Gk: function () {
 			var a = this.Ma.I;
 			this.Bb = 0;
@@ -6019,7 +6298,7 @@
 			a.O(this.Pb);
 			a.O(this.Kb);
 			a.s(this.Hc);
-			a.O(this.Oa);
+			a.O(this.OaFramesField);
 			a.l(this.ae.$);
 		}, ja: function (a, b) {
 			this.ta.ja(a);
@@ -6028,7 +6307,7 @@
 			this.Pb = a.M();
 			this.Kb = a.M();
 			this.Hc = a.u();
-			this.Oa = a.M();
+			this.OaFramesField = a.M();
 			var c = a.lf();
 			this.ae = c == 1 ? Team.red : c == 2 ? Team.blue : Team.spec;
 			this.Ma = b;
@@ -7397,8 +7676,8 @@
 					d.Jb = 0;
 				}
 				this.K.Wo(this);
-				if (this.Ki != null)
-					this.Ki(a);
+				if (this.onGameStartFun != null)
+					this.onGameStartFun(a);
 			}
 		}, Mf: function (a, b, c) {
 			if (c != b.ea) {
@@ -7423,12 +7702,12 @@
 					}
 					b.Jb = d;
 				}
-				Dcb.i(this.xl, a, b, c);
+				Dcb.i(this.onPlayerTeamChangeFun, a, b, c);
 			}
-		}, na: function (a) {
+		}, getFullPlayerById: function (id) {
 			for (var b = 0, c = this.I; c.length > b; b++) {
 				var d = c[b];
-				if (a == d.V)
+				if (id == d.V)
 					return d;
 			}
 			return null;
@@ -7495,14 +7774,14 @@
 		}, Lb: function (a) {
 			if (a == 0)
 				return true;
-			a = this.na(a);
+			a = this.getFullPlayerById(a);
 			return a != null && a.cb ? true : false;
 		}, mr: function (a, b, c, d) {
 			this.yd = b < 0 ? 0 : b > 255 ? 255 : b;
 			this.Zc = c < 0 ? 0 : c > 255 ? 255 : c;
 			d = d < 0 ? 0 : d > 100 ? 100 : d;
 			this.ce = this.Zc * d;
-			FunM.i(this.Hk, a, this.yd, this.Zc, d);
+			FunM.i(this.onKickRateLimitSetFun, a, this.yd, this.Zc, d);
 		}, sc: function () {
 			var a = Mya.zc;
 			var b = this.gc;
@@ -7591,10 +7870,10 @@
 	Mta.ma = Manager;
 	Mta.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			var b = a.na(this.P);
+			var b = a.getFullPlayerById(this.P);
 			if (b != null && b.Ld != this.Yg) {
 				b.Ld = this.Yg;
-				Yyy.i(a.sl, b);
+				Yyy.i(a.onPlayerDesyncChangeFun, b);
 			}
 		}, ua: function (a) {
 			a.l(this.Yg ? 1 : 0);
@@ -7607,7 +7886,7 @@
 	Mrb.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.P == 0)
-				FunM.i(a.Vl, this.Tc, this.color, this.style, this.fn);
+				FunM.i(a.onAnnouncementFun, this.Tc, this.color, this.style, this.fn);
 		}, ua: function (a) {
 			a.mc(StringOpsLimit.Qc(this.Tc, 1000));
 			a.O(this.color);
@@ -7627,7 +7906,7 @@
 	Dqa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 1)) {
-				for (var b = a.na(this.P), c = a.I, d = [], e = 0, f = 0, g = 0; c.length > g; g++) {
+				for (var b = a.getFullPlayerById(this.P), c = a.I, d = [], e = 0, f = 0, g = 0; c.length > g; g++) {
 					var k = c[g];
 					if (Team.spec == k.ea)
 						d.push(k);
@@ -7690,12 +7969,12 @@
 	Msa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 4)) {
-				var b = a.na(this.P);
-				var c = a.na(this.Md);
+				var b = a.getFullPlayerById(this.P);
+				var c = a.getFullPlayerById(this.Md);
 				if (c != null && c.V != 0 && this.Xg != c.cb) {
 					c.cb = this.Xg;
-					if (a.ii != null)
-						a.ii(b, c);
+					if (a.onPlayerAdminChangeFun != null)
+						a.onPlayerAdminChangeFun(b, c);
 				}
 			}
 		}, ua: function (a) {
@@ -7715,7 +7994,7 @@
 	Mra.ma = Manager;
 	Mra.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			a = a.na(this.P);
+			a = a.getFullPlayerById(this.P);
 			if (a != null)
 				a.Xb = this.Zb;
 		}, ua: function (a) {
@@ -7736,9 +8015,9 @@
 	Dss.ma = Manager;
 	Dss.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			var b = a.na(this.Md);
+			var b = a.getFullPlayerById(this.Md);
 			if (b != null) {
-				var c = a.na(this.P);
+				var c = a.getFullPlayerById(this.P);
 				var d = a.Lb(this.P, 1);
 				if (d = d || c == b && !a.Pc && a.K == null)
 					a.Mf(c, b, this.jj);
@@ -7762,11 +8041,11 @@
 	Mqa.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 8)) {
-				var b = a.na(this.P);
+				var b = a.getFullPlayerById(this.P);
 				if (a.K == null) {
 					a.S = this.Pd;
-					if (a.Ii != null)
-						a.Ii(b, this.Pd);
+					if (a.onStadiumChangeFun != null)
+						a.onStadiumChangeFun(b, this.Pd);
 				}
 			}
 		}, ua: function (a) {
@@ -7833,7 +8112,7 @@
 				b.Kd = this.cj;
 				b.Xb = this.Xb;
 				a.I.push(b);
-				a = a.tl;
+				a = a.onPlayerJoinFun;
 				if (a != null)
 					a(b);
 			}
@@ -7853,7 +8132,7 @@
 	Mqb.ma = Manager;
 	Mqb.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			a = a.na(this.ze);
+			a = a.getFullPlayerById(this.ze);
 			if (a != null && this.P == 0)
 				a.Jd = this.Zb;
 		}, ua: function (a) {
@@ -7872,15 +8151,15 @@
 		apply: function (a) {
 			var b = a.K;
 			if (b != null && a.Lb(this.P, 16)) {
-				var c = a.na(this.P);
-				var d = b.Oa == 120;
-				var e = b.Oa > 0;
+				var c = a.getFullPlayerById(this.P);
+				var d = b.OaFramesField == 120;
+				var e = b.OaFramesField > 0;
 				if (this.Bf)
-					b.Oa = 120;
-				else if (b.Oa == 120)
-					b.Oa = 119;
+					b.OaFramesField = 120;
+				else if (b.OaFramesField == 120)
+					b.OaFramesField = 119;
 				if (this.Bf != d)
-					Dcb.i(a.ml, c, this.Bf, e);
+					Dcb.i(a.onGamePauseFun, c, this.Bf, e);
 			}
 		}, ua: function (a) {
 			a.l(this.Bf ? 1 : 0);
@@ -7893,14 +8172,14 @@
 	Dna.prototype = Extend(Manager.prototype, {
 		$m: function (a) {
 			if (a.hq != null) {
-				var b = a.na(this.P);
+				var b = a.getFullPlayerById(this.P);
 				return b == null ? false : a.hq(b, this.Tc);
 			}
 			return true;
 		}, apply: function (a) {
-			var b = a.na(this.P);
+			var b = a.getFullPlayerById(this.P);
 			if (b != null)
-				Mia.i(a.rl, b, this.Tc);
+				Mia.i(a.onPlayerChatFun, b, this.Tc);
 		}, ua: function (a) {
 			a.mc(StringOpsLimit.Qc(this.Tc, 140));
 		}, va: function (a) {
@@ -7913,7 +8192,7 @@
 	Dga.ma = Manager;
 	Dga.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
-			var b = a.na(this.P);
+			var b = a.getFullPlayerById(this.P);
 			if (b != null) {
 				var c = this.input;
 				if ((b.ob & 16) == 0 && (c & 16) != 0)
@@ -7936,10 +8215,10 @@
 	};
 	Mna.ma = Manager;
 	Mna.prototype = Extend(Manager.prototype, {
-		apply: function (a) {
-			var b = a.na(this.P);
-			if (b != null)
-				Mia.i(a.wl, b, this.sj);
+		apply: function (roomInst) {
+			const fullPlayer = roomInst.getFullPlayerById(this.P);
+			if (fullPlayer != null)
+				Mia.i(roomInst.onChatIndicatorStateChangeFun, fullPlayer, this.sj);
 		}, ua: function (a) {
 			a.l(this.sj);
 		}, va: function (a) {
@@ -7985,13 +8264,13 @@
 	Dyy.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (this.V != 0 && a.Lb(this.P, 128)) {
-				var b = a.na(this.V);
-				if (b != null) {
-					var c = a.na(this.P);
-					StringOpsSubstr.remove(a.I, b);
+				var fullPlayer = a.getFullPlayerById(this.V);
+				if (fullPlayer != null) {
+					var c = a.getFullPlayerById(this.P);
+					StringOpsSubstr.remove(a.I, fullPlayer);
 					if (a.K != null)
-						StringOpsSubstr.remove(a.K.ta.F, b.H);
-					FunM.i(a.ul, b, this.fd, this.Qg, c);
+						StringOpsSubstr.remove(a.K.ta.F, fullPlayer.H);
+					FunM.i(a.onPlayerLeaveFun, fullPlayer, this.fd, this.Qg, c);
 				}
 			}
 		}, ua: function (a) {
@@ -8058,7 +8337,7 @@
 				var b = a.K;
 				if (b != null) {
 					if (this.Sm) {
-						a = a.na(this.ze);
+						a = a.getFullPlayerById(this.ze);
 						if (a == null)
 							return;
 						a = a.H;
@@ -8157,7 +8436,7 @@
 	Mma.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 2))
-				a.mr(a.na(this.P), this.min, this.nj, this.aj);
+				a.mr(a.getFullPlayerById(this.P), this.min, this.nj, this.aj);
 		}, ua: function (a) {
 			a.O(this.min);
 			a.O(this.nj);
@@ -8173,7 +8452,7 @@
 	Dma.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 32))
-				a.yr(a.na(this.P), 0);
+				a.yr(a.getFullPlayerById(this.P), 0);
 		}, ua: () => {
 		}, va: () => {
 		}, f: Dma
@@ -8183,7 +8462,7 @@
 	Dla.prototype = Extend(Manager.prototype, {
 		apply: function (a) {
 			if (a.Lb(this.P, 32)) {
-				var b = a.na(this.P);
+				var b = a.getFullPlayerById(this.P);
 				if (a.K != null) {
 					a.K = null;
 					for (var c = 0, d = a.I; d.length > c; c++) {
@@ -8191,8 +8470,8 @@
 						e.H = null;
 						e.Jb = 0;
 					}
-					if (a.vf != null)
-						a.vf(b);
+					if (a.onGameStopFun != null)
+						a.onGameStopFun(b);
 				}
 			}
 		}, ua: () => {
@@ -8770,7 +9049,7 @@
 			if (a.K != null) {
 				var c = a.K;
 				var e = c.ta;
-				var f = a.na(b);
+				var f = a.getFullPlayerById(b);
 				var g = f != null ? f.H : null;
 				var k = this.jf != 0 ? this.canvasElemField.height / this.jf : this.kf * window.devicePixelRatio * this.zg;
 				var h = this.xf * this.zg;
@@ -8829,7 +9108,7 @@
 				this.c.resetTransform();
 				this.c.translate(this.canvasElemField.width / 2, this.canvasElemField.height / 2);
 				this.drawUnpauseBar(c);
-				if (c.Oa <= 0) {
+				if (c.OaFramesField <= 0) {
 					this.td.C(secondsElapsed);
 					this.td.Kc(this.c);
 				}
@@ -8905,11 +9184,11 @@
 			this.c.stroke();
 			this.c.globalAlpha = 1;
 		}, drawUnpauseBar: function (a) {
-			var b = a.Oa > 0;
+			var b = a.OaFramesField > 0;
 			this.adjustGrayscale(b);
 			if (b) {
-				if (a.Oa != 120) {
-					a = a.Oa / 120 * 200;
+				if (a.OaFramesField != 120) {
+					a = a.OaFramesField / 120 * 200;
 					this.c.fillStyle = 'white';
 					this.c.fillRect(.5 * -a, 100, a, 20);
 				}
@@ -9258,7 +9537,7 @@
 					this.Hq(this.Jf);
 				}
 			}
-			this.lo = b.K.Oa > 0 || !a.Wb ? 'black' : a.Wb && a.Sc <= 0 && a.yc >= 0 ? 'white' : 'black';
+			this.lo = b.K.OaFramesField > 0 || !a.Wb ? 'black' : a.Wb && a.Sc <= 0 && a.yc >= 0 ? 'white' : 'black';
 			if (this.w != a.w) {
 				this.w = a.w;
 				this.Or();
@@ -9537,7 +9816,7 @@
 			Daa.i(this.yl);
 			this.bi.disabled = a.T.K == null;
 			if (this.Gd)
-				this.roomMenuViewInstField.C(a.T, a.T.na(a.uc));
+				this.roomMenuViewInstField.C(a.T, a.T.getFullPlayerById(a.uc));
 			else {
 				a = a.Sf();
 				this.gameStateViewInstField.C(a);
@@ -9651,7 +9930,7 @@
 	PlayerMenuView.b = true;
 	PlayerMenuView.prototype = {
 		C: function (a, b) {
-			var c = a.na(this.Nb);
+			var c = a.getFullPlayerById(this.Nb);
 			if (c == null)
 				Daa.i(this.qb);
 			else {
@@ -9886,7 +10165,7 @@
 			if (a.Pc != this.Xh)
 				this.Bj(a.Pc);
 			if (d) {
-				c = a.K.Oa == 120;
+				c = a.K.OaFramesField == 120;
 				if (c != this.ll)
 					this.Cj(c);
 			}
