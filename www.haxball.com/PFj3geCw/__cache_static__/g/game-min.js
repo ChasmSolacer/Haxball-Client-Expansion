@@ -737,7 +737,8 @@
 
 	function GameTimerView() {
 		this.Da = 0;
-		this.hk = this.ik = false;
+		this.ik = false;
+		this.hk = false;
 		this.Ke = 0;
 		this.g = window.document.createElement('div');
 		this.g.className = 'game-timer-view';
@@ -1701,6 +1702,7 @@
 			const currentGame = theRoom.K;
 			return currentGame == null ? 0 : currentGame.ta.F.length;
 		};
+		window.parent.g.getRoomProperties = () => getRoomPropertiesObject();
 		window.parent.g.CollisionFlags = {
 			ball: 1,
 			red: 2,
@@ -4268,9 +4270,9 @@
 			a();
 	};
 	Yyy.b = true;
-	Yyy.i = (a, b) => {
+	Yyy.i = (a, text) => {
 		if (a != null)
-			a(b);
+			a(text);
 	};
 	Mia.b = true;
 	Mia.i = (a, b, c) => {
@@ -4744,7 +4746,7 @@
 				}
 				return {
 					name: fullPlayer.w,
-					team: fullPlayer.ea.$,
+					team: fullPlayer.ea?.$,
 					id: fullPlayer.V,
 					admin: fullPlayer.cb,
 					position: pos,
@@ -5257,26 +5259,26 @@
 	};
 	Muu.$h = (a, b) => '' + window.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
 	Muu.oo = () => {
-		var a = ConnectionConstants.localStorageWrapperInst.fe.getLSUValue();
-		var b = new CreateRoomView('' + a + '\'s room');
-		DisplayUtil.La(b.g);
-		b.ci = () => Muu.xb();
-		b.Jp = b => {
+		var playerName = ConnectionConstants.localStorageWrapperInst.fe.getLSUValue();
+		var createRoomView = new CreateRoomView('' + playerName + '\'s room');
+		DisplayUtil.La(createRoomView.g);
+		createRoomView.ci = () => Muu.xb();
+		createRoomView.Jp = b => {
 			function c() {
 				if (!b.Ks) {
-					var a = new Dfb;
-					a.Id = 9;
-					a.w = gRoom.jc;
-					a.I = gRoom.I.length;
-					a.Xe = l.fg + 1;
-					a.ub = fGeo.ub;
-					a.Ib = l.Ib != null;
-					a.Ec = fGeo.Ec;
-					a.Gc = fGeo.Gc;
-					var c = StreamWriter.ha(16);
-					a.ga(c);
-					a = c.Kg();
-					l.Fi(a);
+					var dfbInst = new Dfb;
+					dfbInst.Id = 9;
+					dfbInst.w = gRoom.jc;
+					dfbInst.I = gRoom.I.length;
+					dfbInst.Xe = iceLbInst.fg + 1;
+					dfbInst.ub = fGeo.ub;
+					dfbInst.Ib = iceLbInst.Ib != null;
+					dfbInst.Ec = fGeo.Ec;
+					dfbInst.Gc = fGeo.Gc;
+					var streamWriter1 = StreamWriter.ha(16);
+					dfbInst.ga(streamWriter1);
+					dfbInst = streamWriter1.Kg();
+					iceLbInst.Fi(dfbInst);
 				}
 			}
 
@@ -5286,34 +5288,34 @@
 			var gRoom = new Room;
 			gRoom.jc = b.name;
 			var kFullPlayer = new FullPlayer;
-			kFullPlayer.w = a;
+			kFullPlayer.w = playerName;
 			kFullPlayer.cb = true;
 			kFullPlayer.Kd = fGeo.ub;
 			kFullPlayer.Xb = ConnectionConstants.localStorageWrapperInst.avatarStorageUnit.getLSUValue();
 			gRoom.I.push(kFullPlayer);
-			var l = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: gRoom, version: 9});
-			l.fg = b.qs - 1;
-			l.Ib = b.password;
+			var iceLbInst = new IceLb({iceServers: ConnectionConstants.stuns, ij: ConnectionConstants.rsUrl + 'api/host', state: gRoom, version: 9});
+			iceLbInst.fg = b.qs - 1;
+			iceLbInst.Ib = b.password;
 			c();
-			var t = new ConnBa(l);
+			var t = new ConnBa(iceLbInst);
 			var h = false;
-			l.ef = (a, b) =>
+			iceLbInst.ef = (a, b) =>
 				Muu.kk(a, a => {
 					b(a);
 					DisplayUtil.La(t.j.g);
 					return h = true;
 				});
 			var m = window.setInterval(() => {
-				var a = Mla.la(l);
-				l.ra(a);
+				var a = Mla.la(iceLbInst);
+				iceLbInst.ra(a);
 			}, 3000);
-			l.$k = a => {
+			iceLbInst.$k = a => {
 				if (gRoom.getFullPlayerById(a) != null) {
 					a = Dyy.la(a, 'Bad actor', false);
-					l.ra(a);
+					iceLbInst.ra(a);
 				}
 			};
-			l.Hp = (a, b) => {
+			iceLbInst.Hp = (a, b) => {
 				var d = b.ic();
 				if (d.length > 25)
 					throw new GlobalError('name too long');
@@ -5324,39 +5326,39 @@
 				if (f != null && f.length > 2)
 					throw new GlobalError('avatar too long');
 				d = Moa.la(a, d, e, f);
-				l.ra(d);
+				iceLbInst.ra(d);
 				c();
 			};
-			l.Ip = a => {
+			iceLbInst.Ip = a => {
 				if (gRoom.getFullPlayerById(a) != null) {
 					a = Dyy.la(a, null, false);
-					l.ra(a);
+					iceLbInst.ra(a);
 				}
 			};
-			l.kg = a => {
+			iceLbInst.kg = a => {
 				e = a;
-				t.Bg = Muu.$h(a, l.Ib != null);
+				t.Bg = Muu.$h(a, iceLbInst.Ib != null);
 				if (!h) {
 					h = true;
 					DisplayUtil.La(t.j.g);
 				}
 			};
-			t.Ih.Np = (a, b, c, d) => l.to(a, b, c, d);
+			t.Ih.Np = (a, b, c, d) => iceLbInst.to(a, b, c, d);
 			t.Ih.Op = () => c();
 			t.j.de = () => {
-				l.ia();
+				iceLbInst.ia();
 				t.ia();
 				Muu.xb();
 				window.clearInterval(m);
 			};
 			t.Of.Fg = a => {
-				l.Ib = a;
+				iceLbInst.Ib = a;
 				c();
 				if (e != null)
-					t.Bg = Muu.$h(e, l.Ib != null);
+					t.Bg = Muu.$h(e, iceLbInst.Ib != null);
 			};
-			t.Of.jm = a => l.Ei(a);
-			t.Of.Ud = createHandlerFromInstance(l, l.Ud);
+			t.Of.jm = a => iceLbInst.Ei(a);
+			t.Of.Ud = createHandlerFromInstance(iceLbInst, iceLbInst.Ud);
 		};
 	};
 	Muu.Dh = a => {
