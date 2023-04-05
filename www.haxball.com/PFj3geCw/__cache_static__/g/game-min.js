@@ -1703,6 +1703,20 @@
 			return currentGame == null ? 0 : currentGame.ta.F.length;
 		};
 		window.parent.g.getRoomProperties = () => getRoomPropertiesObject();
+		// Assuming that goal posts are symmetric with respect to the origin (that only a sign changes in the coordinates)
+		window.parent.g.getGoalPostPoint = () => {
+			let goalPostPoint = null;
+			const currentGame = theRoom.K;
+			if (currentGame != null) {
+				const goals = currentGame.S.tc;
+				if (goals?.length > 0)
+					goalPostPoint = {
+						x: Math.abs(goals[0].W.x),
+						y: Math.abs(goals[0].W.y)
+					};
+			}
+			return goalPostPoint;
+		};
 		window.parent.g.CollisionFlags = {
 			ball: 1,
 			red: 2,
