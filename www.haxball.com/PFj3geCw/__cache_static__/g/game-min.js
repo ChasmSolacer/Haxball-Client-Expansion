@@ -9750,7 +9750,7 @@
 	ChooseNicknameView.prototype = {
 		Dc: function () {
 			var a = this.Cb.value;
-			return a.length <= 25 ? a.length > 0 : false;
+			return a.length <= 25;
 		}, C: function () {
 			this.af.disabled = !this.Dc();
 		}, f: ChooseNicknameView
@@ -9770,7 +9770,7 @@
 			this.Em.textContent = 'Show in room list: ' + (a ? 'No' : 'Yes');
 		}, Dc: function () {
 			var a = this.$e.value;
-			return a.length <= 40 ? a.length > 0 : false;
+			return a.length <= 40;
 		}, C: function () {
 			this.Wj.disabled = !this.Dc();
 		}, f: CreateRoomView
