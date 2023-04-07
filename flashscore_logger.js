@@ -1,8 +1,9 @@
 /*
-* But before we start, find the loadFlashscoreMatchCommentary function call and modify its arguments (otherwise a random match will load)!
-*
 * This will only work in Chromium based browsers (Chrome, Edge, Brave) with flags enabled, otherwise CORS problems will occur!
 * Source: https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome#comment124721890_3177718
+*
+* But before we start, scroll to bottom of this file to the loadFlashscoreMatchCommentary function call
+* and modify its arguments (otherwise a random match will load)!
 *
 * Steps for Windows:
 * Close all Chromium instances.
@@ -275,8 +276,10 @@ function getBotCommentFromSoccerRow(row) {
 
 	// Two-element score array
 	const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
+	const scoreHome = scores[0] || '';
+	const scoreAway = scores[1] || '';
 	// This will precede every chat message
-	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scores[0] + ':' + scores[1] + ' ' + FlashscoreSettings.team2Code + '] ';
+	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scoreHome + ':' + scoreAway + ' ' + FlashscoreSettings.team2Code + '] ';
 	return '' + prefix + commentText;
 }
 
@@ -379,19 +382,28 @@ let fCommentsCallback = (mutations, observer) => {
 		if (lastCommentsQueue.length > 0 &&
 			(commentFromTopSoccerRow === lastCommentsQueue[0] || commentFromTopSoccerRow === lastCommentsQueue[1] || commentFromTopSoccerRow === lastCommentsQueue[2])) {
 			// Don't write the same comment for the second time
+			console.debug('Top comment was already written before');
 			// If the second top comment is the same as the second or third last written comment
 			if (commentFromSecondSoccerRow === lastCommentsQueue[1] || commentFromSecondSoccerRow === lastCommentsQueue[2]) {
 				// Nothing has really changed, don't write anything this time
+				console.debug('Second top comment too');
 				return;
 			}
 			// If the second top comment contents changed
 			else {
-				// Don't add anything to comments queue, just print the second row contents
+				console.debug('But the second top comment is different');
+				// Add the comment text at the second place of the last comments queue
+				const lastComment = lastCommentsQueue.shift();
+				lastCommentsQueue.unshift(commentFromSecondSoccerRow);
+				lastCommentsQueue.unshift(lastComment);
+				// Print the second row
 				triggeringRow = secondSoccerRow;
 			}
 		}
 		// If the top comment is different
 		else {
+			console.debug('Top comment is different');
+			triggeringRow = topSoccerRow;
 			// Add the comment text at the beginning of the last comments queue
 			lastCommentsQueue.unshift(commentFromTopSoccerRow);
 		}
@@ -416,13 +428,13 @@ let fCommentsCallback = (mutations, observer) => {
 
 		// If the match has ended
 		if (scoreStatusText === translate(Str.FINISHED)) {
-			// Stop observing
-			stop();
-			console.log('Match has ended');
+			console.log('Match has ended. Stopping.');
 			const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
 			const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
 			// Display match results
 			sendTextArrayToChat([scoreStatusText + '! ' + teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1]]);
+			// Stop observing
+			stop();
 		}
 	}
 };
@@ -451,9 +463,6 @@ restart = () => {
 	stop();
 	start();
 };
-
-// LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. MODIFY THE ARGUMENTS HERE!
-loadFlashscoreMatchCommentary('QwjJZwHI', 'ANN', 'TOU', 'pl', '560px', '600px');
 
 // KEY EVENTS
 haxballIframeBody.addEventListener('keydown', event => {
@@ -517,3 +526,6 @@ function makeElementDraggable(element) {
 
 // iframe can't be dragged, only div
 makeElementDraggable(fDivOverlay);
+
+// LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. MODIFY THE ARGUMENTS HERE!
+loadFlashscoreMatchCommentary('QwjJZwHI', 'ANN', 'TOU', 'pl', '560px', '600px');
