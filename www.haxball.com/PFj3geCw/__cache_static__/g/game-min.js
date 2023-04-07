@@ -1,6 +1,13 @@
 (function (qc) {
 	window.parent.g = {};
 
+	const Constants = {
+		minH: 0,
+		maxH: 5000,
+		minE: -1000,
+		maxE: 1000
+	};
+
 	function Mhc() {
 	}
 
@@ -1575,7 +1582,7 @@
 		this.Qr = window.setInterval(() => majorInst.C(), 50);
 		this.updateViewport();
 		var c = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
-		var c = c < -200 ? -200 : c > 200 ? 200 : c;
+		var c = c < Constants.minE ? Constants.minE : c > Constants.maxE ? Constants.maxE : c;
 		if (c != 0) {
 			var d = ConnectionConstants.localStorageWrapperInst.rd.getLSUValue();
 			majorInst.gm(d);
@@ -4445,13 +4452,13 @@
 				case 'extrapolation':
 					if (cmdArray.length == 2) {
 						cmdArray = StringOpsInt.parseInt(cmdArray[1]);
-						if (cmdArray != null && cmdArray >= -200 && cmdArray <= 200) {
+						if (cmdArray != null && cmdArray >= Constants.minE && cmdArray <= Constants.maxE) {
 							ConnectionConstants.localStorageWrapperInst.rd.setLSItem(cmdArray);
 							this.ya.gm(cmdArray);
 							this.ba('Extrapolation set to ' + cmdArray + ' msec');
 						}
 						else
-							this.ba('Extrapolation must be a value between -200 and 50 milliseconds');
+							this.ba('Extrapolation must be a value between ' + Constants.minE + ' and ' + Constants.maxE + ' milliseconds');
 					}
 					else
 						this.ba('Extrapolation requires a value in milliseconds.');
@@ -4459,12 +4466,12 @@
 				case 'handicap':
 					if (cmdArray.length == 2) {
 						cmdArray = StringOpsInt.parseInt(cmdArray[1]);
-						if (cmdArray != null && cmdArray >= 0 && cmdArray <= 300) {
+						if (cmdArray != null && cmdArray >= Constants.minH && cmdArray <= Constants.maxH) {
 							this.ya.kr(cmdArray);
 							this.ba('Ping handicap set to ' + cmdArray + ' msec');
 						}
 						else
-							this.ba('Ping handicap must be a value between 0 and 300 milliseconds');
+							this.ba('Ping handicap must be a value between ' + Constants.minH + ' and ' + Constants.maxH + ' milliseconds');
 					}
 					else
 						this.ba('Ping handicap requires a value in milliseconds.');
@@ -4775,12 +4782,12 @@
 
 			const selfImportantUtil = this;
 			this.updateMentions(roomInst);
-			
+
 			roomInst.onPlayerJoinFun = fullPlayer => {
 				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + fullPlayer.w + ' has joined');
 				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.joinSoundField);
 				selfImportantUtil.updateMentions(roomInst);
-				
+
 				if (window.parent.g.onPlayerJoin != null) {
 					const player = getPlayerObject(fullPlayer);
 					window.parent.g.onPlayerJoin(player);
@@ -4817,7 +4824,7 @@
 					ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.highlightSoundField);
 				else if (ConnectionConstants.localStorageWrapperInst.soundChatStorageUnit.getLSUValue())
 					ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.chatSoundField);
-				
+
 				if (window.parent.g.onPlayerChat != null) {
 					const player = getPlayerObject(fullPlayer);
 					window.parent.g.onPlayerChat(player, message);
@@ -4840,7 +4847,7 @@
 			};
 			roomInst.onPlayerBallKickFun = byFullPlayer => {
 				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.kickSoundField);
-				
+
 				if (window.parent.g.onPlayerBallKick != null) {
 					const byPlayer = getPlayerObject(byFullPlayer);
 					window.parent.g.onPlayerBallKick(byPlayer);
@@ -4850,9 +4857,9 @@
 				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.goalSoundField);
 				const bigTextUtilInst = selfImportantUtil.j.gameStateViewInstField.Eb.td;
 				bigTextUtilInst.Pa(team == Team.red ? bigTextUtilInst.Fq : bigTextUtilInst.Bn);
-				
+
 				if (window.parent.g.onTeamGoal != null) {
-					const teamId = team.$
+					const teamId = team.$;
 					window.parent.g.onTeamGoal(teamId);
 				}
 			};
@@ -4862,7 +4869,7 @@
 				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle('' + team.w + ' team won the match');
 
 				if (window.parent.g.onTeamVictory != null) {
-					const teamId = team.$
+					const teamId = team.$;
 					window.parent.g.onTeamVictory(teamId);
 				}
 			};
