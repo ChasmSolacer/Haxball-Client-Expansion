@@ -4801,11 +4801,12 @@
 					window.parent.g.onPlayerLeave(player);
 				}
 
+				let noticeText;
 				if (reason == null)
-					fullPlayer = '' + fullPlayer.w + ' has left';
+					noticeText = '' + fullPlayer.w + ' has left';
 				else {
 					FunM.i(selfImportantUtil.Np, fullPlayer.V, reason, byFullPlayer != null ? byFullPlayer.w : null, ban);
-					fullPlayer = '' + fullPlayer.w + ' was ' + (ban ? 'banned' : 'kicked') + byPlayerNameText(byFullPlayer) + (reason != '' ? ' (' + reason + ')' : '');
+					noticeText = '' + fullPlayer.w + ' was ' + (ban ? 'banned' : 'kicked') + byPlayerNameText(byFullPlayer) + (reason != '' ? ' (' + reason + ')' : '');
 
 					if (window.parent.g.onPlayerKicked != null) {
 						const player = getPlayerObject(fullPlayer);
@@ -4813,7 +4814,7 @@
 						window.parent.g.onPlayerKicked(player, reason, ban, byPlayer);
 					}
 				}
-				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle(fullPlayer);
+				selfImportantUtil.j.chatboxViewInstField.addNoticeToLogAndHandle(noticeText);
 				ConnectionConstants.audioUtilInst.cdPlaySound(ConnectionConstants.audioUtilInst.leaveSoundField);
 				selfImportantUtil.updateMentions(roomInst);
 			};
