@@ -1,9 +1,8 @@
 /*
+* Description: This script observes
+*
 * This will only work in Chromium based browsers (Chrome, Edge, Brave) with flags enabled, otherwise CORS problems will occur!
 * Source: https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome#comment124721890_3177718
-*
-* But before we start, scroll to bottom of this file to the loadFlashscoreMatchCommentary function call
-* and modify its arguments (otherwise a random match will load)!
 *
 * Steps for Windows:
 * Close all Chromium instances.
@@ -19,6 +18,8 @@
 * you can just press "Alt + ;" to hide it (click outside the overlay first).
 *
 * If you are in a room, a comment will be sent in the chat as soon as it appears in Flashscore commentary section.
+*
+* If you want to load a match, call loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
 */
 
 // Modified game-min.js g object. Not necessary in this script.
@@ -145,19 +146,15 @@ fDivOverlay.appendChild(flashscoreFrame);
 
 // Commentary section element
 let fCommentsSection;
-// For debugging
-let lastFMutations;
-let lastAddedSoccerRows;
-let lastAddedComments;
-let lastRemovedSoccerRows;
-let lastRemovedComments;
-// New row containing comment with minute and icons
-let topSoccerRow;
+// Observer interval
+let fCommentsObserverInterval;
+// Previous number of comments
+let previousRowCount = 0;
 // Comments array. The latest is at index 0
 const lastCommentsQueue = [];
 
 // Options for the observer (which mutations to observe)
-let config = {attributes: true, childList: true, subtree: true};
+//let config = {attributes: true, childList: true, subtree: true};
 
 /**
  * This function loads a flashscore commentary page within the flashscoreFrame.
@@ -191,6 +188,7 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	flashscoreFrame.width = width;
 	flashscoreFrame.height = height;
 	infoSpan.style.maxWidth = width;
+	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
 	// When the flashscore page is loaded
 	flashscoreFrame.onload = ev => {
 		console.log('Flashscore frame loaded');
@@ -198,9 +196,8 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 		// Wait 3 seconds for the comments section to load (should be sufficient)
 		setTimeout(() => {
 			console.log('Flashscore comment section loaded');
-			const flashscoreBody = flashscoreFrame.contentDocument.body;
 			// Flashscore comments section element
-			fCommentsSection = flashscoreBody.querySelector('#detail > .section');
+			fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
 
 			const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
 			if (soccerRows?.length > 0) {
@@ -210,10 +207,6 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 				lastCommentsQueue.unshift(getCommentFromSoccerRow(topSoccerRow));
 				// The final comment from top row that will appear in the Haxball chat
 				let botComment = getBotCommentFromSoccerRow(topSoccerRow);
-				// Split the bot comment to fit in the chat
-				const botCommentFragments = getSlicedHaxballText(botComment);
-				// For each bot comment fragment, send it to chat
-				sendTextArrayToChat(botCommentFragments);
 
 				// Print the whole comment to the console
 				console.log(botComment);
@@ -227,14 +220,17 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	};
 }
 
-// Converts a comment row to text
+// Extracts a comment text from soccer row
 function getCommentFromSoccerRow(row) {
-	if (row == null)
+	return row?.querySelector('.soccer__comment')?.innerText?.trim() || '';
+}
+
+function getBotCommentFromSoccerRow(row) {
+	if (row == null || flashscoreFrame == null)
 		return null;
 
 	const minuteText = row.querySelector('.soccer__time')?.innerText?.trim() || '';
 	const goalScoreText = row.querySelector('.soccer__score')?.innerText?.trim() || '';
-	const commentText = row.querySelector('.soccer__comment')?.innerText?.trim() || '';
 	let iconEmoji = '';
 	if (row.querySelector('.var') != null)
 		iconEmoji = '🖥️ ';
@@ -265,14 +261,11 @@ function getCommentFromSoccerRow(row) {
 	if (goalScoreText)
 		goalText = ' ⚽ ' + goalScoreText + ' ⚽ ';
 
-	return minuteText + ' ' + iconEmoji + goalText + commentText;
-}
-
-function getBotCommentFromSoccerRow(row) {
-	if (row == null || flashscoreFrame == null)
-		return null;
-
-	const commentText = getCommentFromSoccerRow(row);
+	let commentText = getCommentFromSoccerRow(row);
+	// Polska pisownia nazwisk z alfabetów niełacińskich
+	if (FlashscoreSettings.language === 'pl') {
+		commentText = spolszczNazwiska(commentText);
+	}
 
 	// Two-element score array
 	const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
@@ -280,7 +273,7 @@ function getBotCommentFromSoccerRow(row) {
 	const scoreAway = scores[1] || '';
 	// This will precede every chat message
 	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scoreHome + ':' + scoreAway + ' ' + FlashscoreSettings.team2Code + '] ';
-	return '' + prefix + commentText;
+	return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 }
 
 function getSlicedHaxballText(text, maxFragmentLength = 140) {
@@ -333,23 +326,17 @@ function sendTextArrayToChat(textArray) {
 
 // Callback function to execute when mutations are observed.
 // If you want to modify this function at runtime, modify it, paste it to console and call restart() to reload the observer
-let fCommentsCallback = (mutations, observer) => {
-	lastFMutations = mutations;
-	// This always return the oldest comment (the welcome one), not the added ones. USELESS :(
-	lastAddedSoccerRows = mutations.flatMap(x => Array.from(x.addedNodes)).filter(x => x.className === 'soccer__row');
-	// Sometimes a comments gets removed. This hopefully will store the actual deleted rows
-	lastRemovedSoccerRows = mutations.flatMap(x => Array.from(x.removedNodes)).filter(x => x.className === 'soccer__row');
-
+let fCommentsCallback = () => {
+	fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
 	// Soccer rows array
 	const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
 	// If there are soccer rows
-	if (soccerRows?.length > 0) {
+	if (soccerRows.length > 0) {
+		const rowCount = soccerRows.length;
 		// Top row containing minute, icons and comment
 		const topSoccerRow = soccerRows[0];
 		// Second top soccer row
 		const secondSoccerRow = soccerRows[1];
-		// If a comment was only updated
-		let isUpdate = false;
 		// Top row converted to text
 		let commentFromTopSoccerRow = getCommentFromSoccerRow(topSoccerRow);
 		// Second top row converted to text
@@ -357,40 +344,30 @@ let fCommentsCallback = (mutations, observer) => {
 
 		let triggeringRow = topSoccerRow;
 
-		// If a comment row was removed
-		if (lastRemovedSoccerRows?.length > 0) {
-			lastRemovedComments = lastRemovedSoccerRows.map(removedRow => getCommentFromSoccerRow(removedRow));
-			console.debug('Last removed rows: %o', lastRemovedSoccerRows);
-			console.log('Last removed comments: %o', lastRemovedComments);
-			// todo: needs testing if lastRemovedComments are the actual removed comments
-		}
-		// If a comment row was added
-		if (lastAddedSoccerRows?.length > 0) {
-			isUpdate = false;
-			//lastAddedComments = lastAddedSoccerRows.map(addedRow => getCommentFromSoccerRow(addedRow));
-			//console.debug('Last added rows: %o', lastAddedSoccerRows);
-			//console.log('Last added comments: %o', lastAddedComments);
-		}
-		// If nothing was added, but an update occurred
-		else {
-			isUpdate = true;
-			console.debug('Last mutations: %o', lastFMutations);
-		}
+		// If a comment row was only updated
+		let isUpdate = rowCount === previousRowCount;
 
-		// Reducing some spam. Since lastAddedSoccerRows doesn't store the rows that were actually added, this workaround is needed
+		// Reducing some spam.
 		// If the top comment is the same as one of the last three written comments
-		if (lastCommentsQueue.length > 0 &&
-			(commentFromTopSoccerRow === lastCommentsQueue[0] || commentFromTopSoccerRow === lastCommentsQueue[1] || commentFromTopSoccerRow === lastCommentsQueue[2])) {
+		if (lastCommentsQueue.length > 0 && (
+			commentFromTopSoccerRow === lastCommentsQueue[0] ||
+			commentFromTopSoccerRow === lastCommentsQueue[1] ||
+			commentFromTopSoccerRow === lastCommentsQueue[2]
+		)) {
 			// Don't write the same comment for the second time
 			console.debug('Top comment was already written before');
-			// If the second top comment is the same as the second or third last written comment
-			if (commentFromSecondSoccerRow === lastCommentsQueue[1] || commentFromSecondSoccerRow === lastCommentsQueue[2]) {
+			// If lastCommentsQueue has max 1 comment OR if the second top comment is the same as the second or third last written comment
+			if (lastCommentsQueue.length < 2 || (
+				commentFromSecondSoccerRow === lastCommentsQueue[1] ||
+				commentFromSecondSoccerRow === lastCommentsQueue[2]
+			)) {
 				// Nothing has really changed, don't write anything this time
-				console.debug('Second top comment too');
+				console.debug('Second top comment was already written too');
 				return;
 			}
 			// If the second top comment contents changed
 			else {
+				isUpdate = true;
 				console.debug('But the second top comment is different');
 				// Add the comment text at the second place of the last comments queue
 				const lastComment = lastCommentsQueue.shift();
@@ -423,11 +400,18 @@ let fCommentsCallback = (mutations, observer) => {
 		// For each bot comment fragment, send it to chat
 		sendTextArrayToChat(botCommentFragments);
 
-		// Score status element
-		const scoreStatusText = flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText;
+		previousRowCount = soccerRows.length;
+	}
+	else {
+		console.debug('No soccer rows found');
+	}
 
-		// If the match has ended
-		if (scoreStatusText === translate(Str.FINISHED)) {
+	// Score status element
+	const scoreStatusText = flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText;
+
+	// If the match has ended
+	if (scoreStatusText === translate(Str.FINISHED)) {
+		setTimeout(() => {
 			console.log('Match has ended. Stopping.');
 			const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
 			const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
@@ -435,18 +419,16 @@ let fCommentsCallback = (mutations, observer) => {
 			sendTextArrayToChat([scoreStatusText + '! ' + teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1]]);
 			// Stop observing
 			stop();
-		}
+		}, 2500);
 	}
 };
-
-// Create an observer instance linked to the callback function
-let fCommentsObserver = new MutationObserver(fCommentsCallback);
 
 // Start observing the target node for configured mutations
 start = () => {
 	if (fCommentsSection != null) {
-		fCommentsObserver = new MutationObserver(fCommentsCallback);
-		fCommentsObserver.observe(fCommentsSection, config);
+		//fCommentsObserverInterval = new MutationObserver(fCommentsCallback);
+		//fCommentsObserverInterval.observe(fCommentsSection, config);
+		fCommentsObserverInterval = setInterval(fCommentsCallback, 2000);
 		console.log('Started observing flashscore commentary section');
 	}
 	else
@@ -455,7 +437,8 @@ start = () => {
 
 // Later, you can stop observing
 stop = () => {
-	fCommentsObserver.disconnect();
+	//fCommentsObserverInterval.disconnect();
+	clearInterval(fCommentsObserverInterval);
 	console.log('Stopped observing flashscore commentary section');
 };
 
@@ -479,6 +462,87 @@ haxballIframeBody.addEventListener('keydown', event => {
 		}
 	}
 }, false);
+
+function spolszczNazwiska(text) {
+	let commentText = text;
+	commentText = commentText.replaceAll('Odysseas', 'Odiseas');
+	commentText = commentText.replaceAll('Vlachodimos', 'Wlachodimos');
+	commentText = commentText.replaceAll('Vasilis', 'Wasilis');
+	commentText = commentText.replaceAll('Fortounis', 'Fortunis');
+	commentText = commentText.replaceAll('Stavros', 'Stawros');
+	commentText = commentText.replaceAll('Vasilantonopoulos', 'Wasilandonopulos');
+	commentText = commentText.replaceAll('Chatzidiakos', 'Chadzidiakos');
+	commentText = commentText.replaceAll('Giannis', 'Janis');
+	commentText = commentText.replaceAll('Papanikolaou', 'Papanikolau');
+	commentText = commentText.replaceAll('Georgios', 'Jorgos');
+	commentText = commentText.replaceAll('Tzavellas', 'Dzawelas');
+
+	commentText = commentText.replaceAll('Kvekve', 'Kwekwe');
+	commentText = commentText.replaceAll('Tsitaishvili', 'Citaiszwili');
+	commentText = commentText.replaceAll('Khvicha', 'Chwicza');
+	commentText = commentText.replaceAll('Kvaratskhelia', 'Kwaracchelia');
+	commentText = commentText.replaceAll('Davitashvili', 'Dawitaszwili');
+	commentText = commentText.replaceAll('Zivzivadze', 'Ziwziwadze');
+	commentText = commentText.replaceAll('shvili', 'szwili');
+
+	commentText = commentText.replaceAll('Vladyslav', 'Władysław');
+	commentText = commentText.replaceAll('Kochergin', 'Koczerhin');
+	commentText = commentText.replaceAll('Evgen', 'Jewhen');
+	commentText = commentText.replaceAll('Konoplyanka', 'Konoplianka');
+	commentText = commentText.replaceAll('Dzyuba', 'Dziuba');
+	commentText = commentText.replaceAll('Yarmolenko', 'Jarmołenko');
+	commentText = commentText.replaceAll('Yaremchuk', 'Jaremczuk');
+	commentText = commentText.replaceAll('Oleksandr', 'Ołeksandr');
+	commentText = commentText.replaceAll('Zinchenko', 'Zinczenko');
+	commentText = commentText.replaceAll('Ruslan', 'Rusłan');
+	commentText = commentText.replaceAll('Malinovsky', 'Malinowski');
+	commentText = commentText.replaceAll('Malinovskyi', 'Malinowski');
+	commentText = commentText.replaceAll('Vitali', 'Witalij');
+	commentText = commentText.replaceAll('Mykolenko', 'Mykołenko');
+	commentText = commentText.replaceAll('Tsygankov', 'Cyhankow');
+	commentText = commentText.replaceAll('Shevchenko', 'Szewczenko');
+	commentText = commentText.replaceAll('Dovbyk', 'Dowbyk');
+	commentText = commentText.replaceAll('Karavaev', 'Karawajew');
+	commentText = commentText.replaceAll('Zaytsev', 'Zajcew');
+	commentText = commentText.replaceAll('Matviienko', 'Matwijenko');
+	commentText = commentText.replaceAll('Mykhailo', 'Michajło');
+	commentText = commentText.replaceAll('Georgiy', 'Heorhij');
+	commentText = commentText.replaceAll('Anatolii', 'Anatolij');
+	commentText = commentText.replaceAll('Andriy', 'Andrij');
+	commentText = commentText.replaceAll('Dmitriy', 'Dmitrij');
+	commentText = commentText.replaceAll(/Lunin\b/g, 'Łunin');
+	commentText = commentText.replaceAll(/(\w*)chenko\b/g, '$1czenko');
+	commentText = commentText.replaceAll(/(\w*)vsky\b/g, '$1wski');
+	commentText = commentText.replaceAll(/(\w*)chuk\b/g, '$1czuk');
+	commentText = commentText.replaceAll(/(\w*)lenko\b/g, '$1łenko');
+
+	commentText = commentText.replaceAll('Velkovski', 'Wełkowski');
+	commentText = commentText.replaceAll(/Stole\b/g, 'Stołe');
+	commentText = commentText.replaceAll(/(\w*)vski\b/g, '$1wski');
+	commentText = commentText.replaceAll(/(\w*)ov\b/g, '$1ow');
+
+	commentText = commentText.replaceAll('Bozhidar', 'Bożidar');
+	commentText = commentText.replaceAll('Chorbadzhiyski', 'Czorbadżijski');
+
+	commentText = commentText.replaceAll('Yakhshiboev', 'Jakszibojew');
+	commentText = commentText.replaceAll('Yaxshiboyev', 'Jakszibojew');
+
+	commentText = commentText.replaceAll('Henrikh', 'Henrich');
+	commentText = commentText.replaceAll('Mkhitaryan', 'Mchitarian');
+	commentText = commentText.replaceAll('Vahan', 'Wahan');
+	commentText = commentText.replaceAll('Bichakhchyan', 'Biczachczjan');
+	commentText = commentText.replaceAll('Zhirayr', 'Żirajr');
+	commentText = commentText.replaceAll('Shaghoyan', 'Szaghojan');
+	commentText = commentText.replaceAll('Hovhannisyan', 'Howhannisjan');
+	commentText = commentText.replaceAll('Davidyan', 'Dawidian');
+	commentText = commentText.replaceAll('Voskanyan', 'Woskanian');
+	commentText = commentText.replaceAll(/(\w*)dyan\b/g, '$1dian');
+	commentText = commentText.replaceAll(/(\w*)ryan\b/g, '$1rian');
+	commentText = commentText.replaceAll(/(\w*)syan\b/g, '$1sjan');
+	commentText = commentText.replaceAll(/(\w*)zyan\b/g, '$1zian');
+
+	return commentText;
+}
 
 // Makes the element draggable
 // https://www.w3schools.com/howto/howto_js_draggable.asp
@@ -527,5 +591,5 @@ function makeElementDraggable(element) {
 // iframe can't be dragged, only div
 makeElementDraggable(fDivOverlay);
 
-// LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. MODIFY THE ARGUMENTS HERE!
-loadFlashscoreMatchCommentary('QwjJZwHI', 'ANN', 'TOU', 'pl', '560px', '600px');
+// LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. Copy this line (without //) to the console and modify the arguments!
+//loadFlashscoreMatchCommentary('2R3myONg', 'LPO', 'FIO', 'en', '560px', '600px');
