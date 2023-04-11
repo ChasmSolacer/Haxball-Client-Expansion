@@ -50,6 +50,10 @@ let mutedNames = new Set();
 let chatHistory = [];
 let announcementHistory = [];
 
+// If true, logs all chat messages to console
+let logChat = true;
+// 1 – log announcements only from players (some rooms only), 2 – log all announcements to the console, other – don't log
+let logAnnouncements = 1;
 // Activates .korwin
 let isOzjasz = false;
 let bannedFromOzjasz = {};
@@ -155,6 +159,9 @@ function dopelniacz(wyraz) {
 	const len = wyraz.length;
 	const wyrazU = wyraz.toUpperCase();
 
+	if (wyrazU === 'Wieprzowa')
+		return 'Wieprzowej';
+
 	// Wyrazy z nietypową końcówką, bez samogłosek lub jednosylabowe nazwiska zakończone samogłoską są nieodmienne
 	if (wyrazU.endsWith('Ą') || wyrazU.endsWith('Ę') ||
 		vowelsCount(wyrazU) < 1 || vowelsCount(wyrazU) < 2 && isVowel(wyrazU[len - 1]))
@@ -162,9 +169,6 @@ function dopelniacz(wyraz) {
 
 	// Musi być litera na końcu
 	if (!isLetter(wyraz[len - 1]))
-		return wyraz;
-	// Nietypowych końcówek nie odmieniamy
-	if (['Ą', 'Ę'].includes(wyraz[len - 1]))
 		return wyraz;
 
 	// A
@@ -262,6 +266,11 @@ function dopelniacz(wyraz) {
 		else
 			wyraz = wyraz.substring(0, len - 1) + 'ego';
 	}
+	// Wyrazy kończące się na samogłoskę ze znakiem diakrytycznym (é, ó, itp.)
+	else if (isVowel(removeDiacritics(wyrazU[wyrazU.length - 1]))) {
+		// Nie odmieniamy nietypowych końcówek
+		return wyraz;
+	}
 	// 2-sylabowe kończące się na -ec (1-sylabowe: Pec - PecA)
 	else if (wyrazU.endsWith('EC') && vowelsCount(wyrazU) > 1) {
 		// ci przed -ec (CzeCIEC – CzeĆCA)
@@ -347,6 +356,9 @@ function biernik(wyraz) {
 	const len = wyraz.length;
 	const wyrazU = wyraz.toUpperCase();
 
+	if (wyrazU === 'Wieprzowa')
+		return 'Wieprzową';
+
 	// Wyrazy z nietypową końcówką, bez samogłosek lub jednosylabowe nazwiska zakończone samogłoską są nieodmienne
 	if (wyrazU.endsWith('Ą') || wyrazU.endsWith('Ę') ||
 		vowelsCount(wyrazU) < 1 || vowelsCount(wyrazU) < 2 && isVowel(wyrazU[len - 1]))
@@ -354,9 +366,6 @@ function biernik(wyraz) {
 
 	// Musi być litera na końcu
 	if (!isLetter(wyraz[len - 1]))
-		return wyraz;
-	// Nietypowych końcówek nie odmieniamy
-	if (['Ą', 'Ę'].includes(wyraz[len - 1]))
 		return wyraz;
 
 	// A
@@ -426,6 +435,11 @@ function biernik(wyraz) {
 		// Inne wyrazy kończące się na -y (RakoczY – RakoczEGO)
 		else
 			wyraz = wyraz.substring(0, len - 1) + 'ego';
+	}
+	// Wyrazy kończące się na samogłoskę ze znakiem diakrytycznym (é, ó, itp.)
+	else if (isVowel(removeDiacritics(wyrazU[wyrazU.length - 1]))) {
+		// Nie odmieniamy nietypowych końcówek
+		return wyraz;
 	}
 	// 2-sylabowe kończące się na -ec (1-sylabowe: Pec - PecA)
 	else if (wyrazU.endsWith('EC') && vowelsCount(wyrazU) > 1) {
@@ -515,16 +529,17 @@ function odmienionaNazwa(nazwa, przypadekFun) {
 	nazwa = nazwa.replace('Klau.dia', 'Klau' + krn + 'dia');
 	nazwa = nazwa.replace('BALL-e', 'BA' + zws + 'LL-e');
 	nazwa = nazwa.replace('Mac Al', 'Ma' + zws + 'c Al');
-	nazwa = nazwa.replace('Nigga Świątek', 'Nigga Św' + zws + 'ią' + zws + 'te' + zws + 'k');
+	nazwa = nazwa.replace('ga Świątek', 'ga Św' + zws + 'ią' + zws + 'te' + zws + 'k');
 	nazwa = nazwa.replace('w gaciach', 'w ga' + zws + 'ci' + zws + 'a' + zws + 'ch');
 	nazwa = nazwa.replace('a Grande', 'a Gr' + zws + 'an' + zws + 'de');
+	nazwa = nazwa.replace('Emile', 'Emil');
 	// Nazwa będzie rozdzielana na człony po tych znakach. Każdy człon będzie odmieniany samodzielnie
 	// Nazwę 'Piotr.Samiec-Talar' rozdzieli na ['Piotr', '.', 'Samiec', '-', 'Talar']
 	let czlony = nazwa.trim().split(/([\s\-+*\/\\.,_=`~"()\[\]{}:;<>?!\u200b])/g);
 	// Dla każdego członu
 	czlony.forEach((czlon, i) => {
 		let czlonU = czlon.toUpperCase();
-		let nieodmienne = ['VAN', 'VON', 'VOM', 'DOS', 'NOT']; // Ulricha von Jungingena
+		let nieodmienne = ['VAN', 'VON', 'VOM', 'DOS', 'NOT', 'ROKOKO']; // Ulricha von Jungingena
 		// Jeżeli człon nie jest ostatni i jest nieodmienny
 		if (i < czlony.length - 1 && (nieodmienne.includes(czlonU) || czlon.length < 3))
 			nazwaO += czlon;
@@ -1237,6 +1252,8 @@ g.onPlayerChat = (byPlayer, message) => {
 	const playerEntry = byPlayer.name + '#' + byPlayer.id;
 	const entry = (timeEntry + ' ' + playerEntry + ': ' + message).replaceAll('\u202e', '[RTLO]');
 	chatHistory.push(entry);
+	if (logChat)
+		console.log(entry);
 
 	// If a bogus character is spammed
 	if (message.split('﷽').length > 5) {
@@ -1265,9 +1282,36 @@ g.onPlayerChat = (byPlayer, message) => {
 };
 
 g.onAnnouncement = (message, color, style, sound) => {
+	const logThisAnnouncement = () => {
+		const rgbaStringFromInt = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
+		let styleStr = '';
+		if (color >= 0)
+			styleStr += 'color:' + rgbaStringFromInt(color) + ';';
+		switch (style) {
+			case 1:
+			case 4:
+				styleStr += 'font-weight:900;';
+				break;
+			case 2:
+			case 5:
+				styleStr += 'font-style:italic;';
+		}
+		switch (style) {
+			case 3:
+			case 4:
+			case 5:
+				styleStr += 'font-size:10px;';
+		}
+
+		console.log('%c' + entry, styleStr);
+	};
+
 	// Log time and replace all RLTO characters that reverse the message
-	const entry = (new Date).toLocaleTimeString() + ' ' + message.replaceAll('\u202e', '[RLTO]');
+	const entry = (new Date).toLocaleTimeString() + ' ▌' + message.replaceAll('\u202e', '[RLTO]');
 	announcementHistory.push(entry);
+	if (logAnnouncements === 2) {
+		logThisAnnouncement();
+	}
 
 	const roomName = g.getRoomProperties().name;
 	if (roomName.includes('hb.jakjus.com')) {
@@ -1291,6 +1335,8 @@ g.onAnnouncement = (message, color, style, sound) => {
 
 		// If the message is from a player and onlyMessage exists
 		if (playerName != null && onlyMessage != null) {
+			if (logAnnouncements === 1)
+				logThisAnnouncement(message);
 			// If a bogus character is spammed
 			if (onlyMessage.split('﷽').length > 5) {
 				const chatLog = iframeBody.querySelector('.log');
