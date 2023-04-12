@@ -1,5 +1,5 @@
 /*
-* Description: This script observes
+* Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
 * This will only work in Chromium based browsers (Chrome, Edge, Brave) with flags enabled, otherwise CORS problems will occur!
 * Source: https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome#comment124721890_3177718
@@ -151,7 +151,9 @@ let fCommentsObserverInterval;
 // Previous number of comments
 let previousRowCount = 0;
 // Comments array. The latest is at index 0
-const lastCommentsQueue = [];
+let lastCommentsQueue = [];
+// Match finished flag
+let endPending = false;
 
 // Options for the observer (which mutations to observe)
 //let config = {attributes: true, childList: true, subtree: true};
@@ -196,10 +198,14 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 		// Wait 3 seconds for the comments section to load (should be sufficient)
 		setTimeout(() => {
 			console.log('Flashscore comment section loaded');
+			// Empty last comments queue
+			lastCommentsQueue = [];
 			// Flashscore comments section element
 			fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
 
+			/*
 			const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
+
 			if (soccerRows?.length > 0) {
 				// Top row containing minute, icons and comment
 				const topSoccerRow = soccerRows[0];
@@ -210,7 +216,9 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 
 				// Print the whole comment to the console
 				console.log(botComment);
+
 			}
+			*/
 			//let soccerRowsToText = soccerRows.map(row => getTextFromRow(row));
 			//console.debug(soccerRowsToText);
 
@@ -407,10 +415,10 @@ let fCommentsCallback = () => {
 	}
 
 	// Score status element
-	const scoreStatusText = flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText;
+	const scoreStatusText = flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText?.toUpperCase();
 
 	// If the match has ended
-	if (scoreStatusText === translate(Str.FINISHED)) {
+	if (scoreStatusText === translate(Str.FINISHED) && !endPending) {
 		setTimeout(() => {
 			console.log('Match has ended. Stopping.');
 			const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
@@ -420,6 +428,7 @@ let fCommentsCallback = () => {
 			// Stop observing
 			stop();
 		}, 2500);
+		endPending = true;
 	}
 };
 
