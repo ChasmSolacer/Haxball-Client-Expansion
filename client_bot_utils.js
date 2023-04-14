@@ -1281,7 +1281,7 @@ g.onPlayerChat = (byPlayer, message) => {
 	checkAndHandleCommand(message, byPlayer);
 };
 
-g.onAnnouncement = (message, color, style, sound) => {
+g.onAnnouncement = (anText, color, style, sound) => {
 	const logThisAnnouncement = () => {
 		const rgbaStringFromInt = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
 		let styleStr = '';
@@ -1307,36 +1307,38 @@ g.onAnnouncement = (message, color, style, sound) => {
 	};
 
 	// Log time and replace all RLTO characters that reverse the message
-	const entry = (new Date).toLocaleTimeString() + ' ▌' + message.replaceAll('\u202e', '[RLTO]');
+	const entry = (new Date).toLocaleTimeString() + ' ▌' + anText.replaceAll('\u202e', '[RLTO]');
 	announcementHistory.push(entry);
 	if (logAnnouncements === 2) {
 		logThisAnnouncement();
 	}
 
 	const roomName = g.getRoomProperties().name;
+	// In jakjus rooms
 	if (roomName.includes('hb.jakjus.com')) {
-		// Delete premium star
-		let clearedMessage = message.replace(' ⭐️', '');
 		// Player name
 		let playerName = null;
 		// Player rank
 		let playerRank = null;
+		// Player emblems (premium star, card)
+		let playerEmblems = null;
 		// Only message without player name and rank
 		let onlyMessage = null;
 		// match returns array of matched capture groups: index 0 is whole match, 1 is the 1st capture group, etc...
 		// Example: the announcement – «Player name (Silver): sample text» – matches the following capture groups marked with ⟨⟩:
-		// ⟨Player name⟩ (⟨Silver⟩): ⟨sample text⟩
-		let matches = clearedMessage.match(/(.*) \((Unranked|Bronze|Silver|Gold|Diamond|Master)\): (.*)/);
+		// ⟨Player name⟩ (⟨Silver⟩)⟨ ⭐⟩: ⟨sample text⟩
+		let matches = anText.match(/(.*) \((Unranked|Bronze|Silver|Gold|Diamond|Master)\)(.*): (.*)/);
 		if (matches?.length > 1) {
 			playerName = matches[1];
 			playerRank = matches[2];
-			onlyMessage = matches[3];
+			playerEmblems = matches[3];
+			onlyMessage = matches[4];
 		}
 
 		// If the message is from a player and onlyMessage exists
 		if (playerName != null && onlyMessage != null) {
 			if (logAnnouncements === 1)
-				logThisAnnouncement(message);
+				logThisAnnouncement(anText);
 			// If a bogus character is spammed
 			if (onlyMessage.split('﷽').length > 5) {
 				const chatLog = iframeBody.querySelector('.log');
@@ -1344,7 +1346,7 @@ g.onAnnouncement = (message, color, style, sound) => {
 				const lastParagraph = paragraphs[paragraphs.length - 1];
 
 				// Replace with dots and shrink chat line
-				lastParagraph.innerText = message.replaceAll('﷽', '.');
+				lastParagraph.innerText = anText.replaceAll('﷽', '.');
 				lastParagraph.style.fontSize = shrunkFontSize;
 				scrollToBottom(chatLog);
 			}
