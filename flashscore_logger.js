@@ -485,9 +485,11 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Papanikolaou', 'Papanikolau');
 	commentText = commentText.replaceAll('Georgios', 'Jorgos');
 	commentText = commentText.replaceAll('Tzavellas', 'Dzawelas');
+	commentText = commentText.replaceAll(/(\w*)poulos\b/g, '$1pulos');
 
 	commentText = commentText.replaceAll('Kvekve', 'Kwekwe');
 	commentText = commentText.replaceAll('Tsitaishvili', 'Citaiszwili');
+	commentText = commentText.replaceAll('Georgiy Tsitaishvili', 'Giorgi Citaiszwili');
 	commentText = commentText.replaceAll('Khvicha', 'Chwicza');
 	commentText = commentText.replaceAll('Kvaratskhelia', 'Kwaracchelia');
 	commentText = commentText.replaceAll('Davitashvili', 'Dawitaszwili');
