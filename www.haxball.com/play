@@ -14,7 +14,7 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<title>Haxball Play</title>
-	<link type="text/css" rel="stylesheet" href="PFj3geCw/s/style.css" />
+	<link type="text/css" rel="stylesheet" href="DEdDrd3X/s/style.css" />
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -28,7 +28,7 @@
 			<a href="/flash/">Flash</a>
 		</div>
 		<div class="flexRow flexGrow">
-			<iframe src="PFj3geCw/__cache_static__/g/game.html" class="gameframe"></iframe>
+			<iframe src="DEdDrd3X/__cache_static__/g/game.html" class="gameframe"></iframe>
 		</div>
 	</div>
 </body>

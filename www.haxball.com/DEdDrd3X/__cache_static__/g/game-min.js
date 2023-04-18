@@ -1286,9 +1286,11 @@
 
 	function AudioUtil(a) {
 		function b(b) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				var e = a.file(b).asArrayBuffer();
-				return c.c.decodeAudioData(e, resolve, reject);
+				return c.c.decodeAudioData(e, resolve, function () {
+					resolve(null);
+				});
 			});
 		}
 
@@ -2025,9 +2027,6 @@
 	function Dca() {
 	}
 
-	function Mmc() {
-	}
-
 	function Dba() {
 	}
 
@@ -2095,7 +2094,7 @@
 		}
 	}
 
-	function Mnc() {
+	function Mnc_mc() {
 	}
 
 	function IceSa(a, b, c, d) {
@@ -2519,7 +2518,7 @@
 	IceSa.b = true;
 	IceSa.vk = a => {
 		try {
-			var b = Mnc.gf(a.candidate);
+			var b = Mnc_mc.gf(a.candidate);
 			if (b.Jr == 'srflx')
 				return b.Xo;
 		}
@@ -2798,8 +2797,8 @@
 			this.th.clear();
 		}, f: IceSa
 	};
-	Mnc.b = true;
-	Mnc.gf = a => {
+	Mnc_mc.b = true;
+	Mnc_mc.gf = a => {
 		a = a.split(' ');
 		if (a[6] != 'typ')
 			throw new GlobalError(null);
@@ -3304,31 +3303,6 @@
 	};
 	Dba.b = true;
 	Dba.cg = a => new PerfectScrollbar(a, {handlers: Dba.scrollHandlers});
-	Mmc.b = true;
-	Mmc.ts = () => {
-		var a = window;
-		a.RTCPeerConnection = a.webkitRTCPeerConnection || a.mozRTCPeerConnection || a.RTCPeerConnection;
-		a.RTCIceCandidate = a.webkitRTCIceCandidate || a.mozRTCIceCandidate || a.RTCIceCandidate;
-		a.RTCSessionDescription = a.webkitRTCSessionDescription || a.mozRTCSessionDescription || a.RTCSessionDescription;
-		var b = new RTCPeerConnection({iceServers: []});
-		try {
-			b.createAnswer().catch(() => {
-			});
-		}
-		catch (e) {
-			var a = a.RTCPeerConnection.prototype;
-			var c = a.createOffer;
-			var d = a.createAnswer;
-			a.createOffer = function (a) {
-				var b = this;
-				return new Promise((resolve, reject) => c.call(b, resolve, reject, a));
-			};
-			a.createAnswer = function (a) {
-				var b = this;
-				return new Promise((resolve, reject) => d.call(b, resolve, reject, a));
-			};
-		}
-	};
 	Dca.b = true;
 	Dca.ar = (a, b) => Dca.Xl(new Blob([a], {type: 'octet/stream'}), b);
 	Dca.br = (a, b) => Dca.Xl(new Blob([a], {type: 'text/plain'}), b);
@@ -5148,7 +5122,6 @@
 	DObj.prototype = {f: DObj};
 	Muu.b = true;
 	Muu.qpDisplay = () => {
-		Mmc.ts();
 		DisplayUtil.fj(() => Muu.jk(Muu.xq));
 		Muu.hp();
 	};
