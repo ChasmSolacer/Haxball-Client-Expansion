@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" class="overflowhidden">
 <head>
-	<!-- gtag -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-20268031-3"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'UA-20268031-3');
-	</script>
-	
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<title>Haxball Play</title>
-	<link type="text/css" rel="stylesheet" href="DEdDrd3X/s/style.css" />
+	<link type="text/css" rel="stylesheet" href="7OirlY7R/s/style.css" />
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-	<div class="container flexCol">
-		<div class="header">
-			<span class="title">HaxBall</span>
-			<a href="http://blog.haxball.com">News</a>
-			<a href="play" class="active">Play</a>
-			<a href="about">About</a>
-			<a href="community">Community</a>
-			<a href="/flash/">Flash</a>
-		</div>
-		<div class="flexRow flexGrow">
-			<iframe src="DEdDrd3X/__cache_static__/g/game.html" class="gameframe"></iframe>
+	<div class="container flexRow">
+		<div class="flexCol flexGrow">
+			<div class="header">
+				<span class="title">HaxBall</span>
+				<a href="http://blog.haxball.com">News</a>
+				<a href="play" class="active">Play</a>
+				<a href="about">About</a>
+				<a href="community">Community</a>
+			</div>
+			<iframe src="7OirlY7R/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe>
 		</div>
 	</div>
 </body>

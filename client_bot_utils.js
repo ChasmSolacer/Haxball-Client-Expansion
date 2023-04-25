@@ -29,7 +29,7 @@ const Color = {
 };
 
 // Haxball iframe body
-const iframeBody = document.querySelector('iframe').contentDocument.body;
+let iframeBody = document.querySelector('iframe').contentDocument.body;
 
 // Your avatar
 let defaultAvatar = localStorage.avatar;
@@ -92,13 +92,14 @@ function sendChat_s(message) {
 		g.sendChat(message);
 	// Legacy
 	else {
+		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const inputElement = iframeBody.querySelector('[data-hook="input"]');
-		const sendButton = iframeBody.querySelector('button[data-hook="send"]');
 		// If chat elements were found
-		if (inputElement != null && sendButton != null) {
+		if (inputElement != null) {
 			const prevText = inputElement.value;
 			inputElement.value = message;
-			sendButton.click();
+			// Press Enter
+			inputElement.dispatchEvent(new KeyboardEvent('keydown', {'keyCode': 13}));
 			inputElement.value = prevText;
 		}
 	}
@@ -723,7 +724,8 @@ function sendBigText(str, bigCharsArray) {
 }
 
 function sendBigTextFromInput(bigCharsArray) {
-	const input = iframeBody.querySelectorAll('[data-hook="input"]')[0];
+	const iframeBody = document.querySelector('iframe').contentDocument.body;
+	const input = iframeBody.querySelector('[data-hook="input"]');
 
 	if (input?.value?.length > 0) {
 		sendBigText(input.value, bigCharsArray);
@@ -738,12 +740,13 @@ function setAvatar_s(avatar) {
 	}
 	else {
 		sendChat_s('/avatar ' + avatar);
-		// Delete the Avatar set notice
+
+		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const chatLog = iframeBody.querySelector('.log');
 		const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 		const lastParagraph = paragraphs[paragraphs.length - 1];
 
-		// Hide notice
+		// Delete the Avatar set notice
 		if (lastParagraph.innerText === 'Avatar set') {
 			chatLog.removeChild(lastParagraph);
 			scrollToBottom(chatLog);
@@ -828,7 +831,7 @@ function setIncrementalLetterAvatar() {
 }
 
 /* =====  Key handling  ===== */
-iframeBody.addEventListener('keydown', (event) => {
+document.querySelector('iframe').contentDocument.body.addEventListener('keydown', (event) => {
 	const keyName = event.key;
 
 	// Jeżeli wciśnięty jest też Alt
@@ -855,7 +858,7 @@ iframeBody.addEventListener('keydown', (event) => {
 				sendBigText('GOAL', bigChars3);
 				break;
 			case 's':
-				slapAll('siemens');
+				slapAll('');
 				break;
 			case 'h':
 				slapAll('Hello there');
@@ -867,19 +870,22 @@ iframeBody.addEventListener('keydown', (event) => {
 				slapAll('NIE ŚPIMY');
 				break;
 			case 'y':
-				// Powoduje Bad Actor
+				// Causes kick with Bad Actor
 				cancelAvatar();
 				for (let i = 0; i < 500; i++)
 					setAvatar_s(defaultAvatar);
 				break;
 			case ',':
+				// Starts/resumes the alphabet avatar
 				clearInterval(intervalAvatar);
 				intervalAvatar = setInterval(setIncrementalLetterAvatar, 500);
 				break;
 			case '.':
+				// Pauses the alphabet avatar
 				clearInterval(intervalAvatar);
 				break;
 			case '/':
+				// Resets the alphabet to A
 				// letters = new StringIdGenerator('AÁĂÂÄÀĀĄÅǺÃÆǼBCĆČÇĈĊDĎĐÐEÉĔĚÊËĖÈĒĘFGĞĢĜĠHĤĦIÍĬÎÏİÌĪĮĨJĴKĶLĹĽĻĿŁMNŃŇŅÑOÓŎÔÖŐÒŌØǾÕŒPÞQRŔŘŖSŚŠŞŜȘẞTŤŢȚŦÞUÚŬÛÜŰÙŪŲŮŨVWẂŴẄẀXYÝŶŸỲĲZŹŽŻaáăâäàāąåǻãæǽbcćčçĉċdďđðeéĕěêëėèēęfgğģĝġhĥħiíĭîïiìīįĩjĵkķlĺľļŀłmnńňņñoóŏôöőòōøǿõœpþqrŕřŗsśšşŝșßtťţțŧþuúŭûüűùūųůũvwẃŵẅẁxyýŷÿỳĳzźžż');
 				letters = new StringIdGenerator('AÁĂÂÄÀĀĄÅǺÃÆǼBCĆČÇĈĊDĎĐÐEÉĔĚÊËĖÈĒĘFGĞĢĜĠHĤĦIÍĬÎÏİÌĪĮĨJĴKĶLĹĽĻĿŁMNŃŇŅÑOÓŎÔÖŐÒŌØǾÕŒPÞQRŔŘŖSŚŠŞŜȘẞTŤŢȚŦÞUÚŬÛÜŰÙŪŲŮŨVWẂŴẄẀXYÝŶŸỲĲZŹŽŻ');
 				break;
@@ -1263,6 +1269,7 @@ g.onPlayerChat = (byPlayer, message) => {
 
 	// If a bogus character is spammed
 	if (message.split('﷽').length > 5) {
+		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const chatLog = iframeBody.querySelector('.log');
 		const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 		const lastParagraph = paragraphs[paragraphs.length - 1];
@@ -1274,6 +1281,7 @@ g.onPlayerChat = (byPlayer, message) => {
 	}
 	// If the player id is in muted ids
 	if (mutedIds.has(byPlayer.id)) {
+		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const chatLog = iframeBody.querySelector('.log');
 		const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 		const lastParagraph = paragraphs[paragraphs.length - 1];
@@ -1347,6 +1355,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 				logThisAnnouncement(anText);
 			// If a bogus character is spammed
 			if (onlyMessage.split('﷽').length > 5) {
+				const iframeBody = document.querySelector('iframe').contentDocument.body;
 				const chatLog = iframeBody.querySelector('.log');
 				const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 				const lastParagraph = paragraphs[paragraphs.length - 1];
@@ -1358,6 +1367,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 			}
 			// If the player name is in muted names
 			if (mutedNames.has(playerName)) {
+				const iframeBody = document.querySelector('iframe').contentDocument.body;
 				const chatLog = iframeBody.querySelector('.log');
 				const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 				const lastParagraph = paragraphs[paragraphs.length - 1];

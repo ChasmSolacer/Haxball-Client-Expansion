@@ -39,9 +39,6 @@ const FlashscoreSettings = {
 	overlayOpacity: '0.8'
 };
 
-// Haxball iframe body
-const haxballIframeBody = document.querySelector('iframe').contentDocument.body;
-
 // Translatable objects
 const Str = {
 	COMMENTARY_LINK1: {
@@ -312,13 +309,14 @@ function sendChat_s(message) {
 		g.sendChat(message);
 	// Legacy
 	else {
-		const inputElement = haxballIframeBody.querySelector('[data-hook="input"]');
-		const sendButton = haxballIframeBody.querySelector('button[data-hook="send"]');
+		const iframeBody = document.querySelector('iframe').contentDocument.body;
+		const inputElement = iframeBody.querySelector('[data-hook="input"]');
 		// If chat elements were found
-		if (inputElement != null && sendButton != null) {
+		if (inputElement != null) {
 			const prevText = inputElement.value;
 			inputElement.value = message;
-			sendButton.click();
+			// Press Enter
+			inputElement.dispatchEvent(new KeyboardEvent('keydown', {'keyCode': 13}));
 			inputElement.value = prevText;
 		}
 	}
@@ -457,7 +455,7 @@ restart = () => {
 };
 
 // KEY EVENTS
-haxballIframeBody.addEventListener('keydown', event => {
+document.querySelector('iframe').contentDocument.body.addEventListener('keydown', event => {
 	const keyName = event.key;
 
 	// If Alt key is also pressed
