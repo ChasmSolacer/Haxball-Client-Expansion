@@ -1579,7 +1579,7 @@ th {
 	height: 150px;
 	width: 800px;
 	min-width: 300px;
-	padding: 10px 10px 5px 10px;
+	padding: 5px 10px 5px 10px;
 	position: relative;
 	background-color: rgba(26, 33, 37, var(--chat-opacity, 1));
 	border-top-left-radius: 5px;
@@ -1640,24 +1640,24 @@ th {
 	line-height: 1.3
 }
 
-.chatbox-view > .log > p:not(:first-child) {
+.chatbox-view > .log .log-contents > p:not(:last-child) {
 	margin-bottom: 3px
 }
 
-.chatbox-view > .log p {
+.chatbox-view > .log .log-contents p {
 	overflow: hidden;
 	flex-shrink: 0
 }
 
-.chatbox-view > .log p.notice {
+.chatbox-view > .log .log-contents p.notice {
 	color: #8ed2ab
 }
 
-.chatbox-view > .log p.highlight {
+.chatbox-view > .log .log-contents p.highlight {
 	font-weight: bold
 }
 
-.chatbox-view > .log p.announcement {
+.chatbox-view > .log .log-contents p.announcement {
 	border-left: 3px solid #c13535;
 	padding-left: 5px;
 	min-height: 12px;
@@ -1693,7 +1693,8 @@ th {
 .chatbox-view > .input {
 	display: flex;
 	flex-direction: row;
-	flex-shrink: 0
+	flex-shrink: 0;
+	height: 19px
 }
 
 .chatbox-view > .input input[type=text] {
@@ -1701,8 +1702,7 @@ th {
 	background-color: #111619;
 	border: none;
 	border-radius: 5px;
-	padding: 0 10px;
-	margin-right: 4px;
+	padding: 0 8px;
 	flex-grow: 1;
 	align-self: stretch;
 	box-sizing: border-box
@@ -1802,6 +1802,30 @@ th {
 	min-height: 0
 }
 
+.game-view.chat-bg-full .bottom-section {
+	align-items: start;
+	background-color: rgba(26, 33, 37, var(--chat-opacity, 1))
+}
+
+.game-view.chat-bg-full .bottom-section .chatbox-view {
+	align-self: end;
+	background: none;
+	margin: 0;
+	padding: 0 0 5px 0
+}
+
+.game-view.chat-bg-full .bottom-section > .buttons {
+	padding: 6px;
+	background: none;
+	margin-left: 0;
+	margin-right: auto
+}
+
+.game-view.chat-bg-full .bottom-section .stats-view {
+	background: none;
+	max-height: 0
+}
+
 .game-view > .bottom-section {
 	flex-shrink: 0;
 	display: flex;
@@ -1878,7 +1902,6 @@ th {
 	margin: 4px;
 	white-space: nowrap;
 	flex: 0 0 100px;
-	overflow: hidden;
 	line-height: 1.5em
 }
 
@@ -1934,7 +1957,7 @@ th {
 }
 
 .game-timer-view > .overtime.on {
-	visibility: visible;
+	visibility: inherit;
 	animation: .4s linear overtime-appear
 }
 
@@ -3036,19 +3059,31 @@ a:hover {
 	display: inline
 }
 
-.thin-scrollbar {
+.thin-scrollbar, .subtle-thin-scrollbar {
 	scrollbar-width: thin;
 	scrollbar-color: rgba(255, 255, 255, .2) rgba(0, 0, 0, .2)
 }
 
-.thin-scrollbar::-webkit-scrollbar {
+.thin-scrollbar::-webkit-scrollbar, .subtle-thin-scrollbar::-webkit-scrollbar {
 	width: 5px;
 	height: 8px;
 	background-color: rgba(0, 0, 0, .2)
 }
 
-.thin-scrollbar::-webkit-scrollbar-thumb {
+.thin-scrollbar::-webkit-scrollbar-thumb, .subtle-thin-scrollbar::-webkit-scrollbar-thumb {
 	background: rgba(255, 255, 255, .2)
+}
+
+.subtle-thin-scrollbar:not(:hover) {
+	scrollbar-color: rgba(255, 255, 255, 0) rgba(0, 0, 0, 0)
+}
+
+.subtle-thin-scrollbar:not(:hover)::-webkit-scrollbar {
+	background-color: rgba(0, 0, 0, 0)
+}
+
+.subtle-thin-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0)
 }
 
 .slider {

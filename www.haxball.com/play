@@ -4,7 +4,7 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<title>Haxball Play</title>
-	<link type="text/css" rel="stylesheet" href="7OirlY7R/s/style.css" />
+	<link type="text/css" rel="stylesheet" href="8BQQbhvV/s/style.css" />
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -17,7 +17,7 @@
 				<a href="about">About</a>
 				<a href="community">Community</a>
 			</div>
-			<iframe src="7OirlY7R/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe>
+			<iframe src="8BQQbhvV/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe>
 		</div>
 	</div>
 </body>
