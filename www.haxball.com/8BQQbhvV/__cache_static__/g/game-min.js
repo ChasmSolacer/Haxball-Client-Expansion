@@ -4986,7 +4986,7 @@
 				}
 				;
 				this.rs = b('fil-full', true);
-				this.Js = b('fil-pass', true);
+				this.Js = b('fil-pass', false);
 				this.ys = c.get('listscroll');
 				this.Ls = class_qb.Zh(this.ys);
 				this.kj = c.get('list');
