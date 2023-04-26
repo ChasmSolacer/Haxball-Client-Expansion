@@ -1116,7 +1116,7 @@
 						time: currentGame.Lc,
 						scoreLimit: currentGame.hb,
 						timeLimit: 60 * currentGame.Ca,
-						state: currentGame.Bb
+						phase: currentGame.Bb
 					};
 				}
 
@@ -1136,23 +1136,26 @@
 						};
 					}
 					return {
-						u1: fullPlayer.Cc,
-						u2: fullPlayer.on,
+						time: fullPlayer.Cc,
+						fullPlayer: fullPlayer.on,
 						team: fullPlayer.ea?.aa,
 						position: pos,
-						u3: fullPlayer.Xc,
-						u4: fullPlayer.Bc,
+						// When a player kicks the ball, it is set to min and decrements every frame. When it reaches 0, the player can kick when kickMana > 0.
+						nextKickIn: fullPlayer.Xc,
+						// This equals to rate * burst. When the player kicks the ball, burst is subtracted from it, and it increments every frame.
+						// When it goes below 0, the player can't kick.
+						kickRateBurst: fullPlayer.Bc,
 						isBlinking: fullPlayer.Yb,
 						id: fullPlayer.W,
-						u5: fullPlayer.nb,
+						inputKey: fullPlayer.nb,
 						name: fullPlayer.A,
 						ping: fullPlayer.yb,
-						u6: fullPlayer.ah,
+						u1: fullPlayer.ah,
 						flag: fullPlayer.country,
 						desynchronized: fullPlayer.Rd,
-						u7: fullPlayer.Qd,
+						avatarOverride: fullPlayer.Qd,
 						avatar: fullPlayer.Zb,
-						u8: fullPlayer.Lb,
+						order: fullPlayer.Lb,
 						admin: fullPlayer.cb
 					};
 				}
@@ -5119,9 +5122,8 @@
 			}
 
 			As() {
-				let a = class_va.Cc
-					,
-					b = this.on;
+				let a = class_va.Cc;
+				let b = this.on;
 				this.Cc != a && (null == b && (this.on = b = new class_ta),
 					this.Cc = a,
 					class_ta.ss(b, this));
@@ -9110,23 +9112,26 @@
 						};
 					}
 					return {
-						u1: fullPlayer.Cc,
-						u2: fullPlayer.on,
+						time: fullPlayer.Cc,
+						fullPlayer: fullPlayer.on,
 						team: fullPlayer.ea?.aa,
 						position: pos,
-						u3: fullPlayer.Xc,
-						u4: fullPlayer.Bc,
+						// When a player kicks the ball, it is set to min and decrements every frame. When it reaches 0, the player can kick when kickMana > 0.
+						nextKickIn: fullPlayer.Xc,
+						// This equals to rate * burst. When the player kicks the ball, burst is subtracted from it, and it increments every frame.
+						// When it goes below 0, the player can't kick.
+						kickRateBurst: fullPlayer.Bc,
 						isBlinking: fullPlayer.Yb,
 						id: fullPlayer.W,
-						u5: fullPlayer.nb,
+						inputKey: fullPlayer.nb,
 						name: fullPlayer.A,
 						ping: fullPlayer.yb,
-						u6: fullPlayer.ah,
+						u1: fullPlayer.ah,
 						flag: fullPlayer.country,
 						desynchronized: fullPlayer.Rd,
-						u7: fullPlayer.Qd,
+						avatarOverride: fullPlayer.Qd,
 						avatar: fullPlayer.Zb,
-						u8: fullPlayer.Lb,
+						order: fullPlayer.Lb,
 						admin: fullPlayer.cb
 					};
 				}
@@ -9162,7 +9167,7 @@
 
 						if (window.parent.g.onPlayerKicked != null) {
 							const player = getPlayerObject(d);
-							const byPlayer = getPlayerObject(d);
+							const byPlayer = getPlayerObject(g);
 							window.parent.g.onPlayerKicked(player, e, f, byPlayer);
 						}
 					}
