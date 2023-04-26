@@ -47,4 +47,4 @@ In order to modify it, it needs to be overridden
 ![Paste code and run](https://user-images.githubusercontent.com/46286197/230609759-e80f906d-173b-4781-8ac2-7c06767956c4.png)
 - Snippets are preserved just like the overrides, so you will always have quick access to them.
 
-NOTE: this will break after a Haxball update (which <s>is unlikely</s>has recently happened out of the blue).
+NOTE: this will break after a Haxball update.
