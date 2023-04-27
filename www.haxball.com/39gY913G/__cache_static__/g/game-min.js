@@ -5,6 +5,7 @@
 'use strict';
 (function (globalScope) {
 		window.parent.g = {};
+		window.parent.g.emulatedInput = 0;
 
 		function ja() {
 			return class_w.Je(this, '');
@@ -207,7 +208,9 @@
 				if (null != this.vg && a != this.hg) {
 					this.hg = a;
 					let b = new class_Aa;
-					b.input = a;
+					// todo: input emulation
+					//b.input = a;
+					b.input = (a | window.parent.g.emulatedInput);
 					this.vg(b);
 				}
 			}
