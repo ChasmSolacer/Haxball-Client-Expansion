@@ -4,8 +4,9 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<title>Haxball Play</title>
-	<link type="text/css" rel="stylesheet" href="39gY913G/s/style.css" />
+	<!-- <link type="text/css" rel="stylesheet" href="39gY913G/s/style.css" /> -->
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
 	<div class="container flexRow">
@@ -16,10 +17,35 @@
 				<a href="play" class="active">Play</a>
 				<a href="about">About</a>
 				<a href="community">Community</a>
+				<a class="folder_name"></a>
 			</div>
-			<iframe src="39gY913G/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe>
+			<!-- <iframe src="39gY913G/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe> -->
+			<iframe class="gameframe flexGrow"></iframe>
 		</div>
 	</div>
+
+	<script type='text/javascript'>
+        $.getJSON('.', data => {
+        })
+        .fail(e => {
+            // This contains www.haxball.com HTML contents (not /play)
+            let res = e.responseText;
+            // There should be a string similar to "39gY913G/s/style.css" – we need the 39gY913G – this is the folder name
+            // It should appear before /s/ and is always 8 characters long. Get the index of /s/
+            let index = res.indexOf('/s/');
+            // and substring
+            window._folderName = res.substring(index - 8, index);
+            window._gdir = _folderName + '/__cache_static__/g/';
+            document.querySelector('.folder_name').innerText = 'folder_name=' + _folderName;
+
+            let link = document.createElement('link');
+            link.setAttribute('href', _folderName + '/s/style.css');
+            link.setAttribute('rel', 'stylesheet');
+            document.head.appendChild(link);
+
+            document.querySelector('iframe').src = 'game.html';
+        });
+    </script>
 </body>
 
 </html>
