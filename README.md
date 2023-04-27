@@ -10,7 +10,7 @@ In order to modify it, it needs to be overridden
 
 ![Download ZIP](https://user-images.githubusercontent.com/46286197/215098635-7506d00a-2649-48ef-92aa-2892205a0ddd.png)
 - Extract the .zip file anywhere to an empty folder.
-- Do not rename any folders or files inside!
+- Do not rename the `www.haxball.com` folder or `play` file inside because they must be overridden!
 
 ### 2. Open Chromium Browser (Chrome, Edge, Brave, etc.)
 #### Set up [Local Overrides](https://developer.chrome.com/blog/new-in-devtools-65/#overrides):
