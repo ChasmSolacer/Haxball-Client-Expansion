@@ -5,6 +5,11 @@
 'use strict';
 (function (globalScope) {
 		window.parent.g = {};
+		/**
+		 * 0 – None, 1 – Up, 2 – Down, 4 – Left, 8 – Right, 16 – Kick.
+		 * To go up and left and kick simultaneously, set this to 1|4|16 which equals 21
+		 * @type {number}
+		 */
 		window.parent.g.emulatedInput = 0;
 
 		function ja() {
@@ -205,10 +210,11 @@
 
 			D() {
 				let a = this.fe;
-				if (null != this.vg && a != this.hg) {
+				// After removing this check, it can work in the background, however it will always trigger onPlayerActivity
+				if (null != this.vg /*&& a != this.hg*/) {
 					this.hg = a;
 					let b = new class_Aa;
-					// todo: input emulation
+					// Add emulatedInput to keyboard input
 					//b.input = a;
 					b.input = (a | window.parent.g.emulatedInput);
 					this.vg(b);
