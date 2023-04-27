@@ -17,7 +17,7 @@
 				<a href="play" class="active">Play</a>
 				<a href="about">About</a>
 				<a href="community">Community</a>
-				<a class="folder_name"></a>
+				<a class="folder_name" style="font-size:0.7em"></a>
 			</div>
 			<!-- <iframe src="39gY913G/__cache_static__/g/game.html" class="gameframe flexGrow"></iframe> -->
 			<iframe class="gameframe flexGrow"></iframe>
