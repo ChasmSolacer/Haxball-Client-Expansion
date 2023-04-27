@@ -10,7 +10,7 @@ Aby go zmodyfikować, musi zostać zastąpiony
 
 ![Pobierz ZIP](https://user-images.githubusercontent.com/46286197/215098635-7506d00a-2649-48ef-92aa-2892205a0ddd.png)
 - Wypakuj pobrany plik .zip do jakiegoś pustego folderu.
-- Nie zmieniaj nazw plików i folderów w środku!
+- Nie zmieniaj nazwy folderu `www.haxball.com` lub pliku `play` w środku, ponieważ to one muszą być zastąpione!
 
 ### 2. Otwórz przeglądarkę Chromium (Chrome, Edge, Brave, itp.)
 #### Włącz [Lokalne Zastąpienia](https://developer.chrome.com/blog/new-in-devtools-65/#overrides):
