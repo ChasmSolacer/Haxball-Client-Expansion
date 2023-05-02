@@ -6101,7 +6101,7 @@
 				this.Od = null;
 				this.Oe = 0;
 				this.co = new class_Ab(3, 1E3);
-				this.class_Ea = new class_wc;
+				this.Ea = new class_wc;
 				this.Lg = 'Waiting for link';
 				this.Hi = this.tm = false;
 				this.Bd = 0;
@@ -6128,12 +6128,12 @@
 					return 'Are you sure you want to leave the room?';
 				}
 				;
-				this.class_Ea.zg = function (d) {
+				this.Ea.zg = function (d) {
 					a.B();
 					a.sa(d);
 				}
 				;
-				this.class_Ea.Zp = function (d) {
+				this.Ea.Zp = function (d) {
 					'ToggleChat' == d && b.l.Oa.ns();
 				}
 				;
@@ -6341,7 +6341,7 @@
 				window.onbeforeunload = null;
 				window.cancelAnimationFrame(this.Oe);
 				window.top.document.body.classList.remove('hb-playing');
-				this.class_Ea.ja();
+				this.Ea.ja();
 				window.clearInterval(this.Lh);
 				window.clearInterval(this.ws);
 				window.clearTimeout(this.Zf);
@@ -6364,7 +6364,7 @@
 
 			nf() {
 				this.Oe = window.requestAnimationFrame(function_M(this, this.nf));
-				this.class_Ea.B();
+				this.Ea.B();
 				this.ya.B();
 				this.Qc();
 			}
@@ -6427,45 +6427,45 @@
 						a.preventDefault();
 						break;
 					case 48:
-						c ? this.class_Ea.rb(a) : b.ta(0.1);
+						c ? this.Ea.rb(a) : b.ta(0.1);
 						break;
 					case 49:
-						c ? this.class_Ea.rb(a) : b.ta(1);
+						c ? this.Ea.rb(a) : b.ta(1);
 						break;
 					case 50:
-						c ? this.class_Ea.rb(a) : b.ta(2);
+						c ? this.Ea.rb(a) : b.ta(2);
 						break;
 					case 51:
-						c ? this.class_Ea.rb(a) : b.ta(3);
+						c ? this.Ea.rb(a) : b.ta(3);
 						break;
 					case 52:
-						c ? this.class_Ea.rb(a) : b.ta(4);
+						c ? this.Ea.rb(a) : b.ta(4);
 						break;
 					case 53:
-						c ? this.class_Ea.rb(a) : b.ta(5);
+						c ? this.Ea.rb(a) : b.ta(5);
 						break;
 					case 54:
-						c ? this.class_Ea.rb(a) : b.ta(6);
+						c ? this.Ea.rb(a) : b.ta(6);
 						break;
 					case 55:
-						c ? this.class_Ea.rb(a) : b.ta(7);
+						c ? this.Ea.rb(a) : b.ta(7);
 						break;
 					case 56:
-						c ? this.class_Ea.rb(a) : b.ta(15);
+						c ? this.Ea.rb(a) : b.ta(15);
 						break;
 					case 57:
-						c ? this.class_Ea.rb(a) : b.ta(-1.5);
+						c ? this.Ea.rb(a) : b.ta(-1.5);
 						break;
 					case 80:
 						this.Tm();
 						break;
 					default:
-						this.class_Ea.rb(a);
+						this.Ea.rb(a);
 				}
 			}
 
 			Kd(a) {
-				this.class_Ea.Kd(a);
+				this.Ea.Kd(a);
 			}
 
 			static qm(a) {
