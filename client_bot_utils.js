@@ -743,13 +743,15 @@ function setAvatar_s(avatar) {
 
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const chatLog = iframeBody.querySelector('.log');
-		const paragraphs = Array.from(chatLog.querySelectorAll('p'));
-		const lastParagraph = paragraphs[paragraphs.length - 1];
+		if (chatLog != null) {
+			const paragraphs = Array.from(chatLog.querySelectorAll('p'));
+			const lastParagraph = paragraphs[paragraphs.length - 1];
 
-		// Delete the Avatar set notice
-		if (lastParagraph.innerText === 'Avatar set') {
-			chatLog.removeChild(lastParagraph);
-			scrollToBottom(chatLog);
+			// Delete the Avatar set notice
+			if (lastParagraph.innerText === 'Avatar set') {
+				chatLog.removeChild(lastParagraph);
+				scrollToBottom(chatLog);
+			}
 		}
 	}
 }
