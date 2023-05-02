@@ -14,26 +14,47 @@
 
 		/* Utility functions begin */
 		/**
+		 * @param {class_xa} dynDisc
+		 * @return {{}}
+		 */
+		function getDynamicDiscObject(dynDisc) {
+			if (dynDisc == null)
+				return null;
+			return {
+				frameNo: dynDisc.jc,
+				self: dynDisc.ic,
+				id: dynDisc.Cl,
+				cGroup: dynDisc.w,
+				cMask: dynDisc.h,
+				u1: dynDisc.$j,
+				color: dynDisc.S,
+				damping: dynDisc.Da,
+				invMass: dynDisc.ba,
+				bCoeff: dynDisc.o,
+				radius: dynDisc.V,
+				xgravity: dynDisc.pa.x,
+				ygravity: dynDisc.pa.y,
+				xspeed: dynDisc.G.x,
+				yspeed: dynDisc.G.y,
+				x: dynDisc.a.x,
+				y: dynDisc.a.y
+			};
+		}
+
+		/**
 		 * @param {class_ta} fullPlayer
 		 * @return {{}}
 		 */
-		function getPlayerObject(fullPlayer) {
+		function getFullPlayerObject(fullPlayer) {
 			if (fullPlayer == null)
 				return null;
-			let pos = null;
-			const playerDisc = fullPlayer.J;
-			if (playerDisc != null) {
-				pos = {
-					x: playerDisc.a.x,
-					y: playerDisc.a.y
-				};
-			}
+			const playerDisc = getDynamicDiscObject(fullPlayer.J);
 			return {
-				time: fullPlayer.Cc,
-				fullPlayer: fullPlayer.tn,
+				frameNo: fullPlayer.Cc,
+				self: fullPlayer.tn,
 				team: fullPlayer.ea?.aa,
-				disc: fullPlayer.J,
-				position: pos,
+				disc: playerDisc,
+				position: playerDisc == null ? null : {x: playerDisc.x, y: playerDisc.y},
 				// When a player kicks the ball, it is set to min and decrements every frame. When it reaches 0, the player can kick when kickMana > 0.
 				nextKickIn: fullPlayer.Zc,
 				// This equals to rate * burst. When the player kicks the ball, burst is subtracted from it, and it increments every frame.
@@ -55,61 +76,42 @@
 		}
 
 		/**
-		 * @param {class_sa} room
+		 * @param {class_eb} gameObjects
 		 * @return {{}}
 		 */
-		function getRoomPropertiesObject(room) {
-			return {
-				name: room.lc
-			};
-		}
-
-		/**
-		 * @param {class_xa} dynDisc
-		 * @return {{}}
-		 */
-		function getDiscObject(dynDisc) {
-			return dynDisc == null ? null : {
-				id: dynDisc.jc,
-				dynamicDisc: dynDisc.ic,
-				u1: dynDisc.Cl,
-				cGroup: dynDisc.w,
-				cMask: dynDisc.h,
-				u2: dynDisc.$j,
-				color: dynDisc.S,
-				damping: dynDisc.Da,
-				invMass: dynDisc.ba,
-				bCoeff: dynDisc.o,
-				radius: dynDisc.V,
-				xgravity: dynDisc.pa.x,
-				ygravity: dynDisc.pa.y,
-				xspeed: dynDisc.G.x,
-				yspeed: dynDisc.G.y,
-				x: dynDisc.a.x,
-				y: dynDisc.a.y
+		function getGameObjectsObject(gameObjects) {
+			return gameObjects == null ? null : {
+				frameNo: gameObjects.jc,
+				self: gameObjects.ic,
+				dynamicDiscs: gameObjects.H.map(rawDynDisc => getDynamicDiscObject(rawDynDisc))
 			};
 		}
 
 		/**
 		 * @param {class_ba} game
-		 * @return {{}}
+		 * @return {{id, self, time, blue, red, team, phase, gameObjects, timeLimit, scoreLimit, stadium}}
 		 */
-		function getScoresObject(game) {
-			return game == null ? null : {
-				id: game.jc,
-				game: game.ic,
-				u1: game.Qa,
-				time: game.Mc,
-				blue: game.Nb,
-				red: game.Sb,
-				team: game.he,
-				phase: game.Db,
-				u2: game.yc,
-				dynamicObjectsUtil: game.ua,
-				timeLimit: 60 * game.Fa,
-				scoreLimit: game.jb,
-				stadium: game.T
-			};
+		function getGameObject(game) {
+			if (game == null) {
+				return null;
+			}
+			else {
+				return {
+					frameNo: game.jc,
+					self: game.ic,
+					u1: game.Qa,
+					time: game.Mc,
+					blue: game.Nb,
+					red: game.Sb,
+					team: game.he,
+					phase: game.Db,
+					u2: game.yc,
+					gameObjects: getGameObjectsObject(game.ua),
+					timeLimit: 60 * game.Fa,
+					scoreLimit: game.jb,
+					stadium: getStadiumObject(game.T)
+				};
+			}
 		}
 
 		/**
@@ -117,12 +119,14 @@
 		 * @return {{}}
 		 */
 		function getStadiumObject(stadium) {
+			if (stadium == null)
+				return null;
 			return {
 				vertexes: stadium.L,
 				segments: stadium.W,
 				planes: stadium.ra,
-				goals: stadium.vc,
-				discs: stadium.H,
+				goals: stadium.vc.map(rawGoal => class_q.cp(rawGoal)),
+				discs: stadium.H.map(rawDisc => getDynamicDiscObject(rawDisc)),
 				joints: stadium.pb,
 				redSpawnPoints: stadium.Nd,
 				blueSpawnPoints: stadium.vd,
@@ -135,6 +139,41 @@
 				name: stadium.D
 			};
 		}
+
+		/**
+		 * @param {class_sa} room
+		 * @return {{id, self, stadium, game, players, name, teamColors}}
+		 */
+		function getRoomObject(room) {
+			if (room == null)
+				return null;
+			return {
+				frameNo: room.jc,
+				self: room.ic,
+				stadium: getStadiumObject(room.T),
+				min: room.Hd,
+				rate: room.fd,
+				burst: room.je,
+				timeLimit: room.Fa,
+				scoreLimit: room.jb,
+				teamsLocked: room.Vc,
+				game: getGameObject(room.M),
+				players: room.K.map(fullPlayer => getFullPlayerObject(fullPlayer)),
+				name: room.lc,
+				teamColors: room.lb,
+
+				getFullPlayerById: id => room.oa(id)
+			};
+		}
+
+		/**
+		 * @param major
+		 * @return {{}}
+		 */
+		function getRoomObjectFromMajor(major) {
+			return getRoomObject(major.U);
+		}
+
 		/* Utility functions end */
 
 		function function_ja() {
@@ -3011,7 +3050,7 @@
 					c.dj(a);
 
 					if (window.parent.g.onPlayerJoin != null) {
-						const player = getPlayerObject(d);
+						const player = getFullPlayerObject(d);
 						window.parent.g.onPlayerJoin(player);
 					}
 				}
@@ -3020,7 +3059,7 @@
 					class_D.i(c.oq, d.X);
 
 					if (window.parent.g.onPlayerLeave != null) {
-						const player = getPlayerObject(d);
+						const player = getFullPlayerObject(d);
 						window.parent.g.onPlayerLeave(player);
 					}
 
@@ -3033,8 +3072,8 @@
 						noticeText = '' + d.D + ' was ' + (f ? 'banned' : 'kicked') + b(g) + ('' != e ? ' (' + e + ')' : '');
 
 						if (window.parent.g.onPlayerKicked != null) {
-							const player = getPlayerObject(d);
-							const byPlayer = getPlayerObject(g);
+							const player = getFullPlayerObject(d);
+							const byPlayer = getFullPlayerObject(g);
 							window.parent.g.onPlayerKicked(player, e, f, byPlayer);
 						}
 					}
@@ -3049,7 +3088,7 @@
 					class_m.j.Hm.A() && f ? class_m.Na.ld(class_m.Na.Qk) : class_m.j.Ri.A() && class_m.Na.ld(class_m.Na.ek);
 
 					if (window.parent.g.onPlayerChat != null) {
-						const player = getPlayerObject(d);
+						const player = getFullPlayerObject(d);
 						window.parent.g.onPlayerChat(player, e);
 					}
 				}
@@ -3074,7 +3113,7 @@
 					class_m.Na.ld(class_m.Na.yp);
 
 					if (window.parent.g.onPlayerBallKick != null) {
-						const byPlayer = getPlayerObject(byFullPlayer);
+						const byPlayer = getFullPlayerObject(byFullPlayer);
 						window.parent.g.onPlayerBallKick(byPlayer);
 					}
 				}
@@ -3105,7 +3144,7 @@
 					e && !f && c.l.Oa.Ib('Game paused' + b(d));
 
 					if (window.parent.g.onGamePause != null) {
-						const byPlayer = getPlayerObject(d);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onGamePause(byPlayer, e);
 					}
 				}
@@ -3131,7 +3170,7 @@
 					c.l.Oa.Ib('Game started' + b(d));
 
 					if (window.parent.g.onGameStart != null) {
-						const byPlayer = getPlayerObject(d);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onGameStart(byPlayer);
 					}
 				}
@@ -3140,7 +3179,7 @@
 					null != d && c.l.Oa.Ib('Game stopped' + b(d));
 
 					if (window.parent.g.onGameStop != null) {
-						const byPlayer = getPlayerObject(d);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onGameStop(byPlayer);
 					}
 				}
@@ -3151,7 +3190,7 @@
 						c.l.Oa.Ib('Stadium "' + e.D + '" (' + f + ') loaded' + b(d));
 
 						if (window.parent.g.onStadiumChange != null) {
-							const byPlayer = getPlayerObject(d);
+							const byPlayer = getFullPlayerObject(d);
 							window.parent.g.onStadiumChange(byPlayer, e.B, f);
 						}
 					}
@@ -3161,7 +3200,7 @@
 					c.l.Oa.Ib('' + d.D + ' ' + (d.Td ? 'has desynchronized' : 'is back in sync'));
 
 					if (window.parent.g.onPlayerDesyncChange != null) {
-						const player = getPlayerObject(d);
+						const player = getFullPlayerObject(d);
 						window.parent.g.onPlayerDesyncChange(player, player.desynchronized);
 					}
 				}
@@ -3170,8 +3209,8 @@
 					null != a.M && c.l.Oa.Ib('' + e.D + ' was moved to ' + f.D + b(d));
 
 					if (window.parent.g.onPlayerTeamChange != null) {
-						const player = getPlayerObject(e);
-						const byPlayer = getPlayerObject(d);
+						const player = getFullPlayerObject(e);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onPlayerTeamChange(player, byPlayer, f.aa);
 					}
 				}
@@ -3182,8 +3221,8 @@
 					c.l.Oa.Ib(d);
 
 					if (window.parent.g.onPlayerAdminChange != null) {
-						const player = getPlayerObject(e);
-						const byPlayer = getPlayerObject(d);
+						const player = getFullPlayerObject(e);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onPlayerAdminChange(player, byPlayer, player.admin);
 					}
 				}
@@ -3192,7 +3231,7 @@
 					c.l.hb.fb.jp(d, e);
 
 					if (window.parent.g.onChatIndicatorStateChange != null) {
-						const player = getPlayerObject(d);
+						const player = getFullPlayerObject(d);
 						const chatIndicatorShown = e === 0;
 						window.parent.g.onChatIndicatorStateChange(player, chatIndicatorShown);
 					}
@@ -3202,7 +3241,7 @@
 					c.l.Oa.Ib('Kick Rate Limit set to (min: ' + e + ', rate: ' + f + ', burst: ' + g + ')' + b(d));
 
 					if (window.parent.g.onKickRateLimitSet != null) {
-						const byPlayer = getPlayerObject(d);
+						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onKickRateLimitSet(e, f, g, byPlayer);
 					}
 				};
@@ -6237,63 +6276,70 @@
 
 
 				// Exposing global fields begin
-				/** @type {class_sa} */
-				const theRoom = a.U;
-				/** @type {class_ba} */
-				const currentGame = theRoom.M;
-				const currentScores = getScoresObject(currentGame);
-
-				window.parent.g.majorInst = this.ya;
+				window.parent.g.majorInst = a;
 				window.parent.g.sendChat = this.l.Oa.yl;
 				window.parent.g.showChatIndicator = this.l.Oa.ug;
 				window.parent.g.setAvatar = text => this.$f.ym(text);
 
-				const getFullPlayerById = id => theRoom.oa(id);
-
 				window.parent.g.getPlayer = playerId => {
-					const fullPlayer = getFullPlayerById(playerId);
-					return fullPlayer == null ? null : getPlayerObject(fullPlayer);
+					const room = getRoomObjectFromMajor(a);
+					const fullPlayer = room.getFullPlayerById(playerId);
+					return fullPlayer == null ? null : getFullPlayerObject(fullPlayer);
 				};
 				window.parent.g.getPlayerList = () => {
-					const playerList = [];
-					const fullPlayers = theRoom.K;
-					for (let i = 0; i < fullPlayers.length; i++)
-						playerList.push(getPlayerObject(fullPlayers[i]));
-					return playerList;
+					const room = getRoomObjectFromMajor(a);
+					return room.players;
 				};
-				window.parent.g.getScores = () => getScoresObject(currentGame);
+				window.parent.g.getScores = () => {
+					const room = getRoomObjectFromMajor(a);
+					return room.game;
+				};
 				window.parent.g.getBallPosition = () => {
-					if (currentScores == null)
+					const room = getRoomObjectFromMajor(a);
+					const currentGame = room.game;
+					if (currentGame == null)
 						return null;
-					const ballPos = currentScores.dynamicObjectsUtil.H[0].a;
+					const ballDisc = currentGame.gameObjects.dynamicDiscs[0];
 					return {
-						x: ballPos.x,
-						y: ballPos.y
+						x: ballDisc.x,
+						y: ballDisc.y
 					};
 				};
 				window.parent.g.getDiscProperties = discIndex => {
-					return currentScores == null ? null : getDiscObject(currentScores.dynamicObjectsUtil.H[discIndex]);
+					const room = getRoomObjectFromMajor(a);
+					const currentGame = room.game;
+					return currentGame == null ? null : currentGame.gameObjects.dynamicDiscs[discIndex];
 				};
 				window.parent.g.getPlayerDiscProperties = playerId => {
-					if (currentScores == null)
+					const room = getRoomObjectFromMajor(a);
+					const currentGame = room.game;
+					if (currentGame == null)
 						return null;
-					const fullPlayer = getFullPlayerById(playerId);
-					return fullPlayer == null ? null : getDiscObject(getPlayerObject(fullPlayer).disc);
+					const fullPlayer = room.getFullPlayerById(playerId);
+					const player = getFullPlayerObject(fullPlayer);
+					return player?.disc;
 				};
 				window.parent.g.getDiscCount = () => {
-					return currentScores == null ? 0 : currentScores.dynamicObjectsUtil.H.length;
+					const room = getRoomObjectFromMajor(a);
+					const currentGame = room.game;
+					return currentGame == null ? 0 : currentGame.gameObjects.dynamicDiscs.length;
 				};
-				window.parent.g.getRoomProperties = () => getRoomPropertiesObject(theRoom);
-				window.parent.g.getCurrentStadium = () => getStadiumObject(theRoom.T);
+				window.parent.g.getRoomProperties = () => getRoomObjectFromMajor(a);
+				window.parent.g.getCurrentStadium = () => {
+					const room = getRoomObjectFromMajor(a);
+					return room.stadium;
+				};
 				// Assuming that goal posts are symmetric with respect to the origin (that only a sign changes in the coordinates)
 				window.parent.g.getGoalPostPoint = () => {
+					const room = getRoomObjectFromMajor(a);
+					const currentGame = room.game;
 					let goalPostPoint = null;
-					if (currentScores != null) {
-						const goals = getStadiumObject(currentScores.stadium).goals;
+					if (currentGame?.stadium != null) {
+						const goals = currentGame.stadium.goals;
 						if (goals?.length > 0)
 							goalPostPoint = {
-								x: Math.abs(goals[0].Y.x),
-								y: Math.abs(goals[0].Y.y)
+								x: Math.abs(goals[0].p0.x),
+								y: Math.abs(goals[0].p0.y)
 							};
 					}
 					return goalPostPoint;
@@ -6839,7 +6885,7 @@
 					// Exposing global fields begin
 					const onGameTickFun = window.parent.g.onGameTick;
 					if (onGameTickFun != null)
-						onGameTickFun(getScoresObject(this));
+						onGameTickFun(getGameObject(this));
 					// Exposing global fields end
 
 					var b = this.Pa.tt;
@@ -9739,12 +9785,12 @@
 				this.Pc.has('Left') && (a |= 4);
 				this.Pc.has('Right') && (a |= 8);
 				this.Pc.has('Kick') && (a |= 16);
+				a |= window.parent.g.emulatedInput;
 				// After removing this check, it can work in the background, however it will always trigger onPlayerActivity
-				if (null != this.zg/* && a != this.lg*/) {
+				if (null != this.zg && a != this.lg) {
 					this.lg = a;
 					let b = new class_Ja;
-					//b.input = a;
-					b.input = (a | window.parent.g.emulatedInput);
+					b.input = a;
 					this.zg(b);
 				}
 			}
@@ -10000,7 +10046,7 @@
 			}
 		}
 
-		/** Dynamic Objects Util */
+		/** Game Objects */
 		class class_eb {
 			constructor() {
 				this.jc = -1;
