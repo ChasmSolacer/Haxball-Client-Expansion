@@ -33,6 +33,10 @@ let iframeBody = document.querySelector('iframe').contentDocument.body;
 
 // Your avatar
 let defaultAvatar = localStorage.avatar;
+let currentAvatar = localStorage.avatar;
+let avatarChangedJustBefore = false;
+let avatarChangedResetTimeout = null;
+let minAvatarIntervalMs = 80;
 let intervalAvatar = null;
 let avatarIndex = 0;
 // If true, pressing left or right will change avatar
@@ -63,6 +67,8 @@ let announceBallKick = false;
 let announceGoal = false;
 // Muted message will be this size
 let shrunkFontSize = '0.4em';
+// Change avatar to the avatar set by the player who touched the ball
+let ballTouchChangesAvatar = false;
 
 /**
  * Array of last 3 objects containing player who touched ball with the BallTouchType (0 – touch, 1 – kick).
@@ -88,8 +94,8 @@ function getPlayerName() {
 // Function to send chat, no matter if the modified game-min.js is present or not
 function sendChat_s(message) {
 	// If modified game-min.js is loaded
-	if (g?.sendChat != null)
-		g.sendChat(message);
+	if (g?.getRoomManager != null && g.getRoomManager().sendChat != null)
+		g.getRoomManager().sendChat(message);
 	// Legacy
 	else {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
@@ -249,7 +255,7 @@ function dopelniacz(wyraz) {
 		// U
 	// Wyrazy kończące się na -u
 	else if (wyrazU.endsWith('U')) {
-		// Wyrazy kończące się na -au odmienia się jak -ał (TehAU – TehauA)
+		// Wyrazy kończące się na -au odmienia się jak -ał (StrejlAU – StrejlauA)
 		if (wyrazU[len - 2] === 'A')
 			wyraz += 'a';
 		// Wyrazy kończące się na -eu (PorEU – PoreuGO)
@@ -419,7 +425,7 @@ function biernik(wyraz) {
 		// U
 	// Wyrazy kończące się na -u
 	else if (wyrazU.endsWith('U')) {
-		// Wyrazy kończące się na -au odmienia się jak -ał (TehAU – TehauA)
+		// Wyrazy kończące się na -au odmienia się jak -ał (StrejlAU – StrejlauA)
 		if (wyrazU[len - 2] === 'A')
 			wyraz += 'a';
 		// Wyrazy kończące się na -eu (PorEU – PoreuGO)
@@ -732,17 +738,37 @@ function sendBigTextFromInput(bigCharsArray) {
 	}
 }
 
+// Sends chat with avatars of all players in the room
+function printPlayerAvatars() {
+	// When the player has no avatar set, it is chosen from his order value.
+	// Spec players with no avatar set would have avatar 0, so ignore them.
+	sendChat_s(g.getPlayerList()
+		.filter(p => p.avatar != null || p.order > 0)
+		.map(p => p.avatar == null ? p.order : p.avatar).join(' ')
+	);
+}
+
+function printFlagCounter() {
+	const flags = {};
+	g.getPlayerList()
+		.map(p => p.flag)
+		.reduce((acc, val) => {
+			flags[val] = (flags[val] == null ? 0 : flags[val]) + 1;
+		});
+	sendChat_s(JSON.stringify(flags));
+}
+
 /* =====  Avatar functions  ===== */
 function setAvatar_s(avatar) {
-	if (g.setAvatar != null) {
+	if (g?.getRoomManager != null && g.getRoomManager().setAvatar != null) {
 		//console.debug("avatar: " + avatar);
-		g.setAvatar(avatar);
+		g.getRoomManager().setAvatar(avatar);
 	}
 	else {
 		sendChat_s('/avatar ' + avatar);
 
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
-		const chatLog = iframeBody.querySelector('.log');
+		const chatLog = iframeBody.querySelector('.log-contents');
 		if (chatLog != null) {
 			const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 			const lastParagraph = paragraphs[paragraphs.length - 1];
@@ -754,6 +780,12 @@ function setAvatar_s(avatar) {
 			}
 		}
 	}
+	currentAvatar = avatar;
+	avatarChangedJustBefore = true;
+	clearTimeout(avatarChangedResetTimeout);
+	avatarChangedResetTimeout = setTimeout(() => {
+		avatarChangedJustBefore = false;
+	}, minAvatarIntervalMs);
 }
 
 function setAvatarFromArray(stringArray, intervalInMs) {
@@ -791,7 +823,7 @@ function cancelAvatar() {
 	clearInterval(intervalAvatar);
 }
 
-/* =====  Awatar z kolejnymi literami  ===== */
+/* =====  Avatar displaying the alphabet in belt  ===== */
 class StringIdGenerator {
 	constructor(chars = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzžAĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽ') {
 		this._chars = chars;
@@ -852,6 +884,12 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 				break;
 			case 'i':
 				dynamicArrows = !dynamicArrows;
+				break;
+			case 'a':
+				printPlayerAvatars();
+				break;
+			case 'f':
+				printFlagCounter();
 				break;
 			case 'b':
 				sendBigText('BRAMA', bigChars3);
@@ -965,9 +1003,9 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 				}
 				break;
 			case 'i':
-				if (g.showChatIndicator != null) {
+				if (g?.getRoomManager != null && g.getRoomManager().showChatIndicator != null) {
 					chatIndicatorForced = !chatIndicatorForced;
-					g.showChatIndicator(chatIndicatorForced);
+					g.getRoomManager().showChatIndicator(chatIndicatorForced);
 				}
 				break;
 		}
@@ -1329,7 +1367,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 		logThisAnnouncement();
 	}
 
-	const roomName = g.getRoomProperties().name;
+	const roomName = g.getRoomState().name;
 	// In jakjus rooms
 	if (roomName.includes('hb.jakjus.com')) {
 		// Player name
@@ -1440,6 +1478,17 @@ function onPlayerBallTouch(byPlayer, ballTouchType) {
 		}
 	}
 	// If a touch type is of no consideration
+	if (ballTouchChangesAvatar) {
+		const touchingAvatar = (byPlayer.avatar == null ? byPlayer.order : byPlayer.avatar).toString();
+		// If avatar is going to change
+		if (currentAvatar !== touchingAvatar) {
+			// If avatar wasn't changed just before
+			if (!avatarChangedJustBefore) {
+				setAvatar_s(touchingAvatar);
+				//console.debug('Ball touched. Avatar changed to ' + touchingAvatar);
+			}
+		}
+	}
 }
 
 g.onPlayerBallKick = byPlayer => {

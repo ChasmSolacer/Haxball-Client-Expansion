@@ -305,8 +305,8 @@ function getSlicedHaxballText(text, maxFragmentLength = 140) {
 // Function to send chat, no matter if the modified game-min.js is present or not
 function sendChat_s(message) {
 	// If modified game-min.js is loaded
-	if (g?.sendChat != null)
-		g.sendChat(message);
+	if (g?.getRoomManager != null && g.getRoomManager().sendChat != null)
+		g.getRoomManager().sendChat(message);
 	// Legacy
 	else {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
@@ -537,18 +537,18 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Yaxshiboyev', 'Jakszibojew');
 
 	commentText = commentText.replaceAll('Henrikh', 'Henrich');
-	commentText = commentText.replaceAll('Mkhitaryan', 'Mchitarian');
+	commentText = commentText.replaceAll('Mkhitaryan', 'Mchitarjan');
 	commentText = commentText.replaceAll('Vahan', 'Wahan');
 	commentText = commentText.replaceAll('Bichakhchyan', 'Biczachczjan');
 	commentText = commentText.replaceAll('Zhirayr', 'Żirajr');
 	commentText = commentText.replaceAll('Shaghoyan', 'Szaghojan');
 	commentText = commentText.replaceAll('Hovhannisyan', 'Howhannisjan');
-	commentText = commentText.replaceAll('Davidyan', 'Dawidian');
-	commentText = commentText.replaceAll('Voskanyan', 'Woskanian');
-	commentText = commentText.replaceAll(/(\w*)dyan\b/g, '$1dian');
-	commentText = commentText.replaceAll(/(\w*)ryan\b/g, '$1rian');
+	commentText = commentText.replaceAll('Davidyan', 'Dawidjan');
+	commentText = commentText.replaceAll('Voskanyan', 'Woskanjan');
+	commentText = commentText.replaceAll(/(\w*)dyan\b/g, '$1djan');
+	commentText = commentText.replaceAll(/(\w*)ryan\b/g, '$1rjan');
 	commentText = commentText.replaceAll(/(\w*)syan\b/g, '$1sjan');
-	commentText = commentText.replaceAll(/(\w*)zyan\b/g, '$1zian');
+	commentText = commentText.replaceAll(/(\w*)zyan\b/g, '$1zjan');
 
 	return commentText;
 }

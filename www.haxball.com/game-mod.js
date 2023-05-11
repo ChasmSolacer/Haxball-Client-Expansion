@@ -141,39 +141,58 @@
 		}
 
 		/**
-		 * @param {class_sa} room
+		 * @param {class_sa} roomState
 		 * @return {{id, self, stadium, game, players, name, teamColors}}
 		 */
-		function getRoomObject(room) {
-			if (room == null)
+		function getRoomStateObject(roomState) {
+			if (roomState == null)
 				return null;
 			return {
-				frameNo: room.jc,
-				self: room.ic,
-				stadium: getStadiumObject(room.T),
-				min: room.Hd,
-				rate: room.fd,
-				burst: room.je,
-				timeLimit: room.Fa,
-				scoreLimit: room.jb,
-				teamsLocked: room.Vc,
-				game: getGameObject(room.M),
-				players: room.K.map(fullPlayer => getFullPlayerObject(fullPlayer)),
-				name: room.lc,
-				teamColors: room.lb,
+				frameNo: roomState.jc,
+				self: roomState.ic,
+				stadium: getStadiumObject(roomState.T),
+				min: roomState.Hd,
+				rate: roomState.fd,
+				burst: roomState.je,
+				timeLimit: roomState.Fa,
+				scoreLimit: roomState.jb,
+				teamsLocked: roomState.Vc,
+				game: getGameObject(roomState.M),
+				players: roomState.K.map(fullPlayer => getFullPlayerObject(fullPlayer)),
+				name: roomState.lc,
+				teamColors: roomState.lb,
 
-				getFullPlayerById: id => room.oa(id)
+				getFullPlayerById: id => roomState.oa(id)
 			};
 		}
 
 		/**
-		 * @param major
+		 * @param {class_Ha|class_Rb} room
 		 * @return {{}}
 		 */
-		function getRoomObjectFromMajor(major) {
-			return getRoomObject(major.U);
+		function getRoomObject(room) {
+			return {
+				self: room,
+				password: room.kb,
+				roomState: getRoomStateObject(room.U)
+			}
 		}
 
+		/**
+		 * @param {class_Ea} roomManager
+		 * @return {{}}
+		 */
+		function getRoomManagerObject(roomManager) {
+			return {
+				self: roomManager,
+				roomLink: roomManager.Lg,
+				room: getRoomObject(roomManager.ya),
+
+				sendChat: roomManager.l.Oa.yl,
+				showChatIndicator: roomManager.l.Oa.ug,
+				setAvatar: text => roomManager.$f.ym(text)
+			};
+		}
 		/* Utility functions end */
 
 		function function_ja() {
@@ -2067,7 +2086,7 @@
 			}
 		}
 
-		/** Room */
+		/** Room state */
 		class class_sa {
 			constructor() {
 				this.jc = -1;
@@ -3135,7 +3154,7 @@
 					c.l.Oa.Ib('' + d.D + ' team won the match');
 
 					if (window.parent.g.onTeamVictory != null) {
-						const teamId = d.B;
+						const teamId = d.aa;
 						window.parent.g.onTeamVictory(teamId);
 					}
 				}
@@ -3191,7 +3210,7 @@
 
 						if (window.parent.g.onStadiumChange != null) {
 							const byPlayer = getFullPlayerObject(d);
-							window.parent.g.onStadiumChange(byPlayer, e.B, f);
+							window.parent.g.onStadiumChange(byPlayer, e.D, f);
 						}
 					}
 				}
@@ -3217,8 +3236,8 @@
 				;
 				a.ri = function (d, e) {
 					let f = e.D;
-					d = (e.eb ? '' + f + ' was given admin rights' : '' + f + '\'s admin rights were taken away') + b(d);
-					c.l.Oa.Ib(d);
+					const noticeText = (e.eb ? '' + f + ' was given admin rights' : '' + f + '\'s admin rights were taken away') + b(d);
+					c.l.Oa.Ib(noticeText);
 
 					if (window.parent.g.onPlayerAdminChange != null) {
 						const player = getFullPlayerObject(e);
@@ -6132,7 +6151,9 @@
 			}
 		}
 
+		/** Room Manager */
 		class class_Ea {
+			/** @param {class_Ha|class_Rb} a */
 			constructor(a) {
 				this.Zf = null;
 				this.Yk = this.Eh = false;
@@ -6270,69 +6291,26 @@
 					a.B();
 				}, 50);
 				var c = class_m.j.Ad.A();
-				c = -200 > c ? -200 : 200 < c ? 200 : c;
+				c = -200 > c ? -200 : 1E3 < c ? 1E3 : c;
 				0 != c && (a.zm(class_m.j.Ad.A()),
 					this.l.Oa.Ib('Extrapolation set to ' + c + ' msec'));
 
 
 				// Exposing global fields begin
-				window.parent.g.majorInst = a;
-				window.parent.g.sendChat = this.l.Oa.yl;
-				window.parent.g.showChatIndicator = this.l.Oa.ug;
-				window.parent.g.setAvatar = text => this.$f.ym(text);
+				window.parent.g.insideRoom = true;
+				window.parent.g.roomManager = b;
+				console.log('Room manager: %o', b);
 
-				window.parent.g.getPlayer = playerId => {
-					const room = getRoomObjectFromMajor(a);
-					const fullPlayer = room.getFullPlayerById(playerId);
-					return fullPlayer == null ? null : getFullPlayerObject(fullPlayer);
-				};
-				window.parent.g.getPlayerList = () => {
-					const room = getRoomObjectFromMajor(a);
-					return room.players;
-				};
-				window.parent.g.getScores = () => {
-					const room = getRoomObjectFromMajor(a);
-					return room.game;
-				};
-				window.parent.g.getBallPosition = () => {
-					const room = getRoomObjectFromMajor(a);
-					const currentGame = room.game;
-					if (currentGame == null)
-						return null;
-					const ballDisc = currentGame.gameObjects.dynamicDiscs[0];
-					return {
-						x: ballDisc.x,
-						y: ballDisc.y
-					};
-				};
-				window.parent.g.getDiscProperties = discIndex => {
-					const room = getRoomObjectFromMajor(a);
-					const currentGame = room.game;
-					return currentGame == null ? null : currentGame.gameObjects.dynamicDiscs[discIndex];
-				};
-				window.parent.g.getPlayerDiscProperties = playerId => {
-					const room = getRoomObjectFromMajor(a);
-					const currentGame = room.game;
-					if (currentGame == null)
-						return null;
-					const fullPlayer = room.getFullPlayerById(playerId);
-					const player = getFullPlayerObject(fullPlayer);
-					return player?.disc;
-				};
-				window.parent.g.getDiscCount = () => {
-					const room = getRoomObjectFromMajor(a);
-					const currentGame = room.game;
-					return currentGame == null ? 0 : currentGame.gameObjects.dynamicDiscs.length;
-				};
-				window.parent.g.getRoomProperties = () => getRoomObjectFromMajor(a);
+				window.parent.g.getRoomManager = () => getRoomManagerObject(b);
+				window.parent.g.getRoomState = () => getRoomManagerObject(b).room.roomState;
 				window.parent.g.getCurrentStadium = () => {
-					const room = getRoomObjectFromMajor(a);
-					return room.stadium;
+					const roomState = getRoomManagerObject(b).room.roomState;
+					return roomState.stadium;
 				};
 				// Assuming that goal posts are symmetric with respect to the origin (that only a sign changes in the coordinates)
 				window.parent.g.getGoalPostPoint = () => {
-					const room = getRoomObjectFromMajor(a);
-					const currentGame = room.game;
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const currentGame = roomState.game;
 					let goalPostPoint = null;
 					if (currentGame?.stadium != null) {
 						const goals = currentGame.stadium.goals;
@@ -6343,6 +6321,49 @@
 							};
 					}
 					return goalPostPoint;
+				};
+				window.parent.g.getPlayer = playerId => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const fullPlayer = roomState.getFullPlayerById(playerId);
+					return fullPlayer == null ? null : getFullPlayerObject(fullPlayer);
+				};
+				window.parent.g.getPlayerList = () => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					return roomState.players;
+				};
+				window.parent.g.getScores = () => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					return roomState.game;
+				};
+				window.parent.g.getBallPosition = () => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const currentGame = roomState.game;
+					if (currentGame == null)
+						return null;
+					const ballDisc = currentGame.gameObjects.dynamicDiscs[0];
+					return {
+						x: ballDisc.x,
+						y: ballDisc.y
+					};
+				};
+				window.parent.g.getDiscProperties = discIndex => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const currentGame = roomState.game;
+					return currentGame == null ? null : currentGame.gameObjects.dynamicDiscs[discIndex];
+				};
+				window.parent.g.getPlayerDiscProperties = playerId => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const currentGame = roomState.game;
+					if (currentGame == null)
+						return null;
+					const fullPlayer = roomState.getFullPlayerById(playerId);
+					const player = getFullPlayerObject(fullPlayer);
+					return player?.disc;
+				};
+				window.parent.g.getDiscCount = () => {
+					const roomState = getRoomManagerObject(b).room.roomState;
+					const currentGame = roomState.game;
+					return currentGame == null ? 0 : currentGame.gameObjects.dynamicDiscs.length;
 				};
 				window.parent.g.CollisionFlags = {
 					ball: 1,
@@ -9786,7 +9807,6 @@
 				this.Pc.has('Right') && (a |= 8);
 				this.Pc.has('Kick') && (a |= 16);
 				a |= window.parent.g.emulatedInput;
-				// After removing this check, it can work in the background, however it will always trigger onPlayerActivity
 				if (null != this.zg && a != this.lg) {
 					this.lg = a;
 					let b = new class_Ja;
@@ -10223,6 +10243,7 @@
 			}
 		}
 
+		/** Room */
 		class class_oa extends class_W {
 			constructor(a) {
 				class_W.zb ? super() : (class_W.zb = true,
@@ -10340,6 +10361,7 @@
 			}
 		}
 
+		/** Server room */
 		class class_Ha extends class_oa {
 			constructor(a, b) {
 				class_W.zb = true;
@@ -10681,6 +10703,7 @@
 			}
 		}
 
+		/** Client room */
 		class class_Rb extends class_oa {
 			constructor(a) {
 				class_W.zb = true;
