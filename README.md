@@ -1,8 +1,11 @@
-[Polski](https://github.com/ChasmSolacer/Haxball-Client-Expansion/blob/master/README_pl.md#haxball-client-expansion)
+[Zobacz to w języku polskim](https://github.com/ChasmSolacer/Haxball-Client-Expansion/blob/master/README_pl.md#haxball-client-expansion)
 # Haxball-Client-Expansion
-### Note: it will work only in Chromium Browser (Chrome, Edge, Brave, etc.)
+**Note: it will work only in Chromium Browser (Chrome, Edge, Brave, etc.)**
+
+(If you came here just to do simple things, such as changing avatar on keypress, go to [point 3](#3-adding-snippets-optional))
+
 The `game-min.js` file is located on haxball.com/play.<br>
-In order to modify it, it needs to be overridden
+In order to modify it, it needs to be overridden.
 
 ## Instructions
 ### 1. Download repository
@@ -32,7 +35,9 @@ In order to modify it, it needs to be overridden
 - Hint: the overrides are preserved after browser restart and work in all browser windows, so you have to do it only once. Next time just go to Haxball, press F12 and refresh the page. The changes should apply.
 
 ### 3. Adding snippets (optional)
-- Snippets allow to save some js files and run them with one click.
+There are some example scripts in this repo such as: `client_bot_utils.js` or `flashscore_logger.js`.<br>
+They don't actually need overrides and work when client is not modded, although some triggers will be disabled. These files' contents can be just copy-pasted in the console and they'll work.<br>
+Snippets allow to save some js files in the browser and run them with one click.
 - Press F12 to open the DevTools panel.
 - Open the `Sources` tab.
 - Open the `Snippets` tab.
@@ -47,4 +52,4 @@ In order to modify it, it needs to be overridden
 ![Paste code and run](https://user-images.githubusercontent.com/46286197/230609759-e80f906d-173b-4781-8ac2-7c06767956c4.png)
 - Snippets are preserved just like the overrides, so you will always have quick access to them.
 
-NOTE: this will break after a Haxball update.
+NOTE: something (if not everything) could break after a Haxball update.
