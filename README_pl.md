@@ -1,8 +1,11 @@
-[English](https://github.com/ChasmSolacer/Haxball-Client-Expansion/blob/master/README.md#haxball-client-expansion)
+[View this in English language](https://github.com/ChasmSolacer/Haxball-Client-Expansion/blob/master/README.md#haxball-client-expansion)
 # Haxball-Client-Expansion
-### Uwaga: to zadziała tylko w przeglądarkach opartych na Chromium (Chrome, Edge, Brave, itp.)
+**Uwaga: to zadziała tylko w przeglądarkach opartych na Chromium (Chrome, Edge, Brave, itp.)**
+
+(Dla tych, co się spieszą i chcą tylko prostych rzeczy, np. zmiana awataru na „KU”, „R” i „WA” jednym przyciskiem, jest [punkt 3](#3-dodawanie-fragmentów-nieobowiązkowe))
+
 Plik `game-min.js` jest umieszczony na stronie haxball.com/play.<br>
-Aby go zmodyfikować, musi zostać zastąpiony
+Aby go zmodyfikować, musi zostać zastąpiony.
 
 ## Instrukcja
 ### 1. Pobierz repozytorium
@@ -32,7 +35,9 @@ Aby go zmodyfikować, musi zostać zastąpiony
 - Wskazówka: zastąpienia zostają po restarcie przeglądarki i działają we wszystkich jej oknach, dzięki temu trzeba to robić tylko raz. Następnym razem wejdź na Haxballa, naciśnij F12 i odśwież stronę. Zmiany powinny być po tym widoczne.
 
 ### 3. Dodawanie fragmentów (nieobowiązkowe)
-- Fragmenty pozwalają na zapisywanie plików js na potem i uruchamianie ich jednym kliknięciem.
+Na tym repozytorium można znaleźć przykładowe skrypty, np.: `client_bot_utils.js` lub `flashscore_logger.js`.<br>
+Nie potrzebują one żadnych zastąpień i działają na niezmodyfikowanym kliencie, ich działanie będzie tylko okrojone. Zawartość tych plików można po prostu skopiować i wkleić do konsoli i zadziałają.<br>
+Fragmenty pozwalają na zapisywanie plików js w przeglądarce i uruchamianie ich jednym kliknięciem.
 - Naciśnij F12, aby otworzyć panel narzędzi.
 - Wybierz zakładkę `Źródła`.
 - Otwórz kartę `Fragmenty`.
@@ -47,4 +52,4 @@ Aby go zmodyfikować, musi zostać zastąpiony
 ![Wklej kod i uruchom](https://user-images.githubusercontent.com/46286197/230609759-e80f906d-173b-4781-8ac2-7c06767956c4.png)
 - Fragmenty są zachowywane podobnie jak zastąpienia, co pozwala na szybki dostęp do nich.
 
-UWAGA: wszystko się posypie po aktualizacji Haxballa.
+UWAGA: część (lub wszystko) może się posypać po aktualizacji Haxballa.

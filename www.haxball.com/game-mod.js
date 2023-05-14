@@ -174,8 +174,9 @@
 			return {
 				self: room,
 				password: room.kb,
+				playerId: room.xc,
 				roomState: getRoomStateObject(room.U)
-			}
+			};
 		}
 
 		/**
@@ -186,13 +187,34 @@
 			return {
 				self: roomManager,
 				roomLink: roomManager.Lg,
+				replay: roomManager.Od,
 				room: getRoomObject(roomManager.ya),
 
 				sendChat: roomManager.l.Oa.yl,
 				showChatIndicator: roomManager.l.Oa.ug,
-				setAvatar: text => roomManager.$f.ym(text)
+				setAvatar: text => roomManager.$f.ym(text),
+				startReplay: () => {
+					if (roomManager.Od == null) {
+						// Start replaying
+						roomManager.cs();
+						// Mark rec button as active
+						roomManager.l.Wa.Tr(true);
+					}
+				},
+				stopReplay: () => {
+					if (roomManager.Od != null) {
+						// Stop replaying and save Uint8Array
+						const replayArray = roomManager.Od.stop();
+						roomManager.Od = null;
+						// Mark rec button as inactive
+						roomManager.l.Wa.Tr(false);
+						return replayArray;
+					}
+				},
+				downloadReplay: replayContents => class_Ea.qm(replayContents)
 			};
 		}
+
 		/* Utility functions end */
 
 		function function_ja() {
@@ -1796,7 +1818,13 @@
 			}
 
 			static hi(a, b) {
-				return '' + globalScope.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
+				// Exposing global fields begin
+				let roomLink = '' + globalScope.location.origin + '/play?c=' + a + (b ? '&p=1' : '');
+				const onRoomLinkFun = window.parent.g.onRoomLink;
+				if (onRoomLinkFun != null)
+					onRoomLinkFun(roomLink);
+				return roomLink;
+				// Exposing global fields end
 			}
 
 			static Io() {
@@ -6297,11 +6325,7 @@
 
 
 				// Exposing global fields begin
-				window.parent.g.insideRoom = true;
-				window.parent.g.roomManager = b;
-				console.log('Room manager: %o', b);
-
-				window.parent.g.getRoomManager = () => getRoomManagerObject(b);
+				window.parent.g.getRoomManager = () => getRoomManagerObject(this);
 				window.parent.g.getRoomState = () => getRoomManagerObject(b).room.roomState;
 				window.parent.g.getCurrentStadium = () => {
 					const roomState = getRoomManagerObject(b).room.roomState;
@@ -6380,6 +6404,9 @@
 					c3: -2147483648, // 2^31
 					all: 63
 				};
+				const onRoomJoinFun = window.parent.g.onRoomJoin;
+				if (onRoomJoinFun != null)
+					onRoomJoinFun(getRoomManagerObject(this));
 				// Exposing global fields end
 			}
 
@@ -6403,6 +6430,11 @@
 			}
 
 			ja() {
+				// Exposing global fields begin
+				const onRoomLeaveFun = window.parent.g.onRoomLeave;
+				if (onRoomLeaveFun != null)
+					onRoomLeaveFun(getRoomManagerObject(this));
+				// Exposing global fields end
 				window.document.removeEventListener('keydown', function_M(this, this.rb));
 				window.document.removeEventListener('keyup', function_M(this, this.Kd));
 				window.onbeforeunload = null;
@@ -11911,11 +11943,11 @@
 			}
 
 			static Lb(a) {
-				return a instanceof v ? a : a instanceof Error ? new class_v(a.message, null, a) : new class_Mb(a, null, a);
+				return a instanceof class_v ? a : a instanceof Error ? new class_v(a.message, null, a) : new class_Mb(a, null, a);
 			}
 
 			static C(a) {
-				return a instanceof v ? a.Kj : a instanceof Error ? a : new class_Mb(a);
+				return a instanceof class_v ? a.Kj : a instanceof Error ? a : new class_Mb(a);
 			}
 		}
 

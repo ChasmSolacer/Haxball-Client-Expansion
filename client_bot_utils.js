@@ -70,6 +70,12 @@ let shrunkFontSize = '0.4em';
 // Change avatar to the avatar set by the player who touched the ball
 let ballTouchChangesAvatar = false;
 
+// Is the script executor inside room
+let insideRoom = false;
+// ID of player who executed this script
+let lastPlayerId = 0;
+// Last recorded scores
+let previousScores = null;
 /**
  * Array of last 3 objects containing player who touched ball with the BallTouchType (0 – touch, 1 – kick).
  * @type {{player: {}, touchType: number}[]}
@@ -80,6 +86,16 @@ let lastPlayersWhoTouchedBall = [];
  * @type [{[{x: number, y: number}, {x: number, y: number}]}]
  */
 let lastKickDirection = [];
+/**
+ * Last recorded replay.
+ * @type {Uint8Array}
+ */
+let lastReplay = null;
+/**
+ * Replays in form of downloadable arrays with timestamps categorized into room names.
+ * @type {{roomName: string, replays: {timestamp: number, replayArray: Uint8Array}[]}}
+ */
+let replays = {};
 
 const BallTouchType = {
 	TOUCH: 0,
@@ -91,11 +107,16 @@ function getPlayerName() {
 	return localStorage.player_name ?? '';
 }
 
+function getCurrentRoomManager() {
+	return insideRoom ? g?.getRoomManager() : null;
+}
+
 // Function to send chat, no matter if the modified game-min.js is present or not
 function sendChat_s(message) {
+	const roomManager = getCurrentRoomManager();
 	// If modified game-min.js is loaded
-	if (g?.getRoomManager != null && g.getRoomManager().sendChat != null)
-		g.getRoomManager().sendChat(message);
+	if (roomManager?.sendChat != null)
+		roomManager.sendChat(message);
 	// Legacy
 	else {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
@@ -760,9 +781,10 @@ function printFlagCounter() {
 
 /* =====  Avatar functions  ===== */
 function setAvatar_s(avatar) {
-	if (g?.getRoomManager != null && g.getRoomManager().setAvatar != null) {
+	const roomManager = getCurrentRoomManager();
+	if (roomManager?.setAvatar != null) {
 		//console.debug("avatar: " + avatar);
-		g.getRoomManager().setAvatar(avatar);
+		roomManager.setAvatar(avatar);
 	}
 	else {
 		sendChat_s('/avatar ' + avatar);
@@ -1277,15 +1299,53 @@ function isKickedBallHeadingGoal(twoPointsArray, targetTeam, goalBounds) {
 	return Math.abs(fy) < goalY;
 }
 
+function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
+	if (roomManager != null) {
+		const gameReplayArray = roomManager.stopReplay();
+		if (gameReplayArray != null) {
+			lastReplay = gameReplayArray;
+			const roomName = roomManager.room.roomState.name;
+			if (!replays.hasOwnProperty(roomName))
+				replays[roomName] = [];
+			const replayName = previousScores == null ? '-:-' : previousScores.red + ':' + previousScores.blue;
+			replays[roomName].push({timestamp: Date.now(), name: replayName, replayArray: lastReplay});
+			console.debug('lastReplay: %o', lastReplay);
+		}
+	}
+}
+
 // Game instance from game-min.js, just for debugging
 let gameInst;
 
 /* =====  Events (modified game-min.js required)  ===== */
+g.onRoomJoin = roomManager => {
+	insideRoom = true;
+	log_c('Joined room: %o', roomManager);
+
+	lastPlayerId = roomManager.room.playerId;
+	// Start replay
+	roomManager.startReplay();
+};
+
+g.onRoomLeave = roomManager => {
+	insideRoom = false;
+	log_c('Left room: %o', roomManager);
+
+	// Stop replay
+	stopAndSaveReplay(roomManager);
+};
+
+g.onRoomLink = url => {
+	log_c('Room link: ' + url);
+};
+
 g.onPlayerJoin = player => {
+	insideRoom = true;
 	log_c('[+] ' + player.name + '#' + player.id + ' has joined', Color.JOIN);
 };
 
 g.onPlayerLeave = player => {
+	insideRoom = true;
 	log_c('[-] ' + player.name + '#' + player.id + ' has left', Color.LEAVE);
 };
 
@@ -1299,6 +1359,7 @@ g.onPlayerKicked = (player, reason, ban, byPlayer) => {
 };
 
 g.onPlayerChat = (byPlayer, message) => {
+	insideRoom = true;
 	// Log time and replace all RLTO characters that reverse the message
 	const timeEntry = (new Date).toLocaleTimeString();
 	const playerEntry = byPlayer.name + '#' + byPlayer.id;
@@ -1336,6 +1397,7 @@ g.onPlayerChat = (byPlayer, message) => {
 };
 
 g.onAnnouncement = (anText, color, style, sound) => {
+	insideRoom = true;
 	const logThisAnnouncement = () => {
 		const rgbaStringFromInt = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
 		let styleStr = '';
@@ -1424,6 +1486,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 };
 
 function onPlayerBallTouch(byPlayer, ballTouchType) {
+	insideRoom = true;
 	// If the ball was kicked
 	if (ballTouchType === BallTouchType.KICK) {
 		// This player touched the ball
@@ -1496,6 +1559,7 @@ g.onPlayerBallKick = byPlayer => {
 };
 
 g.onTeamGoal = team => {
+	insideRoom = true;
 	const scores = g.getScores();
 
 	const m = Math.trunc(scores.time / 60);
@@ -1542,13 +1606,21 @@ g.onTeamGoal = team => {
 		const assistTextD = assistGiver != null ? ' po podaniu ' + odmienionaNazwa(assistGiver.name, dopelniacz) : '';
 		sendChat_s('⚽' + teamIcon + ' ' + goalTime + ' Bramka' + ogText + ' na ' + scoreText + ' zdobyta' + goalScorerTextB + assistTextD);
 	}
+
+	// Save current scores
+	previousScores = scores;
 };
 
 g.onTeamVictory = team => {
+	insideRoom = true;
 	log_c('Team ' + team + ' has won the match', Color.VICTORY);
+
+	// Save current scores
+	previousScores = g.getScores();
 };
 
 g.onGamePause = (byPlayer, isPaused) => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	if (isPaused)
 		log_c('⏸️ Game paused' + byPlayerText, Color.PAUSE);
@@ -1557,10 +1629,15 @@ g.onGamePause = (byPlayer, isPaused) => {
 };
 
 g.onTimeIsUp = () => {
+	insideRoom = true;
 	log_c('Time is up', Color.VICTORY);
+
+	// Save current scores
+	previousScores = g.getScores();
 };
 
 g.onPositionsReset = () => {
+	insideRoom = true;
 	//log_c('Positions reset');
 
 	lastPlayersWhoTouchedBall = [];
@@ -1568,25 +1645,36 @@ g.onPositionsReset = () => {
 };
 
 g.onGameStart = byPlayer => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c('▶️ Game started' + byPlayerText, Color.START);
 
 	lastPlayersWhoTouchedBall = [];
 	lastKickDirection = [];
+
+	// Start replay recording on game start
+	g.getRoomManager().startReplay();
+	// Save current scores
+	previousScores = g.getScores();
 };
 
 g.onGameStop = byPlayer => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c('⏹️ Game stopped' + byPlayerText, Color.STOP);
+
+	stopAndSaveReplay();
 };
 
 g.onStadiumChange = (byPlayer, stadiumName, checksum) => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	const checksumText = checksum != null ? ' (' + checksum + ')' : '';
 	log_c('🏟️ Stadium ' + stadiumName + checksumText + ' loaded' + byPlayerText, Color.STADIUM);
 };
 
 g.onPlayerDesyncChange = (player, desynchronized) => {
+	insideRoom = true;
 	if (desynchronized)
 		log_c('⚠️ ' + player?.name + '#' + player?.id + ' has desynchronized', Color.DESYNC);
 	else
@@ -1594,11 +1682,13 @@ g.onPlayerDesyncChange = (player, desynchronized) => {
 };
 
 g.onPlayerTeamChange = (player, byPlayer, team) => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c(player.name + '#' + player.id + ' was moved to ' + team + byPlayerText, Color.TEAM);
 };
 
 g.onPlayerAdminChange = (player, byPlayer, admin) => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	if (admin)
 		log_c('👑 ' + player.name + '#' + player.id + ' was given admin rights' + byPlayerText, Color.ADMIN);
@@ -1607,6 +1697,7 @@ g.onPlayerAdminChange = (player, byPlayer, admin) => {
 };
 
 g.onChatIndicatorStateChange = (player, chatIndicatorShown) => {
+	insideRoom = true;
 	/*
 	if (chatIndicatorShown)
 		console.log('💬 ' + player?.name + '#' + player?.id + ' is typing');
@@ -1616,6 +1707,7 @@ g.onChatIndicatorStateChange = (player, chatIndicatorShown) => {
 };
 
 g.onGameTick = game => {
+	insideRoom = true;
 	gameInst = game;
 
 	const ballPos = g.getBallPosition();
@@ -1639,6 +1731,7 @@ g.onGameTick = game => {
 };
 
 g.onKickRateLimitSet = (min, rate, burst, byPlayer) => {
+	insideRoom = true;
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c('Kick Rate Limit set to (min: ' + min + ', rate: ' + rate + ', burst: ' + burst + ')' + byPlayerText, Color.KICKRATE);
 };

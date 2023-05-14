@@ -304,9 +304,10 @@ function getSlicedHaxballText(text, maxFragmentLength = 140) {
 
 // Function to send chat, no matter if the modified game-min.js is present or not
 function sendChat_s(message) {
+	const roomManager = g?.getRoomManager();
 	// If modified game-min.js is loaded
-	if (g?.getRoomManager != null && g.getRoomManager().sendChat != null)
-		g.getRoomManager().sendChat(message);
+	if (roomManager?.sendChat != null)
+		roomManager.sendChat(message);
 	// Legacy
 	else {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
