@@ -1320,7 +1320,7 @@ let gameInst;
 /* =====  Events (modified game-min.js required)  ===== */
 g.onRoomJoin = roomManager => {
 	insideRoom = true;
-	log_c('Joined room: %o', roomManager);
+	console.log('Joined room: %o', roomManager);
 
 	lastPlayerId = roomManager.room.playerId;
 	// Start replay
@@ -1329,7 +1329,7 @@ g.onRoomJoin = roomManager => {
 
 g.onRoomLeave = roomManager => {
 	insideRoom = false;
-	log_c('Left room: %o', roomManager);
+	console.log('Left room: %o', roomManager);
 
 	// Stop replay
 	stopAndSaveReplay(roomManager);
