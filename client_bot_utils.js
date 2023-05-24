@@ -1361,12 +1361,13 @@ g.onPlayerKicked = (player, reason, ban, byPlayer) => {
 g.onPlayerChat = (byPlayer, message) => {
 	insideRoom = true;
 	// Log time and replace all RLTO characters that reverse the message
-	const timeEntry = (new Date).toLocaleTimeString();
+	const datetime = (new Date).toLocaleString();
+	const time = (new Date).toLocaleTimeString();
 	const playerEntry = byPlayer.name + '#' + byPlayer.id;
-	const entry = (timeEntry + ' ' + playerEntry + ': ' + message).replaceAll('\u202e', '[RTLO]');
-	chatHistory.push(entry);
+	const entry = message.replaceAll('\u202e', '[RTLO]');
+	chatHistory.push({date: datetime, player: byPlayer, entry: entry});
 	if (logChat)
-		console.log(entry);
+		console.log((time + ' ' + playerEntry + ': ' + message).replaceAll('\u202e', '[RTLO]'));
 
 	// If a bogus character is spammed
 	if (message.split('﷽').length > 5) {
@@ -1398,7 +1399,7 @@ g.onPlayerChat = (byPlayer, message) => {
 
 g.onAnnouncement = (anText, color, style, sound) => {
 	insideRoom = true;
-	const logThisAnnouncement = () => {
+	const logAnnouncement = text => {
 		const rgbaStringFromInt = a => 'rgba(' + [(a & 16711680) >>> 16, (a & 65280) >>> 8, a & 255].join() + ',255)';
 		let styleStr = '';
 		if (color >= 0)
@@ -1419,14 +1420,16 @@ g.onAnnouncement = (anText, color, style, sound) => {
 				styleStr += 'font-size:10px;';
 		}
 
-		console.log('%c' + entry, styleStr);
+		console.log('%c' + text, styleStr);
 	};
 
-	// Log time and replace all RLTO characters that reverse the message
-	const entry = (new Date).toLocaleTimeString() + ' ▌' + anText.replaceAll('\u202e', '[RLTO]');
-	announcementHistory.push(entry);
+	const datetime = (new Date).toLocaleString()
+	const time = (new Date).toLocaleTimeString();
+	// Replace all RLTO characters that reverse the message display order
+	const entry = anText.replaceAll('\u202e', '[RLTO]');
+	announcementHistory.push({date: datetime, entry: entry});
 	if (logAnnouncements === 2) {
-		logThisAnnouncement();
+		logAnnouncement(time + ' ▌' + entry);
 	}
 
 	const roomName = g.getRoomState().name;
@@ -1454,7 +1457,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 		// If the message is from a player and onlyMessage exists
 		if (playerName != null && onlyMessage != null) {
 			if (logAnnouncements === 1)
-				logThisAnnouncement(anText);
+				logAnnouncement(time + ' ▌' + entry);
 			// If a bogus character is spammed
 			if (onlyMessage.split('﷽').length > 5) {
 				const iframeBody = document.querySelector('iframe').contentDocument.body;
