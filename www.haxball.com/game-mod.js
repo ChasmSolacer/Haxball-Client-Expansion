@@ -1,6 +1,6 @@
 /*
  HaxBall @ 2023 - Mario Carbajal - All rights reserved.
- d962bc67
+ f5f95965
 */
 'use strict';
 (function (globalScope) {
@@ -42,7 +42,7 @@
 		}
 
 		/**
-		 * @param {class_ta} fullPlayer
+		 * @param {class_ua_FullPlayer} fullPlayer
 		 * @return {{}}
 		 */
 		function getFullPlayerObject(fullPlayer) {
@@ -115,7 +115,7 @@
 		}
 
 		/**
-		 * @param {class_q} stadium
+		 * @param {class_q_Stadium} stadium
 		 * @return {{}}
 		 */
 		function getStadiumObject(stadium) {
@@ -125,7 +125,7 @@
 				vertexes: stadium.L,
 				segments: stadium.W,
 				planes: stadium.ra,
-				goals: stadium.vc.map(rawGoal => class_q.cp(rawGoal)),
+				goals: stadium.vc.map(rawGoal => class_q_Stadium.cp(rawGoal)),
 				discs: stadium.H.map(rawDisc => getDynamicDiscObject(rawDisc)),
 				joints: stadium.pb,
 				redSpawnPoints: stadium.Nd,
@@ -141,7 +141,7 @@
 		}
 
 		/**
-		 * @param {class_sa} roomState
+		 * @param {class_ta_RoomState} roomState
 		 * @return {{id, self, stadium, game, players, name, teamColors}}
 		 */
 		function getRoomStateObject(roomState) {
@@ -167,7 +167,7 @@
 		}
 
 		/**
-		 * @param {class_Ha|class_Rb} room
+		 * @param {class_Ha|class_Rb_ClientRoom} room
 		 * @return {{}}
 		 */
 		function getRoomObject(room) {
@@ -236,18 +236,18 @@
 			return c;
 		}
 
-		class class_gc {
+		class class_kc {
 			constructor() {
 				this.Fh = 0;
 				this.Tp = 400;
 				this.Pk = 64;
 				this.fj = 32;
 				this.la = window.document.createElement('canvas');
-				this.cg = window.document.createElement('canvas');
+				this.dg = window.document.createElement('canvas');
 				this.f = window.document.createElement('div');
-				this.cg.width = this.la.width = this.fj;
-				this.cg.height = this.la.height = this.Pk;
-				this.Jh = this.cg.getContext('2d', null);
+				this.dg.width = this.la.width = this.fj;
+				this.dg.height = this.la.height = this.Pk;
+				this.Jh = this.dg.getContext('2d', null);
 				this.c = this.la.getContext('2d', null);
 				this.c.fillStyle = 'green';
 				let a = []
@@ -259,7 +259,7 @@
 					++b,
 						a.push(0);
 				this.Fq = a;
-				this.f.appendChild(this.cg);
+				this.f.appendChild(this.dg);
 				this.f.className = 'graph';
 				this.f.hidden = true;
 			}
@@ -284,14 +284,14 @@
 			}
 		}
 
-		class class_Nb {
+		class class_Yb {
 			constructor(a) {
 				this.rd = null;
 				this.dr = 1E4;
 				this.Fd = true;
 				a.ik();
 				this.Sa = a.Sa;
-				this.bd = a.bd;
+				this.cd = a.cd;
 				this.xe = a.xe;
 				this.rd = a.rd;
 				this.Qm = window.performance.now();
@@ -312,7 +312,7 @@
 				}
 				;
 				a = 0;
-				let d = this.bd;
+				let d = this.cd;
 				for (; a < d.length;) {
 					let e = d[a];
 					++a;
@@ -332,7 +332,7 @@
 			}
 
 			Ub(a, b) {
-				if (this.Fd && (a = this.bd[a],
+				if (this.Fd && (a = this.cd[a],
 				'open' == a.readyState)) {
 					b = b.Sg();
 					try {
@@ -349,7 +349,7 @@
 				window.clearTimeout(this.Sm);
 				this.Fd && (this.Fd = false,
 					this.Sa.close(),
-				null != this.pf && this.pf());
+				null != this.qf && this.qf());
 			}
 		}
 
@@ -359,16 +359,16 @@
 			}
 		}
 
-		class class_hc {
+		class class_nc {
 			constructor() {
-				this.Wc = 0;
+				this.Xc = 0;
 				this.bb = [];
-				this.ds = new class_da(['Time is', 'Up!'], 16777215);
-				this.fr = new class_da(['Red is', 'Victorious!'], 15035990);
-				this.er = new class_da(['Red', 'Scores!'], 15035990);
-				this.Wn = new class_da(['Blue is', 'Victorious!'], 625603);
-				this.Vn = new class_da(['Blue', 'Scores!'], 625603);
-				this.Eq = new class_da(['Game', 'Paused'], 16777215);
+				this.ds = new class_ea(['Time is', 'Up!'], 16777215);
+				this.fr = new class_ea(['Red is', 'Victorious!'], 15035990);
+				this.er = new class_ea(['Red', 'Scores!'], 15035990);
+				this.Wn = new class_ea(['Blue is', 'Victorious!'], 625603);
+				this.Vn = new class_ea(['Blue', 'Scores!'], 625603);
+				this.Eq = new class_ea(['Game', 'Paused'], 16777215);
 			}
 
 			Ra(a) {
@@ -377,27 +377,27 @@
 
 			io() {
 				this.bb = [];
-				this.Wc = 0;
+				this.Xc = 0;
 			}
 
 			B(a) {
-				0 < this.bb.length && (this.Wc += a) > this.bb[0].To() && (this.Wc = 0,
+				0 < this.bb.length && (this.Xc += a) > this.bb[0].To() && (this.Xc = 0,
 					this.bb.shift());
 			}
 
-			Qc(a) {
-				0 < this.bb.length && this.bb[0].Qc(a, this.Wc);
+			Rc(a) {
+				0 < this.bb.length && this.bb[0].Rc(a, this.Xc);
 			}
 		}
 
-		class class_ic {
+		class class_yc {
 			constructor() {
 				function a(g) {
-					return new class_qa(g, f, function (h) {
+					return new class_za(g, f, function (h) {
 							if (null == h)
 								return null;
 							try {
-								return class_ka.Mh(h);
+								return class_ma.Mh(h);
 							}
 							catch (k) {
 								return null;
@@ -417,7 +417,7 @@
 				}
 
 				function b(g, h) {
-					return new class_qa(g, f, function (k) {
+					return new class_za(g, f, function (k) {
 							return null != k ? '0' != k : h;
 						}
 						, function (k) {
@@ -427,7 +427,7 @@
 				}
 
 				function c(g, h) {
-					return new class_qa(g, f, function (k) {
+					return new class_za(g, f, function (k) {
 							let l = h;
 							try {
 								null != k && (l = parseFloat(k));
@@ -443,7 +443,7 @@
 				}
 
 				function d(g, h) {
-					return new class_qa(g, f, function (k) {
+					return new class_za(g, f, function (k) {
 							let l = h;
 							try {
 								null != k && (l = class_Q.parseInt(k));
@@ -459,8 +459,8 @@
 				}
 
 				function e(g, h, k) {
-					return new class_qa(g, f, function (l) {
-							return null == l ? h : class_ha.Xc(l, k);
+					return new class_za(g, f, function (l) {
+							return null == l ? h : class_ha.Yc(l, k);
 						}
 						, function (l) {
 							return l;
@@ -493,14 +493,14 @@
 				this.Xe = a('geo');
 				this.Ye = a('geo_override');
 				this.me = function () {
-					return new class_qa('player_keys', f, function (g) {
+					return new class_za('player_keys', f, function (g) {
 							if (null == g)
-								return class_ra.rk();
+								return class_ya.rk();
 							try {
-								return class_ra.Mh(g);
+								return class_ya.Mh(g);
 							}
 							catch (h) {
-								return class_ra.rk();
+								return class_ya.rk();
 							}
 						}
 						, function (g) {
@@ -516,17 +516,17 @@
 			}
 
 			Ph() {
-				return null != this.Ye.A() ? this.Ye.A() : null != this.Xe.A() ? this.Xe.A() : new class_ka;
+				return null != this.Ye.A() ? this.Ye.A() : null != this.Xe.A() ? this.Xe.A() : new class_ma;
 			}
 		}
 
-		class class_gb {
+		class class_xb {
 			constructor(a) {
 				this.xk = false;
-				this.Im = new class_Aa(class_u.Ma);
-				this.Zj = new class_Aa(class_u.Ca);
-				this.am = new class_Aa(class_u.ga);
-				this.f = class_x.Ha(class_gb.O);
+				this.Im = new class_Oa(class_u_Team.Ma);
+				this.Zj = new class_Oa(class_u_Team.Ca);
+				this.am = new class_Oa(class_u_Team.ga);
+				this.f = class_x.Ha(class_xb.O);
 				let b = class_x.Aa(this.f);
 				this.lc = b.get('room-name');
 				this.Lm = b.get('start-btn');
@@ -541,8 +541,8 @@
 					d = b.get('leave-btn')
 					,
 					e = b.get('rand-btn');
-				this.Hf = b.get('time-limit-sel');
-				this.Af = b.get('score-limit-sel');
+				this.If = b.get('time-limit-sel');
+				this.Bf = b.get('score-limit-sel');
 				this.Jm = b.get('stadium-name');
 				this.Km = b.get('stadium-pick');
 				let f = this;
@@ -553,14 +553,14 @@
 				this.Xh(b.get('red-list'), this.am, a);
 				this.Xh(b.get('blue-list'), this.Zj, a);
 				this.Xh(b.get('spec-list'), this.Im, a);
-				this.jl(this.Hf, this.il());
-				this.jl(this.Af, this.il());
-				this.Hf.onchange = function () {
-					class_D.i(f.Bq, f.Hf.selectedIndex);
+				this.jl(this.If, this.il());
+				this.jl(this.Bf, this.il());
+				this.If.onchange = function () {
+					class_D.i(f.Bq, f.If.selectedIndex);
 				}
 				;
-				this.Af.onchange = function () {
-					class_D.i(f.tq, f.Af.selectedIndex);
+				this.Bf.onchange = function () {
+					class_D.i(f.tq, f.Bf.selectedIndex);
 				}
 				;
 				this.Lm.onclick = function () {
@@ -584,8 +584,8 @@
 				}
 				;
 				this.km.onclick = function () {
-					null != f.le && (f.le(class_u.Ca),
-						f.le(class_u.ga));
+					null != f.le && (f.le(class_u_Team.Ca),
+						f.le(class_u_Team.ga));
 				}
 				;
 				this.Zl.onclick = function () {
@@ -612,7 +612,7 @@
 				class_x.replaceWith(a, b.f);
 				let d = this;
 				b.yg = function (e, f) {
-					class_Ba.i(d.yg, e, f);
+					class_Aa.i(d.yg, e, f);
 				}
 				;
 				b.le = function (e) {
@@ -620,11 +620,11 @@
 				}
 				;
 				b.jq = function (e) {
-					class_Ba.i(d.yg, c, e);
+					class_Aa.i(d.yg, c, e);
 				}
 				;
-				b.sf = function (e) {
-					class_D.i(d.sf, e);
+				b.tf = function (e) {
+					class_D.i(d.tf, e);
 				};
 			}
 
@@ -661,22 +661,22 @@
 				this.xk != b && (this.f.className = 'room-view' + (b ? ' admin' : ''),
 					this.xk = b);
 				var c = !b || null != a.M;
-				this.Hf.disabled = c;
-				this.Af.disabled = c;
+				this.If.disabled = c;
+				this.Bf.disabled = c;
 				this.Km.disabled = c;
 				c = null != a.M;
 				this.Lm.hidden = c;
 				this.Nm.hidden = !c;
 				this.oi.hidden = !c;
-				this.Hf.selectedIndex = a.Fa;
-				this.Af.selectedIndex = a.jb;
+				this.If.selectedIndex = a.Fa;
+				this.Bf.selectedIndex = a.jb;
 				this.Jm.textContent = a.T.D;
-				this.Jm.classList.toggle('custom', !a.T.$e());
-				let d = a.Vc;
+				this.Jm.classList.toggle('custom', !a.T.af());
+				let d = a.Wc;
 				for (var e = this.am, f = a.K, g = [], h = 0; h < f.length;) {
 					var k = f[h];
 					++h;
-					k.ea == class_u.ga && g.push(k);
+					k.ea == class_u_Team.ga && g.push(k);
 				}
 				e.B(g, d, c, b);
 				e = this.Zj;
@@ -685,7 +685,7 @@
 				for (h = 0; h < f.length;)
 					k = f[h],
 						++h,
-					k.ea == class_u.Ca && g.push(k);
+					k.ea == class_u_Team.Ca && g.push(k);
 				e.B(g, d, c, b);
 				e = this.Im;
 				f = a.K;
@@ -693,10 +693,10 @@
 				for (h = 0; h < f.length;)
 					k = f[h],
 						++h,
-					k.ea == class_u.Ma && g.push(k);
+					k.ea == class_u_Team.Ma && g.push(k);
 				e.B(g, d, c, b);
 				this.km.disabled = c;
-				this.bi != a.Vc && this.Pj(a.Vc);
+				this.bi != a.Wc && this.Pj(a.Wc);
 				c && (a = 120 == a.M.Qa,
 				this.El != a && this.Qj(a));
 			}
@@ -712,10 +712,10 @@
 			}
 		}
 
-		class class_hb {
+		class class_ub {
 			constructor() {
-				this.Cf = null;
-				this.f = class_x.Ha(class_hb.O);
+				this.Df = null;
+				this.f = class_x.Ha(class_ub.O);
 				var a = class_x.Aa(this.f);
 				let b = this;
 				a.get('cancel').onclick = function () {
@@ -725,7 +725,7 @@
 				this.zh = a.get('change');
 				this.zh.disabled = true;
 				this.zh.onclick = function () {
-					null != b.Cf && b.rm(b.Cf.index);
+					null != b.Df && b.rm(b.Df.index);
 				}
 				;
 				a = a.get('list');
@@ -741,21 +741,21 @@
 					,
 					c = 0
 					,
-					d = class_Ca.bb.length >> 2;
+					d = class_Pa.bb.length >> 2;
 				for (; c < d;) {
 					var e = c++;
 					let f = e
 						,
-						g = class_Ca.bb[e << 2];
-					e = class_Ca.bb[(e << 2) + 1].toLowerCase();
+						g = class_Pa.bb[e << 2];
+					e = class_Pa.bb[(e << 2) + 1].toLowerCase();
 					let h = window.document.createElement('div');
 					h.className = 'elem';
 					h.innerHTML = '<div class="flagico f-' + e + '"></div> ' + g;
 					a.appendChild(h);
 					h.onclick = function () {
-						null != b.Cf && b.Cf.Ja.classList.remove('selected');
+						null != b.Df && b.Df.Ja.classList.remove('selected');
 						b.zh.disabled = false;
-						b.Cf = {
+						b.Df = {
 							Ja: h,
 							index: f
 						};
@@ -769,10 +769,10 @@
 			}
 
 			rm(a) {
-				let b = new class_ka;
-				b.vb = class_Ca.bb[(a << 2) + 1].toLowerCase();
-				b.Jc = class_Ca.bb[(a << 2) + 2];
-				b.Lc = class_Ca.bb[(a << 2) + 3];
+				let b = new class_ma;
+				b.vb = class_Pa.bb[(a << 2) + 1].toLowerCase();
+				b.Jc = class_Pa.bb[(a << 2) + 2];
+				b.Mc = class_Pa.bb[(a << 2) + 3];
 				class_m.j.Ye.ta(b);
 				class_H.i(this.qb);
 			}
@@ -811,15 +811,15 @@
 
 			static qj(a) {
 				class_C.Ss() && class_C.Ms(function () {
-					class_Gc.qj();
-					let b = null == class_m.j.Xe.A() ? class_ka.Zo().then(function (d) {
+					class_Hc.qj();
+					let b = null == class_m.j.Xe.A() ? class_ma.Zo().then(function (d) {
 							class_m.j.Xe.ta(d);
 						}, function () {
 						}) : Promise.resolve(null)
 						,
 						c = class_Y.A(window.parent._gdir + 'res.dat', 'arraybuffer').then(function (d) {
 							d = new JSZip(d);
-							class_m.Na = new class_jc(d);
+							class_m.Na = new class_wc(d);
 							return Promise.all([class_m.Na.Lo, class_C.fh(d.file('images/grass.png').asArrayBuffer()).then(function (e) {
 								return class_m.ep = e;
 							}), class_C.fh(d.file('images/concrete.png').asArrayBuffer()).then(function (e) {
@@ -852,7 +852,7 @@
 				0 != d.length ? (window.document.body.innerHTML = '',
 					class_C.Yg = window.document.createElement('div'),
 					window.document.body.appendChild(class_C.Yg),
-					a = new class_jb(d),
+					a = new class_hb(d),
 					class_C.La(a.f)) : a();
 			}
 
@@ -877,16 +877,16 @@
 			}
 		}
 
-		class class_kb {
+		class class_qb {
 			constructor() {
 				this.Qb = -1;
 				this.fb = new class_T(class_m.j.di.A());
-				this.Wc = new class_kc;
-				this.f = class_x.Ha(class_kb.O);
+				this.Xc = new class_hc;
+				this.f = class_x.Ha(class_qb.O);
 				let a = class_x.Aa(this.f);
-				this.Sb = new class_Ob(a.get('red-score'), 0);
-				this.Nb = new class_Ob(a.get('blue-score'), 0);
-				class_x.replaceWith(a.get('timer'), this.Wc.f);
+				this.Sb = new class_Pb(a.get('red-score'), 0);
+				this.Nb = new class_Pb(a.get('blue-score'), 0);
+				class_x.replaceWith(a.get('timer'), this.Xc.f);
 				class_x.replaceWith(a.get('canvas'), this.fb.la);
 			}
 
@@ -899,25 +899,25 @@
 				}
 				b = a.M;
 				null == b ? this.f.hidden = true : (this.f.hidden = false,
-					this.Wc.Wr(60 * a.Fa),
-					this.Wc.Vr(b.Mc | 0),
+					this.Xc.Wr(60 * a.Fa),
+					this.Xc.Vr(b.Nc | 0),
 					this.Nb.set(b.Nb),
 					this.Sb.set(b.Sb),
-					this.fb.Qc(a, this.Qb));
+					this.fb.Rc(a, this.Qb));
 			}
 		}
 
-		class class_Sa {
+		class class_db {
 			constructor(a, b, c) {
 				this.rd = this.ze = null;
 				this.xe = [];
 				this.sk = 0;
 				this.Al = false;
 				this.hg = [];
-				this.bd = [];
+				this.cd = [];
 				this.Sa = new RTCPeerConnection({
 					iceServers: b
-				}, class_Sa.to);
+				}, class_db.to);
 				let d = this;
 				this.Wh = new Promise(function (e) {
 						d.pp = e;
@@ -965,17 +965,17 @@
 					let g = 0;
 					for (; g < b.length;)
 						d.Mj(b[g++]);
-					return class_Hc.gs(d.Wh, c).then(f, f);
+					return class_Ic.gs(d.Wh, c).then(f, f);
 				}).then(function (e) {
 					d.li(e);
 				}).catch(function () {
-					d.fg();
+					d.gg();
 				});
 			}
 
 			yo(a) {
 				let b = {
-					id: this.bd.length,
+					id: this.cd.length,
 					negotiated: true,
 					ordered: a.ordered
 				};
@@ -986,7 +986,7 @@
 				a.onopen = function () {
 					let d = 0
 						,
-						e = c.bd;
+						e = c.cd;
 					for (; d < e.length;)
 						if ('open' != e[d++].readyState)
 							return;
@@ -994,14 +994,14 @@
 				}
 				;
 				a.onclose = function () {
-					c.fg();
+					c.gg();
 				}
 				;
 				a.onmessage = function () {
-					c.fg();
+					c.gg();
 				}
 				;
-				this.bd.push(a);
+				this.cd.push(a);
 			}
 
 			Mj(a) {
@@ -1012,10 +1012,10 @@
 			}
 
 			np() {
-				this.fg();
+				this.gg();
 			}
 
-			fg() {
+			gg() {
 				null != this.kd && this.kd();
 				this.ja();
 			}
@@ -1034,7 +1034,7 @@
 				this.Sa.oniceconnectionstatechange = null;
 				let a = 0
 					,
-					b = this.bd;
+					b = this.cd;
 				for (; a < b.length;) {
 					let c = b[a];
 					++a;
@@ -1045,7 +1045,7 @@
 			}
 		}
 
-		class class_Pb {
+		class class_ac {
 		}
 
 		class class_zc {
@@ -1090,7 +1090,7 @@
 				return a;
 			}
 
-			vf() {
+			wf() {
 				return this.s.getInt8(this.a++);
 			}
 
@@ -1228,16 +1228,16 @@
 			}
 		}
 
-		class class_Aa {
+		class class_Oa {
 			constructor(a) {
 				this.Gd = new Map;
-				this.f = class_x.Ha(class_Aa.O);
+				this.f = class_x.Ha(class_Oa.O);
 				this.f.className += ' ' + a.Co;
 				let b = class_x.Aa(this.f);
 				this.bb = b.get('list');
 				this.$h = b.get('join-btn');
 				this.Ei = b.get('reset-btn');
-				a == class_u.Ma && this.Ei.remove();
+				a == class_u_Team.Ma && this.Ei.remove();
 				this.$h.textContent = '' + a.D;
 				this.f.ondragover = this.f.vt = function (d) {
 					-1 != d.dataTransfer.types.indexOf('player') && d.preventDefault();
@@ -1248,7 +1248,7 @@
 					d.preventDefault();
 					d = d.dataTransfer.getData('player');
 					null != d && (d = class_Q.parseInt(d),
-					null != d && class_Ba.i(c.yg, d, a));
+					null != d && class_Aa.i(c.yg, d, a));
 				}
 				;
 				this.$h.onclick = function () {
@@ -1275,9 +1275,9 @@
 					e = a[c],
 						++c,
 						f = this.Gd.get(e.X),
-					null == f && (f = new class_lb(e),
-						f.sf = function (h) {
-							class_D.i(g.sf, h);
+					null == f && (f = new class_jb(e),
+						f.tf = function (h) {
+							class_D.i(g.tf, h);
 						}
 						,
 						this.Gd.set(e.X, f),
@@ -1299,7 +1299,7 @@
 			}
 		}
 
-		class class_jc {
+		class class_wc {
 			constructor(a) {
 				function b(d) {
 					return new Promise(function (e) {
@@ -1330,7 +1330,7 @@
 					return c.Cp = d;
 				}), b('sounds/crowd.ogg').then(function (d) {
 					c.Bo = d;
-					c.nk = new class_lc(c.Bo, c.c);
+					c.nk = new class_xc(c.Bo, c.c);
 					c.nk.connect(c.og);
 				})]);
 			}
@@ -1397,10 +1397,10 @@
 			}
 		}
 
-		class class_mb {
+		class class_yb {
 			constructor() {
-				this.Gl = new class_gc;
-				this.f = class_x.Ha(class_mb.O);
+				this.Gl = new class_kc;
+				this.f = class_x.Ha(class_yb.O);
 				let a = class_x.Aa(this.f);
 				this.Dg = a.get('ping');
 				this.Qo = a.get('fps');
@@ -1427,21 +1427,20 @@
 			}
 		}
 
-		/** Point */
-		class class_P {
+		class class_P_Point {
 			constructor(a, b) {
 				this.x = a;
 				this.y = b;
 			}
 		}
 
-		class class_R {
+		class class_R_Plane {
 			constructor() {
 				this.w = 32;
 				this.h = 63;
 				this.o = 1;
 				this.Ua = 0;
-				this.xa = new class_P(0, 0);
+				this.xa = new class_P_Point(0, 0);
 			}
 
 			fa(a) {
@@ -1465,27 +1464,27 @@
 			}
 		}
 
-		class class_Da {
+		class class_Qa {
 		}
 
-		class class_nc {
+		class class_gc {
 			constructor(a, b) {
 				this.pn = 0;
 				this.version = 1;
 				this.kh = 0;
 				this.Vd = class_A.ia(1E3);
-				this.Nf = class_A.ia(16384);
+				this.Of = class_A.ia(16384);
 				this.version = b;
 				let c = this.kh = a.$;
 				this.sj = a;
-				a.U.fa(this.Nf);
+				a.U.fa(this.Of);
 				let d = this;
 				a.hc = function (f) {
 					let g = a.$;
-					d.Nf.mb(g - c);
+					d.Of.mb(g - c);
 					c = g;
-					d.Nf.Wb(f.R);
-					class_p.vj(f, d.Nf);
+					d.Of.Wb(f.R);
+					class_p.vj(f, d.Of);
 				}
 				;
 				this.Vd.Wb(0);
@@ -1503,7 +1502,7 @@
 				this.sj.hc = null;
 				this.sj.U.Cm(null);
 				this.Vd.s.setUint16(0, this.pn, this.Vd.Ta);
-				this.Vd.Xb(this.Nf.Vb());
+				this.Vd.Xb(this.Of.Vb());
 				let a = pako.deflateRaw(this.Vd.Vb())
 					,
 					b = class_A.ia(a.byteLength + 32);
@@ -1685,7 +1684,7 @@
 			}
 
 			static Bk(a) {
-				let b = new class_nb(class_m.j.ne.A());
+				let b = new class_tb(class_m.j.ne.A());
 				b.vl = function (c) {
 					class_m.j.ne.ta(c);
 					class_m.Na.lm();
@@ -1697,14 +1696,14 @@
 			}
 
 			static Ck(a, b) {
-				a = new class_Z(a);
+				a = new class_aa(a);
 				a.Va = b;
 				class_C.La(a.f);
 			}
 
 			static Ho(a, b) {
 				function c() {
-					let f = new class_Ta('Failed', null);
+					let f = new class_Za('Failed', null);
 					f.Va = function () {
 						class_B.yb();
 					}
@@ -1721,7 +1720,7 @@
 					});
 				}
 
-				class_C.La((new class_aa('Connecting', 'Connecting...', [])).f);
+				class_C.La((new class_ba('Connecting', 'Connecting...', [])).f);
 				let e = null;
 				e = function (f, g) {
 					class_Y.Sl(class_m.Pe + 'api/client', 'room=' + f + '&rcr=' + g, class_Y.Gj).then(function (h) {
@@ -1747,17 +1746,17 @@
 			}
 
 			static Xq() {
-				let a = class_Ac.A()
+				let a = class_Bc.A()
 					,
 					b = a.get('c')
 					,
 					c = a.get('p');
 				a.get('v');
-				null != b ? null != c ? class_B.Ih(b) : class_B.ag(b) : class_B.yb();
+				null != b ? null != c ? class_B.Ih(b) : class_B.cg(b) : class_B.yb();
 			}
 
 			static yb() {
-				let a = new class_Ua(class_m.j.Ph());
+				let a = new class_$a(class_m.j.Ph());
 				class_C.La(a.Ja);
 				a.qn = function (b) {
 					if (9 != b.Ed.Rd) {
@@ -1765,7 +1764,7 @@
 						9 > b.Ed.Rd ? (b = 'Old version room',
 							c = 'The room is running an older version, an update must have happened recently.') : (b = 'New version',
 							c = 'The room is running a new version of haxball, refresh the site to update.');
-						let d = new class_aa(b, c, ['Ok']);
+						let d = new class_ba(b, c, ['Ok']);
 						class_C.La(d.f);
 						d.Va = function () {
 							class_C.La(a.Ja);
@@ -1773,7 +1772,7 @@
 						};
 					}
 					else
-						b.Ed.Kb ? class_B.Ih(b.aa) : class_B.ag(b.aa);
+						b.Ed.Kb ? class_B.Ih(b.aa) : class_B.cg(b.aa);
 				}
 				;
 				a.ct = function () {
@@ -1805,7 +1804,7 @@
 				}
 				;
 				a.cq = function () {
-					let c = new class_hb
+					let c = new class_ub
 						,
 						d = window.document.createElement('div');
 					d.className = 'view-wrapper';
@@ -1830,7 +1829,7 @@
 			static Io() {
 				let a = class_m.j.ne.A()
 					,
-					b = new class_ob('' + a + '\'s room');
+					b = new class_rb('' + a + '\'s room');
 				class_C.La(b.f);
 				b.ki = function () {
 					class_B.yb();
@@ -1843,31 +1842,31 @@
 							t.Rd = 9;
 							t.D = g.lc;
 							t.K = g.K.length;
-							t.hf = k.rg + 1;
+							t.jf = k.rg + 1;
 							t.vb = f.vb;
 							t.Kb = null != k.Kb;
 							t.Jc = f.Jc;
-							t.Lc = f.Lc;
+							t.Mc = f.Mc;
 							var z = class_A.ia(16);
 							t.fa(z);
 							k.Pi(z.Sg());
 						}
 					}
 
-					class_C.La((new class_aa('Creating room', 'Connecting...', [])).f);
+					class_C.La((new class_ba('Creating room', 'Connecting...', [])).f);
 					let e = null
 						,
 						f = class_m.j.Ph()
 						,
-						g = new class_sa;
+						g = new class_ta_RoomState;
 					g.lc = c.name;
-					let h = new class_ta;
+					let h = new class_ua_FullPlayer;
 					h.D = a;
 					h.eb = true;
 					h.country = f.vb;
 					h.Zb = class_m.j.uh.A();
 					g.K.push(h);
-					let k = new class_Rb({
+					let k = new class_Rb_ClientRoom({
 						iceServers: class_m.ig,
 						tj: class_m.Pe + 'api/host',
 						state: g,
@@ -1876,10 +1875,10 @@
 					k.rg = c.Ys - 1;
 					k.Kb = c.password;
 					d();
-					let l = new class_Ea(k)
+					let l = new class_Ma_RoomManager(k)
 						,
 						n = false;
-					k.rf = function (t, z) {
+					k.sf = function (t, z) {
 						class_B.Ck(t, function (K) {
 							z(K);
 							class_C.La(l.l.f);
@@ -1888,10 +1887,10 @@
 					}
 					;
 					let r = window.setInterval(function () {
-						k.sa(class_Fa.na(k));
+						k.sa(class_Ia.na(k));
 					}, 3E3);
 					k.sl = function (t) {
-						null != g.oa(t) && k.sa(class_ma.na(t, 'Bad actor', false));
+						null != g.oa(t) && k.sa(class_ka.na(t, 'Bad actor', false));
 					}
 					;
 					k.gq = function (t, z) {
@@ -1904,12 +1903,12 @@
 						z = z.Bb();
 						if (null != z && 2 < z.length)
 							throw class_v.C('avatar too long');
-						k.sa(class_Ga.na(t, K, N, z));
+						k.sa(class_Da.na(t, K, N, z));
 						d();
 					}
 					;
 					k.hq = function (t) {
-						null != g.oa(t) && k.sa(class_ma.na(t, null, false));
+						null != g.oa(t) && k.sa(class_ka.na(t, null, false));
 					}
 					;
 					k.wg = function (t) {
@@ -1934,31 +1933,31 @@
 						window.clearInterval(r);
 					}
 					;
-					l.$f.Og = function (t) {
+					l.ag.Og = function (t) {
 						k.Kb = t;
 						d();
 						null != e && (l.Lg = class_B.hi(e, null != k.Kb));
 					}
 					;
-					l.$f.Bm = function (t) {
+					l.ag.Bm = function (t) {
 						k.Oi(t);
 					}
 					;
-					l.$f.be = function_M(k, k.be);
+					l.ag.be = function_M(k, k.be);
 				};
 			}
 
 			static Ih(a) {
-				let b = new class_pb;
+				let b = new class_vb;
 				class_C.La(b.f);
 				b.Va = function (c) {
-					null == c ? class_B.yb() : class_B.ag(a, c);
+					null == c ? class_B.yb() : class_B.cg(a, c);
 				};
 			}
 
 			static Jo(a) {
 				try {
-					let b = new class_oc(new class_Sb(new Uint8Array(a), new class_sa, 3));
+					let b = new class_ic(new class_Sb_ReplayRoom(new Uint8Array(a), new class_ta_RoomState, 3));
 					b.qe.ke = function () {
 						b.ja();
 						class_B.yb();
@@ -1969,7 +1968,7 @@
 				catch (b) {
 					let c = class_v.Lb(b).Gb();
 					if (c instanceof class_Tb)
-						a = new class_aa('Incompatible replay version', 'The replay file is of a different version', ['Open player', 'Cancel']),
+						a = new class_ba('Incompatible replay version', 'The replay file is of a different version', ['Open player', 'Cancel']),
 							class_C.La(a.f),
 							a.Va = function (d) {
 								0 == d ? (d = window.top.location,
@@ -1977,7 +1976,7 @@
 							}
 						;
 					else {
-						let d = new class_aa('Replay error', 'Couldn\'t load the file.', ['Ok']);
+						let d = new class_ba('Replay error', 'Couldn\'t load the file.', ['Ok']);
 						class_C.La(d.f);
 						d.Va = function () {
 							d.Va = null;
@@ -1987,17 +1986,17 @@
 				}
 			}
 
-			static ag(a, b, c) {
+			static cg(a, b, c) {
 				try {
 					let d = class_B.Vo()
 						,
-						e = new class_sa
+						e = new class_ta_RoomState
 						,
 						f = class_A.ia();
 					f.oc(class_m.j.ne.A());
 					f.oc(class_m.j.Ph().vb);
 					f.Fb(class_m.j.uh.A());
-					let g = new class_Ha(a, {
+					let g = new class_Na_ServerRoom(a, {
 							iceServers: class_m.ig,
 							tj: class_m.Bs,
 							state: e,
@@ -2009,18 +2008,18 @@
 							Ls: class_B.Ue
 						})
 						,
-						h = new class_qb;
+						h = new class_wb;
 					h.ca('Connecting to master...');
 					h.yh.onclick = function () {
 						g.Jd = null;
-						g.qf = null;
+						g.rf = null;
 						g.ja();
 						class_B.yb();
 					}
 					;
 					class_C.La(h.f);
 					let k = function (r, t) {
-							r = new class_Ta(r, t);
+							r = new class_Za(r, t);
 							r.Va = function () {
 								class_B.yb();
 							}
@@ -2029,7 +2028,7 @@
 						}
 						,
 						l = function () {
-							let r = new class_aa('Connection Failed', '', ['Ok']);
+							let r = new class_ba('Connection Failed', '', ['Ok']);
 							r.ce.innerHTML = '<p>Failed to connect to room host.</p><p>If this problem persists please see the <a href=\'https://github.com/haxball/haxball-issues/wiki/Connection-Issues\' target=\'_blank\'>troubleshooting guide</a>.</p>';
 							r.Va = function () {
 								class_B.yb();
@@ -2039,10 +2038,10 @@
 						}
 						,
 						n = function () {
-							let r = new class_Ea(g);
+							let r = new class_Ma_RoomManager(g);
 							g.wl = function (t) {
-								r.l.Ff.Sr(g.Eg.jh() | 0, g.Eg.max() | 0);
-								r.l.Ff.Gl.Ln(t);
+								r.l.Gf.Sr(g.Eg.jh() | 0, g.Eg.max() | 0);
+								r.l.Gf.Gl.Ln(t);
 							}
 							;
 							r.Lg = class_B.hi(a, false);
@@ -2061,8 +2060,8 @@
 								k(g.wk, t);
 							};
 						};
-					g.qf = function (r) {
-						g.qf = null;
+					g.rf = function (r) {
+						g.rf = null;
 						g.Jd = null;
 						switch (r.ob) {
 							case 1:
@@ -2072,18 +2071,18 @@
 								switch (r.reason) {
 									case 4004:
 										class_B.Ho(a, function (t) {
-											class_B.ag(a, b, t);
+											class_B.cg(a, b, t);
 										});
 										break;
 									case 4101:
-										null == b ? class_B.Ih(a) : k(class_Ha.Ch(r), null);
+										null == b ? class_B.Ih(a) : k(class_Na_ServerRoom.Ch(r), null);
 										break;
 									default:
-										k(class_Ha.Ch(r), null);
+										k(class_Na_ServerRoom.Ch(r), null);
 								}
 								break;
 							default:
-								k(class_Ha.Ch(r), null);
+								k(class_Na_ServerRoom.Ch(r), null);
 						}
 					}
 					;
@@ -2107,38 +2106,37 @@
 				catch (d) {
 					c = class_v.Lb(d).Gb(),
 						globalScope.console.log(c),
-						c = new class_aa('Unexpected Error', '', []),
+						c = new class_ba('Unexpected Error', '', []),
 						c.ce.innerHTML = 'An error ocurred while attempting to join the room.<br><br>This might be caused by a browser extension, try disabling all extensions and refreshing the site.<br><br>The error has been printed to the inspector console.',
 						class_C.La(c.f);
 				}
 			}
 		}
 
-		/** Room state */
-		class class_sa {
+		class class_ta_RoomState {
 			constructor() {
 				this.jc = -1;
 				this.T = this.ic = null;
 				this.Hd = 2;
-				this.fd = 0;
+				this.gd = 0;
 				this.je = 1;
 				this.jb = this.Fa = 3;
-				this.Vc = false;
-				/** @type {class_ba} */
+				this.Wc = false;
+				/** @type {class_ca_Game} */
 				this.M = null;
-				/** @type {class_ta[]} */
+				/** @type {class_ua_FullPlayer[]} */
 				this.K = [];
 				this.lc = '';
-				/** @type {class_q} */
-				this.T = class_q.Oh()[0];
-				this.lb = [null, new class_ua, new class_ua];
-				this.lb[1].gb.push(class_u.ga.S);
-				this.lb[2].gb.push(class_u.Ca.S);
+				/** @type {class_q_Stadium} */
+				this.T = class_q_Stadium.Oh()[0];
+				this.lb = [null, new class_va_TeamColors, new class_va_TeamColors];
+				this.lb[1].gb.push(class_u_Team.ga.S);
+				this.lb[2].gb.push(class_u_Team.Ca.S);
 			}
 
 			bs(a) {
 				if (null == this.M) {
-					this.M = new class_ba;
+					this.M = new class_ca_Game;
 					for (var b = 0, c = this.K; b < c.length;) {
 						let d = c[b];
 						++b;
@@ -2150,7 +2148,7 @@
 				}
 			}
 
-			Yf(a, b, c) {
+			Zf(a, b, c) {
 				if (b.ea != c) {
 					b.ea = c;
 					class_O.remove(this.K, b);
@@ -2179,7 +2177,7 @@
 						}
 						b.Mb = d;
 					}
-					class_pc.i(this.Ql, a, b, c);
+					class_tc.i(this.Ql, a, b, c);
 				}
 			}
 
@@ -2202,11 +2200,11 @@
 
 			fa(a) {
 				a.Fb(this.lc);
-				a.m(this.Vc ? 1 : 0);
+				a.m(this.Wc ? 1 : 0);
 				a.P(this.jb);
 				a.P(this.Fa);
 				a.hj(this.je);
-				a.m(this.fd);
+				a.m(this.gd);
 				a.m(this.Hd);
 				this.T.fa(a);
 				a.m(null != this.M ? 1 : 0);
@@ -2223,23 +2221,23 @@
 
 			ka(a) {
 				this.lc = a.Bb();
-				this.Vc = 0 != a.F();
+				this.Wc = 0 != a.F();
 				this.jb = a.N();
 				this.Fa = a.N();
 				this.je = a.wi();
-				this.fd = a.F();
+				this.gd = a.F();
 				this.Hd = a.F();
-				this.T = class_q.ka(a);
+				this.T = class_q_Stadium.ka(a);
 				var b = 0 != a.F();
 				this.M = null;
-				b && (this.M = new class_ba,
+				b && (this.M = new class_ca_Game,
 					this.M.ka(a, this));
 				b = null == this.M ? null : this.M.ua.H;
 				let c = a.F();
 				for (var d = this.K; d.length > c;)
 					d.pop();
 				for (d = 0; d < c;) {
-					let e = new class_ta;
+					let e = new class_ua_FullPlayer;
 					e.wa(a, b);
 					this.K[d++] = e;
 				}
@@ -2280,19 +2278,19 @@
 
 			Pr(a, b, c, d) {
 				this.Hd = 0 > b ? 0 : 255 < b ? 255 : b;
-				this.fd = 0 > c ? 0 : 255 < c ? 255 : c;
+				this.gd = 0 > c ? 0 : 255 < c ? 255 : c;
 				0 > d ? d = 0 : 100 < d && (d = 100);
-				this.je = this.fd * d;
-				class_Ub.i(this.Xk, a, this.Hd, this.fd, d);
+				this.je = this.gd * d;
+				class_Nb.i(this.Xk, a, this.Hd, this.gd, d);
 			}
 
 			uc() {
-				let a = class_va.Cc
+				let a = class_wa.Cc
 					,
 					b = this.ic;
-				this.jc != a && (null == b && (this.ic = b = new class_sa),
+				this.jc != a && (null == b && (this.ic = b = new class_ta_RoomState),
 					this.jc = a,
-					class_sa.zd(b, this));
+					class_ta_RoomState.zd(b, this));
 				return b;
 			}
 
@@ -2315,31 +2313,31 @@
 					}
 				}
 				a.M = null == b.M ? null : b.M.uc();
-				a.Vc = b.Vc;
+				a.Wc = b.Wc;
 				a.jb = b.jb;
 				a.Fa = b.Fa;
 				a.je = b.je;
-				a.fd = b.fd;
+				a.gd = b.gd;
 				a.Hd = b.Hd;
 				a.T = b.T;
 				a.lb = b.lb;
 			}
 		}
 
-		class class_rb {
+		class class_sb {
 			constructor(a, b) {
-				this.f = class_x.Ha(class_rb.O);
+				this.f = class_x.Ha(class_sb.O);
 				let c = class_x.Aa(this.f);
-				this.kf = c.get('name');
-				this.Tf = c.get('admin');
-				this.af = c.get('kick');
+				this.lf = c.get('name');
+				this.Uf = c.get('admin');
+				this.bf = c.get('kick');
 				this.wd = c.get('close');
 				let d = this;
-				this.Tf.onclick = function () {
-					class_Ba.i(d.aq, d.Qb, !d.Jl);
+				this.Uf.onclick = function () {
+					class_Aa.i(d.aq, d.Qb, !d.Jl);
 				}
 				;
-				this.af.onclick = function () {
+				this.bf.onclick = function () {
 					class_D.i(d.mi, d.Qb);
 				}
 				;
@@ -2350,15 +2348,15 @@
 				this.Qb = a.X;
 				this.Sj(a.D);
 				this.Rj(a.eb);
-				this.Tf.disabled = !b || 0 == this.Qb;
-				this.af.disabled = !b || 0 == this.Qb;
+				this.Uf.disabled = !b || 0 == this.Qb;
+				this.bf.disabled = !b || 0 == this.Qb;
 			}
 
 			B(a, b) {
 				a = a.oa(this.Qb);
 				null == a ? class_H.i(this.qb) : (this.ts(a),
-					this.Tf.disabled = !b || 0 == this.Qb,
-					this.af.disabled = !b || 0 == this.Qb);
+					this.Uf.disabled = !b || 0 == this.Qb,
+					this.bf.disabled = !b || 0 == this.Qb);
 			}
 
 			ts(a) {
@@ -2368,16 +2366,16 @@
 
 			Sj(a) {
 				this.ne = a;
-				this.kf.textContent = a;
+				this.lf.textContent = a;
 			}
 
 			Rj(a) {
 				this.Jl = a;
-				this.Tf.textContent = a ? 'Remove Admin' : 'Give Admin';
+				this.Uf.textContent = a ? 'Remove Admin' : 'Give Admin';
 			}
 		}
 
-		class class_Va {
+		class class_eb {
 			constructor() {
 				this.list = [];
 			}
@@ -2425,7 +2423,7 @@
 				let c = this.list;
 				for (; 0 < c.length;)
 					c.pop();
-				class_Va.$s(a.list, b.list, this.list);
+				class_eb.$s(a.list, b.list, this.list);
 			}
 
 			jt(a) {
@@ -2519,7 +2517,7 @@
 				a.parentElement.replaceChild(b, a);
 			}
 
-			static Mf(a) {
+			static Nf(a) {
 				let b = a.firstChild;
 				for (; null != b;)
 					a.removeChild(b),
@@ -2527,13 +2525,13 @@
 			}
 		}
 
-		class class_pc {
+		class class_tc {
 			static i(a, b, c, d) {
 				null != a && a(b, c, d);
 			}
 		}
 
-		class class_sb {
+		class class_gb {
 			constructor(a) {
 				this.ml = a.get('notice');
 				this.vo = a.get('notice-contents');
@@ -2545,10 +2543,10 @@
 				let a = this;
 				class_Y.Kk(class_m.Pe + 'api/notice').then(function (b) {
 					let c = b.content;
-					null != c && '' != c && class_sb.jo != c && (a.vo.innerHTML = c,
+					null != c && '' != c && class_gb.jo != c && (a.vo.innerHTML = c,
 							a.ml.hidden = false,
 							a.wd.onclick = function () {
-								class_sb.jo = c;
+								class_gb.jo = c;
 								return a.ml.hidden = true;
 							}
 					);
@@ -2556,10 +2554,10 @@
 			}
 		}
 
-		class class_tb {
+		class class_Jb {
 			constructor() {
 				this.yk = null;
-				this.f = class_x.Ha(class_tb.O);
+				this.f = class_x.Ha(class_Jb.O);
 				var a = class_x.Aa(this.f);
 				this.mg = a.get('link');
 				let b = a.get('copy');
@@ -2585,11 +2583,11 @@
 			}
 		}
 
-		class class_ub {
+		class class_Kb {
 			static Ep() {
-				if (null != class_ub.ui)
-					return class_ub.ui;
-				class_ub.ui = new Promise(function (a, b) {
+				if (null != class_Kb.ui)
+					return class_Kb.ui;
+				class_Kb.ui = new Promise(function (a, b) {
 						var c = window.grecaptcha;
 						null != c ? a(c) : (c = window.document.createElement('script'),
 								c.src = 'https://www.google.com/recaptcha/api.js?onload=___recaptchaload&render=explicit',
@@ -2604,13 +2602,13 @@
 						);
 					}
 				);
-				return class_ub.ui;
+				return class_Kb.ui;
 			}
 		}
 
-		class class_Ta {
+		class class_Za {
 			constructor(a, b) {
-				this.f = class_x.Ha(class_Ta.O);
+				this.f = class_x.Ha(class_Za.O);
 				let c = class_x.Aa(this.f);
 				this.Yp = c.get('ok');
 				let d = this;
@@ -2622,45 +2620,45 @@
 				let e = null != b;
 				this.gm.hidden = !e;
 				e && (this.gm.onclick = function () {
-						class_Ea.qm(b);
+						class_Ma_RoomManager.qm(b);
 					}
 				);
 				c.get('reason').textContent = a;
 			}
 		}
 
-		class class_va {
+		class class_wa {
 		}
 
-		class class_da {
+		class class_ea {
 			constructor(a, b) {
 				let c = []
 					,
 					d = 0;
 				for (; d < a.length;)
 					c.push(this.Qp(a[d++], b));
-				this.gf = c;
+				this.hf = c;
 			}
 
 			To() {
-				return 2.31 + .1155 * (this.gf.length - 1);
+				return 2.31 + .1155 * (this.hf.length - 1);
 			}
 
-			Qc(a, b) {
+			Rc(a, b) {
 				b /= 2.31;
 				let c = 0;
 				a.imageSmoothingEnabled = true;
 				let d = 0
 					,
-					e = this.gf;
+					e = this.hf;
 				for (; d < e.length;) {
 					let g = e[d];
 					++d;
 					var f = b - .05 * c;
-					let h = class_da.An.eval(f)
+					let h = class_ea.An.eval(f)
 						,
-						k = 35 * -(this.gf.length - 1) + 70 * c;
-					f = 180 * class_da.Bn.eval(f);
+						k = 35 * -(this.hf.length - 1) + 70 * c;
+					f = 180 * class_ea.Bn.eval(f);
 					a.globalAlpha = h;
 					a.drawImage(g, f * (0 != (c & 1) ? -1 : 1) - .5 * g.width, k - .5 * g.height);
 					a.globalAlpha = 1;
@@ -2674,11 +2672,11 @@
 				a.imageSmoothingEnabled = true;
 				let c = 0
 					,
-					d = this.gf;
+					d = this.hf;
 				for (; c < d.length;) {
 					let e = d[c];
 					++c;
-					a.drawImage(e, .5 * -e.width, 35 * -(this.gf.length - 1) + 70 * b - .5 * e.height);
+					a.drawImage(e, .5 * -e.width, 35 * -(this.hf.length - 1) + 70 * b - .5 * e.height);
 					++b;
 				}
 				a.imageSmoothingEnabled = false;
@@ -2706,7 +2704,7 @@
 			}
 		}
 
-		class class_Vb {
+		class class_cc {
 			constructor(a) {
 				this.$b = a.slice();
 			}
@@ -2732,16 +2730,16 @@
 			}
 		}
 
-		class class_nb {
+		class class_tb {
 			constructor(a) {
 				function b() {
 					d.Ic() && null != d.vl && d.vl(d.Eb.value);
 				}
 
-				this.f = class_x.Ha(class_nb.O);
+				this.f = class_x.Ha(class_tb.O);
 				let c = class_x.Aa(this.f);
 				this.Eb = c.get('input');
-				this.mf = c.get('ok');
+				this.nf = c.get('ok');
 				let d = this;
 				this.Eb.maxLength = 25;
 				this.Eb.value = a;
@@ -2753,7 +2751,7 @@
 					13 == e.keyCode && b();
 				}
 				;
-				this.mf.onclick = b;
+				this.nf.onclick = b;
 				this.B();
 			}
 
@@ -2763,12 +2761,12 @@
 			}
 
 			B() {
-				this.mf.disabled = !this.Ic();
+				this.nf.disabled = !this.Ic();
 			}
 		}
 
 		class class_ha {
-			static Xc(a, b) {
+			static Yc(a, b) {
 				return a.length <= b ? a : class_O.substr(a, 0, b);
 			}
 
@@ -2779,12 +2777,12 @@
 					,
 					d = a.byteLength;
 				for (; c < d;)
-					b += class_ca.eh(a[c++], 2);
+					b += class_Z.eh(a[c++], 2);
 				return b;
 			}
 		}
 
-		class class_ca {
+		class class_Z {
 			static Ts(a, b) {
 				a = class_O.mj(a, b);
 				return 8 < a && 14 > a ? true : 32 == a;
@@ -2794,12 +2792,12 @@
 				let b = a.length
 					,
 					c = 0;
-				for (; c < b && class_ca.Ts(a, b - c - 1);)
+				for (; c < b && class_Z.Ts(a, b - c - 1);)
 					++c;
 				return 0 < c ? class_O.substr(a, 0, b - c) : a;
 			}
 
-			static Kf(a) {
+			static Lf(a) {
 				var b;
 				let c = '';
 				for (b = 2 - a.length; c.length < b;)
@@ -2824,10 +2822,10 @@
 			}
 		}
 
-		class class_vb {
+		class class_kb {
 			constructor() {
 				this.kb = null;
-				this.f = class_x.Ha(class_vb.O);
+				this.f = class_x.Ha(class_kb.O);
 				let a = class_x.Aa(this.f)
 					,
 					b = this;
@@ -2860,7 +2858,7 @@
 				;
 				this.Ik.onclick = function () {
 					null != b.kb && b.kb.Xd().then(function (e) {
-						class_Wb.Cr(e.Ae(), e.D + '.hbs');
+						class_Ob.Cr(e.Ae(), e.D + '.hbs');
 					});
 				}
 				;
@@ -2877,7 +2875,7 @@
 						f.onload = function () {
 							try {
 								var g = f.result;
-								let h = new class_q;
+								let h = new class_q_Stadium;
 								h.al(g);
 								class_D.i(b.Ag, h);
 							}
@@ -2927,7 +2925,7 @@
 			}
 
 			ti(a) {
-				let b = class_q.Oh()
+				let b = class_q_Stadium.Oh()
 					,
 					c = 0;
 				for (; c < b.length;) {
@@ -2938,16 +2936,16 @@
 					}, null));
 				}
 				let d = this;
-				class_wb.getAll().then(function (e) {
+				class_lb.getAll().then(function (e) {
 					let f = 0;
 					for (; f < e.length;) {
 						let g = e[f];
 						++f;
 						let h = g.id;
 						a.appendChild(d.hl(g.name, function () {
-							return class_wb.get(h);
+							return class_lb.get(h);
 						}, function () {
-							return class_wb.delete(h);
+							return class_lb.delete(h);
 						}));
 					}
 					d.Vl.update();
@@ -2955,11 +2953,11 @@
 			}
 		}
 
-		class class_lc {
+		class class_xc {
 			constructor(a, b) {
 				this.ph = null;
 				this.ot = .025;
-				this.De = this.mh = this.Of = 0;
+				this.De = this.mh = this.Pf = 0;
 				this.bh = b.createGain();
 				this.bh.gain.value = 0;
 				b = b.createBufferSource();
@@ -2974,8 +2972,8 @@
 				let b = a - this.mn;
 				this.mn = a;
 				this.De += (this.mh - this.De) * this.ot;
-				this.Of -= b;
-				0 >= this.Of && (this.Of = this.mh = 0);
+				this.Pf -= b;
+				0 >= this.Pf && (this.Pf = this.mh = 0);
 				0 >= this.mh && .05 > this.De && (window.clearInterval(this.ph),
 					this.ph = null,
 					this.De = 0);
@@ -2985,7 +2983,7 @@
 
 			zj(a) {
 				this.mh = a;
-				this.Of = 166.66666666666666;
+				this.Pf = 166.66666666666666;
 				let b = this;
 				null == this.ph && (this.ph = window.setInterval(function () {
 					b.update();
@@ -3021,7 +3019,7 @@
 							,
 							t = 0
 							,
-							z = class_u.ga.Hh
+							z = class_u_Team.ga.Hh
 							,
 							K = 0;
 						for (a = a.K; K < a.length;) {
@@ -3030,11 +3028,11 @@
 							if (null == N.J)
 								continue;
 							var c = N.J.a;
-							let xb = e.a;
-							var d = c.x - xb.x;
-							c = c.y - xb.y;
+							let Hb = e.a;
+							var d = c.x - Hb.x;
+							c = c.y - Hb.y;
 							d = d * d + c * c;
-							if (N.ea == class_u.ga) {
+							if (N.ea == class_u_Team.ga) {
 								if (null == f || f.a.x * z < N.J.a.x * z)
 									f = N.J;
 								if (null == g || g.a.x * z > N.J.a.x * z)
@@ -3043,7 +3041,7 @@
 									h = N.J,
 										k = d;
 							}
-							else if (N.ea == class_u.Ca) {
+							else if (N.ea == class_u_Team.Ca) {
 								if (null == l || l.a.x * z < N.J.a.x * z)
 									l = N.J;
 								if (null == n || n.a.x * z > N.J.a.x * z)
@@ -3059,11 +3057,11 @@
 			}
 		}
 
-		class class_Xb {
+		class class_Zb {
 			constructor(a, b) {
 				this.Vh = null;
 				this.l = a;
-				null != b && (this.Vh = '@' + class_ca.replace(b, ' ', '_'));
+				null != b && (this.Vh = '@' + class_Z.replace(b, ' ', '_'));
 			}
 
 			dj(a) {
@@ -3115,7 +3113,7 @@
 						noticeText = '' + d.D + ' has left';
 					}
 					else {
-						class_Ub.i(c.nq, d.X, e, null != g ? g.D : null, f);
+						class_Nb.i(c.nq, d.X, e, null != g ? g.D : null, f);
 						noticeText = '' + d.D + ' was ' + (f ? 'banned' : 'kicked') + b(g) + ('' != e ? ' (' + e + ')' : '');
 
 						if (window.parent.g.onPlayerKicked != null) {
@@ -3168,7 +3166,7 @@
 				a.Yi = function (d) {
 					class_m.Na.ld(class_m.Na.bp);
 					let e = c.l.hb.fb.Cd;
-					e.Ra(d == class_u.ga ? e.er : e.Vn);
+					e.Ra(d == class_u_Team.ga ? e.er : e.Vn);
 
 					if (window.parent.g.onTeamGoal != null) {
 						const teamId = d.aa;
@@ -3178,7 +3176,7 @@
 				;
 				a.Zi = function (d) {
 					let e = c.l.hb.fb.Cd;
-					e.Ra(d == class_u.ga ? e.fr : e.Wn);
+					e.Ra(d == class_u_Team.ga ? e.fr : e.Wn);
 					c.l.Oa.Ib('' + d.D + ' team won the match');
 
 					if (window.parent.g.onTeamVictory != null) {
@@ -3222,7 +3220,7 @@
 					}
 				}
 				;
-				a.Gf = function (d) {
+				a.Hf = function (d) {
 					null != d && c.l.Oa.Ib('Game stopped' + b(d));
 
 					if (window.parent.g.onGameStop != null) {
@@ -3232,8 +3230,8 @@
 				}
 				;
 				a.Ti = function (d, e) {
-					if (!e.$e()) {
-						let f = class_ca.eh(e.hk(), 8);
+					if (!e.af()) {
+						let f = class_Z.eh(e.hk(), 8);
 						c.l.Oa.Ib('Stadium "' + e.D + '" (' + f + ') loaded' + b(d));
 
 						if (window.parent.g.onStadiumChange != null) {
@@ -3306,7 +3304,7 @@
 				a.Fl = null;
 				a.$i = null;
 				a.Vi = null;
-				a.Gf = null;
+				a.Hf = null;
 				a.Ti = null;
 				a.Ll = null;
 				a.Ql = null;
@@ -3322,7 +3320,7 @@
 			}
 		}
 
-		class class_Yb {
+		class class_ec {
 			constructor(a) {
 				this.Zs = a;
 				this.ab = [];
@@ -3382,11 +3380,11 @@
 					var L = window.document.createElement('div');
 					L.textContent = y;
 					F.appendChild(L);
-					L = yb.Yo(y);
-					let ea = 0;
-					for (; ea < L.length;) {
-						let V = L[ea];
-						++ea;
+					L = Gb.Yo(y);
+					let da = 0;
+					for (; da < L.length;) {
+						let V = L[da];
+						++da;
 						let rc = window.document.createElement('div');
 						var S = V;
 						V.startsWith('Key') && (S = class_O.substr(V, 3, null));
@@ -3395,8 +3393,8 @@
 						S = window.document.createElement('i');
 						S.className = 'icon-cancel';
 						S.onclick = function () {
-							yb.ir(V);
-							class_m.j.me.ta(yb);
+							Gb.ir(V);
+							class_m.j.me.ta(Gb);
 							rc.remove();
 						}
 						;
@@ -3412,9 +3410,9 @@
 							sc.classList.toggle('show', false);
 							V.stopPropagation();
 							V = V.code;
-							null == yb.A(V) && (yb.Ra(V, y),
-								class_m.j.me.ta(yb),
-								Bc());
+							null == Gb.A(V) && (Gb.Ra(V, y),
+								class_m.j.me.ta(Gb),
+								Ec());
 						};
 					}
 					;
@@ -3432,7 +3430,7 @@
 						try {
 							F.classList.add('f-' + L.vb);
 						}
-						catch (ea) {
+						catch (da) {
 						}
 						y.textContent = L.vb.toUpperCase();
 					}
@@ -3450,17 +3448,17 @@
 					z.value = '' + y;
 				}
 
-				function f(y, F, L, ea) {
+				function f(y, F, L, da) {
 					let S = l.get(y);
 					y = F.A();
-					S.selectedIndex = ea(y);
+					S.selectedIndex = da(y);
 					S.onchange = function () {
 						F.ta(L(S.selectedIndex));
 					};
 				}
 
 				function g(y, F, L) {
-					function ea(V) {
+					function da(V) {
 						S.classList.toggle('icon-ok', V);
 						S.classList.toggle('icon-cancel', !V);
 					}
@@ -3473,11 +3471,11 @@
 					y.onclick = function () {
 						let V = !F.A();
 						F.ta(V);
-						ea(V);
+						da(V);
 						null != L && L(V);
 					}
 					;
-					ea(F.A());
+					da(F.A());
 				}
 
 				function h(y) {
@@ -3496,12 +3494,12 @@
 						,
 						L = 0;
 					for (; L < n.length;) {
-						let ea = n[L];
+						let da = n[L];
 						++L;
-						let S = ea == y;
+						let S = da == y;
 						S && (class_la.sm = F);
-						ea.lh.classList.toggle('selected', S);
-						ea.bn.classList.toggle('selected', S);
+						da.lh.classList.toggle('selected', S);
+						da.bn.classList.toggle('selected', S);
 						++F;
 					}
 				}
@@ -3570,10 +3568,10 @@
 				}, function (y) {
 					return 'full' == y ? 0 : 1;
 				});
-				let xb = null
+				let Hb = null
 					,
-					Ic = this;
-				xb = function () {
+					Jc = this;
+				Hb = function () {
 					let y = class_m.j.Ye.A();
 					c('loc', 'Detected location', class_m.j.Xe.A());
 					c('loc-ovr', 'Location override', y);
@@ -3581,52 +3579,52 @@
 					F.disabled = !a;
 					null == y ? (F.textContent = 'Override location',
 							F.onclick = function () {
-								class_H.i(Ic.cq);
+								class_H.i(Jc.cq);
 							}
 					) : (F.textContent = 'Remove override',
 							F.onclick = function () {
 								class_m.j.Ye.ta(null);
-								xb();
+								Hb();
 							}
 					);
 				}
 				;
-				xb();
-				let yb = class_m.j.me.A()
+				Hb();
+				let Gb = class_m.j.me.A()
 					,
 					sc = l.get('presskey')
 					,
-					Bc = null
+					Ec = null
 					,
-					Wa = l.get('inputsec');
-				Bc = function () {
-					class_x.Mf(Wa);
-					Wa.appendChild(b('Up'));
-					Wa.appendChild(b('Down'));
-					Wa.appendChild(b('Left'));
-					Wa.appendChild(b('Right'));
-					Wa.appendChild(b('Kick'));
-					Wa.appendChild(b('ToggleChat'));
+					cb = l.get('inputsec');
+				Ec = function () {
+					class_x.Nf(cb);
+					cb.appendChild(b('Up'));
+					cb.appendChild(b('Down'));
+					cb.appendChild(b('Left'));
+					cb.appendChild(b('Right'));
+					cb.appendChild(b('Kick'));
+					cb.appendChild(b('ToggleChat'));
 				}
 				;
-				Bc();
+				Ec();
 				this.wd.onclick = function () {
-					class_H.i(Ic.qb);
+					class_H.i(Jc.qb);
 				};
 			}
 		}
 
-		class class_Zb {
+		class class_dc {
 			constructor(a, b, c, d, e, f) {
 				this.th = this.Dh = false;
-				this.qa = new class_Sa(0, b, d);
+				this.qa = new class_db(0, b, d);
 				let g = this;
 				this.qa.kd = function () {
 					g.Ze(na.Je);
 				}
 				;
 				this.qa.Id = function () {
-					null != g.Id && g.Id(new class_Nb(g.qa));
+					null != g.Id && g.Id(new class_Yb(g.qa));
 					g.qa = null;
 					g.jk();
 				}
@@ -3650,7 +3648,7 @@
 						g.Li(g.Kr, g.qa.hg, e);
 						g.qa.vg = function_M(g, g.Ii);
 						g.qa.Wh.then(function () {
-							g.Tc(0, null);
+							g.Uc(0, null);
 						});
 					};
 				}
@@ -3719,7 +3717,7 @@
 				this.qa.Sa.addIceCandidate(a);
 			}
 
-			Tc(a, b) {
+			Uc(a, b) {
 				if (null != this.Z) {
 					var c = class_A.ia(32, false);
 					c.m(a);
@@ -3735,13 +3733,13 @@
 				d.oc(a.sdp);
 				d.Wg(b);
 				null != c && d.Xb(c.Vb());
-				this.Tc(1, d);
+				this.Uc(1, d);
 			}
 
 			Ii(a) {
 				let b = class_A.ia(32, false);
 				b.Wg(a);
-				this.Tc(4, b);
+				this.Uc(4, b);
 			}
 
 			static Xo(a) {
@@ -3749,7 +3747,7 @@
 					case 0:
 						return 'Failed';
 					case 1:
-						return class_Jc.description(a.code);
+						return class_Kc.description(a.code);
 					case 2:
 						return '';
 					case 3:
@@ -3758,9 +3756,9 @@
 			}
 		}
 
-		class class_zb {
+		class class_Bb {
 			constructor(a) {
-				this.Ja = class_x.Ha(class_zb.Cj, 'tbody');
+				this.Ja = class_x.Ha(class_Bb.Cj, 'tbody');
 				var b = class_x.Aa(this.Ja);
 				let c = b.get('name')
 					,
@@ -3773,7 +3771,7 @@
 				this.lt = a;
 				let g = a.Ed;
 				c.textContent = g.D;
-				d.textContent = '' + g.K + '/' + g.hf;
+				d.textContent = '' + g.K + '/' + g.jf;
 				f.textContent = g.Kb ? 'Yes' : 'No';
 				e.textContent = '' + (a.We | 0) + 'km';
 				try {
@@ -3785,12 +3783,12 @@
 			}
 		}
 
-		class class_Ab {
+		class class_Eb {
 			constructor(a, b) {
 				this.ak = a;
 				this.cj = b;
 				this.qc = a;
-				this.ff = window.performance.now();
+				this.gf = window.performance.now();
 			}
 
 			Um() {
@@ -3807,7 +3805,7 @@
 				if (0 >= a)
 					return 0;
 				let b = window.performance.now();
-				return this.ff + a * this.cj - b;
+				return this.gf + a * this.cj - b;
 			}
 
 			uo(a) {
@@ -3819,29 +3817,29 @@
 			B() {
 				let a = window.performance.now()
 					,
-					b = Math.floor((a - this.ff) / this.cj);
-				this.ff += b * this.cj;
+					b = Math.floor((a - this.gf) / this.cj);
+				this.gf += b * this.cj;
 				this.qc += b;
 				this.qc >= this.ak && (this.qc = this.ak,
-					this.ff = a);
+					this.gf = a);
 			}
 		}
 
-		class class_lb {
+		class class_jb {
 			constructor(a) {
 				this.D = a.D;
 				this.Ab = a.Ab;
 				this.aa = a.X;
-				this.f = class_x.Ha(class_lb.O);
+				this.f = class_x.Ha(class_jb.O);
 				let b = class_x.Aa(this.f);
-				this.kf = b.get('name');
+				this.lf = b.get('name');
 				this.Dg = b.get('ping');
 				try {
 					b.get('flag').classList.add('f-' + a.country);
 				}
 				catch (d) {
 				}
-				this.kf.textContent = this.D;
+				this.lf.textContent = this.D;
 				this.Dg.textContent = '' + this.Ab;
 				let c = this;
 				this.f.ondragstart = function (d) {
@@ -3850,7 +3848,7 @@
 				;
 				this.f.oncontextmenu = function (d) {
 					d.preventDefault();
-					class_D.i(c.sf, c.aa);
+					class_D.i(c.tf, c.aa);
 				}
 				;
 				this.xm(a.eb);
@@ -3869,21 +3867,21 @@
 			}
 		}
 
-		class class_Bb {
+		class class_Lb {
 			constructor(a, b, c, d) {
 				this.vh = new Set;
-				this.Uf = new Set;
-				this.Kg = this.yf = this.wm = false;
-				this.Sc = null;
-				this.Bf = this.aa = '';
+				this.Vf = new Set;
+				this.Kg = this.zf = this.wm = false;
+				this.Tc = null;
+				this.Cf = this.aa = '';
 				this.Ar = 5E4;
 				this.zr = 1E4;
 				this.xd = new Map;
 				this.$r = a;
 				this.ig = b;
 				this.bo = c;
-				this.Bf = d;
-				null == this.Bf && (this.Bf = '');
+				this.Cf = d;
+				null == this.Cf && (this.Cf = '');
 				this.Ui();
 			}
 
@@ -3902,9 +3900,9 @@
 			}
 
 			Pi(a) {
-				if (null != this.Sc || null != a) {
-					if (null != this.Sc && null != a && this.Sc.byteLength == a.byteLength) {
-						let c = new Uint8Array(this.Sc)
+				if (null != this.Tc || null != a) {
+					if (null != this.Tc && null != a && this.Tc.byteLength == a.byteLength) {
+						let c = new Uint8Array(this.Tc)
 							,
 							d = new Uint8Array(a)
 							,
@@ -3912,7 +3910,7 @@
 							,
 							f = 0
 							,
-							g = this.Sc.byteLength;
+							g = this.Tc.byteLength;
 						for (; f < g;) {
 							let h = f++;
 							if (c[h] != d[h]) {
@@ -3923,7 +3921,7 @@
 						if (!e)
 							return;
 					}
-					this.Sc = a.slice(0);
+					this.Tc = a.slice(0);
 					this.Kg = true;
 					var b = this;
 					null != this.Z && 1 == this.Z.readyState && null == this.se && (this.Ki(),
@@ -3936,11 +3934,11 @@
 
 			Oi(a) {
 				function b() {
-					null != c.Z && 1 == c.Z.readyState && c.yf != c.wm && c.vm();
+					null != c.Z && 1 == c.Z.readyState && c.zf != c.wm && c.vm();
 					c.jm = null;
 				}
 
-				this.yf = a;
+				this.zf = a;
 				let c = this;
 				null == this.jm && (b(),
 					this.jm = window.setTimeout(b, 1E3));
@@ -3951,7 +3949,7 @@
 					e = e.sitekey;
 					if (null == e)
 						throw class_v.C(null);
-					null != d.rf && d.rf(e, function (f) {
+					null != d.sf && d.sf(e, function (f) {
 						d.Ui(f);
 					});
 				}
@@ -3982,7 +3980,7 @@
 
 				null == a && (a = '');
 				let d = this;
-				class_Y.Sl(this.$r, 'token=' + this.Bf + '&rcr=' + a, class_Y.Gj).then(function (e) {
+				class_Y.Sl(this.$r, 'token=' + this.Cf + '&rcr=' + a, class_Y.Gj).then(function (e) {
 					switch (e.action) {
 						case 'connect':
 							c(e);
@@ -3996,8 +3994,8 @@
 			}
 
 			mp() {
-				null != this.Sc && this.Ki();
-				0 != this.yf && this.vm();
+				null != this.Tc && this.Ki();
+				0 != this.zf && this.vm();
 				let a = this;
 				this.Hl = window.setInterval(function () {
 					a.Ji();
@@ -4041,7 +4039,7 @@
 					f = h;
 				}
 				catch (g) {
-					this.Df(b, 0);
+					this.Ef(b, 0);
 					return;
 				}
 				this.lp(b, c, e, f, a, d);
@@ -4049,15 +4047,15 @@
 
 			lp(a, b, c, d, e, f) {
 				if (16 <= this.xd.size)
-					this.Df(a, 4104);
+					this.Ef(a, 4104);
 				else if (this.vh.has(b))
-					this.Df(a, 4102);
+					this.Ef(a, 4102);
 				else {
 					for (var g = [], h = 0; h < d.length;) {
-						let n = class_Bb.Mk(d[h++]);
+						let n = class_Lb.Mk(d[h++]);
 						if (null != n) {
-							if (this.Uf.has(n)) {
-								this.Df(a, 4102);
+							if (this.Vf.has(n)) {
+								this.Ef(a, 4102);
 								return;
 							}
 							g.push(n);
@@ -4067,30 +4065,30 @@
 						h.a = e.a,
 						e = this.lk(b, h),
 					1 == e.ob)) {
-						this.Df(a, e.reason);
+						this.Ef(a, e.reason);
 						return;
 					}
-					var k = new class_Sa(a, this.ig, this.bo);
+					var k = new class_db(a, this.ig, this.bo);
 					f && (k.sk = 2500);
 					k.xe = g;
 					k.rd = b;
 					this.xd.set(a, k);
 					var l = this;
 					k.kd = function () {
-						l.Tc(0, k, null);
+						l.Uc(0, k, null);
 						l.xd.delete(k.aa);
 					}
 					;
 					k.Id = function () {
 						l.xd.delete(k.aa);
-						l.Tc(0, k, null);
-						null != l.ul && l.ul(new class_Nb(k));
+						l.Uc(0, k, null);
+						null != l.ul && l.ul(new class_Yb(k));
 					}
 					;
 					k.li = function (n) {
 						l.Li(k, n, k.hg, null);
 						k.Wh.then(function () {
-							l.Tc(0, k, null);
+							l.Uc(0, k, null);
 						});
 						k.vg = function (r) {
 							l.Ii(k, r);
@@ -4121,9 +4119,9 @@
 			gp(a, b) {
 				a = this.xd.get(a);
 				if (null != a) {
-					let c = class_Bb.Mk(b);
+					let c = class_Lb.Mk(b);
 					if (null != c && (a.xe.push(c),
-						this.Uf.has(c)))
+						this.Vf.has(c)))
 						return;
 					a.Mj(b);
 				}
@@ -4135,10 +4133,10 @@
 			}
 
 			kp(a) {
-				this.Bf = a.pe(a.s.byteLength - a.a);
+				this.Cf = a.pe(a.s.byteLength - a.a);
 			}
 
-			Tc(a, b, c) {
+			Uc(a, b, c) {
 				if (!b.Al) {
 					0 == a && (b.Al = true);
 					var d = b.aa;
@@ -4151,7 +4149,7 @@
 				}
 			}
 
-			Df(a, b) {
+			Ef(a, b) {
 				let c = class_A.ia(16, false);
 				c.m(0);
 				c.ub(a);
@@ -4169,16 +4167,16 @@
 				this.Kg = false;
 				let a = class_A.ia(256, false);
 				a.m(7);
-				null != this.Sc && a.Vg(this.Sc);
+				null != this.Tc && a.Vg(this.Tc);
 				this.Z.send(a.Qd());
 			}
 
 			vm() {
 				let a = class_A.ia(2, false);
 				a.m(9);
-				a.m(this.yf ? 1 : 0);
+				a.m(this.zf ? 1 : 0);
 				this.Z.send(a.Qd());
-				this.wm = this.yf;
+				this.wm = this.zf;
 			}
 
 			Li(a, b, c, d) {
@@ -4186,13 +4184,13 @@
 				e.oc(b.sdp);
 				e.Wg(c);
 				null != d && e.Xb(d.Vb());
-				this.Tc(1, a, e);
+				this.Uc(1, a, e);
 			}
 
 			Ii(a, b) {
 				let c = class_A.ia(32, false);
 				c.Wg(b);
-				this.Tc(4, a, c);
+				this.Uc(4, a, c);
 			}
 
 			Hk() {
@@ -4225,7 +4223,7 @@
 					,
 					c = a.xe;
 				for (; b < c.length;)
-					this.Uf.add(c[b++]);
+					this.Vf.add(c[b++]);
 				null != a.rd && this.vh.add(a.rd);
 				return {
 					wt: a.xe,
@@ -4234,13 +4232,13 @@
 			}
 
 			be() {
-				this.Uf.clear();
+				this.Vf.clear();
 				this.vh.clear();
 			}
 
 			static Mk(a) {
 				try {
-					let b = class_Kc.tf(a.candidate);
+					let b = class_Gc.uf(a.candidate);
 					if ('srflx' == b.ps)
 						return b.sp;
 				}
@@ -4250,23 +4248,23 @@
 			}
 		}
 
-		class class_wa {
+		class class_xa {
 			constructor(a) {
 				this.ol = this.nl = this.ql = null;
-				this.hb = new class_kb;
+				this.hb = new class_qb;
 				this.nd = false;
-				this.Ff = new class_mb;
-				this.Oa = new class_Xa;
-				this.Wa = new class_gb(a);
+				this.Gf = new class_yb;
+				this.Oa = new class_bb;
+				this.Wa = new class_xb(a);
 				this.hb.Qb = a;
-				this.f = class_x.Ha(class_wa.O);
+				this.f = class_x.Ha(class_xa.O);
 				a = class_x.Aa(this.f);
 				this.os = a.get('top-section');
-				this.uf = a.get('popups');
-				this.uf.style.display = 'none';
+				this.vf = a.get('popups');
+				this.vf.style.display = 'none';
 				a.get('gameplay').appendChild(this.hb.f);
 				class_x.replaceWith(a.get('chatbox'), this.Oa.f);
-				class_x.replaceWith(a.get('stats'), this.Ff.f);
+				class_x.replaceWith(a.get('stats'), this.Gf.f);
 				this.ji = a.get('menu');
 				let b = this;
 				this.ji.onclick = function () {
@@ -4274,7 +4272,7 @@
 					b.ji.blur();
 				}
 				;
-				new class_tc(a.get('sound'));
+				new class_pc(a.get('sound'));
 				a.get('settings').onclick = function () {
 					let c = new class_la;
 					c.qb = function () {
@@ -4285,7 +4283,7 @@
 				}
 				;
 				this.Wa.ke = function () {
-					let c = new class_Cb;
+					let c = new class_Fb;
 					c.qb = function (d) {
 						b.cb(null);
 						d && class_H.i(b.ke);
@@ -4295,7 +4293,7 @@
 				}
 				;
 				this.Wa.xq = function () {
-					let c = new class_vb;
+					let c = new class_kb;
 					c.ki = function () {
 						b.cb(null);
 					}
@@ -4306,7 +4304,7 @@
 					}
 					;
 					c.ni = function (d) {
-						d = new class_aa('Error loading stadium', d, ['Ok']);
+						d = new class_ba('Error loading stadium', d, ['Ok']);
 						d.Va = function () {
 							b.cb(null);
 						}
@@ -4356,7 +4354,7 @@
 					c.Gg = 1 + .25 * (b - 1),
 					this.hb.fb.xh = d * window.devicePixelRatio,
 					this.hb.f.style.paddingBottom = '0');
-				a = a.eg();
+				a = a.fg();
 				this.hb.B(a);
 				class_m.Na.nk.qt(a);
 			}
@@ -4368,23 +4366,23 @@
 			}
 
 			vp() {
-				return null != class_wa.Kq;
+				return null != class_xa.Kq;
 			}
 
 			cb(a, b) {
-				class_x.Mf(this.uf);
-				class_wa.Kq = a;
-				null != a ? (this.uf.style.display = 'flex',
-					this.uf.appendChild(a),
-					this.Rl = b) : (this.uf.style.display = 'none',
+				class_x.Nf(this.vf);
+				class_xa.Kq = a;
+				null != a ? (this.vf.style.display = 'flex',
+					this.vf.appendChild(a),
+					this.Rl = b) : (this.vf.style.display = 'none',
 					this.Rl = null);
 			}
 		}
 
-		class class_uc {
+		class class_oc {
 			constructor(a) {
 				this.Lj = new Map;
-				this.ap = new class_Ab(100, 16);
+				this.ap = new class_Eb(100, 16);
 				this.Jg = false;
 				this.Ab = 0;
 				this.qa = a;
@@ -4399,40 +4397,40 @@
 			}
 		}
 
-		class class_ka {
+		class class_ma {
 			constructor() {
 				this.vb = '';
-				this.Jc = this.Lc = 0;
+				this.Jc = this.Mc = 0;
 			}
 
 			Ae() {
 				return JSON.stringify({
 					lat: this.Jc,
-					lon: this.Lc,
+					lon: this.Mc,
 					code: this.vb
 				});
 			}
 
 			static Mh(a) {
-				return class_ka.dg(JSON.parse(a));
+				return class_ma.eg(JSON.parse(a));
 			}
 
-			static dg(a) {
-				let b = new class_ka;
+			static eg(a) {
+				let b = new class_ma;
 				b.Jc = a.lat;
-				b.Lc = a.lon;
+				b.Mc = a.lon;
 				b.vb = a.code.toLowerCase();
 				return b;
 			}
 
 			static Zo() {
 				return class_Y.Kk(class_m.Pe + 'api/geo').then(function (a) {
-					return class_ka.dg(a);
+					return class_ma.eg(a);
 				});
 			}
 		}
 
-		class class_$b {
+		class class_Xb {
 			static nh(a) {
 				return new Promise(function (b, c) {
 						a.onsuccess = function () {
@@ -4447,7 +4445,7 @@
 
 		class class_T {
 			constructor(a) {
-				this.gd = window.performance.now();
+				this.hd = window.performance.now();
 				this.Rg = new Map;
 				this.md = new Map;
 				this.re = 1;
@@ -4455,9 +4453,9 @@
 				this.Tg = 35;
 				this.Md = 0;
 				this.Gg = 1.5;
-				this.Xa = new class_P(0, 0);
+				this.Xa = new class_P_Point(0, 0);
 				this.Uk = false;
-				this.Cd = new class_hc;
+				this.Cd = new class_nc;
 				this.up = a;
 				this.la = window.document.createElement('canvas');
 				this.la.mozOpaque = true;
@@ -4495,10 +4493,10 @@
 				}
 			}
 
-			Qc(a, b) {
+			Rc(a, b) {
 				var c = window.performance.now();
-				let d = (c - this.gd) / 1E3;
-				this.gd = c;
+				let d = (c - this.hd) / 1E3;
+				this.hd = c;
 				this.Rg.clear();
 				this.vs();
 				class_T.Qi(this.c, true);
@@ -4515,7 +4513,7 @@
 					b = this.Tg * this.re;
 					var k = this.xh * this.re
 						,
-						l = c.T.jf
+						l = c.T.kf
 						,
 						n = this.la.width / h;
 					0 < l && n > l && (n = l,
@@ -4528,7 +4526,7 @@
 						if (null == z.J)
 							continue;
 						let K = this.md.get(z.X);
-						null == K && (K = new class_Db,
+						null == K && (K = new class_zb,
 							this.md.set(z.X, K));
 						K.B(z, a);
 						this.Rg.set(z.J, K);
@@ -4568,7 +4566,7 @@
 					this.c.translate(this.la.width / 2, b + (this.la.height - b - k) / 2);
 					this.nr(c);
 					0 >= c.Qa && (this.Cd.B(d),
-						this.Cd.Qc(this.c));
+						this.Cd.Rc(this.c));
 					this.Rg.clear();
 					this.jr(a);
 				}
@@ -4695,7 +4693,7 @@
 						this.c.lineTo(0, c),
 						this.c.stroke(),
 						this.c.beginPath(),
-						this.c.arc(0, 0, a.ad, 0, 2 * Math.PI),
+						this.c.arc(0, 0, a.bd, 0, 2 * Math.PI),
 						this.c.stroke();
 				else if (2 == a.ud) {
 					this.c.strokeStyle = '#E9CC6E';
@@ -4725,7 +4723,7 @@
 					e = function (f, g, h) {
 						d.c.beginPath();
 						d.c.strokeStyle = f;
-						d.c.arc(0, 0, a.ad, -1.5707963267948966, 1.5707963267948966, h);
+						d.c.arc(0, 0, a.bd, -1.5707963267948966, 1.5707963267948966, h);
 						0 != g && (d.c.moveTo(g, -c),
 							d.c.lineTo(g, c));
 						d.c.stroke();
@@ -4891,40 +4889,40 @@
 			}
 		}
 
-		class class_jb {
+		class class_hb {
 			constructor(a) {
-				this.f = class_x.Ha(class_jb.O);
+				this.f = class_x.Ha(class_hb.O);
 				class_x.Aa(this.f).get('features').textContent = a.join(', ');
 			}
 		}
 
-		class class_ra {
+		class class_ya {
 			constructor() {
-				this.ed = new Map;
+				this.fd = new Map;
 			}
 
 			Ra(a, b) {
-				this.ed.set(a, b);
+				this.fd.set(a, b);
 			}
 
 			A(a) {
-				return this.ed.get(a);
+				return this.fd.get(a);
 			}
 
 			ir(a) {
-				this.ed.delete(a);
+				this.fd.delete(a);
 			}
 
 			Yo(a) {
 				let b = []
 					,
-					c = this.ed.keys()
+					c = this.fd.keys()
 					,
 					d = c.next();
 				for (; !d.done;) {
 					let e = d.value;
 					d = c.next();
-					this.ed.get(e) == a && b.push(e);
+					this.fd.get(e) == a && b.push(e);
 				}
 				return b;
 			}
@@ -4932,37 +4930,37 @@
 			Ae() {
 				let a = {}
 					,
-					b = this.ed.keys()
+					b = this.fd.keys()
 					,
 					c = b.next();
 				for (; !c.done;) {
 					let d = c.value;
 					c = b.next();
-					a[d] = this.ed.get(d);
+					a[d] = this.fd.get(d);
 				}
 				return JSON.stringify(a);
 			}
 
-			static dg(a) {
-				let b = new class_ra
+			static eg(a) {
+				let b = new class_ya
 					,
-					c = class_Cc.dn(a)
+					c = class_Dc.dn(a)
 					,
 					d = 0;
 				for (; d < c.length;) {
 					let e = c[d];
 					++d;
-					b.ed.set(e, a[e]);
+					b.fd.set(e, a[e]);
 				}
 				return b;
 			}
 
 			static Mh(a) {
-				return class_ra.dg(JSON.parse(a));
+				return class_ya.eg(JSON.parse(a));
 			}
 
 			static rk() {
-				let a = new class_ra;
+				let a = new class_ya;
 				a.Ra('ArrowUp', 'Up');
 				a.Ra('KeyW', 'Up');
 				a.Ra('ArrowDown', 'Down');
@@ -4982,13 +4980,13 @@
 			}
 		}
 
-		class class_Db {
+		class class_zb {
 			constructor() {
 				this.kg = false;
 				this.D = '';
 				this.wh = 0;
-				this.Vf = '';
-				this.lb = new class_ua;
+				this.Wf = '';
+				this.lb = new class_va_TeamColors;
 				let a = window.document.createElement('canvas');
 				a.width = 64;
 				a.height = 64;
@@ -5027,14 +5025,14 @@
 						d = null != a.Sd ? a.Sd : a.Zb
 						,
 						e = class_m.j.Em.A() && null != d;
-					if (!class_Db.fo(this.lb, c) || !e && a.Mb != this.wh || e && this.Vf != d)
-						class_Db.wo(this.lb, c),
-							e ? (this.Vf = d,
-								this.wh = -1) : (this.Vf = '' + a.Mb,
+					if (!class_zb.fo(this.lb, c) || !e && a.Mb != this.wh || e && this.Wf != d)
+						class_zb.wo(this.lb, c),
+							e ? (this.Wf = d,
+								this.wh = -1) : (this.Wf = '' + a.Mb,
 								this.wh = a.Mb),
-							this.gr(this.Vf);
+							this.gr(this.Wf);
 				}
-				this.Fo = 0 < b.M.Qa || !a.Yb ? 'black' : a.Yb && 0 >= a.Zc && 0 <= a.Bc ? 'white' : 'black';
+				this.Fo = 0 < b.M.Qa || !a.Yb ? 'black' : a.Yb && 0 >= a.$c && 0 <= a.Bc ? 'white' : 'black';
 				a.D != this.D && (this.D = a.D,
 					this.us());
 			}
@@ -5084,7 +5082,7 @@
 			}
 		}
 
-		class class_Cc {
+		class class_Dc {
 			static dn(a) {
 				let b = [];
 				if (null != a) {
@@ -5096,7 +5094,7 @@
 			}
 		}
 
-		class class_wb {
+		class class_lb {
 			static delete(a) {
 				return null == window.indexedDB ? Promise.reject('IndexedDB not supported by browser.') : new Promise(function (b, c) {
 						let d = window.indexedDB.open('stadiums', 1);
@@ -5161,9 +5159,9 @@
 								e.close();
 							}
 							;
-							class_$b.nh(f.objectStore('files').get(a)).then(function (g) {
+							class_Xb.nh(f.objectStore('files').get(a)).then(function (g) {
 								try {
-									let h = new class_q;
+									let h = new class_q_Stadium;
 									h.al(g);
 									b(h);
 								}
@@ -5205,7 +5203,7 @@
 								d.close();
 							}
 							;
-							class_$b.nh(e.objectStore('meta').getAll()).then(a, b);
+							class_Xb.nh(e.objectStore('meta').getAll()).then(a, b);
 						};
 					}
 				);
@@ -5257,12 +5255,12 @@
 							}
 							;
 							try {
-								class_$b.nh(f.objectStore('files').add(a.Ae())).then(function (g) {
+								class_Xb.nh(f.objectStore('files').add(a.Ae())).then(function (g) {
 									g = {
 										name: a.D,
 										id: g
 									};
-									return class_$b.nh(f.objectStore('meta').add(g));
+									return class_Xb.nh(f.objectStore('meta').add(g));
 								}).catch(c);
 							}
 							catch (g) {
@@ -5280,16 +5278,14 @@
 			}
 		}
 
-		/** Full Player */
-		class class_ta {
+		class class_ua_FullPlayer {
 			constructor() {
 				this.Cc = -1;
 				this.tn = null;
-				/** @type {class_u} */
-				this.ea = class_u.Ma;
-				/** @type {class_xa} */
+				/** @type {class_u_Team} */
+				this.ea = class_u_Team.Ma;
 				this.J = null;
-				this.Bc = this.Zc = 0;
+				this.Bc = this.$c = 0;
 				this.Yb = false;
 				this.Ea = this.X = 0;
 				this.D = 'Player';
@@ -5314,7 +5310,7 @@
 				a.mb(this.X);
 				a.m(this.Yb ? 1 : 0);
 				a.hj(this.Bc);
-				a.m(this.Zc);
+				a.m(this.$c);
 				a.m(this.ea.aa);
 				a.hj(null == this.J ? -1 : this.J.Cl);
 			}
@@ -5332,20 +5328,20 @@
 				this.X = a.Cb();
 				this.Yb = 0 != a.F();
 				this.Bc = a.wi();
-				this.Zc = a.F();
-				let c = a.vf();
-				this.ea = 1 == c ? class_u.ga : 2 == c ? class_u.Ca : class_u.Ma;
+				this.$c = a.F();
+				let c = a.wf();
+				this.ea = 1 == c ? class_u_Team.ga : 2 == c ? class_u_Team.Ca : class_u_Team.Ma;
 				a = a.wi();
 				this.J = 0 > a ? null : b[a];
 			}
 
 			Qs() {
-				let a = class_va.Cc
+				let a = class_wa.Cc
 					,
 					b = this.tn;
-				this.Cc != a && (null == b && (this.tn = b = new class_ta),
+				this.Cc != a && (null == b && (this.tn = b = new class_ua_FullPlayer),
 					this.Cc = a,
-					class_ta.Hs(b, this));
+					class_ua_FullPlayer.Hs(b, this));
 				return b;
 			}
 
@@ -5363,22 +5359,22 @@
 				a.X = b.X;
 				a.Yb = b.Yb;
 				a.Bc = b.Bc;
-				a.Zc = b.Zc;
+				a.$c = b.$c;
 				a.J = null == b.J ? null : b.J.uc();
 				a.ea = b.ea;
 			}
 		}
 
-		class class_Ca {
+		class class_Pa {
 		}
 
-		class class_G {
+		class class_G_Vertex {
 			constructor() {
 				this.Dd = 0;
 				this.w = 32;
 				this.h = 63;
 				this.o = 1;
-				this.a = new class_P(0, 0);
+				this.a = new class_P_Point(0, 0);
 			}
 
 			fa(a) {
@@ -5400,7 +5396,7 @@
 			}
 		}
 
-		class class_kc {
+		class class_hc {
 			constructor() {
 				this.Fa = 0;
 				this.zk = this.Ak = false;
@@ -5462,7 +5458,7 @@
 			}
 		}
 
-		class class_Ua {
+		class class_$a {
 			constructor(a) {
 				function b(g, h) {
 					function k() {
@@ -5487,10 +5483,10 @@
 
 				this.oj = [];
 				this.Ps = a;
-				this.Ja = class_x.Ha(class_Ua.Cj);
+				this.Ja = class_x.Ha(class_$a.Cj);
 				let c = class_x.Aa(this.Ja)
 					,
-					d = new class_sb(c);
+					d = new class_gb(c);
 				this.yj = c.get('refresh');
 				this.ln = c.get('join');
 				a = c.get('create');
@@ -5549,26 +5545,26 @@
 
 				this.xn(null);
 				this.yj.disabled = true;
-				class_x.Mf(this.rj);
+				class_x.Nf(this.rj);
 				let b = [];
 				this.oj = [];
-				let c = class_ac.get().then(function (e) {
+				let c = class_$b.get().then(function (e) {
 						return b = e;
 					}, function () {
 						return null;
 					})
 					,
 					d = this;
-				class_Ua.gt(c).then(a, a);
+				class_$a.gt(c).then(a, a);
 			}
 
 			un(a) {
 				this.oj = a;
-				class_ac.nt(this.Ps, a);
+				class_$b.nt(this.Ps, a);
 				a.sort(function (k, l) {
 					return k.We - l.We;
 				});
-				class_x.Mf(this.rj);
+				class_x.Nf(this.rj);
 				let b = 0
 					,
 					c = 0
@@ -5586,13 +5582,13 @@
 					let k = a[h];
 					++h;
 					let l = k.Ed;
-					if (d && l.K >= l.hf)
+					if (d && l.K >= l.jf)
 						continue;
 					if (e && l.Kb)
 						continue;
 					if (f && 0 == l.K)
 						continue;
-					let n = new class_zb(k);
+					let n = new class_Bb(k);
 					n.Ja.ondblclick = function () {
 						class_D.i(g.qn, k);
 					}
@@ -5633,7 +5629,7 @@
 			}
 		}
 
-		class class_I {
+		class class_I_Segment {
 			constructor() {
 				this.Pg = this.Qg = this.xa = null;
 				this.pk = 0;
@@ -5680,7 +5676,7 @@
 				this.w = a.N();
 			}
 
-			Uc(a) {
+			Vc(a) {
 				a *= .017453292519943295;
 				if (0 > a) {
 					a = -a;
@@ -5689,7 +5685,7 @@
 					this.da = b;
 					this.Hc = -this.Hc;
 				}
-				a > class_I.Dn && a < class_I.Cn && (this.wb = 1 / Math.tan(a / 2));
+				a > class_I_Segment.Dn && a < class_I_Segment.Cn && (this.wb = 1 / Math.tan(a / 2));
 			}
 
 			Wo() {
@@ -5706,7 +5702,7 @@
 					a = .5 * (a.y - b.y);
 					b = this.Y.a;
 					let d = this.wb;
-					this.ee = new class_P(b.x + c + -a * d, b.y + a + c * d);
+					this.ee = new class_P_Point(b.x + c + -a * d, b.y + a + c * d);
 					a = this.Y.a;
 					b = this.ee;
 					c = a.x - b.x;
@@ -5714,10 +5710,10 @@
 					this.pk = Math.sqrt(c * c + a * a);
 					c = this.Y.a;
 					a = this.ee;
-					this.Pg = new class_P(-(c.y - a.y), c.x - a.x);
+					this.Pg = new class_P_Point(-(c.y - a.y), c.x - a.x);
 					c = this.ee;
 					a = this.da.a;
-					this.Qg = new class_P(-(c.y - a.y), c.x - a.x);
+					this.Qg = new class_P_Point(-(c.y - a.y), c.x - a.x);
 					0 >= this.wb && (a = c = this.Pg,
 						c.x = -a.x,
 						c.y = -a.y,
@@ -5731,7 +5727,7 @@
 						c = a.x - b.x,
 						a = -(a.y - b.y),
 						b = Math.sqrt(a * a + c * c),
-						this.xa = new class_P(a / b, c / b);
+						this.xa = new class_P_Point(a / b, c / b);
 			}
 		}
 
@@ -5743,8 +5739,7 @@
 			}
 		}
 
-		/** Dynamic disc */
-		class class_xa {
+		class class_sa_DynamicDisc {
 			constructor() {
 				this.jc = -1;
 				this.ic = null;
@@ -5756,9 +5751,9 @@
 				this.ba = 1;
 				this.o = .5;
 				this.V = 10;
-				this.pa = new class_P(0, 0);
-				this.G = new class_P(0, 0);
-				this.a = new class_P(0, 0);
+				this.pa = new class_P_Point(0, 0);
+				this.G = new class_P_Point(0, 0);
+				this.a = new class_P_Point(0, 0);
 			}
 
 			fa(a) {
@@ -5898,12 +5893,12 @@
 			}
 
 			uc() {
-				let a = class_va.Cc
+				let a = class_wa.Cc
 					,
 					b = this.ic;
-				this.jc != a && (null == b && (this.ic = b = new class_xa),
+				this.jc != a && (null == b && (this.ic = b = new class_sa_DynamicDisc),
 					this.jc = a,
-					class_xa.zd(b, this));
+					class_sa_DynamicDisc.zd(b, this));
 				return b;
 			}
 
@@ -5963,12 +5958,12 @@
 			}
 		}
 
-		class class_pb {
+		class class_vb {
 			constructor() {
-				this.f = class_x.Ha(class_pb.O);
+				this.f = class_x.Ha(class_vb.O);
 				let a = class_x.Aa(this.f);
 				this.Eb = a.get('input');
-				this.mf = a.get('ok');
+				this.nf = a.get('ok');
 				let b = this;
 				a.get('cancel').onclick = function () {
 					null != b.Va && b.Va(null);
@@ -5983,7 +5978,7 @@
 					13 == c.keyCode && b.Ic() && null != b.Va && b.Va(b.Eb.value);
 				}
 				;
-				this.mf.onclick = function () {
+				this.nf.onclick = function () {
 					b.Ic() && null != b.Va && b.Va(b.Eb.value);
 				}
 				;
@@ -5996,24 +5991,24 @@
 			}
 
 			B() {
-				this.mf.disabled = !this.Ic();
+				this.nf.disabled = !this.Ic();
 			}
 		}
 
-		class class_ob {
+		class class_rb {
 			constructor(a) {
-				this.f = class_x.Ha(class_ob.O);
+				this.f = class_x.Ha(class_rb.O);
 				var b = class_x.Aa(this.f);
 				this.yh = b.get('cancel');
 				this.mk = b.get('create');
-				this.lf = b.get('name');
+				this.mf = b.get('name');
 				this.Dl = b.get('pass');
 				this.ii = b.get('max-pl');
 				this.Wm = b.get('unlisted');
-				this.lf.maxLength = 40;
-				this.lf.value = a;
+				this.mf.maxLength = 40;
+				this.mf.value = a;
 				let c = this;
-				this.lf.oninput = function () {
+				this.mf.oninput = function () {
 					c.B();
 				}
 				;
@@ -6031,7 +6026,7 @@
 						let d = c.Dl.value;
 						'' == d && (d = null);
 						class_D.i(c.iq, {
-							name: c.lf.value,
+							name: c.mf.value,
 							password: d,
 							Ys: c.ii.selectedIndex + 2,
 							pt: c.Xm
@@ -6054,7 +6049,7 @@
 			}
 
 			Ic() {
-				let a = this.lf.value;
+				let a = this.mf.value;
 				return 40 >= a.length ? 0 < a.length : false;
 			}
 
@@ -6063,12 +6058,11 @@
 			}
 		}
 
-		/** Goal */
-		class class_Eb {
+		class class_Cb_Goal {
 			constructor() {
-				this.ye = class_u.Ma;
-				this.da = new class_P(0, 0);
-				this.Y = new class_P(0, 0);
+				this.ye = class_u_Team.Ma;
+				this.da = new class_P_Point(0, 0);
+				this.Y = new class_P_Point(0, 0);
 			}
 
 			fa(a) {
@@ -6088,33 +6082,32 @@
 				b = this.da;
 				b.x = a.v();
 				b.y = a.v();
-				a = a.vf();
-				this.ye = 1 == a ? class_u.ga : 2 == a ? class_u.Ca : class_u.Ma;
+				a = a.wf();
+				this.ye = 1 == a ? class_u_Team.ga : 2 == a ? class_u_Team.Ca : class_u_Team.Ma;
 			}
 		}
 
-		class class_Ba {
+		class class_Aa {
 			static i(a, b, c) {
 				null != a && a(b, c);
 			}
 		}
 
-		class class_vc {
+		class class_uc {
 		}
 
-		/** Player physics */
-		class class_bc {
+		class class_Vb_PlayerPhysics {
 			constructor() {
-				this.cf = 0;
+				this.df = 0;
 				this.V = 15;
 				this.w = 0;
-				this.pa = new class_P(0, 0);
+				this.pa = new class_P_Point(0, 0);
 				this.ba = this.o = .5;
 				this.Da = .96;
 				this.Ne = .1;
-				this.df = .07;
-				this.ef = .96;
-				this.bf = 5;
+				this.ef = .07;
+				this.ff = .96;
+				this.cf = 5;
 			}
 
 			fa(a) {
@@ -6122,15 +6115,15 @@
 				a.u(this.ba);
 				a.u(this.Da);
 				a.u(this.Ne);
-				a.u(this.df);
 				a.u(this.ef);
-				a.u(this.bf);
+				a.u(this.ff);
+				a.u(this.cf);
 				let b = this.pa;
 				a.u(b.x);
 				a.u(b.y);
 				a.P(this.w);
 				a.u(this.V);
-				a.u(this.cf);
+				a.u(this.df);
 			}
 
 			ka(a) {
@@ -6138,75 +6131,73 @@
 				this.ba = a.v();
 				this.Da = a.v();
 				this.Ne = a.v();
-				this.df = a.v();
 				this.ef = a.v();
-				this.bf = a.v();
+				this.ff = a.v();
+				this.cf = a.v();
 				let b = this.pa;
 				b.x = a.v();
 				b.y = a.v();
 				this.w = a.N();
 				this.V = a.v();
-				this.cf = a.v();
+				this.df = a.v();
 			}
 		}
 
-		class class_Gc {
+		class class_Hc {
 			static qj() {
-				class_p.Ia(class_Fb);
-				class_p.Ia(class_Ia);
-				class_p.Ia(class_Ya);
-				class_p.Ia(class_Ja);
-				class_p.Ia(class_Za);
-				class_p.Ia(class_Ga);
-				class_p.Ia(class_ma);
-				class_p.Ia(class_$a);
-				class_p.Ia(class_ab);
-				class_p.Ia(class_bb);
-				class_p.Ia(class_ya);
-				class_p.Ia(class_Ka);
+				class_p.Ia(class_mb);
+				class_p.Ia(class_Ba);
+				class_p.Ia(class_Sa);
+				class_p.Ia(class_Ca);
+				class_p.Ia(class_Ta);
+				class_p.Ia(class_Da);
+				class_p.Ia(class_ka);
+				class_p.Ia(class_Ua);
+				class_p.Ia(class_Va);
+				class_p.Ia(class_Wa);
+				class_p.Ia(class_qa);
+				class_p.Ia(class_Ea);
 				class_p.Ia(class_fa);
-				class_p.Ia(class_La);
-				class_p.Ia(class_Ma);
-				class_p.Ia(class_cb);
-				class_p.Ia(class_Na);
 				class_p.Ia(class_Fa);
-				class_p.Ia(class_Oa);
-				class_p.Ia(class_db);
-				class_p.Ia(class_Gb);
-				class_p.Ia(class_Pa);
-				class_p.Ia(class_Hb);
-				class_p.Ia(class_Ib);
+				class_p.Ia(class_Ga);
+				class_p.Ia(class_Xa);
+				class_p.Ia(class_Ha);
+				class_p.Ia(class_Ia);
+				class_p.Ia(class_Ja);
+				class_p.Ia(class_Ya);
+				class_p.Ia(class_nb);
+				class_p.Ia(class_Ka);
+				class_p.Ia(class_ob);
+				class_p.Ia(class_pb);
 			}
 		}
 
-		/** Room Manager */
-		class class_Ea {
-			/** @param {class_Ha|class_Rb} a */
+		class class_Ma_RoomManager {
 			constructor(a) {
-				this.Zf = null;
+				this.$f = null;
 				this.Yk = this.Eh = false;
-				this.gd = window.performance.now();
+				this.hd = window.performance.now();
 				this.Od = null;
 				this.Oe = 0;
-				this.co = new class_Ab(3, 1E3);
-				this.Ea = new class_wc;
+				this.co = new class_Eb(3, 1E3);
+				this.Ea = new class_lc;
 				this.Lg = 'Waiting for link';
 				this.Hi = this.tm = false;
 				this.Bd = 0;
 				let b = this;
-				this.$f = new class_cc(a, function (d) {
+				this.ag = new class_bc(a, function (d) {
 						b.l.Oa.Ib(d);
 					}
 				);
 				this.ya = a;
 				a.U.Eo = function (d) {
 					b.tm != d && (b.tm = d,
-						a.sa(class_Na.na(d)));
+						a.sa(class_Ha.na(d)));
 				}
 				;
-				this.l = new class_wa(a.xc);
+				this.l = new class_xa(a.xc);
 				window.top.document.body.classList.add('hb-playing');
-				this.Nh = new class_Xb(this.l, a.U.oa(a.xc).D);
+				this.Nh = new class_Zb(this.l, a.U.oa(a.xc).D);
 				this.Nh.Ai(a.U);
 				this.l.Oa.yl = function_M(this, this.fq);
 				this.l.Oa.ug = function_M(this, this.eq);
@@ -6226,23 +6217,23 @@
 				}
 				;
 				this.l.Wa.Bq = function (d) {
-					a.sa(class_ya.na(1, d));
+					a.sa(class_qa.na(1, d));
 				}
 				;
 				this.l.Wa.tq = function (d) {
-					a.sa(class_ya.na(0, d));
+					a.sa(class_qa.na(0, d));
 				}
 				;
 				this.l.Ag = function (d) {
-					a.sa(class_Ka.na(d));
+					a.sa(class_Ea.na(d));
 				}
 				;
 				this.l.Wa.yq = function () {
-					a.sa(new class_$a);
+					a.sa(new class_Ua);
 				}
 				;
 				this.l.Wa.zq = function () {
-					a.sa(new class_ab);
+					a.sa(new class_Va);
 				}
 				;
 				this.l.Wa.mq = function () {
@@ -6255,27 +6246,27 @@
 				;
 				this.l.Wa.le = function_M(this, this.wr);
 				this.l.Wa.bq = function () {
-					a.sa(new class_cb);
+					a.sa(new class_Xa);
 				}
 				;
 				this.l.Wa.pq = function () {
-					class_Ea.ar(a);
+					class_Ma_RoomManager.ar(a);
 				}
 				;
 				this.l.Wa.Aq = function (d) {
-					a.sa(class_La.na(d));
+					a.sa(class_Fa.na(d));
 				}
 				;
-				this.l.Wa.sf = function (d) {
+				this.l.Wa.tf = function (d) {
 					let e = a.U.oa(d);
 					if (null != e) {
-						let f = new class_rb(e, b.Hi);
+						let f = new class_sb(e, b.Hi);
 						f.qb = function () {
 							b.l.cb(null);
 						}
 						;
 						f.aq = function (g, h) {
-							a.sa(class_Ma.na(g, h));
+							a.sa(class_Ga.na(g, h));
 						}
 						;
 						f.mi = function () {
@@ -6289,7 +6280,7 @@
 				}
 				;
 				this.l.Wa.wq = function () {
-					let d = new class_tb;
+					let d = new class_Jb;
 					d.qb = function () {
 						b.l.cb(null);
 					}
@@ -6305,14 +6296,14 @@
 					else {
 						let d = b.Od.stop();
 						b.Od = null;
-						class_Ea.qm(d);
+						class_Ma_RoomManager.qm(d);
 					}
 					b.l.Wa.Tr(null != b.Od);
 				}
 				;
-				window.requestAnimationFrame(function_M(this, this.nf));
+				window.requestAnimationFrame(function_M(this, this.pf));
 				this.Lh = window.setInterval(function () {
-					b.l.Ff.Am(b.Bd);
+					b.l.Gf.Am(b.Bd);
 					b.Bd = 0;
 				}, 1E3);
 				this.ws = window.setInterval(function () {
@@ -6322,7 +6313,6 @@
 				c = -200 > c ? -200 : 1E3 < c ? 1E3 : c;
 				0 != c && (a.zm(class_m.j.Ad.A()),
 					this.l.Oa.Ib('Extrapolation set to ' + c + ' msec'));
-
 
 				// Exposing global fields begin
 				window.parent.g.getRoomManager = () => getRoomManagerObject(this);
@@ -6411,18 +6401,18 @@
 			}
 
 			cs() {
-				this.Od = new class_nc(this.ya, 3);
+				this.Od = new class_gc(this.ya, 3);
 			}
 
 			Yr(a) {
-				a = new class_Jb(a);
+				a = new class_Ib(a);
 				let b = this;
 				a.qb = function () {
 					b.l.cb(null);
 				}
 				;
 				a.mi = function (c, d, e) {
-					b.ya.sa(class_ma.na(c, d, e));
+					b.ya.sa(class_ka.na(c, d, e));
 					b.l.cb(null);
 				}
 				;
@@ -6443,7 +6433,7 @@
 				this.Ea.ja();
 				window.clearInterval(this.Lh);
 				window.clearInterval(this.ws);
-				window.clearTimeout(this.Zf);
+				window.clearTimeout(this.$f);
 			}
 
 			wr(a) {
@@ -6455,22 +6445,22 @@
 				for (; c < d.length;) {
 					let e = d[c];
 					++c;
-					e.ea == a && b.push(class_fa.na(e.X, class_u.Ma));
+					e.ea == a && b.push(class_fa.na(e.X, class_u_Team.Ma));
 				}
 				for (a = 0; a < b.length;)
 					this.ya.sa(b[a++]);
 			}
 
-			nf() {
-				this.Oe = window.requestAnimationFrame(function_M(this, this.nf));
+			pf() {
+				this.Oe = window.requestAnimationFrame(function_M(this, this.pf));
 				this.Ea.B();
 				this.ya.B();
-				this.Qc();
+				this.Rc();
 			}
 
-			Qc() {
+			Rc() {
 				var a = window.performance.now();
-				1 == class_m.j.Kh.A() && 28.333333333333336 > a - this.gd || (this.gd = a,
+				1 == class_m.j.Kh.A() && 28.333333333333336 > a - this.hd || (this.hd = a,
 					this.Bd++,
 					a = this.ya.U.oa(this.ya.xc),
 				null != a && (this.Hi = a.eb),
@@ -6479,9 +6469,9 @@
 
 			fq(a) {
 				let b = this;
-				this.$f.tf(a) || this.co.uo(function () {
-					let c = new class_Za;
-					c.$c = a;
+				this.ag.uf(a) || this.co.uo(function () {
+					let c = new class_Ta;
+					c.ad = a;
 					b.ya.sa(c);
 				});
 			}
@@ -6489,22 +6479,22 @@
 			eq(a) {
 				this.Eh = a;
 				let b = this;
-				null == this.Zf && (this.Zf = window.setTimeout(function () {
-					b.Zf = null;
+				null == this.$f && (this.$f = window.setTimeout(function () {
+					b.$f = null;
 					b.um(b.Eh);
 				}, 1E3),
 					this.um(this.Eh));
 			}
 
 			um(a) {
-				a != this.Yk && (this.ya.sa(class_Ia.na(a ? 0 : 1)),
+				a != this.Yk && (this.ya.sa(class_Ba.na(a ? 0 : 1)),
 					this.Yk = a);
 			}
 
 			Tm() {
 				if (null != this.ya.U.M) {
-					let a = new class_bb;
-					a.Lf = 120 != this.ya.U.M.Qa;
+					let a = new class_Wa;
+					a.Mf = 120 != this.ya.U.M.Qa;
 					this.ya.sa(a);
 				}
 			}
@@ -6569,7 +6559,7 @@
 
 			static qm(a) {
 				let b = new Date;
-				class_Wb.Br(a, 'HBReplay-' + b.getFullYear() + '-' + class_ca.Kf('' + (b.getMonth() + 1)) + '-' + class_ca.Kf('' + b.getDate()) + '-' + class_ca.Kf('' + b.getHours()) + 'h' + class_ca.Kf('' + b.getMinutes()) + 'm.hbr2');
+				class_Ob.Br(a, 'HBReplay-' + b.getFullYear() + '-' + class_Z.Lf('' + (b.getMonth() + 1)) + '-' + class_Z.Lf('' + b.getDate()) + '-' + class_Z.Lf('' + b.getHours()) + 'h' + class_Z.Lf('' + b.getMinutes()) + 'm.hbr2');
 			}
 
 			static ar(a) {
@@ -6580,21 +6570,21 @@
 				for (var f = 0; f < b.length;) {
 					let g = b[f];
 					++f;
-					g.ea == class_u.Ma && c.push(g.X);
-					g.ea == class_u.ga ? ++d : g.ea == class_u.Ca && ++e;
+					g.ea == class_u_Team.Ma && c.push(g.X);
+					g.ea == class_u_Team.ga ? ++d : g.ea == class_u_Team.Ca && ++e;
 				}
 				f = c.length;
 				0 != f && (b = function () {
 					return c.splice(Math.random() * c.length | 0, 1)[0];
 				}
 					,
-					e == d ? 2 > f || (a.sa(class_fa.na(b(), class_u.ga)),
-						a.sa(class_fa.na(b(), class_u.Ca))) : (d = e > d ? class_u.ga : class_u.Ca,
+					e == d ? 2 > f || (a.sa(class_fa.na(b(), class_u_Team.ga)),
+						a.sa(class_fa.na(b(), class_u_Team.Ca))) : (d = e > d ? class_u_Team.ga : class_u_Team.Ca,
 						a.sa(class_fa.na(b(), d))));
 			}
 		}
 
-		class class_qa {
+		class class_za {
 			constructor(a, b, c, d) {
 				this.D = a;
 				this.As = d;
@@ -6620,7 +6610,7 @@
 			}
 		}
 
-		class class_Kb {
+		class class_Db_Joint {
 			constructor() {
 				this.S = 0;
 				this.we = 1 / 0;
@@ -6715,25 +6705,25 @@
 			}
 		}
 
-		class class_oc {
+		class class_ic {
 			constructor(a) {
-				this.gd = window.performance.now();
+				this.hd = window.performance.now();
 				this.Bd = this.Oe = 0;
 				this.ya = a;
-				this.l = new class_wa(a.xc);
-				let b = new class_Xb(this.l);
+				this.l = new class_xa(a.xc);
+				let b = new class_Zb(this.l);
 				b.Ai(a.U);
 				window.document.addEventListener('keydown', function_M(this, this.rb));
 				window.document.addEventListener('keyup', function_M(this, this.Kd));
-				window.requestAnimationFrame(function_M(this, this.nf));
+				window.requestAnimationFrame(function_M(this, this.pf));
 				let c = this;
 				this.Lh = window.setInterval(function () {
-					c.l.Ff.Am(c.Bd);
+					c.l.Gf.Am(c.Bd);
 					c.Bd = 0;
 				}, 1E3);
 				this.Dm(class_m.j.Ac.A());
 				this.l.f.classList.add('replayer');
-				this.qe = new class_Qa(a);
+				this.qe = new class_La(a);
 				this.qe.vq = function () {
 					b.rs(a.U);
 				}
@@ -6758,16 +6748,16 @@
 				window.clearInterval(this.Lh);
 			}
 
-			nf() {
-				this.Oe = window.requestAnimationFrame(function_M(this, this.nf));
+			pf() {
+				this.Oe = window.requestAnimationFrame(function_M(this, this.pf));
 				this.ya.B();
-				this.Qc();
+				this.Rc();
 			}
 
-			Qc() {
+			Rc() {
 				this.qe.B();
 				let a = window.performance.now();
-				1 == class_m.j.Kh.A() && 28.333333333333336 > a - this.gd || (this.gd = a,
+				1 == class_m.j.Kh.A() && 28.333333333333336 > a - this.hd || (this.hd = a,
 					this.Bd++,
 					this.Dm(class_m.j.Ac.A()),
 				0 < this.ya.Pd || this.l.B(this.ya));
@@ -6828,15 +6818,15 @@
 			}
 		}
 
-		class class_Jb {
+		class class_Ib {
 			constructor(a) {
-				this.f = class_x.Ha(class_Jb.O);
+				this.f = class_x.Ha(class_Ib.O);
 				let b = class_x.Aa(this.f);
-				this.kf = b.get('title');
+				this.lf = b.get('title');
 				this.xi = b.get('reason');
 				this.Qn = b.get('ban-btn');
 				this.Sn = b.get('ban-text');
-				this.af = b.get('kick');
+				this.bf = b.get('kick');
 				this.wd = b.get('close');
 				let c = this;
 				this.Qn.onclick = function () {
@@ -6847,8 +6837,8 @@
 					class_H.i(c.qb);
 				}
 				;
-				this.af.onclick = function () {
-					class_pc.i(c.mi, c.Qb, c.xi.value, c.Xj);
+				this.bf.onclick = function () {
+					class_tc.i(c.mi, c.Qb, c.xi.value, c.Xj);
 				}
 				;
 				this.xi.onkeydown = function (d) {
@@ -6857,7 +6847,7 @@
 				;
 				this.xi.maxLength = 100;
 				this.Qb = a.X;
-				this.kf.textContent = 'Kick ' + a.D;
+				this.lf.textContent = 'Kick ' + a.D;
 				this.Oj(false);
 			}
 
@@ -6867,18 +6857,17 @@
 			}
 		}
 
-		/** Game */
-		class class_ba {
+		class class_ca_Game {
 			constructor() {
 				this.jc = -1;
 				this.ic = null;
-				this.Sb = this.Nb = this.Mc = this.Qa = 0;
-				this.he = class_u.ga;
+				this.Sb = this.Nb = this.Nc = this.Qa = 0;
+				this.he = class_u_Team.ga;
 				this.yc = this.Db = 0;
-				this.ua = new class_eb;
+				this.ua = new class_ab_GameObjects;
 				this.Fa = 0;
 				this.jb = 5;
-				/** @type {class_q} */
+				/** @type {class_q_Stadium} */
 				this.T = null;
 			}
 
@@ -6899,12 +6888,12 @@
 			}
 
 			Tk(a) {
-				if (a.ea == class_u.Ma)
+				if (a.ea == class_u_Team.Ma)
 					a.J = null;
 				else {
 					a.Ea = 0;
 					var b = a.J;
-					null == b && (b = new class_xa,
+					null == b && (b = new class_sa_DynamicDisc,
 						a.J = b,
 						this.ua.H.push(b));
 					var c = this.T.Ld;
@@ -6915,7 +6904,7 @@
 					b.o = c.o;
 					b.h = 39;
 					b.w = a.ea.w | c.w;
-					var d = a.ea == class_u.ga ? this.T.Nd : this.T.vd;
+					var d = a.ea == class_u_Team.ga ? this.T.Nd : this.T.vd;
 					0 == d.length ? (b.a.x = a.ea.Hh * this.T.bc,
 						b.a.y = 0) : (a = b.a,
 						d = d[d.length - 1],
@@ -6950,9 +6939,9 @@
 						if (null != d.J) {
 							0 == (d.Ea & 16) && (d.Yb = false);
 							var e = this.T.Ld;
-							0 < d.Zc && d.Zc--;
+							0 < d.$c && d.$c--;
 							d.Bc < this.Pa.je && d.Bc++;
-							if (d.Yb && 0 >= d.Zc && 0 <= d.Bc) {
+							if (d.Yb && 0 >= d.$c && 0 <= d.Bc) {
 								for (var f = false, g = 0, h = this.ua.H; g < h.length;) {
 									var k = h[g];
 									++g;
@@ -6967,13 +6956,13 @@
 										if (4 > n - k.V - d.J.V) {
 											f = r / n;
 											r = l / n;
-											l = e.bf;
+											l = e.cf;
 											var t = n = k.G;
 											k = k.ba;
 											n.x = t.x + f * l * k;
 											n.y = t.y + r * l * k;
 											t = d.J;
-											k = -e.cf;
+											k = -e.df;
 											n = l = t.G;
 											t = t.ba;
 											l.x = n.x + f * k * t;
@@ -6984,8 +6973,8 @@
 								}
 								f && (null != this.Pa.si && this.Pa.si(d),
 									d.Yb = false,
-									d.Zc = this.Pa.Hd,
-									d.Bc -= this.Pa.fd);
+									d.$c = this.Pa.Hd,
+									d.Bc -= this.Pa.gd);
 							}
 							f = d.Ea;
 							h = g = 0;
@@ -6997,10 +6986,10 @@
 								g /= f,
 								h /= f);
 							f = d.J.G;
-							k = d.Yb ? e.df : e.Ne;
+							k = d.Yb ? e.ef : e.Ne;
 							f.x += g * k;
 							f.y += h * k;
-							d.J.Da = d.Yb ? e.ef : e.Da;
+							d.J.Da = d.Yb ? e.ff : e.Da;
 						}
 					}
 					c = 0;
@@ -7009,8 +6998,8 @@
 					for (g = d.length; e < g;)
 						f = e++,
 							h = d[f],
-						0 != (h.w & 128) && (class_ba.vk[c] = f,
-							f = class_ba.pl[c],
+						0 != (h.w & 128) && (class_ca_Game.vk[c] = f,
+							f = class_ca_Game.pl[c],
 							h = h.a,
 							f.x = h.x,
 							f.y = h.y,
@@ -7025,28 +7014,28 @@
 						0 < b.x * b.x + b.y * b.y && (this.Db = 1);
 					}
 					else if (1 == this.Db) {
-						this.Mc += .016666666666666666;
+						this.Nc += .016666666666666666;
 						for (a = 0; a < b.length;)
 							d = b[a],
 								++a,
 							null != d.J && (d.J.h = 39);
-						d = class_u.Ma;
+						d = class_u_Team.Ma;
 						b = this.ua.H;
 						for (a = 0; a < c && (d = a++,
-							d = this.T.eo(b[class_ba.vk[d]].a, class_ba.pl[d]),
-						d == class_u.Ma);)
+							d = this.T.eo(b[class_ca_Game.vk[d]].a, class_ca_Game.pl[d]),
+						d == class_u_Team.Ma);)
 							;
-						d != class_u.Ma ? (this.Db = 2,
+						d != class_u_Team.Ma ? (this.Db = 2,
 							this.yc = 150,
 							this.he = d,
-							d == class_u.ga ? this.Nb++ : this.Sb++,
+							d == class_u_Team.ga ? this.Nb++ : this.Sb++,
 						null != this.Pa.Yi && this.Pa.Yi(d.Bg),
-						null != this.Pa.hm && this.Pa.hm(d.aa)) : 0 < this.Fa && this.Mc >= 60 * this.Fa && this.Sb != this.Nb && (null != this.Pa.$i && this.Pa.$i(),
+						null != this.Pa.hm && this.Pa.hm(d.aa)) : 0 < this.Fa && this.Nc >= 60 * this.Fa && this.Sb != this.Nb && (null != this.Pa.$i && this.Pa.$i(),
 							this.Mm());
 					}
 					else if (2 == this.Db)
 						this.yc--,
-						0 >= this.yc && (0 < this.jb && (this.Sb >= this.jb || this.Nb >= this.jb) || 0 < this.Fa && this.Mc >= 60 * this.Fa && this.Sb != this.Nb ? this.Mm() : (this.Wk(),
+						0 >= this.yc && (0 < this.jb && (this.Sb >= this.jb || this.Nb >= this.jb) || 0 < this.Fa && this.Nc >= 60 * this.Fa && this.Sb != this.Nb ? this.Mm() : (this.Wk(),
 						null != this.Pa.Lq && this.Pa.Lq()));
 					else if (3 == this.Db && (this.yc--,
 					0 >= this.yc && (b = this.Pa,
@@ -7058,7 +7047,7 @@
 								++a,
 								d.J = null,
 								d.Mb = 0;
-						null != b.Gf && b.Gf(null);
+						null != b.Hf && b.Hf(null);
 					}
 				}
 			}
@@ -7066,13 +7055,13 @@
 			Mm() {
 				this.yc = 300;
 				this.Db = 3;
-				null != this.Pa.Zi && this.Pa.Zi(this.Sb > this.Nb ? class_u.ga : class_u.Ca);
+				null != this.Pa.Zi && this.Pa.Zi(this.Sb > this.Nb ? class_u_Team.ga : class_u_Team.Ca);
 			}
 
 			Wk() {
 				let a = this.Pa.K;
 				this.Db = 0;
-				for (var b = this.T.H, c = this.ua.H, d = 0, e = this.T.zf ? b.length : 1; d < e;) {
+				for (var b = this.T.H, c = this.ua.H, d = 0, e = this.T.Af ? b.length : 1; d < e;) {
 					var f = d++;
 					b[f].Sk(c[f]);
 				}
@@ -7082,13 +7071,13 @@
 						++c,
 						this.Tk(d),
 						e = d.ea,
-					e != class_u.Ma) {
+					e != class_u_Team.Ma) {
 						f = d.J.a;
 						var g = this.T
 							,
 							h = b[e.aa]
 							,
-							k = e == class_u.ga ? g.Nd : g.vd;
+							k = e == class_u_Team.ga ? g.Nd : g.vd;
 						0 == k.length ? (k = h + 1 >> 1,
 						0 == (h & 1) && (k = -k),
 							g = g.mc * e.Hh,
@@ -7109,7 +7098,7 @@
 				a.P(this.Db);
 				a.P(this.Sb);
 				a.P(this.Nb);
-				a.u(this.Mc);
+				a.u(this.Nc);
 				a.P(this.Qa);
 				a.m(this.he.aa);
 			}
@@ -7120,10 +7109,10 @@
 				this.Db = a.N();
 				this.Sb = a.N();
 				this.Nb = a.N();
-				this.Mc = a.v();
+				this.Nc = a.v();
 				this.Qa = a.N();
-				a = a.vf();
-				this.he = 1 == a ? class_u.ga : 2 == a ? class_u.Ca : class_u.Ma;
+				a = a.wf();
+				this.he = 1 == a ? class_u_Team.ga : 2 == a ? class_u_Team.Ca : class_u_Team.Ma;
 				this.Pa = b;
 				this.jb = b.jb;
 				this.Fa = b.Fa;
@@ -7135,12 +7124,12 @@
 			}
 
 			uc() {
-				let a = class_va.Cc
+				let a = class_wa.Cc
 					,
 					b = this.ic;
-				this.jc != a && (null == b && (this.ic = b = new class_ba),
+				this.jc != a && (null == b && (this.ic = b = new class_ca_Game),
 					this.jc = a,
-					class_ba.zd(b, this));
+					class_ca_Game.zd(b, this));
 				return b;
 			}
 
@@ -7153,16 +7142,16 @@
 				a.Db = b.Db;
 				a.Sb = b.Sb;
 				a.Nb = b.Nb;
-				a.Mc = b.Mc;
+				a.Nc = b.Nc;
 				a.Qa = b.Qa;
 				a.T = b.T;
 				a.he = b.he;
 			}
 		}
 
-		class class_aa {
+		class class_ba {
 			constructor(a, b, c) {
-				this.f = class_x.Ha(class_aa.O);
+				this.f = class_x.Ha(class_ba.O);
 				var d = class_x.Aa(this.f);
 				d.get('ok');
 				d.get('cancel');
@@ -7192,12 +7181,12 @@
 			}
 		}
 
-		class class_Xa {
+		class class_bb {
 			constructor() {
-				this.gg = this.Yh = false;
-				this.f = class_x.Ha(class_Xa.O);
+				this.$e = this.Yh = false;
+				this.f = class_x.Ha(class_bb.O);
 				let a = class_x.Aa(this.f);
-				this.hd = a.get('log');
+				this.Lc = a.get('log');
 				this.ci = a.get('log-contents');
 				this.Za = a.get('input');
 				this.Za.maxLength = 140;
@@ -7207,8 +7196,8 @@
 						h.preventDefault();
 						class_m.j.gk.ta(function_fc(function_fc(e + (f - h.y))));
 						b.Za.blur();
-						b.gg = false;
-						b.wf();
+						b.$e = false;
+						b.xf();
 					}
 
 					b.f.classList.add('dragging');
@@ -7228,7 +7217,7 @@
 					window.document.addEventListener('mouseup', g, false);
 				}
 				;
-				this.Fc = new class_dc(a.get('autocompletebox'), function (c, d) {
+				this.Fc = new class_Wb(a.get('autocompletebox'), function (c, d) {
 						b.Za.value = c;
 						b.Za.setSelectionRange(d, d);
 					}
@@ -7260,29 +7249,36 @@
 				this.Za.onfocus = function () {
 					null != b.ug && b.ug(true);
 					b.Yh = true;
-					b.wf();
+					b.xf();
 				}
 				;
 				this.Za.onblur = function () {
 					null != b.ug && b.ug(false);
 					b.Yh = false;
 					b.Fc.Uh();
-					b.wf();
+					b.xf();
 				}
 				;
 				this.Za.oninput = function () {
 					b.Fc.ao(b.Za.value, b.Za.selectionStart);
 				}
 				;
-				this.wf();
+				this.xf();
 			}
 
+			/// Last changes
 			ns() {
-				this.gg = !this.gg;
-				this.wf();
+				this.$e = !this.$e;
+				this.xf();
+				if (!this.$e) {
+					let a = this.Lc;
+					window.setTimeout(function () {
+						a.scrollTop = a.scrollHeight;
+					}, 200);
+				}
 			}
 
-			wf() {
+			xf() {
 				let a = '' + this.kk();
 				this.f.style.height = a + 'px';
 			}
@@ -7294,7 +7290,7 @@
 					a <= b && (a = b);
 				}
 				else
-					this.gg && (a = 0);
+					this.$e && (a = 0);
 				return a;
 			}
 
@@ -7322,10 +7318,10 @@
 			}
 
 			dl(a) {
-				var b = this.hd.clientHeight;
-				b = this.hd.scrollTop + b - this.hd.scrollHeight >= .5 * -b || !class_Xa.tp(this.hd);
+				var b = this.Lc.clientHeight;
+				b = this.Lc.scrollTop + b - this.Lc.scrollHeight >= .5 * -b || !class_bb.tp(this.Lc);
 				this.ci.appendChild(a);
-				b && (this.hd.scrollTop = this.hd.scrollHeight);
+				b && (this.Lc.scrollTop = this.Lc.scrollHeight);
 				for (a = b ? 50 : 100; this.ci.childElementCount > a;)
 					this.ci.firstElementChild.remove();
 			}
@@ -7346,8 +7342,8 @@
 			}
 		}
 
-		class class_Kc {
-			static tf(a) {
+		class class_Gc {
+			static uf(a) {
 				a = a.split(' ');
 				let b = a[4];
 				if ('typ' != a[6])
@@ -7359,7 +7355,7 @@
 			}
 		}
 
-		class class_ua {
+		class class_va_TeamColors {
 			constructor() {
 				this.od = 16777215;
 				this.gb = [];
@@ -7390,13 +7386,13 @@
 			}
 		}
 
-		class class_Ub {
+		class class_Nb {
 			static i(a, b, c, d, e) {
 				null != a && a(b, c, d, e);
 			}
 		}
 
-		class class_dc {
+		class class_Wb {
 			constructor(a, b) {
 				this.Vj = [];
 				this.hr = /[#@][^\s@#]*$/;
@@ -7416,7 +7412,7 @@
 						,
 						d = class_O.substr(c, 1, null).split('')
 						,
-						e = class_dc.Po
+						e = class_Wb.Po
 						,
 						f = Array(d.length);
 					let g = 0
@@ -7456,14 +7452,14 @@
 			}
 
 			Dk(a) {
-				a = this.Vk ? '#' + a.aa : '@' + class_ca.replace(a.D, ' ', '_');
+				a = this.Vk ? '#' + a.aa : '@' + class_Z.replace(a.D, ' ', '_');
 				this.rq(class_O.substr(this.fm, 0, this.Bi) + a + ' ' + class_O.substr(this.fm, this.Bi + this.vr, null), this.Bi + a.length + 1);
 			}
 
 			ej(a) {
 				var b = null != a && 0 != a.length;
-				this.Pb.hidden || class_x.Mf(this.Pb);
-				this.cd = null;
+				this.Pb.hidden || class_x.Nf(this.Pb);
+				this.dd = null;
 				this.Pb.hidden = !b;
 				if (b) {
 					var c = this;
@@ -7486,21 +7482,21 @@
 							Ja: f
 						});
 					}
-					this.cd = b;
-					this.cd[0].Ja.classList.toggle('selected', true);
+					this.dd = b;
+					this.dd[0].Ja.classList.toggle('selected', true);
 					this.zc = 0;
 				}
 			}
 
 			dk(a) {
-				if (null != this.cd) {
+				if (null != this.dd) {
 					var b = this.zc;
 					this.zc += a;
-					a = this.cd.length - 1;
+					a = this.dd.length - 1;
 					0 > this.zc ? this.zc = a : this.zc > a && (this.zc = 0);
-					a = this.cd[this.zc];
+					a = this.dd[this.zc];
 					b != this.zc && (a.Ja.classList.toggle('selected', true),
-						this.cd[b].Ja.classList.toggle('selected', false));
+						this.dd[b].Ja.classList.toggle('selected', false));
 					a = a.Ja;
 					b = a.offsetTop;
 					a = b + a.offsetHeight;
@@ -7510,7 +7506,7 @@
 			}
 
 			Ko() {
-				null != this.cd && (this.Dk(this.cd[this.zc].item),
+				null != this.dd && (this.Dk(this.dd[this.zc].item),
 					this.Uh());
 			}
 
@@ -7519,7 +7515,7 @@
 			}
 		}
 
-		class class_Qa {
+		class class_La {
 			constructor(a) {
 				function b() {
 					let t = g[f];
@@ -7528,7 +7524,7 @@
 				}
 
 				this.jg = false;
-				this.f = class_x.Ha(class_Qa.O);
+				this.f = class_x.Ha(class_La.O);
 				let c = class_x.Aa(this.f);
 				this.Ci = a;
 				let d = this;
@@ -7584,7 +7580,7 @@
 					k.appendChild(z);
 				}
 				k.onclick = function (t) {
-					a.Fr((t.pageX - k.offsetLeft) / k.clientWidth * a.qh * a.xf);
+					a.Fr((t.pageX - k.offsetLeft) / k.clientWidth * a.qh * a.yf);
 					d.jg || (d.jg = true,
 						d.vq(),
 						d.xl());
@@ -7592,7 +7588,7 @@
 				;
 				k.onmousemove = function (t) {
 					t = (t.pageX - k.offsetLeft) / k.clientWidth;
-					l.textContent = class_Qa.ll(a.xf * a.qh * t);
+					l.textContent = class_La.ll(a.yf * a.qh * t);
 					return l.style.left = 'calc(' + 100 * t + '% - 30px)';
 				}
 				;
@@ -7603,7 +7599,7 @@
 			}
 
 			B() {
-				this.hs.textContent = class_Qa.ll(this.Ci.Tb);
+				this.hs.textContent = class_La.ll(this.Ci.Tb);
 				this.$q.style.width = 100 * this.Ci.$o() + '%';
 				!this.jg || 0 < this.Ci.Pd || (this.jg = false,
 					this.uq());
@@ -7611,14 +7607,13 @@
 
 			static ll(a) {
 				a = a / 1E3 | 0;
-				return (a / 60 | 0) + ':' + class_ca.Kf(class_Q.Fe(a % 60));
+				return (a / 60 | 0) + ':' + class_Z.Lf(class_Q.Fe(a % 60));
 			}
 		}
 
-		/** Team */
-		class class_u {
+		class class_u_Team {
 			constructor(a, b, c, d, e, f, g, h) {
-				/** @type {class_u} */
+				/** @type {class_u_Team} */
 				this.Bg = null;
 				this.aa = a;
 				this.S = b;
@@ -7627,12 +7622,12 @@
 				this.D = e;
 				this.Co = f;
 				this.w = h;
-				this.Om = new class_ua;
+				this.Om = new class_va_TeamColors;
 				this.Om.gb.push(b);
 			}
 		}
 
-		class class_Dc {
+		class class_Fc {
 			constructor(a) {
 				this.current = 0;
 				this.Es = a;
@@ -7643,7 +7638,7 @@
 			}
 		}
 
-		class class_Ob {
+		class class_Pb {
 			constructor(a, b) {
 				this.Ja = a;
 				this.value = b;
@@ -7656,18 +7651,18 @@
 			}
 		}
 
-		class class_cc {
+		class class_bc {
 			constructor(a, b) {
 				this.ya = a;
 				this.ca = b;
 			}
 
-			tf(a) {
+			uf(a) {
 				if ('/' != a.charAt(0))
 					return false;
 				if (1 == a.length)
 					return true;
-				a = class_ca.mt(class_O.substr(a, 1, null)).split(' ');
+				a = class_Z.mt(class_O.substr(a, 1, null)).split(' ');
 				let b = a[0]
 					,
 					c = this;
@@ -7679,7 +7674,7 @@
 					case 'checksum':
 						var d = this.ya.U.T;
 						a = d.D;
-						d.$e() ? this.ca('Current stadium is original: "' + a + '"') : (d = class_ca.eh(d.hk(), 8),
+						d.af() ? this.ca('Current stadium is original: "' + a + '"') : (d = class_Z.eh(d.hk(), 8),
 							this.ca('Stadium: "' + a + '" (checksum: ' + d + ')'));
 						break;
 					case 'clear_avatar':
@@ -7696,7 +7691,7 @@
 						break;
 					case 'colors':
 						try {
-							d = class_cc.Dq(a),
+							d = class_bc.Dq(a),
 								this.ya.sa(d);
 						}
 						catch (g) {
@@ -7708,7 +7703,7 @@
 						2 == a.length ? (a = class_Q.parseInt(a[1]),
 							null != a && -200 <= a && 1E3 >= a ? (class_m.j.Ad.ta(a),
 								this.ya.zm(a),
-								this.ca('Extrapolation set to ' + a + ' msec')) : this.ca('Extrapolation must be a value between -200 and 50 milliseconds')) : this.ca('Extrapolation requires a value in milliseconds.');
+								this.ca('Extrapolation set to ' + a + ' msec')) : this.ca('Extrapolation must be a value between -200 and 1000 milliseconds')) : this.ca('Extrapolation requires a value in milliseconds.');
 						break;
 					case 'handicap':
 						2 == a.length ? (a = class_Q.parseInt(a[1]),
@@ -7722,7 +7717,7 @@
 							d = class_Q.parseInt(a[1]);
 							var e = class_Q.parseInt(a[2]);
 							a = class_Q.parseInt(a[3]);
-							null == d || null == e || null == a ? this.ca('Invalid arguments') : this.ya.sa(class_Pa.na(d, e, a));
+							null == d || null == e || null == a ? this.ca('Invalid arguments') : this.ya.sa(class_Ka.na(d, e, a));
 						}
 						break;
 					case 'recaptcha':
@@ -7757,8 +7752,8 @@
 						break;
 					case 'store':
 						let f = this.ya.U.T;
-						f.$e() ? this.ca('Can\'t store default stadium.') : class_wb.kt().then(function () {
-							return class_wb.add(f);
+						f.af() ? this.ca('Can\'t store default stadium.') : class_lb.kt().then(function () {
+							return class_lb.add(f);
 						}).then(function () {
 							c.ca('Stadium stored');
 						}, function () {
@@ -7772,9 +7767,9 @@
 			}
 
 			ym(a) {
-				null != a && (a = class_ha.Xc(a, 2));
+				null != a && (a = class_ha.Yc(a, 2));
 				class_m.j.uh.ta(a);
-				this.ya.sa(class_Oa.na(a));
+				this.ya.sa(class_Ja.na(a));
 			}
 
 			static Dq(a) {
@@ -7782,18 +7777,18 @@
 					throw class_v.C('Not enough arguments');
 				if (7 < a.length)
 					throw class_v.C('Too many arguments');
-				let b = new class_db
+				let b = new class_Ya
 					,
-					c = new class_ua;
+					c = new class_va_TeamColors;
 				b.ah = c;
 				switch (a[1]) {
 					case 'blue':
-						c.gb = [class_u.Ca.S];
-						b.ea = class_u.Ca;
+						c.gb = [class_u_Team.Ca.S];
+						b.ea = class_u_Team.Ca;
 						break;
 					case 'red':
-						c.gb = [class_u.ga.S];
-						b.ea = class_u.ga;
+						c.gb = [class_u_Team.ga.S];
+						b.ea = class_u_Team.ga;
 						break;
 					default:
 						throw class_v.C('First argument must be either "red" or "blue"');
@@ -7814,7 +7809,7 @@
 			}
 		}
 
-		class class_tc {
+		class class_pc {
 			constructor(a) {
 				this.f = a;
 				let b = class_x.Aa(a);
@@ -7873,7 +7868,7 @@
 		class class_m {
 		}
 
-		class class_ac {
+		class class_$b {
 			static parse(a) {
 				a.F();
 				let b = [];
@@ -7884,7 +7879,7 @@
 					try {
 						let e = new class_Qb;
 						e.ka(new class_J(new DataView(d), false));
-						let f = new class_xc;
+						let f = new class_vc;
 						f.Ed = e;
 						f.aa = c;
 						b.push(f);
@@ -7901,20 +7896,20 @@
 
 			static nt(a, b) {
 				let c = a.Jc;
-				a = a.Lc;
+				a = a.Mc;
 				let d = 0;
 				for (; d < b.length;) {
 					let e = b[d];
 					++d;
 					let f = e.Ed;
-					e.We = 6378 * class_ac.Rs(.017453292519943295 * f.Jc, .017453292519943295 * f.Lc, .017453292519943295 * c, .017453292519943295 * a);
+					e.We = 6378 * class_$b.Rs(.017453292519943295 * f.Jc, .017453292519943295 * f.Mc, .017453292519943295 * c, .017453292519943295 * a);
 					isFinite(e.We) || (e.We = 22E3);
 				}
 			}
 
 			static get() {
 				return class_Y.A(class_m.Pe + 'api/list', 'arraybuffer').then(function (a) {
-					return class_ac.parse(new class_J(new DataView(a), false));
+					return class_$b.parse(new class_J(new DataView(a), false));
 				});
 			}
 		}
@@ -7924,8 +7919,8 @@
 			}
 
 			ck() {
-				this.D = class_ha.Xc(this.D, 40);
-				this.vb = class_ha.Xc(this.vb, 3);
+				this.D = class_ha.Yc(this.D, 40);
+				this.vb = class_ha.Yc(this.vb, 3);
 			}
 
 			fa(a) {
@@ -7935,9 +7930,9 @@
 				a.an(this.D);
 				a.an(this.vb);
 				a.gj(this.Jc);
-				a.gj(this.Lc);
+				a.gj(this.Mc);
 				a.m(this.Kb ? 1 : 0);
-				a.m(this.hf);
+				a.m(this.jf);
 				a.m(this.K);
 				a.Ta = false;
 			}
@@ -7948,18 +7943,18 @@
 				this.D = a.Yl();
 				this.vb = a.Yl();
 				this.Jc = a.vi();
-				this.Lc = a.vi();
+				this.Mc = a.vi();
 				this.Kb = 0 != a.F();
-				this.hf = a.F();
+				this.jf = a.F();
 				this.K = a.F();
 				a.Ta = false;
-				if (30 < this.K || 30 < this.hf)
+				if (30 < this.K || 30 < this.jf)
 					throw class_v.C(null);
 				this.ck();
 			}
 		}
 
-		class class_Ec {
+		class class_Ac {
 			constructor(a, b) {
 				this.x = a;
 				this.y = b;
@@ -7998,12 +7993,12 @@
 			}
 
 			static Ia(a) {
-				a.Fn = class_p.If;
+				a.Fn = class_p.Jf;
 				if (null == a.za)
 					throw class_v.C('Class doesn\'t have a config');
-				a.prototype.Jf = a.za;
-				class_p.hn.set(class_p.If, a);
-				class_p.If++;
+				a.prototype.Kf = a.za;
+				class_p.hn.set(class_p.Jf, a);
+				class_p.Jf++;
 			}
 
 			static vj(a, b) {
@@ -8024,7 +8019,7 @@
 			}
 		}
 
-		class class_Jc {
+		class class_Kc {
 			static description(a) {
 				switch (a) {
 					case 4001:
@@ -8043,9 +8038,9 @@
 			}
 		}
 
-		class class_Cb {
+		class class_Fb {
 			constructor() {
-				this.f = class_x.Ha(class_Cb.O);
+				this.f = class_x.Ha(class_Fb.O);
 				let a = class_x.Aa(this.f)
 					,
 					b = this;
@@ -8059,8 +8054,8 @@
 			}
 		}
 
-		class class_Ac {
-			static tf(a) {
+		class class_Bc {
+			static uf(a) {
 				let b = new class_mc('([^&=]+)=?([^&]*)', 'g');
 				a = a.substring(1);
 				var c = 0;
@@ -8077,7 +8072,7 @@
 			}
 
 			static A() {
-				return class_Ac.tf(window.top.location.search);
+				return class_Bc.uf(window.top.location.search);
 			}
 		}
 
@@ -8184,17 +8179,17 @@
 			}
 
 			oc(a) {
-				this.mb(class_A.Wf(a));
+				this.mb(class_A.Xf(a));
 				this.Xg(a);
 			}
 
 			Fb(a) {
-				null == a ? this.mb(0) : (this.mb(class_A.Wf(a) + 1),
+				null == a ? this.mb(0) : (this.mb(class_A.Xf(a) + 1),
 					this.Xg(a));
 			}
 
 			an(a) {
-				let b = class_A.Wf(a);
+				let b = class_A.Xf(a);
 				if (255 < b)
 					throw class_v.C(null);
 				this.m(b);
@@ -8207,7 +8202,7 @@
 
 			Xg(a) {
 				let b = this.a;
-				this.tc(b + class_A.Wf(a));
+				this.tc(b + class_A.Xf(a));
 				let c = a.length
 					,
 					d = 0;
@@ -8299,7 +8294,7 @@
 				throw class_v.C('Cannot calculate length of UTF8 character: charCode (' + a + ') is too large (>= 0x80000000)');
 			}
 
-			static Wf(a) {
+			static Xf(a) {
 				let b = 0
 					,
 					c = a.length
@@ -8316,42 +8311,41 @@
 			}
 		}
 
-		class class_xc {
+		class class_vc {
 			constructor() {
 			}
 		}
 
-		class class_Z {
+		class class_aa {
 			constructor(a) {
-				let b = new class_aa('Only humans', '', []);
+				let b = new class_ba('Only humans', '', []);
 				this.f = b.f;
 				b.ce.style.minHeight = '78px';
 				let c = this;
-				class_ub.Ep().then(function (d) {
-					null == class_Z.Ig && (class_Z.Ig = window.document.createElement('div'),
-						b.ce.appendChild(class_Z.Ig),
-						class_Z.cr = d.render(class_Z.Ig, {
+				class_Kb.Ep().then(function (d) {
+					null == class_aa.Ig && (class_aa.Ig = window.document.createElement('div'),
+						b.ce.appendChild(class_aa.Ig),
+						class_aa.cr = d.render(class_aa.Ig, {
 							sitekey: a,
 							callback: function (e) {
-								class_D.i(class_Z.$l, e);
+								class_D.i(class_aa.$l, e);
 							},
 							theme: 'dark'
 						}));
-					d.reset(class_Z.cr);
-					class_Z.$l = function (e) {
+					d.reset(class_aa.cr);
+					class_aa.$l = function (e) {
 						window.setTimeout(function () {
 							class_D.i(c.Va, e);
 						}, 1E3);
-						class_Z.$l = null;
+						class_aa.$l = null;
 					}
 					;
-					b.ce.appendChild(class_Z.Ig);
+					b.ce.appendChild(class_aa.Ig);
 				});
 			}
 		}
 
-		/** Stadium */
-		class class_q {
+		class class_q_Stadium {
 			constructor() {
 				this.L = [];
 				this.W = [];
@@ -8361,15 +8355,15 @@
 				this.pb = [];
 				this.Nd = [];
 				this.vd = [];
-				this.Ld = new class_bc;
+				this.Ld = new class_Vb_PlayerPhysics;
 				this.Gh = 255;
-				this.Re = this.jf = 0;
-				this.Xf = true;
-				this.zf = false;
+				this.Re = this.kf = 0;
+				this.Yf = true;
+				this.Af = false;
 			}
 
 			pg() {
-				let a = new class_za;
+				let a = new class_ra_StadiumDisc;
 				a.S = 16777215;
 				a.h = 63;
 				a.w = 193;
@@ -8382,12 +8376,12 @@
 
 			fa(a) {
 				a.m(this.Gh);
-				if (!this.$e()) {
+				if (!this.af()) {
 					a.Fb(this.D);
 					a.P(this.ud);
 					a.u(this.ae);
 					a.u(this.$d);
-					a.u(this.ad);
+					a.u(this.bd);
 					a.u(this.Gc);
 					a.u(this.Qe);
 					a.P(this.td);
@@ -8395,10 +8389,10 @@
 					a.u(this.sc);
 					a.u(this.mc);
 					this.Ld.fa(a);
-					a.Wb(this.jf);
+					a.Wb(this.kf);
 					a.m(this.Re);
-					a.m(this.Xf ? 1 : 0);
-					a.m(this.zf ? 1 : 0);
+					a.m(this.Yf ? 1 : 0);
+					a.m(this.Af ? 1 : 0);
 					a.m(this.L.length);
 					for (var b = 0, c = this.L.length; b < c;) {
 						var d = b++;
@@ -8452,7 +8446,7 @@
 						h = 0;
 					for (; h < g;) {
 						++h;
-						let k = new class_P(0, 0);
+						let k = new class_P_Point(0, 0);
 						k.x = a.v();
 						k.y = a.v();
 						f.push(k);
@@ -8464,7 +8458,7 @@
 				this.ud = a.N();
 				this.ae = a.v();
 				this.$d = a.v();
-				this.ad = a.v();
+				this.bd = a.v();
 				this.Gc = a.v();
 				this.Qe = a.v();
 				this.td = a.N();
@@ -8472,13 +8466,13 @@
 				this.sc = a.v();
 				this.mc = a.v();
 				this.Ld.ka(a);
-				this.jf = a.Rb();
+				this.kf = a.Rb();
 				this.Re = a.F();
-				this.Xf = 0 != a.F();
-				this.zf = 0 != a.F();
+				this.Yf = 0 != a.F();
+				this.Af = 0 != a.F();
 				this.L = [];
 				for (var c = a.F(), d = 0; d < c;) {
-					var e = new class_G;
+					var e = new class_G_Vertex;
 					e.ka(a);
 					e.Dd = d++;
 					this.L.push(e);
@@ -8487,35 +8481,35 @@
 				c = a.F();
 				for (d = 0; d < c;)
 					++d,
-						e = new class_I,
+						e = new class_I_Segment,
 						e.ka(a, this.L),
 						this.W.push(e);
 				this.ra = [];
 				c = a.F();
 				for (d = 0; d < c;)
 					++d,
-						e = new class_R,
+						e = new class_R_Plane,
 						e.ka(a),
 						this.ra.push(e);
 				this.vc = [];
 				c = a.F();
 				for (d = 0; d < c;)
 					++d,
-						e = new class_Eb,
+						e = new class_Cb_Goal,
 						e.ka(a),
 						this.vc.push(e);
 				this.H = [];
 				c = a.F();
 				for (d = 0; d < c;)
 					++d,
-						e = new class_za,
+						e = new class_ra_StadiumDisc,
 						e.ka(a),
 						this.H.push(e);
 				this.pb = [];
 				c = a.F();
 				for (d = 0; d < c;)
 					++d,
-						e = new class_Kb,
+						e = new class_Db_Joint,
 						e.ka(a),
 						this.pb.push(e);
 				this.Nd = b();
@@ -8526,7 +8520,7 @@
 			}
 
 			Zm() {
-				return 0 >= this.H.length || 0 > this.Gc || 0 > this.ad || 0 > this.Ld.V ? false : true;
+				return 0 >= this.H.length || 0 > this.Gc || 0 > this.bd || 0 > this.Ld.V ? false : true;
 			}
 
 			oe() {
@@ -8537,7 +8531,7 @@
 					b[a++].oe();
 			}
 
-			$e() {
+			af() {
 				return 255 != this.Gh;
 			}
 
@@ -8548,7 +8542,7 @@
 
 			Mp(a) {
 				a = a.canBeStored;
-				return null != a ? class_w.I(a, Fc) : true;
+				return null != a ? class_w.I(a, Cc) : true;
 			}
 
 			Ae() {
@@ -8556,7 +8550,7 @@
 			}
 
 			ls() {
-				if (!this.Xf) {
+				if (!this.Yf) {
 					//throw class_v.C(0);
 					console.debug(getStadiumObject(this).name + ' canBeStored bypassed');
 				}
@@ -8565,30 +8559,30 @@
 					var f = e[d];
 					++d;
 					f.Dd = b++;
-					c.push(class_q.zs(f));
+					c.push(class_q_Stadium.zs(f));
 				}
-				d = new class_I;
+				d = new class_I_Segment;
 				b = [];
 				e = 0;
 				for (f = this.W; e < f.length;)
-					b.push(class_q.Gr(f[e++], d));
+					b.push(class_q_Stadium.Gr(f[e++], d));
 				d = [];
 				e = 0;
 				for (f = this.ra; e < f.length;)
-					d.push(class_q.Gq(f[e++]));
+					d.push(class_q_Stadium.Gq(f[e++]));
 				e = [];
 				f = 0;
 				for (var g = this.vc; f < g.length;)
-					e.push(class_q.cp(g[f++]));
-				f = class_q.Jq(this.Ld);
-				var h = new class_za;
+					e.push(class_q_Stadium.cp(g[f++]));
+				f = class_q_Stadium.Jq(this.Ld);
+				var h = new class_ra_StadiumDisc;
 				g = [];
 				for (var k = 0, l = this.H; k < l.length;)
-					g.push(class_q.Go(l[k++], h));
+					g.push(class_q_Stadium.Go(l[k++], h));
 				h = [];
 				k = 0;
 				for (l = this.pb; k < l.length;)
-					h.push(class_q.xp(l[k++]));
+					h.push(class_q_Stadium.xp(l[k++]));
 				k = [];
 				l = 0;
 				for (var n = this.Nd; l < n.length;) {
@@ -8616,13 +8610,13 @@
 					playerPhysics: f,
 					ballPhysics: 'disc0'
 				};
-				class_q.ma(c, 'maxViewWidth', this.jf, 0);
-				class_q.ma(c, 'cameraFollow', 1 == this.Re ? 'player' : '', '');
-				class_q.ma(c, 'spawnDistance', this.mc, 200);
+				class_q_Stadium.ma(c, 'maxViewWidth', this.kf, 0);
+				class_q_Stadium.ma(c, 'cameraFollow', 1 == this.Re ? 'player' : '', '');
+				class_q_Stadium.ma(c, 'spawnDistance', this.mc, 200);
 				0 != h.length && (c.joints = h);
 				0 != k.length && (c.redSpawnPoints = k);
 				0 != l.length && (c.blueSpawnPoints = l);
-				class_q.ma(c, 'kickOffReset', this.zf ? 'full' : 'partial', 'partial');
+				class_q_Stadium.ma(c, 'kickOffReset', this.Af ? 'full' : 'partial', 'partial');
 				switch (this.ud) {
 					case 1:
 						b = 'grass';
@@ -8633,13 +8627,13 @@
 					default:
 						b = 'none';
 				}
-				class_q.ma(a, 'type', b, 'none');
-				class_q.ma(a, 'width', this.ae, 0);
-				class_q.ma(a, 'height', this.$d, 0);
-				class_q.ma(a, 'kickOffRadius', this.ad, 0);
-				class_q.ma(a, 'cornerRadius', this.Gc, 0);
-				class_q.Cg(a, this.td, 7441498);
-				class_q.ma(a, 'goalLine', this.Qe, 0);
+				class_q_Stadium.ma(a, 'type', b, 'none');
+				class_q_Stadium.ma(a, 'width', this.ae, 0);
+				class_q_Stadium.ma(a, 'height', this.$d, 0);
+				class_q_Stadium.ma(a, 'kickOffRadius', this.bd, 0);
+				class_q_Stadium.ma(a, 'cornerRadius', this.Gc, 0);
+				class_q_Stadium.Cg(a, this.td, 7441498);
+				class_q_Stadium.ma(a, 'goalLine', this.Qe, 0);
 				return c;
 			}
 
@@ -8649,7 +8643,7 @@
 					h = class_w.I(h[1], E);
 					null == h && (h = 0);
 					null == k && (k = 0);
-					return new class_P(k, h);
+					return new class_P_Point(k, h);
 				}
 
 				function c(h, k, l, n) {
@@ -8662,7 +8656,7 @@
 								let t = n[r];
 								++r;
 								try {
-									class_q.On(t, f),
+									class_q_Stadium.On(t, f),
 										h.push(l(t));
 								}
 								catch (z) {
@@ -8681,7 +8675,7 @@
 				this.D = class_w.I(d.name, String);
 				this.bc = class_w.I(d.width, E);
 				this.sc = class_w.I(d.height, E);
-				this.jf = this.ie(d, 'maxViewWidth') | 0;
+				this.kf = this.ie(d, 'maxViewWidth') | 0;
 				'player' == d.cameraFollow && (this.Re = 1);
 				this.mc = 200;
 				a = d.spawnDistance;
@@ -8701,35 +8695,35 @@
 				this.ud = e;
 				this.ae = this.ie(a, 'width');
 				this.$d = this.ie(a, 'height');
-				this.ad = this.ie(a, 'kickOffRadius');
+				this.bd = this.ie(a, 'kickOffRadius');
 				this.Gc = this.ie(a, 'cornerRadius');
 				this.td = 7441498;
-				null != a.color && (this.td = class_q.ng(a.color));
+				null != a.color && (this.td = class_q_Stadium.ng(a.color));
 				this.Qe = this.ie(a, 'goalLine');
-				this.Xf = this.Mp(d);
-				this.zf = 'full' == d.kickOffReset;
+				this.Yf = this.Mp(d);
+				this.Af = 'full' == d.kickOffReset;
 				let f = d.traits;
 				a = d.ballPhysics;
-				'disc0' != a && (null != a ? (a = class_q.bl(a, this.pg()),
+				'disc0' != a && (null != a ? (a = class_q_Stadium.bl(a, this.pg()),
 					a.w |= 192,
 					this.H.push(a)) : this.H.push(this.pg()));
-				c(this.L, 'vertexes', class_q.Lp);
+				c(this.L, 'vertexes', class_q_Stadium.Lp);
 				let g = this;
 				c(this.W, 'segments', function (h) {
-					return class_q.Kp(h, g.L);
+					return class_q_Stadium.Kp(h, g.L);
 				});
-				c(this.vc, 'goals', class_q.Gp);
+				c(this.vc, 'goals', class_q_Stadium.Gp);
 				c(this.H, 'discs', function (h) {
-					return class_q.bl(h, new class_za);
+					return class_q_Stadium.bl(h, new class_ra_StadiumDisc);
 				});
-				c(this.ra, 'planes', class_q.Ip);
+				c(this.ra, 'planes', class_q_Stadium.Ip);
 				c(this.pb, 'joints', function (h) {
-					return class_q.Hp(h, g.H);
+					return class_q_Stadium.Hp(h, g.H);
 				}, true);
 				c(this.Nd, 'redSpawnPoints', b, true);
 				c(this.vd, 'blueSpawnPoints', b, true);
 				a = d.playerPhysics;
-				null != a && (this.Ld = class_q.Jp(a));
+				null != a && (this.Ld = class_q_Stadium.Jp(a));
 				if (255 < this.L.length || 255 < this.W.length || 255 < this.ra.length || 255 < this.vc.length || 255 < this.H.length)
 					throw class_v.C('Error');
 				this.oe();
@@ -8738,10 +8732,10 @@
 			}
 
 			hk() {
-				let a = class_q.js;
+				let a = class_q_Stadium.js;
 				a.a = 0;
 				this.fa(a);
-				let b = new class_yc;
+				let b = new class_jc;
 				b.Fs(a.Vb());
 				b.hash = (b.hash += b.hash << 3) ^ b.hash >>> 11;
 				b.hash += b.hash << 15;
@@ -8767,7 +8761,7 @@
 					if (e)
 						return h.ye;
 				}
-				return class_u.Ma;
+				return class_u_Team.Ma;
 			}
 
 			jd(a, b, c, d, e, f, g, h) {
@@ -8780,111 +8774,111 @@
 				this.td = 7441498;
 				this.ae = d;
 				this.$d = e;
-				this.ad = g;
+				this.bd = g;
 				this.Gc = h;
 				this.mc = .75 * d;
 				400 < this.mc && (this.mc = 400);
-				a = new class_R;
+				a = new class_R_Plane;
 				var k = a.xa;
 				k.x = 0;
 				k.y = 1;
 				a.Ua = -c;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = 0;
 				k.y = -1;
 				a.Ua = -c;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = 1;
 				k.y = 0;
 				a.Ua = -b;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = -1;
 				k.y = 0;
 				a.Ua = -b;
 				a.o = 0;
 				this.ra.push(a);
-				this.qg(d, 1, f, 13421823, class_u.Ca);
-				this.qg(-d, -1, f, 16764108, class_u.ga);
+				this.qg(d, 1, f, 13421823, class_u_Team.Ca);
+				this.qg(-d, -1, f, 16764108, class_u_Team.ga);
 				this.gl(g, c);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = 0;
 				c.y = 1;
 				b.Ua = -e;
 				b.h = 1;
 				this.ra.push(b);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = 0;
 				c.y = -1;
 				b.Ua = -e;
 				b.h = 1;
 				this.ra.push(b);
-				b = new class_G;
+				b = new class_G_Vertex;
 				c = b.a;
 				c.x = -d;
 				c.y = -e;
 				b.h = 0;
-				c = new class_G;
+				c = new class_G_Vertex;
 				g = c.a;
 				g.x = d;
 				g.y = -e;
 				c.h = 0;
-				g = new class_G;
+				g = new class_G_Vertex;
 				a = g.a;
 				a.x = d;
 				a.y = -f;
 				g.h = 0;
-				a = new class_G;
+				a = new class_G_Vertex;
 				k = a.a;
 				k.x = d;
 				k.y = f;
 				a.h = 0;
-				k = new class_G;
+				k = new class_G_Vertex;
 				var l = k.a;
 				l.x = d;
 				l.y = e;
 				k.h = 0;
-				l = new class_G;
+				l = new class_G_Vertex;
 				var n = l.a;
 				n.x = -d;
 				n.y = e;
 				l.h = 0;
-				n = new class_G;
+				n = new class_G_Vertex;
 				var r = n.a;
 				r.x = -d;
 				r.y = f;
 				n.h = 0;
-				r = new class_G;
+				r = new class_G_Vertex;
 				var t = r.a;
 				t.x = -d;
 				t.y = -f;
 				r.h = 0;
-				f = new class_I;
+				f = new class_I_Segment;
 				f.Y = c;
 				f.da = g;
 				f.h = 1;
 				f.$a = false;
-				t = new class_I;
+				t = new class_I_Segment;
 				t.Y = a;
 				t.da = k;
 				t.h = 1;
 				t.$a = false;
-				let z = new class_I;
+				let z = new class_I_Segment;
 				z.Y = l;
 				z.da = n;
 				z.h = 1;
 				z.$a = false;
-				let K = new class_I;
+				let K = new class_I_Segment;
 				K.Y = r;
 				K.da = b;
 				K.h = 1;
@@ -8913,64 +8907,64 @@
 				this.ud = 2;
 				this.ae = d;
 				this.$d = e;
-				this.ad = 75;
+				this.bd = 75;
 				this.Gc = h;
 				this.Qe = g;
 				this.mc = .75 * (d - g);
 				400 < this.mc && (this.mc = 400);
-				a = new class_R;
+				a = new class_R_Plane;
 				var k = a.xa;
 				k.x = 0;
 				k.y = 1;
 				a.Ua = -c;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = 0;
 				k.y = -1;
 				a.Ua = -c;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = 1;
 				k.y = 0;
 				a.Ua = -b;
 				a.o = 0;
 				this.ra.push(a);
-				a = new class_R;
+				a = new class_R_Plane;
 				k = a.xa;
 				k.x = -1;
 				k.y = 0;
 				a.Ua = -b;
 				a.o = 0;
 				this.ra.push(a);
-				this.qg(d - g, 1, f, 13421823, class_u.Ca, 63);
-				this.qg(-d + g, -1, f, 16764108, class_u.ga, 63);
+				this.qg(d - g, 1, f, 13421823, class_u_Team.Ca, 63);
+				this.qg(-d + g, -1, f, 16764108, class_u_Team.ga, 63);
 				this.gl(75, c);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = 0;
 				c.y = 1;
 				b.Ua = -e;
 				b.h = 1;
 				this.ra.push(b);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = 0;
 				c.y = -1;
 				b.Ua = -e;
 				b.h = 1;
 				this.ra.push(b);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = 1;
 				c.y = 0;
 				b.Ua = -d;
 				b.h = 1;
 				this.ra.push(b);
-				b = new class_R;
+				b = new class_R_Plane;
 				c = b.xa;
 				c.x = -1;
 				c.y = 0;
@@ -8985,34 +8979,34 @@
 				var g;
 				null == g && (g = 32);
 				null == f && (f = 1);
-				var h = new class_G
+				var h = new class_G_Vertex
 					,
 					k = h.a;
 				k.x = a + 8 * b;
 				k.y = -c;
-				k = new class_G;
+				k = new class_G_Vertex;
 				var l = k.a;
 				l.x = a + 8 * b;
 				l.y = c;
-				let n = new class_G;
+				let n = new class_G_Vertex;
 				l = n.a;
 				l.x = h.a.x + 22 * b;
 				l.y = h.a.y + 22;
-				let r = new class_G;
+				let r = new class_G_Vertex;
 				l = r.a;
 				l.x = k.a.x + 22 * b;
 				l.y = k.a.y - 22;
-				l = new class_I;
+				l = new class_I_Segment;
 				l.Y = h;
 				l.da = n;
-				l.Uc(90 * b);
-				let t = new class_I;
+				l.Vc(90 * b);
+				let t = new class_I_Segment;
 				t.Y = r;
 				t.da = n;
-				let z = new class_I;
+				let z = new class_I_Segment;
 				z.Y = r;
 				z.da = k;
-				z.Uc(90 * b);
+				z.Vc(90 * b);
 				b = this.L.length;
 				this.L.push(h);
 				this.L.push(k);
@@ -9034,7 +9028,7 @@
 						this.W[k].h = f,
 						this.W[k].w = g,
 						this.W[k].o = .1;
-				f = new class_za;
+				f = new class_ra_StadiumDisc;
 				g = f.a;
 				g.x = a;
 				g.y = -c;
@@ -9042,7 +9036,7 @@
 				f.V = 8;
 				f.S = d;
 				this.H.push(f);
-				f = new class_za;
+				f = new class_ra_StadiumDisc;
 				g = f.a;
 				g.x = a;
 				g.y = c;
@@ -9050,7 +9044,7 @@
 				f.V = 8;
 				f.S = d;
 				this.H.push(f);
-				d = new class_Eb;
+				d = new class_Cb_Goal;
 				f = d.Y;
 				f.x = a;
 				f.y = -c;
@@ -9062,63 +9056,63 @@
 			}
 
 			gl(a, b) {
-				let c = new class_G;
+				let c = new class_G_Vertex;
 				var d = c.a;
 				d.x = 0;
 				d.y = -b;
 				c.o = .1;
 				c.w = 24;
 				c.h = 6;
-				d = new class_G;
+				d = new class_G_Vertex;
 				var e = d.a;
 				e.x = 0;
 				e.y = -a;
 				d.o = .1;
 				d.w = 24;
 				d.h = 6;
-				e = new class_G;
+				e = new class_G_Vertex;
 				var f = e.a;
 				f.x = 0;
 				f.y = a;
 				e.o = .1;
 				e.w = 24;
 				e.h = 6;
-				a = new class_G;
+				a = new class_G_Vertex;
 				f = a.a;
 				f.x = 0;
 				f.y = b;
 				a.o = .1;
 				a.w = 24;
 				a.h = 6;
-				b = new class_I;
+				b = new class_I_Segment;
 				b.Y = c;
 				b.da = d;
 				b.w = 24;
 				b.h = 6;
 				b.$a = false;
 				b.o = .1;
-				f = new class_I;
+				f = new class_I_Segment;
 				f.Y = e;
 				f.da = a;
 				f.w = 24;
 				f.h = 6;
 				f.$a = false;
 				f.o = .1;
-				let g = new class_I;
+				let g = new class_I_Segment;
 				g.Y = d;
 				g.da = e;
 				g.w = 8;
 				g.h = 6;
 				g.$a = false;
-				g.Uc(180);
+				g.Vc(180);
 				g.o = .1;
-				let h = new class_I;
+				let h = new class_I_Segment;
 				h.Y = e;
 				h.da = d;
 				h.w = 16;
 				h.h = 6;
 				h.$a = false;
-				h.Uc(180);
+				h.Vc(180);
 				h.o = .1;
 				this.L.push(c);
 				this.L.push(d);
@@ -9132,75 +9126,75 @@
 
 			el(a, b, c) {
 				if (!(0 >= c)) {
-					var d = new class_G
+					var d = new class_G_Vertex
 						,
 						e = d.a;
 					e.x = -a + c;
 					e.y = -b;
 					d.h = 0;
-					e = new class_G;
+					e = new class_G_Vertex;
 					var f = e.a;
 					f.x = -a;
 					f.y = -b + c;
 					e.h = 0;
-					f = new class_G;
+					f = new class_G_Vertex;
 					var g = f.a;
 					g.x = -a + c;
 					g.y = b;
 					f.h = 0;
-					g = new class_G;
+					g = new class_G_Vertex;
 					var h = g.a;
 					h.x = -a;
 					h.y = b - c;
 					g.h = 0;
-					h = new class_G;
+					h = new class_G_Vertex;
 					var k = h.a;
 					k.x = a - c;
 					k.y = b;
 					h.h = 0;
-					k = new class_G;
+					k = new class_G_Vertex;
 					var l = k.a;
 					l.x = a;
 					l.y = b - c;
 					k.h = 0;
-					l = new class_G;
+					l = new class_G_Vertex;
 					var n = l.a;
 					n.x = a - c;
 					n.y = -b;
 					l.h = 0;
-					n = new class_G;
+					n = new class_G_Vertex;
 					var r = n.a;
 					r.x = a;
 					r.y = -b + c;
 					n.h = 0;
-					a = new class_I;
+					a = new class_I_Segment;
 					a.Y = d;
 					a.da = e;
 					a.h = 1;
 					a.$a = false;
 					a.o = 1;
-					a.Uc(-90);
-					b = new class_I;
+					a.Vc(-90);
+					b = new class_I_Segment;
 					b.Y = f;
 					b.da = g;
 					b.h = 1;
 					b.$a = false;
 					b.o = 1;
-					b.Uc(90);
-					c = new class_I;
+					b.Vc(90);
+					c = new class_I_Segment;
 					c.Y = h;
 					c.da = k;
 					c.h = 1;
 					c.$a = false;
 					c.o = 1;
-					c.Uc(-90);
-					r = new class_I;
+					c.Vc(-90);
+					r = new class_I_Segment;
 					r.Y = l;
 					r.da = n;
 					r.h = 1;
 					r.$a = false;
 					r.o = 1;
-					r.Uc(90);
+					r.Vc(90);
 					this.L.push(d);
 					this.L.push(e);
 					this.L.push(f);
@@ -9218,52 +9212,52 @@
 
 			static ka(a) {
 				var b = a.F();
-				return 255 == b ? (b = new class_q,
+				return 255 == b ? (b = new class_q_Stadium,
 					b.qs(a),
-					b) : class_q.Oh()[b];
+					b) : class_q_Stadium.Oh()[b];
 			}
 
 			static Oh() {
-				if (null == class_q.xb) {
-					class_q.xb = [];
-					var a = new class_q;
+				if (null == class_q_Stadium.xb) {
+					class_q_Stadium.xb = [];
+					var a = new class_q_Stadium;
 					a.jd('Classic', 420, 200, 370, 170, 64, 75);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Easy', 420, 200, 370, 170, 90, 75);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Small', 420, 200, 320, 130, 55, 70);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Big', 600, 270, 550, 240, 80, 80);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Rounded', 420, 200, 370, 170, 64, 75, 75);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.fl('Hockey', 420, 204, 398, 182, 68, 120, 100);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.fl('Big Hockey', 600, 270, 550, 240, 90, 160, 150);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Big Easy', 600, 270, 550, 240, 95, 80);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Big Rounded', 600, 270, 550, 240, 80, 75, 100);
-					class_q.xb.push(a);
-					a = new class_q;
+					class_q_Stadium.xb.push(a);
+					a = new class_q_Stadium;
 					a.jd('Huge', 750, 350, 700, 320, 100, 80);
-					class_q.xb.push(a);
+					class_q_Stadium.xb.push(a);
 					a = 0;
-					let b = class_q.xb.length;
+					let b = class_q_Stadium.xb.length;
 					for (; a < b;) {
 						let c = a++;
-						class_q.xb[c].Gh = c;
+						class_q_Stadium.xb[c].Gh = c;
 					}
 				}
-				return class_q.xb;
+				return class_q_Stadium.xb;
 			}
 
 			static On(a, b) {
@@ -9271,7 +9265,7 @@
 				null != b)) {
 					let c = 0
 						,
-						d = class_Cc.dn(b);
+						d = class_Dc.dn(b);
 					for (; c < d.length;) {
 						let e = d[c];
 						++c;
@@ -9348,17 +9342,17 @@
 				return b;
 			}
 
-			static Oc(a, b, c, d) {
-				c != d && (a[b] = class_q.Xn(c));
+			static Pc(a, b, c, d) {
+				c != d && (a[b] = class_q_Stadium.Xn(c));
 			}
 
 			static Cg(a, b, c) {
-				b != c && (a.color = class_q.mo(b));
+				b != c && (a.color = class_q_Stadium.mo(b));
 			}
 
 			static mo(a) {
 				a |= 0;
-				return 0 > a ? 'transparent' : class_ca.eh(a);
+				return 0 > a ? 'transparent' : class_Z.eh(a);
 			}
 
 			static ng(a) {
@@ -9376,22 +9370,22 @@
 					x: a.a.x,
 					y: a.a.y
 				};
-				class_q.ma(b, 'bCoef', a.o, 1);
-				class_q.Oc(b, 'cMask', a.h, 63);
-				class_q.Oc(b, 'cGroup', a.w, 32);
+				class_q_Stadium.ma(b, 'bCoef', a.o, 1);
+				class_q_Stadium.Pc(b, 'cMask', a.h, 63);
+				class_q_Stadium.Pc(b, 'cGroup', a.w, 32);
 				return b;
 			}
 
 			static Lp(a) {
-				let b = new class_G;
+				let b = new class_G_Vertex;
 				b.a.x = class_w.I(a.x, E);
 				b.a.y = class_w.I(a.y, E);
 				var c = a.bCoef;
 				null != c && (b.o = class_w.I(c, E));
 				c = a.cMask;
-				null != c && (b.h = class_q.Kc(c));
+				null != c && (b.h = class_q_Stadium.Kc(c));
 				a = a.cGroup;
-				null != a && (b.w = class_q.Kc(a));
+				null != a && (b.w = class_q_Stadium.Kc(a));
 				return b;
 			}
 
@@ -9400,22 +9394,22 @@
 					v0: a.Y.Dd,
 					v1: a.da.Dd
 				};
-				class_q.ma(c, 'bias', a.Hc, b.Hc);
-				class_q.ma(c, 'bCoef', a.o, b.o);
+				class_q_Stadium.ma(c, 'bias', a.Hc, b.Hc);
+				class_q_Stadium.ma(c, 'bCoef', a.o, b.o);
 				let d = a.Wo();
-				class_q.ma(c, 'curve', d, 0);
+				class_q_Stadium.ma(c, 'curve', d, 0);
 				0 != d && (c.curveF = a.wb);
-				class_q.ma(c, 'vis', a.$a, b.$a);
-				class_q.Oc(c, 'cMask', a.h, b.h);
-				class_q.Oc(c, 'cGroup', a.w, b.w);
-				class_q.Cg(c, a.S, b.S);
+				class_q_Stadium.ma(c, 'vis', a.$a, b.$a);
+				class_q_Stadium.Pc(c, 'cMask', a.h, b.h);
+				class_q_Stadium.Pc(c, 'cGroup', a.w, b.w);
+				class_q_Stadium.Cg(c, a.S, b.S);
 				return c;
 			}
 
 			static Kp(a, b) {
-				let c = new class_I;
-				var d = class_w.I(a.v1, ec);
-				c.Y = b[class_w.I(a.v0, ec)];
+				let c = new class_I_Segment;
+				var d = class_w.I(a.v1, Ub);
+				c.Y = b[class_w.I(a.v0, Ub)];
 				c.da = b[d];
 				b = a.bias;
 				d = a.bCoef;
@@ -9431,11 +9425,11 @@
 				a = a.color;
 				null != b && (c.Hc = class_w.I(b, E));
 				null != d && (c.o = class_w.I(d, E));
-				null != f ? c.wb = class_w.I(f, E) : null != e && c.Uc(class_w.I(e, E));
-				null != g && (c.$a = class_w.I(g, Fc));
-				null != h && (c.h = class_q.Kc(h));
-				null != k && (c.w = class_q.Kc(k));
-				null != a && (c.S = class_q.ng(a));
+				null != f ? c.wb = class_w.I(f, E) : null != e && c.Vc(class_w.I(e, E));
+				null != g && (c.$a = class_w.I(g, Cc));
+				null != h && (c.h = class_q_Stadium.Kc(h));
+				null != k && (c.w = class_q_Stadium.Kc(k));
+				null != a && (c.S = class_q_Stadium.ng(a));
 				return c;
 			}
 
@@ -9445,16 +9439,16 @@
 					d1: a.ge,
 					length: a.Jb >= a.fc ? a.Jb : [a.Jb, a.fc]
 				};
-				class_q.Cg(b, a.S, 0);
-				class_q.ma(b, 'strength', a.we, 1 / 0);
+				class_q_Stadium.Cg(b, a.S, 0);
+				class_q_Stadium.ma(b, 'strength', a.we, 1 / 0);
 				return b;
 			}
 
 			static Hp(a, b) {
-				let c = new class_Kb;
-				var d = class_w.I(a.d0, ec)
+				let c = new class_Db_Joint;
+				var d = class_w.I(a.d0, Ub)
 					,
-					e = class_w.I(a.d1, ec);
+					e = class_w.I(a.d1, Ub);
 				let f = a.color
 					,
 					g = a.strength;
@@ -9474,7 +9468,7 @@
 						c.fc = c.Jb = Math.sqrt(e * e + b * b))) : a instanceof Array ? (c.Jb = class_w.I(a[0], E),
 					c.fc = class_w.I(a[1], E)) : c.fc = c.Jb = class_w.I(a, E);
 				c.we = null == g || 'rigid' == g ? 1 / 0 : class_w.I(g, E);
-				null != f && (c.S = class_q.ng(f));
+				null != f && (c.S = class_q_Stadium.ng(f));
 				return c;
 			}
 
@@ -9483,14 +9477,14 @@
 					normal: [a.xa.x, a.xa.y],
 					dist: a.Ua
 				};
-				class_q.ma(b, 'bCoef', a.o, 1);
-				class_q.Oc(b, 'cMask', a.h, 63);
-				class_q.Oc(b, 'cGroup', a.w, 32);
+				class_q_Stadium.ma(b, 'bCoef', a.o, 1);
+				class_q_Stadium.Pc(b, 'cMask', a.h, 63);
+				class_q_Stadium.Pc(b, 'cGroup', a.w, 32);
 				return b;
 			}
 
 			static Ip(a) {
-				let b = new class_R;
+				let b = new class_R_Plane;
 				var c = class_w.I(a.normal, Array)
 					,
 					d = class_w.I(c[0], E)
@@ -9510,8 +9504,8 @@
 				d = a.cMask;
 				a = a.cGroup;
 				null != c && (b.o = class_w.I(c, E));
-				null != d && (b.h = class_q.Kc(d));
-				null != a && (b.w = class_q.Kc(a));
+				null != d && (b.h = class_q_Stadium.Kc(d));
+				null != a && (b.w = class_q_Stadium.Kc(a));
 				return b;
 			}
 
@@ -9519,12 +9513,12 @@
 				return {
 					p0: [a.Y.x, a.Y.y],
 					p1: [a.da.x, a.da.y],
-					team: a.ye == class_u.ga ? 'red' : 'blue'
+					team: a.ye == class_u_Team.ga ? 'red' : 'blue'
 				};
 			}
 
 			static Gp(a) {
-				let b = new class_Eb;
+				let b = new class_Cb_Goal;
 				var c = class_w.I(a.p0, Array);
 				let d = class_w.I(a.p1, Array)
 					,
@@ -9536,10 +9530,10 @@
 				c.y = d[1];
 				switch (a.team) {
 					case 'blue':
-						a = class_u.Ca;
+						a = class_u_Team.Ca;
 						break;
 					case 'red':
-						a = class_u.ga;
+						a = class_u_Team.ga;
 						break;
 					default:
 						throw class_v.C('Bad team value');
@@ -9550,23 +9544,23 @@
 
 			static Jq(a) {
 				let b = {};
-				class_q.ma(b, 'bCoef', a.o, .5);
-				class_q.ma(b, 'invMass', a.ba, .5);
-				class_q.ma(b, 'damping', a.Da, .96);
-				class_q.ma(b, 'acceleration', a.Ne, .1);
-				class_q.ma(b, 'kickingAcceleration', a.df, .07);
-				class_q.ma(b, 'kickingDamping', a.ef, .96);
-				class_q.ma(b, 'kickStrength', a.bf, 5);
-				class_q.Oc(b, 'cGroup', a.w, 0);
+				class_q_Stadium.ma(b, 'bCoef', a.o, .5);
+				class_q_Stadium.ma(b, 'invMass', a.ba, .5);
+				class_q_Stadium.ma(b, 'damping', a.Da, .96);
+				class_q_Stadium.ma(b, 'acceleration', a.Ne, .1);
+				class_q_Stadium.ma(b, 'kickingAcceleration', a.ef, .07);
+				class_q_Stadium.ma(b, 'kickingDamping', a.ff, .96);
+				class_q_Stadium.ma(b, 'kickStrength', a.cf, 5);
+				class_q_Stadium.Pc(b, 'cGroup', a.w, 0);
 				if (0 != a.pa.x || 0 != a.pa.y)
 					b.gravity = [a.pa.x, a.pa.y];
-				class_q.ma(b, 'radius', a.V, 15);
-				class_q.ma(b, 'kickback', a.cf, 0);
+				class_q_Stadium.ma(b, 'radius', a.V, 15);
+				class_q_Stadium.ma(b, 'kickback', a.df, 0);
 				return b;
 			}
 
 			static Jp(a) {
-				let b = new class_bc;
+				let b = new class_Vb_PlayerPhysics;
 				var c = a.bCoef
 					,
 					d = a.invMass;
@@ -9590,16 +9584,16 @@
 				null != d && (b.ba = class_w.I(d, E));
 				null != e && (b.Da = class_w.I(e, E));
 				null != f && (b.Ne = class_w.I(f, E));
-				null != g && (b.df = class_w.I(g, E));
-				null != h && (b.ef = class_w.I(h, E));
-				null != k && (b.bf = class_w.I(k, E));
+				null != g && (b.ef = class_w.I(g, E));
+				null != h && (b.ff = class_w.I(h, E));
+				null != k && (b.cf = class_w.I(k, E));
 				null != l && (c = b.pa,
 					d = class_w.I(l[1], E),
 					c.x = class_w.I(l[0], E),
 					c.y = d);
-				null != n && (b.w = class_q.Kc(n));
+				null != n && (b.w = class_q_Stadium.Kc(n));
 				null != r && (b.V = class_w.I(r, E));
-				null != a && (b.cf = class_w.I(a, E));
+				null != a && (b.df = class_w.I(a, E));
 				return b;
 			}
 
@@ -9611,13 +9605,13 @@
 					c.speed = [a.G.x, a.G.y];
 				if (a.pa.x != b.pa.x || a.pa.y != b.pa.y)
 					c.gravity = [a.pa.x, a.pa.y];
-				class_q.ma(c, 'radius', a.V, b.V);
-				class_q.ma(c, 'bCoef', a.o, b.o);
-				class_q.ma(c, 'invMass', a.ba, b.ba);
-				class_q.ma(c, 'damping', a.Da, b.Da);
-				class_q.Cg(c, a.S, b.S);
-				class_q.Oc(c, 'cMask', a.h, b.h);
-				class_q.Oc(c, 'cGroup', a.w, b.w);
+				class_q_Stadium.ma(c, 'radius', a.V, b.V);
+				class_q_Stadium.ma(c, 'bCoef', a.o, b.o);
+				class_q_Stadium.ma(c, 'invMass', a.ba, b.ba);
+				class_q_Stadium.ma(c, 'damping', a.Da, b.Da);
+				class_q_Stadium.Cg(c, a.S, b.S);
+				class_q_Stadium.Pc(c, 'cMask', a.h, b.h);
+				class_q_Stadium.Pc(c, 'cGroup', a.w, b.w);
 				return c;
 			}
 
@@ -9654,9 +9648,9 @@
 				null != g && (b.o = class_w.I(g, E));
 				null != h && (b.ba = class_w.I(h, E));
 				null != k && (b.Da = class_w.I(k, E));
-				null != l && (b.S = class_q.ng(l));
-				null != n && (b.h = class_q.Kc(n));
-				null != a && (b.w = class_q.Kc(a));
+				null != l && (b.S = class_q_Stadium.ng(l));
+				null != n && (b.h = class_q_Stadium.Kc(n));
+				null != a && (b.w = class_q_Stadium.Kc(a));
 				return b;
 			}
 
@@ -9686,13 +9680,13 @@
 				if (5 <= b.length)
 					return '<...>';
 				var c = typeof a;
-				'function' == c && (a.b || a.Sf) && (c = 'object');
+				'function' == c && (a.b || a.Tf) && (c = 'object');
 				switch (c) {
 					case 'function':
 						return '<function>';
 					case 'object':
 						if (a.Hb) {
-							var d = Lb[a.Hb].Zd[a.ob];
+							var d = Ab[a.Hb].Zd[a.ob];
 							c = d.wc;
 							if (d.Le) {
 								b += '\t';
@@ -9770,13 +9764,13 @@
 				switch (b) {
 					case Array:
 						return a instanceof Array;
-					case Fc:
+					case Cc:
 						return 'boolean' == typeof a;
 					case Lc:
 						return null != a;
 					case E:
 						return 'number' == typeof a;
-					case ec:
+					case Ub:
 						return 'number' == typeof a ? (a | 0) === a : false;
 					case String:
 						return 'string' == typeof a;
@@ -9792,7 +9786,7 @@
 							}
 						else
 							return false;
-						return b == Mc && null != a.b || b == Nc && null != a.Sf ? true : null != a.Hb ? Lb[a.Hb] == b : false;
+						return b == Mc && null != a.b || b == Nc && null != a.Tf ? true : null != a.Hb ? Ab[a.Hb] == b : false;
 				}
 			}
 
@@ -9820,9 +9814,9 @@
 			}
 		}
 
-		class class_wc {
+		class class_lc {
 			constructor() {
-				this.Pc = new Set;
+				this.Qc = new Set;
 				this.lg = 0;
 				window.document.addEventListener('focusout', function_M(this, this.tl));
 			}
@@ -9833,15 +9827,16 @@
 
 			B() {
 				let a = 0;
-				this.Pc.has('Up') && (a = 1);
-				this.Pc.has('Down') && (a |= 2);
-				this.Pc.has('Left') && (a |= 4);
-				this.Pc.has('Right') && (a |= 8);
-				this.Pc.has('Kick') && (a |= 16);
+				this.Qc.has('Up') && (a = 1);
+				this.Qc.has('Down') && (a |= 2);
+				this.Qc.has('Left') && (a |= 4);
+				this.Qc.has('Right') && (a |= 8);
+				this.Qc.has('Kick') && (a |= 16);
+				// Emulated input
 				a |= window.parent.g.emulatedInput;
 				if (null != this.zg && a != this.lg) {
 					this.lg = a;
-					let b = new class_Ja;
+					let b = new class_Ca;
 					b.input = a;
 					this.zg(b);
 				}
@@ -9860,20 +9855,20 @@
 			}
 
 			kq(a) {
-				this.Pc.has(a) || (this.Pc.add(a),
+				this.Qc.has(a) || (this.Qc.add(a),
 					this.B(),
 					class_D.i(this.Zp, a));
 			}
 
 			$p(a) {
-				this.Pc.delete(a) && this.B();
+				this.Qc.delete(a) && this.B();
 			}
 
 			tl() {
 				if (null != this.zg && 0 != this.lg) {
-					this.Pc.clear();
+					this.Qc.clear();
 					this.lg = 0;
-					let a = new class_Ja;
+					let a = new class_Ca;
 					a.input = 0;
 					this.zg(a);
 				}
@@ -9927,22 +9922,22 @@
 			}
 		}
 
-		class class_qb {
+		class class_wb {
 			constructor() {
-				this.f = class_x.Ha(class_qb.O);
+				this.f = class_x.Ha(class_wb.O);
 				let a = class_x.Aa(this.f);
-				this.hd = a.get('log');
+				this.Lc = a.get('log');
 				this.yh = a.get('cancel');
 			}
 
 			ca(a) {
 				let b = window.document.createElement('p');
 				b.textContent = a;
-				this.hd.appendChild(b);
+				this.Lc.appendChild(b);
 			}
 		}
 
-		class class_yc {
+		class class_jc {
 			constructor() {
 				this.hash = 0;
 			}
@@ -9968,7 +9963,7 @@
 			}
 		}
 
-		class class_za {
+		class class_ra_StadiumDisc {
 			constructor() {
 				this.h = this.w = 63;
 				this.S = 16777215;
@@ -9976,9 +9971,9 @@
 				this.ba = 1;
 				this.o = .5;
 				this.V = 10;
-				this.pa = new class_P(0, 0);
-				this.G = new class_P(0, 0);
-				this.a = new class_P(0, 0);
+				this.pa = new class_P_Point(0, 0);
+				this.G = new class_P_Point(0, 0);
+				this.a = new class_P_Point(0, 0);
 			}
 
 			fa(a) {
@@ -10020,7 +10015,7 @@
 			}
 
 			Pp() {
-				let a = new class_xa;
+				let a = new class_sa_DynamicDisc;
 				this.Sk(a);
 				return a;
 			}
@@ -10054,15 +10049,15 @@
 			}
 		}
 
-		class class_Wb {
+		class class_Ob {
 			static Br(a, b) {
-				class_Wb.pm(new Blob([a], {
+				class_Ob.pm(new Blob([a], {
 					type: 'octet/stream'
 				}), b);
 			}
 
 			static Cr(a, b) {
-				class_Wb.pm(new Blob([a], {
+				class_Ob.pm(new Blob([a], {
 					type: 'text/plain'
 				}), b);
 			}
@@ -10080,7 +10075,7 @@
 			}
 		}
 
-		class class_Hc {
+		class class_Ic {
 			static gs(a, b) {
 				return new Promise(function (c, d) {
 						let e = window.setTimeout(function () {
@@ -10098,12 +10093,11 @@
 			}
 		}
 
-		/** Game Objects */
-		class class_eb {
+		class class_ab_GameObjects {
 			constructor() {
 				this.jc = -1;
 				this.ic = null;
-				/** @type {class_xa[]} */
+				/** @type {class_sa_DynamicDisc[]} */
 				this.H = [];
 			}
 
@@ -10128,7 +10122,7 @@
 					c = 0;
 				for (; c < b;) {
 					++c;
-					let d = new class_xa;
+					let d = new class_sa_DynamicDisc;
 					d.ka(a);
 					this.H.push(d);
 				}
@@ -10223,12 +10217,12 @@
 			}
 
 			uc() {
-				let a = class_va.Cc
+				let a = class_wa.Cc
 					,
 					b = this.ic;
-				this.jc != a && (null == b && (this.ic = b = new class_eb),
+				this.jc != a && (null == b && (this.ic = b = new class_ab_GameObjects),
 					this.jc = a,
-					class_eb.zd(b, this));
+					class_ab_GameObjects.zd(b, this));
 				return b;
 			}
 
@@ -10256,7 +10250,7 @@
 			}
 		}
 
-		class class_Ya extends class_p {
+		class class_Sa extends class_p {
 			constructor() {
 				super();
 			}
@@ -10275,8 +10269,7 @@
 			}
 		}
 
-		/** Room */
-		class class_oa extends class_W {
+		class class_oa_Room extends class_W {
 			constructor(a) {
 				class_W.zb ? super() : (class_W.zb = true,
 					super(),
@@ -10285,13 +10278,13 @@
 			}
 
 			Ya(a) {
-				this.bj = new class_Va;
+				this.bj = new class_eb;
 				this.Be = this.ec = 0;
-				this.te = new class_Va;
+				this.te = new class_eb;
 				this.xc = this.dc = this.Ad = 0;
 				this.Ec = .06;
 				this.qh = 16.666666666666668;
-				this.Rf = 120;
+				this.Sf = 120;
 				super.Ya(a);
 			}
 
@@ -10299,7 +10292,7 @@
 				throw class_v.C('missing implementation');
 			}
 
-			eg() {
+			fg() {
 				throw class_v.C('missing implementation');
 			}
 
@@ -10351,8 +10344,8 @@
 			Nk(a, b) {
 				if (0 >= a)
 					return this.U;
-				a > this.Rf && (a = this.Rf);
-				class_va.Cc++;
+				a > this.Sf && (a = this.Sf);
+				class_wa.Cc++;
 				let c = this.U.uc();
 				null != b ? (this.bj.Is(this.te, b),
 					b = this.bj) : b = this.te;
@@ -10371,7 +10364,7 @@
 						let k = b[d];
 						if (k.nb > f)
 							break;
-						k.Jf.Ba && k.apply(c);
+						k.Kf.Ba && k.apply(c);
 						++d;
 					}
 					c.B(f != h ? 1 : a - g);
@@ -10393,8 +10386,7 @@
 			}
 		}
 
-		/** Server room */
-		class class_Ha extends class_oa {
+		class class_Na_ServerRoom extends class_oa_Room {
 			constructor(a, b) {
 				class_W.zb = true;
 				super();
@@ -10405,11 +10397,11 @@
 			Ya(a, b) {
 				this.Ni = [];
 				this.yi = [];
-				this.Fg = new class_Va;
+				this.Fg = new class_eb;
 				this.Xp = 1;
 				this.yd = this.Rm = 0;
-				this.aj = new class_Yb(50);
-				this.Eg = new class_Yb(50);
+				this.aj = new class_ec(50);
+				this.Eg = new class_ec(50);
 				this.En = 1E3;
 				this.wk = '';
 				super.Ya(b.state);
@@ -10419,11 +10411,11 @@
 					,
 					d = this;
 				c = function (e) {
-					d.Ef(0);
+					d.Ff(0);
 					let f = class_A.ia();
 					f.Wb(b.version);
 					f.Fb(b.password);
-					d.rc = new class_Zb(b.tj, b.iceServers, a, class_vc.channels, f, b.zn);
+					d.rc = new class_dc(b.tj, b.iceServers, a, class_uc.channels, f, b.zn);
 					d.rc.th = e;
 					d.rc.Id = function (h) {
 						d.rc = null;
@@ -10433,21 +10425,21 @@
 							d.Uq(k);
 						}
 						;
-						h.pf = function () {
-							3 != d.yd && class_D.i(d.qf, ia.Pf('Connection closed'));
+						h.qf = function () {
+							3 != d.yd && class_D.i(d.rf, ia.Qf('Connection closed'));
 							d.ja();
 						}
 						;
 						h = window.setTimeout(function () {
-							class_D.i(d.qf, ia.Pf('Game state timeout'));
+							class_D.i(d.rf, ia.Qf('Game state timeout'));
 							d.ja();
 						}, 1E4);
 						d.ze = h;
-						d.Ef(2);
+						d.Ff(2);
 					}
 					;
 					d.rc.zl = function () {
-						d.Ef(1);
+						d.Ff(1);
 					}
 					;
 					let g = false;
@@ -10460,7 +10452,7 @@
 							class_H.i(d.sq),
 								c(true);
 						else {
-							let k = class_Zb.Xo(h);
+							let k = class_dc.Xo(h);
 							switch (h.ob) {
 								case 0:
 									h = ia.Je;
@@ -10472,9 +10464,9 @@
 									h = ia.Ie;
 									break;
 								default:
-									h = ia.Pf(k);
+									h = ia.Qf(k);
 							}
-							class_D.i(d.qf, h);
+							class_D.i(d.rf, h);
 							d.ja(k);
 						}
 					};
@@ -10488,14 +10480,14 @@
 					this.rc.$n(),
 					this.rc = null);
 				window.clearTimeout(this.ze);
-				null != this.qa && (this.qa.pf = null,
+				null != this.qa && (this.qa.qf = null,
 					this.qa.ja(),
 					this.qa = null);
 				this.wk = null == a ? 'Connection closed' : a;
-				this.Ef(4);
+				this.Ff(4);
 			}
 
-			Ef(a) {
+			Ff(a) {
 				this.yd != a && (this.yd = a,
 				null != this.Jd && this.Jd(a));
 			}
@@ -10506,18 +10498,18 @@
 
 			B() {
 				this.Fd() && window.performance.now() - this.Rm > this.En && this.Ji();
-				this.dd = window.performance.now() * this.Ec + this.aj.jh() - this.$;
+				this.ed = window.performance.now() * this.Ec + this.aj.jh() - this.$;
 				this.bk();
 			}
 
-			eg() {
+			fg() {
 				return this.Fd() ? (0 > this.dc && (this.dc = 0),
 					this.Nk(window.performance.now() * this.Ec + this.aj.jh() - this.$ + this.dc + this.Ad, this.Fg)) : this.U;
 			}
 
 			bk() {
-				0 > this.dd && (this.dd = 0);
-				this.dd > this.Rf && (this.dd = this.Rf);
+				0 > this.ed && (this.ed = 0);
+				this.ed > this.Sf && (this.ed = this.Sf);
 			}
 
 			Uq(a) {
@@ -10537,6 +10529,7 @@
 					case 4:
 						this.Tq(a);
 						break;
+					// Kick/Ban
 					case 5:
 						this.Pq(a);
 						break;
@@ -10564,11 +10557,11 @@
 				this.$ = a.ib();
 				this.Be = a.ib();
 				this.ec = a.Cb();
-				this.dd = 10;
+				this.ed = 10;
 				for (this.U.ka(a); 0 < a.s.byteLength - a.a;)
 					this.Mg(this.Ym(a));
 				window.clearTimeout(this.ze);
-				this.Ef(3);
+				this.Ff(3);
 			}
 
 			Jr(a) {
@@ -10623,7 +10616,7 @@
 				a = a.ib();
 				this.yi.push({
 					frame: b,
-					If: a
+					Jf: a
 				});
 				this.Ul();
 			}
@@ -10633,7 +10626,7 @@
 					for (var a = 0, b = this.yi; a < b.length;) {
 						var c = b[a];
 						++a;
-						c.frame <= this.$ || c.If == this.Be + this.ec + this.te.Js(c.frame) && this.Nn(c.frame - this.$);
+						c.frame <= this.$ || c.Jf == this.Be + this.ec + this.te.Js(c.frame) && this.Nn(c.frame - this.$);
 					}
 					a = 0;
 					b = this.yi;
@@ -10697,7 +10690,7 @@
 
 			Nn(a) {
 				this.Nj(a);
-				this.dd -= a;
+				this.ed -= a;
 				this.bk();
 			}
 
@@ -10707,14 +10700,14 @@
 						,
 						c = 0;
 					0 > this.dc && (this.dc = 0);
-					a.Jf.delay && (c = this.$ + (this.dd | 0) + this.dc);
+					a.Kf.delay && (c = this.$ + (this.ed | 0) + this.dc);
 					var d = class_A.ia();
 					d.m(1);
 					d.ub(c);
 					d.ub(b);
 					class_p.vj(a, d);
 					this.Ub(d);
-					a.Jf.Ba && (a.Ce = b,
+					a.Kf.Ba && (a.Ce = b,
 						a.R = this.xc,
 						a.nb = c,
 						this.Fg.jn(a));
@@ -10728,15 +10721,14 @@
 					case 1:
 						return 'Failed to connect to peer.';
 					case 2:
-						return class_Jc.description(a.reason);
+						return class_Kc.description(a.reason);
 					case 3:
 						return a.description;
 				}
 			}
 		}
 
-		/** Client room */
-		class class_Rb extends class_oa {
+		class class_Rb_ClientRoom extends class_oa_Room {
 			constructor(a) {
 				class_W.zb = true;
 				super();
@@ -10758,30 +10750,30 @@
 				this.Sp = 1;
 				this.Zk = this.xc = 0;
 				this.Wi = window.performance.now();
-				this.Nc = new class_Bb(this.Rp, a.iceServers, class_vc.channels, a.zn);
-				this.Nc.lk = function_M(this, this.ip);
+				this.Oc = new class_Lb(this.Rp, a.iceServers, class_uc.channels, a.zn);
+				this.Oc.lk = function_M(this, this.ip);
 				let b = this;
-				this.Nc.ul = function (c) {
+				this.Oc.ul = function (c) {
 					b.lq(c);
 				}
 				;
-				this.Nc.wg = function (c) {
+				this.Oc.wg = function (c) {
 					class_D.i(b.wg, c);
 				}
 				;
-				this.Nc.rf = function (c, d) {
-					null != b.rf && b.rf(c, d);
+				this.Oc.sf = function (c, d) {
+					null != b.sf && b.sf(c, d);
 				};
 			}
 
 			ja() {
-				this.Nc.ja();
+				this.Oc.ja();
 				let a = 0
 					,
 					b = this.cc;
 				for (; a < b.length;) {
 					let c = b[a++].qa;
-					c.pf = null;
+					c.qf = null;
 					c.xg = null;
 					c.ja();
 				}
@@ -10791,7 +10783,7 @@
 				let e = this.Te.get(a);
 				if (null != e) {
 					if (d) {
-						let f = this.Nc.Rn(e.qa);
+						let f = this.Oc.Rn(e.qa);
 						this.Yj.set(a, f);
 					}
 					a = class_A.ia();
@@ -10806,22 +10798,22 @@
 			}
 
 			be() {
-				this.Nc.be();
+				this.Oc.be();
 				this.Yj.clear();
 			}
 
 			Pi(a) {
-				this.Nc.Pi(a);
+				this.Oc.Pi(a);
 			}
 
 			Oi(a) {
-				this.Nc.Oi(a);
+				this.Oc.Oi(a);
 			}
 
 			sa(a) {
 				a.R = 0;
 				let b = this.$ + this.Gi + this.dc;
-				a.Jf.delay || (b = this.$);
+				a.Kf.delay || (b = this.$);
 				a.nb = b;
 				this.Mg(a);
 				this.Mi();
@@ -10836,20 +10828,20 @@
 					this.Hr());
 			}
 
-			eg() {
+			fg() {
 				0 > this.dc && (this.dc = 0);
 				return this.Nk((window.performance.now() - this.Wi) * this.Ec - this.$ + this.Gi + this.dc + this.Ad);
 			}
 
 			ip(a, b) {
 				if (this.cc.length >= this.rg)
-					return fb.Qf(4100);
+					return fb.Rf(4100);
 				try {
 					if (b.Rb() != this.ys)
 						throw class_v.C(null);
 				}
 				catch (c) {
-					return fb.Qf(4103);
+					return fb.Rf(4103);
 				}
 				try {
 					let c = b.Bb();
@@ -10857,7 +10849,7 @@
 						throw class_v.C(null);
 				}
 				catch (c) {
-					return fb.Qf(4101);
+					return fb.Rf(4101);
 				}
 				return fb.Fj;
 			}
@@ -10866,7 +10858,7 @@
 				if (this.cc.length >= this.rg)
 					a.ja();
 				else {
-					var b = new class_uc(a);
+					var b = new class_oc(a);
 					this.cc.push(b);
 					var c = this;
 					a.xg = function (d) {
@@ -10874,7 +10866,7 @@
 						c.Oq(d, b);
 					}
 					;
-					a.pf = function () {
+					a.qf = function () {
 						class_O.remove(c.cc, b);
 						c.Te.delete(b.aa);
 						class_D.i(c.hq, b.aa);
@@ -10949,7 +10941,7 @@
 			Hr() {
 				this.Zk = this.$;
 				if (0 != this.cc.length) {
-					var a = new class_Ya;
+					var a = new class_Sa;
 					a.nb = this.$;
 					a.Dc = this.ec++;
 					a.R = 0;
@@ -10974,7 +10966,7 @@
 							var g = e.Sp++;
 							b.aa = g;
 							e.Te.set(g, b);
-							class_Ba.i(e.gq, g, new class_J(new DataView(d.buffer, d.byteOffset, d.byteLength), false));
+							class_Aa.i(e.gq, g, new class_J(new DataView(d.buffer, d.byteOffset, d.byteLength), false));
 							b.Jg = true;
 							e.Ir(b);
 						}
@@ -11038,10 +11030,10 @@
 					,
 					d = a.ib();
 				a = class_p.oh(a);
-				var e = a.Jf.xj;
+				var e = a.Kf.xj;
 				if (null != e) {
 					var f = b.Lj.get(e);
-					null == f && (f = new class_Ab(e.kj, e.Dj),
+					null == f && (f = new class_Eb(e.kj, e.Dj),
 						b.Lj.set(e, f));
 					if (!f.Um())
 						throw class_v.C(3);
@@ -11057,7 +11049,7 @@
 			}
 		}
 
-		class class_Sb extends class_oa {
+		class class_Sb_ReplayRoom extends class_oa_Room {
 			constructor(a, b, c) {
 				class_W.zb = true;
 				super();
@@ -11077,12 +11069,12 @@
 				b = a.ib();
 				if (c != b)
 					throw class_v.C(new class_Tb(b));
-				this.xf = a.ib();
+				this.yf = a.ib();
 				c = pako.inflateRaw(a.tb());
-				this.Rc = new class_J(new DataView(c.buffer, c.byteOffset, c.byteLength));
-				this.br(this.Rc);
-				c = this.Rc.tb();
-				this.Rc = new class_J(new DataView(c.buffer, c.byteOffset, c.byteLength), false);
+				this.Sc = new class_J(new DataView(c.buffer, c.byteOffset, c.byteLength));
+				this.br(this.Sc);
+				c = this.Sc.tb();
+				this.Sc = new class_J(new DataView(c.buffer, c.byteOffset, c.byteLength), false);
 				this.Di();
 				this.ai = window.performance.now();
 				this.xc = -1;
@@ -11099,31 +11091,31 @@
 					c += a.Cb();
 					let e = a.F();
 					this.kl.push({
-						wj: c / this.xf,
+						wj: c / this.yf,
 						kind: e
 					});
 				}
 			}
 
 			Xl() {
-				var a = this.Rc;
-				0 < a.s.byteLength - a.a ? (a = this.Rc.Cb(),
+				var a = this.Sc;
+				0 < a.s.byteLength - a.a ? (a = this.Sc.Cb(),
 					this.tg += a,
-					a = this.Rc.Rb(),
-					this.sg = class_p.oh(this.Rc),
+					a = this.Sc.Rb(),
+					this.sg = class_p.oh(this.Sc),
 					this.sg.R = a) : this.sg = null;
 			}
 
 			$o() {
-				return this.$ / this.xf;
+				return this.$ / this.yf;
 			}
 
 			sa() {
 			}
 
-			eg() {
+			fg() {
 				this.B();
-				class_va.Cc++;
+				class_wa.Cc++;
 				let a = this.U.uc();
 				a.B(this.Jk);
 				return a;
@@ -11137,7 +11129,7 @@
 				0 < this.Pd ? (this.Tb += 1E4,
 				this.Tb > this.Pd && (this.Tb = this.Pd,
 					this.Pd = -1)) : this.Tb += b * this.Il;
-				a = this.xf * this.qh;
+				a = this.yf * this.qh;
 				this.Tb > a && (this.Tb = a);
 				b = this.Tb * this.Ec;
 				a = b | 0;
@@ -11159,13 +11151,13 @@
 
 			Di() {
 				this.tg = 0;
-				this.Tb = this.$ = this.Rc.a = 0;
-				this.U.ka(this.Rc);
+				this.Tb = this.$ = this.Sc.a = 0;
+				this.U.ka(this.Sc);
 				this.Xl();
 			}
 		}
 
-		class class_Na extends class_p {
+		class class_Ha extends class_p {
 			constructor() {
 				super();
 			}
@@ -11185,31 +11177,31 @@
 			}
 
 			static na(a) {
-				let b = new class_Na;
+				let b = new class_Ha;
 				b.hh = a;
 				return b;
 			}
 		}
 
-		class class_Fb extends class_p {
+		class class_mb extends class_p {
 			constructor() {
 				super();
 			}
 
 			apply(a) {
-				0 == this.R && class_Ub.i(a.nm, this.$c, this.color, this.style, this.yn);
+				0 == this.R && class_Nb.i(a.nm, this.ad, this.color, this.style, this.yn);
 			}
 
 			va(a) {
-				a.oc(class_ha.Xc(this.$c, 1E3));
+				a.oc(class_ha.Yc(this.ad, 1E3));
 				a.P(this.color);
 				a.m(this.style);
 				a.m(this.yn);
 			}
 
 			wa(a) {
-				this.$c = a.kc();
-				if (1E3 < this.$c.length)
+				this.ad = a.kc();
+				if (1E3 < this.ad.length)
 					throw class_v.C('message too long');
 				this.color = a.N();
 				this.style = a.F();
@@ -11217,7 +11209,7 @@
 			}
 		}
 
-		class class_cb extends class_p {
+		class class_Xa extends class_p {
 			constructor() {
 				super();
 			}
@@ -11227,12 +11219,12 @@
 					for (var b = a.oa(this.R), c = a.K, d = [], e = 0, f = 0, g = 0; g < c.length;) {
 						let h = c[g];
 						++g;
-						h.ea == class_u.Ma && d.push(h);
-						h.ea == class_u.ga ? ++e : h.ea == class_u.Ca && ++f;
+						h.ea == class_u_Team.Ma && d.push(h);
+						h.ea == class_u_Team.ga ? ++e : h.ea == class_u_Team.Ca && ++f;
 					}
 					c = d.length;
-					0 != c && (f == e ? 2 > c || (a.Yf(b, d[0], class_u.ga),
-						a.Yf(b, d[1], class_u.Ca)) : a.Yf(b, d[0], f > e ? class_u.ga : class_u.Ca));
+					0 != c && (f == e ? 2 > c || (a.Zf(b, d[0], class_u_Team.ga),
+						a.Zf(b, d[1], class_u_Team.Ca)) : a.Zf(b, d[0], f > e ? class_u_Team.ga : class_u_Team.Ca));
 				}
 			}
 
@@ -11243,7 +11235,7 @@
 			}
 		}
 
-		class class_ya extends class_p {
+		class class_qa extends class_p {
 			constructor() {
 				super();
 			}
@@ -11272,14 +11264,14 @@
 			}
 
 			static na(a, b) {
-				let c = new class_ya;
+				let c = new class_qa;
 				c.Aj = a;
 				c.newValue = b;
 				return c;
 			}
 		}
 
-		class class_Ma extends class_p {
+		class class_Ga extends class_p {
 			constructor() {
 				super();
 			}
@@ -11305,14 +11297,14 @@
 			}
 
 			static na(a, b) {
-				let c = new class_Ma;
+				let c = new class_Ga;
 				c.Ud = a;
 				c.gh = b;
 				return c;
 			}
 		}
 
-		class class_Oa extends class_p {
+		class class_Ja extends class_p {
 			constructor() {
 				super();
 			}
@@ -11328,11 +11320,11 @@
 
 			wa(a) {
 				this.ac = a.Bb();
-				null != this.ac && (this.ac = class_ha.Xc(this.ac, 2));
+				null != this.ac && (this.ac = class_ha.Yc(this.ac, 2));
 			}
 
 			static na(a) {
-				let b = new class_Oa;
+				let b = new class_Ja;
 				b.ac = a;
 				return b;
 			}
@@ -11349,7 +11341,7 @@
 					var c = a.oa(this.R)
 						,
 						d = a.Ob(this.R);
-					(d = d || b == c && !a.Vc && null == a.M) && a.Yf(c, b, this.uj);
+					(d = d || b == c && !a.Wc && null == a.M) && a.Zf(c, b, this.uj);
 				}
 			}
 
@@ -11360,8 +11352,8 @@
 
 			wa(a) {
 				this.Ud = a.N();
-				a = a.vf();
-				this.uj = 1 == a ? class_u.ga : 2 == a ? class_u.Ca : class_u.Ma;
+				a = a.wf();
+				this.uj = 1 == a ? class_u_Team.ga : 2 == a ? class_u_Team.Ca : class_u_Team.Ma;
 			}
 
 			static na(a, b) {
@@ -11372,7 +11364,7 @@
 			}
 		}
 
-		class class_Ka extends class_p {
+		class class_Ea extends class_p {
 			constructor() {
 				super();
 			}
@@ -11395,23 +11387,23 @@
 
 			wa(a) {
 				a = pako.inflateRaw(a.tb(a.Rb()));
-				this.Xd = class_q.ka(new class_J(new DataView(a.buffer, a.byteOffset, a.byteLength)));
+				this.Xd = class_q_Stadium.ka(new class_J(new DataView(a.buffer, a.byteOffset, a.byteLength)));
 			}
 
 			static na(a) {
-				let b = new class_Ka;
+				let b = new class_Ea;
 				b.Xd = a;
 				return b;
 			}
 		}
 
-		class class_db extends class_p {
+		class class_Ya extends class_p {
 			constructor() {
 				super();
 			}
 
 			apply(a) {
-				a.Ob(this.R) && this.ea != class_u.Ma && (a.lb[this.ea.aa] = this.ah);
+				a.Ob(this.R) && this.ea != class_u_Team.Ma && (a.lb[this.ea.aa] = this.ah);
 			}
 
 			va(a) {
@@ -11420,20 +11412,20 @@
 			}
 
 			wa(a) {
-				let b = a.vf();
-				this.ea = 1 == b ? class_u.ga : 2 == b ? class_u.Ca : class_u.Ma;
-				this.ah = new class_ua;
+				let b = a.wf();
+				this.ea = 1 == b ? class_u_Team.ga : 2 == b ? class_u_Team.Ca : class_u_Team.Ma;
+				this.ah = new class_va_TeamColors;
 				this.ah.ka(a);
 			}
 		}
 
-		class class_La extends class_p {
+		class class_Fa extends class_p {
 			constructor() {
 				super();
 			}
 
 			apply(a) {
-				a.Ob(this.R) && (a.Vc = this.newValue);
+				a.Ob(this.R) && (a.Wc = this.newValue);
 			}
 
 			va(a) {
@@ -11445,20 +11437,20 @@
 			}
 
 			static na(a) {
-				let b = new class_La;
+				let b = new class_Fa;
 				b.newValue = a;
 				return b;
 			}
 		}
 
-		class class_Ga extends class_p {
+		class class_Da extends class_p {
 			constructor() {
 				super();
 			}
 
 			apply(a) {
 				if (0 == this.R) {
-					var b = new class_ta;
+					var b = new class_ua_FullPlayer;
 					b.X = this.X;
 					b.D = this.name;
 					b.country = this.nj;
@@ -11484,7 +11476,7 @@
 			}
 
 			static na(a, b, c, d) {
-				let e = new class_Ga;
+				let e = new class_Da;
 				e.X = a;
 				e.name = b;
 				e.nj = c;
@@ -11493,7 +11485,7 @@
 			}
 		}
 
-		class class_Hb extends class_p {
+		class class_ob extends class_p {
 			constructor() {
 				super();
 			}
@@ -11511,11 +11503,11 @@
 			wa(a) {
 				this.ac = a.Bb();
 				this.Ge = a.N();
-				null != this.ac && (this.ac = class_ha.Xc(this.ac, 2));
+				null != this.ac && (this.ac = class_ha.Yc(this.ac, 2));
 			}
 		}
 
-		class class_bb extends class_p {
+		class class_Wa extends class_p {
 			constructor() {
 				super();
 			}
@@ -11528,21 +11520,21 @@
 						d = 120 == b.Qa
 						,
 						e = 0 < b.Qa;
-					this.Lf ? b.Qa = 120 : 120 == b.Qa && (b.Qa = 119);
-					d != this.Lf && class_pc.i(a.Fl, c, this.Lf, e);
+					this.Mf ? b.Qa = 120 : 120 == b.Qa && (b.Qa = 119);
+					d != this.Mf && class_tc.i(a.Fl, c, this.Mf, e);
 				}
 			}
 
 			va(a) {
-				a.m(this.Lf ? 1 : 0);
+				a.m(this.Mf ? 1 : 0);
 			}
 
 			wa(a) {
-				this.Lf = 0 != a.F();
+				this.Mf = 0 != a.F();
 			}
 		}
 
-		class class_Za extends class_p {
+		class class_Ta extends class_p {
 			constructor() {
 				super();
 			}
@@ -11550,28 +11542,28 @@
 			sn(a) {
 				if (null != a.Hq) {
 					let b = a.oa(this.R);
-					return null == b ? false : a.Hq(b, this.$c);
+					return null == b ? false : a.Hq(b, this.ad);
 				}
 				return true;
 			}
 
 			apply(a) {
 				let b = a.oa(this.R);
-				null != b && class_Ba.i(a.Kl, b, this.$c);
+				null != b && class_Aa.i(a.Kl, b, this.ad);
 			}
 
 			va(a) {
-				a.oc(class_ha.Xc(this.$c, 140));
+				a.oc(class_ha.Yc(this.ad, 140));
 			}
 
 			wa(a) {
-				this.$c = a.kc();
-				if (140 < this.$c.length)
+				this.ad = a.kc();
+				if (140 < this.ad.length)
 					throw class_v.C('message too long');
 			}
 		}
 
-		class class_Ja extends class_p {
+		class class_Ca extends class_p {
 			constructor() {
 				super();
 			}
@@ -11595,14 +11587,14 @@
 			}
 		}
 
-		class class_Ia extends class_p {
+		class class_Ba extends class_p {
 			constructor() {
 				super();
 			}
 
 			apply(a) {
 				let b = a.oa(this.R);
-				null != b && class_Ba.i(a.Pl, b, this.Bj);
+				null != b && class_Aa.i(a.Pl, b, this.Bj);
 			}
 
 			va(a) {
@@ -11614,13 +11606,13 @@
 			}
 
 			static na(a) {
-				let b = new class_Ia;
+				let b = new class_Ba;
 				b.Bj = a;
 				return b;
 			}
 		}
 
-		class class_ma extends class_p {
+		class class_ka extends class_p {
 			constructor() {
 				class_p.zb = true;
 				super();
@@ -11640,13 +11632,13 @@
 						var c = a.oa(this.R);
 						class_O.remove(a.K, b);
 						null != a.M && class_O.remove(a.M.ua.H, b.J);
-						class_Ub.i(a.Nl, b, this.pd, this.Zg, c);
+						class_Nb.i(a.Nl, b, this.pd, this.Zg, c);
 					}
 				}
 			}
 
 			va(a) {
-				null != this.pd && (this.pd = class_ha.Xc(this.pd, 100));
+				null != this.pd && (this.pd = class_ha.Yc(this.pd, 100));
 				a.P(this.X);
 				a.Fb(this.pd);
 				a.m(this.Zg ? 1 : 0);
@@ -11661,7 +11653,7 @@
 			}
 
 			static na(a, b, c) {
-				let d = new class_ma;
+				let d = new class_ka;
 				d.X = a;
 				d.pd = b;
 				d.Zg = c;
@@ -11669,7 +11661,7 @@
 			}
 		}
 
-		class class_Gb extends class_p {
+		class class_nb extends class_p {
 			constructor() {
 				super();
 			}
@@ -11721,7 +11713,7 @@
 			}
 		}
 
-		class class_Ib extends class_p {
+		class class_pb extends class_p {
 			constructor() {
 				super();
 			}
@@ -11748,9 +11740,9 @@
 						null != this.Ka[7] && (a.o = this.Ka[7]),
 						null != this.Ka[8] && (a.ba = this.Ka[8]),
 						null != this.Ka[9] && (a.Da = this.Ka[9]),
-						null != this.Yc[0] && (a.S = this.Yc[0]),
-						null != this.Yc[1] && (a.h = this.Yc[1]),
-						null != this.Yc[2] && (a.w = this.Yc[2]));
+						null != this.Zc[0] && (a.S = this.Zc[0]),
+						null != this.Zc[1] && (a.h = this.Zc[1]),
+						null != this.Zc[2] && (a.w = this.Zc[2]));
 					}
 				}
 			}
@@ -11769,7 +11761,7 @@
 					d <<= 1;
 				}
 				e = 0;
-				for (f = this.Yc; e < f.length;)
+				for (f = this.Zc; e < f.length;)
 					g = f[e],
 						++e,
 					null != g && (c |= d,
@@ -11792,16 +11784,16 @@
 					0 != (b & 1) && (this.Ka[d] = a.vi());
 					b >>>= 1;
 				}
-				this.Yc = [];
+				this.Zc = [];
 				for (c = 0; 3 > c;)
 					d = c++,
-						this.Yc[d] = null,
-					0 != (b & 1) && (this.Yc[d] = a.N()),
+						this.Zc[d] = null,
+					0 != (b & 1) && (this.Zc[d] = a.N()),
 						b >>>= 1;
 			}
 		}
 
-		class class_Pa extends class_p {
+		class class_Ka extends class_p {
 			constructor() {
 				super();
 			}
@@ -11823,7 +11815,7 @@
 			}
 
 			static na(a, b, c) {
-				let d = new class_Pa;
+				let d = new class_Ka;
 				d.min = a;
 				d.rate = b;
 				d.lj = c;
@@ -11831,7 +11823,7 @@
 			}
 		}
 
-		class class_$a extends class_p {
+		class class_Ua extends class_p {
 			constructor() {
 				super();
 			}
@@ -11847,7 +11839,7 @@
 			}
 		}
 
-		class class_ab extends class_p {
+		class class_Va extends class_p {
 			constructor() {
 				super();
 			}
@@ -11866,7 +11858,7 @@
 							e.J = null;
 							e.Mb = 0;
 						}
-						null != a.Gf && a.Gf(b);
+						null != a.Hf && a.Hf(b);
 					}
 				}
 			}
@@ -11878,7 +11870,7 @@
 			}
 		}
 
-		class class_Fa extends class_p {
+		class class_Ia extends class_p {
 			constructor() {
 				super();
 			}
@@ -11915,7 +11907,7 @@
 			}
 
 			static na(a) {
-				let b = new class_Fa
+				let b = new class_Ia
 					,
 					c = a.U.K
 					,
@@ -11943,11 +11935,11 @@
 			}
 
 			static Lb(a) {
-				return a instanceof class_v ? a : a instanceof Error ? new class_v(a.message, null, a) : new class_Mb(a, null, a);
+				return a instanceof v ? a : a instanceof Error ? new class_v(a.message, null, a) : new class_Mb(a, null, a);
 			}
 
 			static C(a) {
-				return a instanceof class_v ? a.Kj : a instanceof Error ? a : new class_Mb(a);
+				return a instanceof v ? a.Kj : a instanceof Error ? a : new class_Mb(a);
 			}
 		}
 
@@ -11962,7 +11954,7 @@
 			}
 		}
 
-		var Lb = Lb || {},
+		var Ab = Ab || {},
 			X;
 		class_mc.b = true;
 		Object.assign(class_mc.prototype, {
@@ -11970,16 +11962,16 @@
 		});
 		class_O.b = true;
 		Math.b = true;
-		class_Cc.b = true;
+		class_Dc.b = true;
 		class_Q.b = true;
-		class_ca.b = true;
+		class_Z.b = true;
 		class_ha.b = true;
-		class_yc.b = true;
-		Object.assign(class_yc.prototype, {
-			g: class_yc
+		class_jc.b = true;
+		Object.assign(class_jc.prototype, {
+			g: class_jc
 		});
-		var na = Lb['bas.basnet.FailReason'] = {
-			Sf: true,
+		var na = Ab['bas.basnet.FailReason'] = {
+			Tf: true,
 			Zd: null,
 			Je: {
 				wc: 'PeerFailed',
@@ -12013,16 +12005,16 @@
 			}
 		};
 		na.Zd = [na.Je, na.Ke, na.Ie, na.Error];
-		class_Zb.b = true;
-		Object.assign(class_Zb.prototype, {
-			g: class_Zb
+		class_dc.b = true;
+		Object.assign(class_dc.prototype, {
+			g: class_dc
 		});
-		class_Sa.b = true;
-		Object.assign(class_Sa.prototype, {
-			g: class_Sa
+		class_db.b = true;
+		Object.assign(class_db.prototype, {
+			g: class_db
 		});
-		var fb = Lb['bas.basnet.ConnectionRequestResponse'] = {
-			Sf: true,
+		var fb = Ab['bas.basnet.ConnectionRequestResponse'] = {
+			Tf: true,
 			Zd: null,
 			Fj: {
 				wc: 'Accept',
@@ -12030,7 +12022,7 @@
 				Hb: 'bas.basnet.ConnectionRequestResponse',
 				toString: function_ja
 			},
-			Qf: (X = function (a) {
+			Rf: (X = function (a) {
 				return {
 					ob: 1,
 					reason: a,
@@ -12043,15 +12035,15 @@
 				X.Le = ['reason'],
 				X)
 		};
-		fb.Zd = [fb.Fj, fb.Qf];
-		class_Bb.b = true;
-		Object.assign(class_Bb.prototype, {
-			g: class_Bb
+		fb.Zd = [fb.Fj, fb.Rf];
+		class_Lb.b = true;
+		Object.assign(class_Lb.prototype, {
+			g: class_Lb
 		});
-		class_Kc.b = true;
-		class_Nb.b = true;
-		Object.assign(class_Nb.prototype, {
-			g: class_Nb
+		class_Gc.b = true;
+		class_Yb.b = true;
+		Object.assign(class_Yb.prototype, {
+			g: class_Yb
 		});
 		class_J.b = true;
 		Object.assign(class_J.prototype, {
@@ -12065,60 +12057,60 @@
 		Object.assign(class_U.prototype, {
 			g: class_U
 		});
-		class_ub.b = true;
+		class_Kb.b = true;
 		class_ib.b = true;
-		class_Wb.b = true;
 		class_Ob.b = true;
-		Object.assign(class_Ob.prototype, {
-			g: class_Ob
+		class_Pb.b = true;
+		Object.assign(class_Pb.prototype, {
+			g: class_Pb
 		});
 		class_x.b = true;
-		class_$b.b = true;
-		class_Hc.b = true;
+		class_Xb.b = true;
+		class_Ic.b = true;
 		class_p.b = true;
 		Object.assign(class_p.prototype, {
 			g: class_p
 		});
-		class_Va.b = true;
-		Object.assign(class_Va.prototype, {
-			g: class_Va
+		class_eb.b = true;
+		Object.assign(class_eb.prototype, {
+			g: class_eb
 		});
 		class_W.b = true;
 		Object.assign(class_W.prototype, {
 			g: class_W
 		});
-		class_Ya.b = true;
-		class_Ya.ha = class_p;
-		Object.assign(class_Ya.prototype, {
-			g: class_Ya
+		class_Sa.b = true;
+		class_Sa.ha = class_p;
+		Object.assign(class_Sa.prototype, {
+			g: class_Sa
 		});
-		class_Pb.b = true;
-		class_Pb.Ij = true;
-		Object.assign(class_Pb.prototype, {
-			g: class_Pb
+		class_ac.b = true;
+		class_ac.Ij = true;
+		Object.assign(class_ac.prototype, {
+			g: class_ac
 		});
-		class_Yb.b = true;
-		Object.assign(class_Yb.prototype, {
-			g: class_Yb
+		class_ec.b = true;
+		Object.assign(class_ec.prototype, {
+			g: class_ec
 		});
 		class_qc.b = true;
 		Object.assign(class_qc.prototype, {
 			g: class_qc
 		});
-		class_nc.b = true;
-		Object.assign(class_nc.prototype, {
-			g: class_nc
+		class_gc.b = true;
+		Object.assign(class_gc.prototype, {
+			g: class_gc
 		});
-		class_Da.b = true;
-		class_Da.Ij = true;
-		class_va.b = true;
-		class_oa.b = true;
-		class_oa.ha = class_W;
-		Object.assign(class_oa.prototype, {
-			g: class_oa
+		class_Qa.b = true;
+		class_Qa.Ij = true;
+		class_wa.b = true;
+		class_oa_Room.b = true;
+		class_oa_Room.ha = class_W;
+		Object.assign(class_oa_Room.prototype, {
+			g: class_oa_Room
 		});
-		var ia = Lb['bas.marf.net.ConnFailReason'] = {
-			Sf: true,
+		var ia = Ab['bas.marf.net.ConnFailReason'] = {
+			Tf: true,
 			Zd: null,
 			Ie: {
 				wc: 'Cancelled',
@@ -12144,7 +12136,7 @@
 				X.wc = 'Rejected',
 				X.Le = ['reason'],
 				X),
-			Pf: (X = function (a) {
+			Qf: (X = function (a) {
 				return {
 					ob: 3,
 					description: a,
@@ -12157,342 +12149,366 @@
 				X.Le = ['description'],
 				X)
 		};
-		ia.Zd = [ia.Ie, ia.Je, ia.Ke, ia.Pf];
-		class_Ha.b = true;
-		class_Ha.ha = class_oa;
-		Object.assign(class_Ha.prototype, {
-			g: class_Ha
+		ia.Zd = [ia.Ie, ia.Je, ia.Ke, ia.Qf];
+		class_Na_ServerRoom.b = true;
+		class_Na_ServerRoom.ha = class_oa_Room;
+		Object.assign(class_Na_ServerRoom.prototype, {
+			g: class_Na_ServerRoom
 		});
-		class_Rb.b = true;
-		class_Rb.ha = class_oa;
-		Object.assign(class_Rb.prototype, {
-			g: class_Rb
+		class_Rb_ClientRoom.b = true;
+		class_Rb_ClientRoom.ha = class_oa_Room;
+		Object.assign(class_Rb_ClientRoom.prototype, {
+			g: class_Rb_ClientRoom
 		});
-		class_uc.b = true;
-		Object.assign(class_uc.prototype, {
-			g: class_uc
-		});
-		class_vc.b = true;
-		class_Tb.b = true;
-		Object.assign(class_Tb.prototype, {
-			g: class_Tb
-		});
-		class_Sb.b = true;
-		class_Sb.ha = class_oa;
-		Object.assign(class_Sb.prototype, {
-			g: class_Sb
-		});
-		class_Vb.b = true;
-		Object.assign(class_Vb.prototype, {
-			g: class_Vb
-		});
-		class_Ec.b = true;
-		Object.assign(class_Ec.prototype, {
-			g: class_Ec
-		});
-		class_P.b = true;
-		Object.assign(class_P.prototype, {
-			g: class_P
-		});
-		class_Y.b = true;
-		class_H.b = true;
-		class_D.b = true;
-		class_Ba.b = true;
-		class_pc.b = true;
-		class_Ub.b = true;
-		class_Ab.b = true;
-		Object.assign(class_Ab.prototype, {
-			g: class_Ab
-		});
-		class_Ac.b = true;
-		class_cc.b = true;
-		Object.assign(class_cc.prototype, {
-			g: class_cc
-		});
-		class_Ca.b = true;
-		class_Ea.b = true;
-		Object.assign(class_Ea.prototype, {
-			g: class_Ea
-		});
-		class_Xb.b = true;
-		Object.assign(class_Xb.prototype, {
-			g: class_Xb
-		});
-		class_wc.b = true;
-		Object.assign(class_wc.prototype, {
-			g: class_wc
-		});
-		class_ka.b = true;
-		Object.assign(class_ka.prototype, {
-			g: class_ka
-		});
-		class_ic.b = true;
-		Object.assign(class_ic.prototype, {
-			g: class_ic
-		});
-		class_zc.b = true;
-		class_qa.b = true;
-		Object.assign(class_qa.prototype, {
-			g: class_qa
-		});
-		class_ra.b = true;
-		Object.assign(class_ra.prototype, {
-			g: class_ra
-		});
-		class_m.b = true;
-		class_xc.b = true;
-		Object.assign(class_xc.prototype, {
-			g: class_xc
-		});
-		class_B.b = true;
-		class_C.b = true;
 		class_oc.b = true;
 		Object.assign(class_oc.prototype, {
 			g: class_oc
 		});
-		class_Qb.b = true;
-		Object.assign(class_Qb.prototype, {
-			g: class_Qb
+		class_uc.b = true;
+		class_Tb.b = true;
+		Object.assign(class_Tb.prototype, {
+			g: class_Tb
 		});
-		class_ac.b = true;
-		class_wb.b = true;
-		class_jc.b = true;
-		Object.assign(class_jc.prototype, {
-			g: class_jc
+		class_Sb_ReplayRoom.b = true;
+		class_Sb_ReplayRoom.ha = class_oa_Room;
+		Object.assign(class_Sb_ReplayRoom.prototype, {
+			g: class_Sb_ReplayRoom
+		});
+		class_cc.b = true;
+		Object.assign(class_cc.prototype, {
+			g: class_cc
+		});
+		class_Ac.b = true;
+		Object.assign(class_Ac.prototype, {
+			g: class_Ac
+		});
+		class_P_Point.b = true;
+		Object.assign(class_P_Point.prototype, {
+			g: class_P_Point
+		});
+		class_Y.b = true;
+		class_H.b = true;
+		class_D.b = true;
+		class_Aa.b = true;
+		class_tc.b = true;
+		class_Nb.b = true;
+		class_Eb.b = true;
+		Object.assign(class_Eb.prototype, {
+			g: class_Eb
+		});
+		class_Bc.b = true;
+		class_bc.b = true;
+		Object.assign(class_bc.prototype, {
+			g: class_bc
+		});
+		class_Pa.b = true;
+		class_Ma_RoomManager.b = true;
+		Object.assign(class_Ma_RoomManager.prototype, {
+			g: class_Ma_RoomManager
+		});
+		class_Zb.b = true;
+		Object.assign(class_Zb.prototype, {
+			g: class_Zb
 		});
 		class_lc.b = true;
 		Object.assign(class_lc.prototype, {
 			g: class_lc
 		});
+		class_ma.b = true;
+		Object.assign(class_ma.prototype, {
+			g: class_ma
+		});
+		class_yc.b = true;
+		Object.assign(class_yc.prototype, {
+			g: class_yc
+		});
+		class_zc.b = true;
 		class_za.b = true;
 		Object.assign(class_za.prototype, {
 			g: class_za
 		});
-		class_ba.b = true;
-		class_ba.qd = [class_Da];
-		Object.assign(class_ba.prototype, {
-			g: class_ba
+		class_ya.b = true;
+		Object.assign(class_ya.prototype, {
+			g: class_ya
 		});
-		class_Eb.b = true;
-		Object.assign(class_Eb.prototype, {
-			g: class_Eb
+		class_m.b = true;
+		class_vc.b = true;
+		Object.assign(class_vc.prototype, {
+			g: class_vc
 		});
-		class_bc.b = true;
-		Object.assign(class_bc.prototype, {
-			g: class_bc
+		class_B.b = true;
+		class_C.b = true;
+		class_ic.b = true;
+		Object.assign(class_ic.prototype, {
+			g: class_ic
+		});
+		class_Qb.b = true;
+		Object.assign(class_Qb.prototype, {
+			g: class_Qb
+		});
+		class_$b.b = true;
+		class_lb.b = true;
+		class_wc.b = true;
+		Object.assign(class_wc.prototype, {
+			g: class_wc
+		});
+		class_xc.b = true;
+		Object.assign(class_xc.prototype, {
+			g: class_xc
+		});
+		class_ra_StadiumDisc.b = true;
+		Object.assign(class_ra_StadiumDisc.prototype, {
+			g: class_ra_StadiumDisc
+		});
+		class_ca_Game.b = true;
+		class_ca_Game.qd = [class_Qa];
+		Object.assign(class_ca_Game.prototype, {
+			g: class_ca_Game
+		});
+		class_Cb_Goal.b = true;
+		Object.assign(class_Cb_Goal.prototype, {
+			g: class_Cb_Goal
+		});
+		class_Vb_PlayerPhysics.b = true;
+		Object.assign(class_Vb_PlayerPhysics.prototype, {
+			g: class_Vb_PlayerPhysics
 		});
 		class_Ra.b = true;
 		Object.assign(class_Ra.prototype, {
 			g: class_Ra
 		});
-		class_q.b = true;
-		Object.assign(class_q.prototype, {
-			g: class_q
+		class_q_Stadium.b = true;
+		Object.assign(class_q_Stadium.prototype, {
+			g: class_q_Stadium
 		});
-		class_ua.b = true;
-		Object.assign(class_ua.prototype, {
-			g: class_ua
+		class_va_TeamColors.b = true;
+		Object.assign(class_va_TeamColors.prototype, {
+			g: class_va_TeamColors
 		});
-		class_u.b = true;
-		Object.assign(class_u.prototype, {
-			g: class_u
+		class_u_Team.b = true;
+		Object.assign(class_u_Team.prototype, {
+			g: class_u_Team
 		});
-		class_sa.b = true;
-		class_sa.qd = [class_Da, class_Pb];
-		Object.assign(class_sa.prototype, {
-			g: class_sa
+		class_ta_RoomState.b = true;
+		class_ta_RoomState.qd = [class_Qa, class_ac];
+		Object.assign(class_ta_RoomState.prototype, {
+			g: class_ta_RoomState
 		});
-		class_ta.b = true;
-		class_ta.qd = [class_Da];
-		Object.assign(class_ta.prototype, {
-			g: class_ta
+		class_ua_FullPlayer.b = true;
+		class_ua_FullPlayer.qd = [class_Qa];
+		Object.assign(class_ua_FullPlayer.prototype, {
+			g: class_ua_FullPlayer
 		});
-		class_Na.b = true;
-		class_Na.ha = class_p;
-		Object.assign(class_Na.prototype, {
-			g: class_Na
+		class_Ha.b = true;
+		class_Ha.ha = class_p;
+		Object.assign(class_Ha.prototype, {
+			g: class_Ha
 		});
-		class_Fb.b = true;
-		class_Fb.ha = class_p;
-		Object.assign(class_Fb.prototype, {
-			g: class_Fb
+		class_mb.b = true;
+		class_mb.ha = class_p;
+		Object.assign(class_mb.prototype, {
+			g: class_mb
 		});
-		class_cb.b = true;
-		class_cb.ha = class_p;
-		Object.assign(class_cb.prototype, {
-			g: class_cb
+		class_Xa.b = true;
+		class_Xa.ha = class_p;
+		Object.assign(class_Xa.prototype, {
+			g: class_Xa
 		});
-		class_ya.b = true;
-		class_ya.ha = class_p;
-		Object.assign(class_ya.prototype, {
-			g: class_ya
-		});
-		class_Ma.b = true;
-		class_Ma.ha = class_p;
-		Object.assign(class_Ma.prototype, {
-			g: class_Ma
-		});
-		class_Oa.b = true;
-		class_Oa.ha = class_p;
-		Object.assign(class_Oa.prototype, {
-			g: class_Oa
-		});
-		class_fa.b = true;
-		class_fa.ha = class_p;
-		Object.assign(class_fa.prototype, {
-			g: class_fa
-		});
-		class_Ka.b = true;
-		class_Ka.ha = class_p;
-		Object.assign(class_Ka.prototype, {
-			g: class_Ka
-		});
-		class_db.b = true;
-		class_db.ha = class_p;
-		Object.assign(class_db.prototype, {
-			g: class_db
-		});
-		class_La.b = true;
-		class_La.ha = class_p;
-		Object.assign(class_La.prototype, {
-			g: class_La
+		class_qa.b = true;
+		class_qa.ha = class_p;
+		Object.assign(class_qa.prototype, {
+			g: class_qa
 		});
 		class_Ga.b = true;
 		class_Ga.ha = class_p;
 		Object.assign(class_Ga.prototype, {
 			g: class_Ga
 		});
-		class_Hb.b = true;
-		class_Hb.ha = class_p;
-		Object.assign(class_Hb.prototype, {
-			g: class_Hb
-		});
-		class_bb.b = true;
-		class_bb.ha = class_p;
-		Object.assign(class_bb.prototype, {
-			g: class_bb
-		});
-		class_Za.b = true;
-		class_Za.ha = class_p;
-		Object.assign(class_Za.prototype, {
-			g: class_Za
-		});
 		class_Ja.b = true;
 		class_Ja.ha = class_p;
 		Object.assign(class_Ja.prototype, {
 			g: class_Ja
 		});
-		class_Ia.b = true;
-		class_Ia.ha = class_p;
-		Object.assign(class_Ia.prototype, {
-			g: class_Ia
+		class_fa.b = true;
+		class_fa.ha = class_p;
+		Object.assign(class_fa.prototype, {
+			g: class_fa
 		});
-		class_Gc.b = true;
-		class_ma.b = true;
-		class_ma.ha = class_p;
-		Object.assign(class_ma.prototype, {
-			g: class_ma
+		class_Ea.b = true;
+		class_Ea.ha = class_p;
+		Object.assign(class_Ea.prototype, {
+			g: class_Ea
 		});
-		class_Gb.b = true;
-		class_Gb.ha = class_p;
-		Object.assign(class_Gb.prototype, {
-			g: class_Gb
-		});
-		class_Ib.b = true;
-		class_Ib.ha = class_p;
-		Object.assign(class_Ib.prototype, {
-			g: class_Ib
-		});
-		class_Pa.b = true;
-		class_Pa.ha = class_p;
-		Object.assign(class_Pa.prototype, {
-			g: class_Pa
-		});
-		class_$a.b = true;
-		class_$a.ha = class_p;
-		Object.assign(class_$a.prototype, {
-			g: class_$a
-		});
-		class_ab.b = true;
-		class_ab.ha = class_p;
-		Object.assign(class_ab.prototype, {
-			g: class_ab
+		class_Ya.b = true;
+		class_Ya.ha = class_p;
+		Object.assign(class_Ya.prototype, {
+			g: class_Ya
 		});
 		class_Fa.b = true;
 		class_Fa.ha = class_p;
 		Object.assign(class_Fa.prototype, {
 			g: class_Fa
 		});
-		class_xa.b = true;
-		class_xa.qd = [class_Da];
-		Object.assign(class_xa.prototype, {
-			g: class_xa
+		class_Da.b = true;
+		class_Da.ha = class_p;
+		Object.assign(class_Da.prototype, {
+			g: class_Da
 		});
-		class_Kb.b = true;
-		class_Kb.qd = [class_Da];
-		Object.assign(class_Kb.prototype, {
-			g: class_Kb
+		class_ob.b = true;
+		class_ob.ha = class_p;
+		Object.assign(class_ob.prototype, {
+			g: class_ob
 		});
-		class_eb.b = true;
-		class_eb.qd = [class_Da];
-		Object.assign(class_eb.prototype, {
-			g: class_eb
+		class_Wa.b = true;
+		class_Wa.ha = class_p;
+		Object.assign(class_Wa.prototype, {
+			g: class_Wa
 		});
-		class_R.b = true;
-		Object.assign(class_R.prototype, {
-			g: class_R
+		class_Ta.b = true;
+		class_Ta.ha = class_p;
+		Object.assign(class_Ta.prototype, {
+			g: class_Ta
 		});
-		class_I.b = true;
-		Object.assign(class_I.prototype, {
-			g: class_I
+		class_Ca.b = true;
+		class_Ca.ha = class_p;
+		Object.assign(class_Ca.prototype, {
+			g: class_Ca
 		});
-		class_G.b = true;
-		Object.assign(class_G.prototype, {
-			g: class_G
+		class_Ba.b = true;
+		class_Ba.ha = class_p;
+		Object.assign(class_Ba.prototype, {
+			g: class_Ba
+		});
+		class_Hc.b = true;
+		class_ka.b = true;
+		class_ka.ha = class_p;
+		Object.assign(class_ka.prototype, {
+			g: class_ka
+		});
+		class_nb.b = true;
+		class_nb.ha = class_p;
+		Object.assign(class_nb.prototype, {
+			g: class_nb
+		});
+		class_pb.b = true;
+		class_pb.ha = class_p;
+		Object.assign(class_pb.prototype, {
+			g: class_pb
+		});
+		class_Ka.b = true;
+		class_Ka.ha = class_p;
+		Object.assign(class_Ka.prototype, {
+			g: class_Ka
+		});
+		class_Ua.b = true;
+		class_Ua.ha = class_p;
+		Object.assign(class_Ua.prototype, {
+			g: class_Ua
+		});
+		class_Va.b = true;
+		class_Va.ha = class_p;
+		Object.assign(class_Va.prototype, {
+			g: class_Va
+		});
+		class_Ia.b = true;
+		class_Ia.ha = class_p;
+		Object.assign(class_Ia.prototype, {
+			g: class_Ia
+		});
+		class_sa_DynamicDisc.b = true;
+		class_sa_DynamicDisc.qd = [class_Qa];
+		Object.assign(class_sa_DynamicDisc.prototype, {
+			g: class_sa_DynamicDisc
+		});
+		class_Db_Joint.b = true;
+		class_Db_Joint.qd = [class_Qa];
+		Object.assign(class_Db_Joint.prototype, {
+			g: class_Db_Joint
+		});
+		class_ab_GameObjects.b = true;
+		class_ab_GameObjects.qd = [class_Qa];
+		Object.assign(class_ab_GameObjects.prototype, {
+			g: class_ab_GameObjects
+		});
+		class_R_Plane.b = true;
+		Object.assign(class_R_Plane.prototype, {
+			g: class_R_Plane
+		});
+		class_I_Segment.b = true;
+		Object.assign(class_I_Segment.prototype, {
+			g: class_I_Segment
+		});
+		class_G_Vertex.b = true;
+		Object.assign(class_G_Vertex.prototype, {
+			g: class_G_Vertex
 		});
 		class_T.b = true;
 		Object.assign(class_T.prototype, {
 			g: class_T
 		});
-		class_da.b = true;
-		Object.assign(class_da.prototype, {
-			g: class_da
+		class_ea.b = true;
+		Object.assign(class_ea.prototype, {
+			g: class_ea
 		});
-		class_hc.b = true;
-		Object.assign(class_hc.prototype, {
-			g: class_hc
+		class_nc.b = true;
+		Object.assign(class_nc.prototype, {
+			g: class_nc
 		});
-		class_Db.b = true;
-		Object.assign(class_Db.prototype, {
-			g: class_Db
+		class_zb.b = true;
+		Object.assign(class_zb.prototype, {
+			g: class_zb
 		});
-		class_hb.b = true;
-		Object.assign(class_hb.prototype, {
-			g: class_hb
+		class_ub.b = true;
+		Object.assign(class_ub.prototype, {
+			g: class_ub
 		});
-		class_Xa.b = true;
-		Object.assign(class_Xa.prototype, {
-			g: class_Xa
+		class_bb.b = true;
+		Object.assign(class_bb.prototype, {
+			g: class_bb
 		});
-		class_dc.b = true;
-		Object.assign(class_dc.prototype, {
-			g: class_dc
+		class_Wb.b = true;
+		Object.assign(class_Wb.prototype, {
+			g: class_Wb
 		});
-		class_nb.b = true;
-		Object.assign(class_nb.prototype, {
-			g: class_nb
+		class_tb.b = true;
+		Object.assign(class_tb.prototype, {
+			g: class_tb
+		});
+		class_wb.b = true;
+		Object.assign(class_wb.prototype, {
+			g: class_wb
+		});
+		class_rb.b = true;
+		Object.assign(class_rb.prototype, {
+			g: class_rb
+		});
+		class_Za.b = true;
+		Object.assign(class_Za.prototype, {
+			g: class_Za
 		});
 		class_qb.b = true;
 		Object.assign(class_qb.prototype, {
 			g: class_qb
 		});
-		class_ob.b = true;
-		Object.assign(class_ob.prototype, {
-			g: class_ob
+		class_hc.b = true;
+		Object.assign(class_hc.prototype, {
+			g: class_hc
 		});
-		class_Ta.b = true;
-		Object.assign(class_Ta.prototype, {
-			g: class_Ta
+		class_pc.b = true;
+		Object.assign(class_pc.prototype, {
+			g: class_pc
+		});
+		class_xa.b = true;
+		Object.assign(class_xa.prototype, {
+			g: class_xa
+		});
+		class_Ib.b = true;
+		Object.assign(class_Ib.prototype, {
+			g: class_Ib
+		});
+		class_Fb.b = true;
+		Object.assign(class_Fb.prototype, {
+			g: class_Fb
 		});
 		class_kb.b = true;
 		Object.assign(class_kb.prototype, {
@@ -12502,89 +12518,65 @@
 		Object.assign(class_kc.prototype, {
 			g: class_kc
 		});
-		class_tc.b = true;
-		Object.assign(class_tc.prototype, {
-			g: class_tc
-		});
-		class_wa.b = true;
-		Object.assign(class_wa.prototype, {
-			g: class_wa
-		});
-		class_Jb.b = true;
-		Object.assign(class_Jb.prototype, {
-			g: class_Jb
-		});
-		class_Cb.b = true;
-		Object.assign(class_Cb.prototype, {
-			g: class_Cb
-		});
-		class_vb.b = true;
-		Object.assign(class_vb.prototype, {
-			g: class_vb
-		});
-		class_gc.b = true;
-		Object.assign(class_gc.prototype, {
-			g: class_gc
-		});
-		class_rb.b = true;
-		Object.assign(class_rb.prototype, {
-			g: class_rb
-		});
-		class_lb.b = true;
-		Object.assign(class_lb.prototype, {
-			g: class_lb
-		});
-		class_Aa.b = true;
-		Object.assign(class_Aa.prototype, {
-			g: class_Aa
-		});
-		class_Z.b = true;
-		Object.assign(class_Z.prototype, {
-			g: class_Z
-		});
-		class_Qa.b = true;
-		Object.assign(class_Qa.prototype, {
-			g: class_Qa
-		});
-		class_tb.b = true;
-		Object.assign(class_tb.prototype, {
-			g: class_tb
-		});
-		class_zb.b = true;
-		Object.assign(class_zb.prototype, {
-			g: class_zb
-		});
-		class_Ua.b = true;
-		Object.assign(class_Ua.prototype, {
-			g: class_Ua
-		});
 		class_sb.b = true;
 		Object.assign(class_sb.prototype, {
 			g: class_sb
 		});
-		class_pb.b = true;
-		Object.assign(class_pb.prototype, {
-			g: class_pb
+		class_jb.b = true;
+		Object.assign(class_jb.prototype, {
+			g: class_jb
 		});
-		class_gb.b = true;
-		Object.assign(class_gb.prototype, {
-			g: class_gb
-		});
-		class_la.b = true;
-		Object.assign(class_la.prototype, {
-			g: class_la
+		class_Oa.b = true;
+		Object.assign(class_Oa.prototype, {
+			g: class_Oa
 		});
 		class_aa.b = true;
 		Object.assign(class_aa.prototype, {
 			g: class_aa
 		});
-		class_mb.b = true;
-		Object.assign(class_mb.prototype, {
-			g: class_mb
+		class_La.b = true;
+		Object.assign(class_La.prototype, {
+			g: class_La
 		});
-		class_jb.b = true;
-		Object.assign(class_jb.prototype, {
-			g: class_jb
+		class_Jb.b = true;
+		Object.assign(class_Jb.prototype, {
+			g: class_Jb
+		});
+		class_Bb.b = true;
+		Object.assign(class_Bb.prototype, {
+			g: class_Bb
+		});
+		class_$a.b = true;
+		Object.assign(class_$a.prototype, {
+			g: class_$a
+		});
+		class_gb.b = true;
+		Object.assign(class_gb.prototype, {
+			g: class_gb
+		});
+		class_vb.b = true;
+		Object.assign(class_vb.prototype, {
+			g: class_vb
+		});
+		class_xb.b = true;
+		Object.assign(class_xb.prototype, {
+			g: class_xb
+		});
+		class_la.b = true;
+		Object.assign(class_la.prototype, {
+			g: class_la
+		});
+		class_ba.b = true;
+		Object.assign(class_ba.prototype, {
+			g: class_ba
+		});
+		class_yb.b = true;
+		Object.assign(class_yb.prototype, {
+			g: class_yb
+		});
+		class_hb.b = true;
+		Object.assign(class_hb.prototype, {
+			g: class_hb
 		});
 		class_v.b = true;
 		class_v.ha = Error;
@@ -12596,9 +12588,9 @@
 		Object.assign(class_Mb.prototype, {
 			g: class_Mb
 		});
-		class_Dc.b = true;
-		Object.assign(class_Dc.prototype, {
-			g: class_Dc
+		class_Fc.b = true;
+		Object.assign(class_Fc.prototype, {
+			g: class_Fc
 		});
 		class_w.b = true;
 		globalScope.Ej |= 0;
@@ -12616,25 +12608,25 @@
 		Array.b = true;
 		Date.prototype.g = Date;
 		Date.b = 'Date';
-		var ec = {}
+		var Ub = {}
 			,
 			Lc = {}
 			,
 			E = Number
 			,
-			Fc = Boolean
+			Cc = Boolean
 			,
 			Mc = {}
 			,
 			Nc = {};
-		class_u.Ma = new class_u(0, 16777215, 0, -1, 'Spectators', 't-spec', 0, 0);
-		class_u.ga = new class_u(1, 15035990, -1, 8, 'Red', 't-red', 15035990, 2);
-		class_u.Ca = new class_u(2, 5671397, 1, 16, 'Blue', 't-blue', 625603, 4);
-		class_u.Ma.Bg = class_u.Ma;
-		class_u.ga.Bg = class_u.Ca;
-		class_u.Ca.Bg = class_u.ga;
+		class_u_Team.Ma = new class_u_Team(0, 16777215, 0, -1, 'Spectators', 't-spec', 0, 0);
+		class_u_Team.ga = new class_u_Team(1, 15035990, -1, 8, 'Red', 't-red', 15035990, 2);
+		class_u_Team.Ca = new class_u_Team(2, 5671397, 1, 16, 'Blue', 't-blue', 625603, 4);
+		class_u_Team.Ma.Bg = class_u_Team.Ma;
+		class_u_Team.ga.Bg = class_u_Team.Ca;
+		class_u_Team.Ca.Bg = class_u_Team.ga;
 		class_w.Kn = {}.toString;
-		class_Sa.to = {
+		class_db.to = {
 			mandatory: {
 				OfferToReceiveAudio: false,
 				OfferToReceiveVideo: false
@@ -12653,14 +12645,14 @@
 		class_ib.op = ['click-rail', 'drag-thumb', 'wheel', 'touch'];
 		class_p.zb = false;
 		class_p.hn = new Map;
-		class_p.If = 0;
+		class_p.Jf = 0;
 		class_W.zb = false;
-		class_Ya.za = class_p.Ga({
+		class_Sa.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
-		class_va.Cc = 0;
-		class_vc.channels = [{
+		class_wa.Cc = 0;
+		class_uc.channels = [{
 			name: 'ro',
 			reliable: true,
 			ordered: true
@@ -12674,24 +12666,24 @@
 			ordered: false
 		}];
 		class_Y.Gj = 'application/x-www-form-urlencoded';
-		class_Ca.bb = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
+		class_Pa.bb = ['Afghanistan', 'AF', 33.3, 65.1, 'Albania', 'AL', 41.1, 20.1, 'Algeria', 'DZ', 28, 1.6, 'American Samoa', 'AS', -14.2, -170.1, 'Andorra', 'AD', 42.5, 1.6, 'Angola', 'AO', -11.2, 17.8, 'Anguilla', 'AI', 18.2, -63, 'Antigua and Barbuda', 'AG', 17, -61.7, 'Argentina', 'AR', -34.5, -58.4, 'Armenia', 'AM', 40, 45, 'Aruba', 'AW', 12.5, -69.9, 'Australia', 'AU', -25.2, 133.7, 'Austria', 'AT', 47.5, 14.5, 'Azerbaijan', 'AZ', 40.1, 47.5, 'Bahamas', 'BS', 25, -77.3, 'Bahrain', 'BH', 25.9, 50.6, 'Bangladesh', 'BD', 23.6, 90.3, 'Barbados', 'BB', 13.1, -59.5, 'Belarus', 'BY', 53.7, 27.9, 'Belgium', 'BE', 50.5, 4.4, 'Belize', 'BZ', 17.1, -88.4, 'Benin', 'BJ', 9.3, 2.3, 'Bermuda', 'BM', 32.3, -64.7, 'Bhutan', 'BT', 27.5, 90.4, 'Bolivia', 'BO', -16.2, -63.5, 'Bosnia and Herzegovina', 'BA', 43.9, 17.6, 'Botswana', 'BW', -22.3, 24.6, 'Bouvet Island', 'BV', -54.4, 3.4, 'Brazil', 'BR', -14.2, -51.9, 'British Indian Ocean Territory', 'IO', -6.3, 71.8, 'British Virgin Islands', 'VG', 18.4, -64.6, 'Brunei', 'BN', 4.5, 114.7, 'Bulgaria', 'BG', 42.7, 25.4, 'Burkina Faso', 'BF', 12.2, -1.5, 'Burundi', 'BI', -3.3, 29.9, 'Cambodia', 'KH', 12.5, 104.9, 'Cameroon', 'CM', 7.3, 12.3, 'Canada', 'CA', 56.1, -106.3, 'Cape Verde', 'CV', 16, -24, 'Cayman Islands', 'KY', 19.5, -80.5, 'Central African Republic', 'CF', 6.6, 20.9, 'Chad', 'TD', 15.4, 18.7, 'Chile', 'CL', -35.6, -71.5, 'China', 'CN', 35.8, 104.1, 'Christmas Island', 'CX', -10.4, 105.6, 'Colombia', 'CO', 4.5, -74.2, 'Comoros', 'KM', -11.8, 43.8, 'Congo [DRC]', 'CD', -4, 21.7, 'Congo [Republic]', 'CG', -.2, 15.8, 'Cook Islands', 'CK', -21.2, -159.7, 'Costa Rica', 'CR', 9.7, -83.7, 'Croatia', 'HR', 45.1, 15.2, 'Cuba', 'CU', 21.5, -77.7, 'Cyprus', 'CY', 35.1, 33.4, 'Czech Republic', 'CZ', 49.8, 15.4, 'C\u00f4te d\'Ivoire', 'CI', 7.5, -5.5, 'Denmark', 'DK', 56.2, 9.5, 'Djibouti', 'DJ', 11.8, 42.5, 'Dominica', 'DM', 15.4, -61.3, 'Dominican Republic', 'DO', 18.7, -70.1, 'Ecuador', 'EC', -1.8, -78.1, 'Egypt', 'EG', 26.8, 30.8, 'El Salvador', 'SV', 13.7, -88.8, 'England', 'ENG', 55.3, -3.4, 'Equatorial Guinea', 'GQ', 1.6, 10.2, 'Eritrea', 'ER', 15.1, 39.7, 'Estonia', 'EE', 58.5, 25, 'Ethiopia', 'ET', 9.1, 40.4, 'Faroe Islands', 'FO', 61.8, -6.9, 'Fiji', 'FJ', -16.5, 179.4, 'Finland', 'FI', 61.9, 25.7, 'France', 'FR', 46.2, 2.2, 'French Guiana', 'GF', 3.9, -53.1, 'French Polynesia', 'PF', -17.6, -149.4, 'Gabon', 'GA', -.8, 11.6, 'Gambia', 'GM', 13.4, -15.3, 'Georgia', 'GE', 42.3, 43.3, 'Germany', 'DE', 51.1, 10.4, 'Ghana', 'GH', 7.9, -1, 'Gibraltar', 'GI', 36.1, -5.3, 'Greece', 'GR', 39, 21.8, 'Greenland', 'GL', 71.7, -42.6, 'Grenada', 'GD', 12.2, -61.6, 'Guadeloupe', 'GP', 16.9, -62, 'Guam', 'GU', 13.4, 144.7, 'Guatemala', 'GT', 15.7, -90.2, 'Guinea', 'GN', 9.9, -9.6, 'Guinea-Bissau', 'GW', 11.8, -15.1, 'Guyana', 'GY', 4.8, -58.9, 'Haiti', 'HT', 18.9, -72.2, 'Honduras', 'HN', 15.1, -86.2, 'Hong Kong', 'HK', 22.3, 114.1, 'Hungary', 'HU', 47.1, 19.5, 'Iceland', 'IS', 64.9, -19, 'India', 'IN', 20.5, 78.9, 'Indonesia', 'ID', -.7, 113.9, 'Iran', 'IR', 32.4, 53.6, 'Iraq', 'IQ', 33.2, 43.6, 'Ireland', 'IE', 53.4, -8.2, 'Israel', 'IL', 31, 34.8, 'Italy', 'IT', 41.8, 12.5, 'Jamaica', 'JM', 18.1, -77.2, 'Japan', 'JP', 36.2, 138.2, 'Jordan', 'JO', 30.5, 36.2, 'Kazakhstan', 'KZ', 48, 66.9, 'Kenya', 'KE', -0, 37.9, 'Kiribati', 'KI', -3.3, -168.7, 'Kosovo', 'XK', 42.6, 20.9, 'Kuwait', 'KW', 29.3, 47.4, 'Kyrgyzstan', 'KG', 41.2, 74.7, 'Laos', 'LA', 19.8, 102.4, 'Latvia', 'LV', 56.8, 24.6, 'Lebanon', 'LB', 33.8, 35.8, 'Lesotho', 'LS', -29.6, 28.2, 'Liberia', 'LR', 6.4, -9.4, 'Libya', 'LY', 26.3, 17.2, 'Liechtenstein', 'LI', 47.1, 9.5, 'Lithuania', 'LT', 55.1, 23.8, 'Luxembourg', 'LU', 49.8, 6.1, 'Macau', 'MO', 22.1, 113.5, 'Macedonia [FYROM]', 'MK', 41.6, 21.7, 'Madagascar', 'MG', -18.7, 46.8, 'Malawi', 'MW', -13.2, 34.3, 'Malaysia', 'MY', 4.2, 101.9, 'Maldives', 'MV', 3.2, 73.2, 'Mali', 'ML', 17.5, -3.9, 'Malta', 'MT', 35.9, 14.3, 'Marshall Islands', 'MH', 7.1, 171.1, 'Martinique', 'MQ', 14.6, -61, 'Mauritania', 'MR', 21, -10.9, 'Mauritius', 'MU', -20.3, 57.5, 'Mayotte', 'YT', -12.8, 45.1, 'Mexico', 'MX', 23.6, -102.5, 'Micronesia', 'FM', 7.4, 150.5, 'Moldova', 'MD', 47.4, 28.3, 'Monaco', 'MC', 43.7, 7.4, 'Mongolia', 'MN', 46.8, 103.8, 'Montenegro', 'ME', 42.7, 19.3, 'Montserrat', 'MS', 16.7, -62.1, 'Morocco', 'MA', 31.7, -7, 'Mozambique', 'MZ', -18.6, 35.5, 'Myanmar [Burma]', 'MM', 21.9, 95.9, 'Namibia', 'NA', -22.9, 18.4, 'Nauru', 'NR', -.5, 166.9, 'Nepal', 'NP', 28.3, 84.1, 'Netherlands', 'NL', 52.1, 5.2, 'Netherlands Antilles', 'AN', 12.2, -69, 'New Caledonia', 'NC', -20.9, 165.6, 'New Zealand', 'NZ', -40.9, 174.8, 'Nicaragua', 'NI', 12.8, -85.2, 'Niger', 'NE', 17.6, 8, 'Nigeria', 'NG', 9, 8.6, 'Niue', 'NU', -19, -169.8, 'Norfolk Island', 'NF', -29, 167.9, 'North Korea', 'KP', 40.3, 127.5, 'Northern Mariana Islands', 'MP', 17.3, 145.3, 'Norway', 'NO', 60.4, 8.4, 'Oman', 'OM', 21.5, 55.9, 'Pakistan', 'PK', 30.3, 69.3, 'Palau', 'PW', 7.5, 134.5, 'Palestinian Territories', 'PS', 31.9, 35.2, 'Panama', 'PA', 8.5, -80.7, 'Papua New Guinea', 'PG', -6.3, 143.9, 'Paraguay', 'PY', -23.4, -58.4, 'Peru', 'PE', -9.1, -75, 'Philippines', 'PH', 12.8, 121.7, 'Pitcairn Islands', 'PN', -24.7, -127.4, 'Poland', 'PL', 51.9, 19.1, 'Portugal', 'PT', 39.3, -8.2, 'Puerto Rico', 'PR', 18.2, -66.5, 'Qatar', 'QA', 25.3, 51.1, 'Romania', 'RO', 45.9, 24.9, 'Russia', 'RU', 61.5, 105.3, 'Rwanda', 'RW', -1.9, 29.8, 'R\u00e9union', 'RE', -21.1, 55.5, 'Saint Helena', 'SH', -24.1, -10, 'Saint Kitts', 'KN', 17.3, -62.7, 'Saint Lucia', 'LC', 13.9, -60.9, 'Saint Pierre', 'PM', 46.9, -56.2, 'Saint Vincent', 'VC', 12.9, -61.2, 'Samoa', 'WS', -13.7, -172.1, 'San Marino', 'SM', 43.9, 12.4, 'Saudi Arabia', 'SA', 23.8, 45, 'Scotland', 'SCT', 56.5, 4.2, 'Senegal', 'SN', 14.4, -14.4, 'Serbia', 'RS', 44, 21, 'Seychelles', 'SC', -4.6, 55.4, 'Sierra Leone', 'SL', 8.4, -11.7, 'Singapore', 'SG', 1.3, 103.8, 'Slovakia', 'SK', 48.6, 19.6, 'Slovenia', 'SI', 46.1, 14.9, 'Solomon Islands', 'SB', -9.6, 160.1, 'Somalia', 'SO', 5.1, 46.1, 'South Africa', 'ZA', -30.5, 22.9, 'South Georgia', 'GS', -54.4, -36.5, 'South Korea', 'KR', 35.9, 127.7, 'Spain', 'ES', 40.4, -3.7, 'Sri Lanka', 'LK', 7.8, 80.7, 'Sudan', 'SD', 12.8, 30.2, 'Suriname', 'SR', 3.9, -56, 'Svalbard and Jan Mayen', 'SJ', 77.5, 23.6, 'Swaziland', 'SZ', -26.5, 31.4, 'Sweden', 'SE', 60.1, 18.6, 'Switzerland', 'CH', 46.8, 8.2, 'Syria', 'SY', 34.8, 38.9, 'S\u00e3o Tom\u00e9 and Pr\u00edncipe', 'ST', .1, 6.6, 'Taiwan', 'TW', 23.6, 120.9, 'Tajikistan', 'TJ', 38.8, 71.2, 'Tanzania', 'TZ', -6.3, 34.8, 'Thailand', 'TH', 15.8, 100.9, 'Timor-Leste', 'TL', -8.8, 125.7, 'Togo', 'TG', 8.6, .8, 'Tokelau', 'TK', -8.9, -171.8, 'Tonga', 'TO', -21.1, -175.1, 'Trinidad and Tobago', 'TT', 10.6, -61.2, 'Tunisia', 'TN', 33.8, 9.5, 'Turkey', 'TR', 38.9, 35.2, 'Turkmenistan', 'TM', 38.9, 59.5, 'Turks and Caicos Islands', 'TC', 21.6, -71.7, 'Tuvalu', 'TV', -7.1, 177.6, 'U.S. Minor Outlying Islands', 'UM', 0, 0, 'U.S. Virgin Islands', 'VI', 18.3, -64.8, 'Uganda', 'UG', 1.3, 32.2, 'Ukraine', 'UA', 48.3, 31.1, 'United Arab Emirates', 'AE', 23.4, 53.8, 'United Kingdom', 'GB', 55.3, -3.4, 'United States', 'US', 37, -95.7, 'Uruguay', 'UY', -32.5, -55.7, 'Uzbekistan', 'UZ', 41.3, 64.5, 'Vanuatu', 'VU', -15.3, 166.9, 'Vatican City', 'VA', 41.9, 12.4, 'Venezuela', 'VE', 6.4, -66.5, 'Vietnam', 'VN', 14, 108.2, 'Wales', 'WLS', 55.3, -3.4, 'Wallis and Futuna', 'WF', -13.7, -177.1, 'Western Sahara', 'EH', 24.2, -12.8, 'Yemen', 'YE', 15.5, 48.5, 'Zambia', 'ZM', -13.1, 27.8, 'Zimbabwe', 'ZW', -19, 29.1];
 		class_m.Bs = 'wss://p2p.haxball.com/';
 		class_m.Pe = 'https://www.haxball.com/rs/';
 		class_m.ig = [{
 			urls: 'stun:stun.l.google.com:19302'
 		}];
-		class_m.j = new class_ic;
-		class_ba.pl = function () {
+		class_m.j = new class_yc;
+		class_ca_Game.pl = function () {
 			let a = [];
 			{
 				let b = 0;
 				for (; 256 > b;)
 					++b,
-						a.push(new class_P(0, 0));
+						a.push(new class_P_Point(0, 0));
 			}
 			return a;
 		}(this);
-		class_ba.vk = function () {
+		class_ca_Game.vk = function () {
 			let a = [];
 			{
 				let b = 0;
@@ -12701,12 +12693,12 @@
 			}
 			return a;
 		}(this);
-		class_q.js = class_A.ia(1024);
-		class_Na.za = class_p.Ga({
+		class_q_Stadium.js = class_A.ia(1024);
+		class_Ha.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
-		class_Fb.za = class_p.Ga({
+		class_mb.za = class_p.Ga({
 			Ba: false,
 			delay: false,
 			xj: {
@@ -12714,39 +12706,11 @@
 				Dj: 900
 			}
 		});
-		class_cb.za = class_p.Ga({
+		class_Xa.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
-		class_ya.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Ma.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Oa.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_fa.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Ka.za = class_p.Ga({
-			Ba: false,
-			delay: false,
-			xj: {
-				kj: 10,
-				Dj: 2E3
-			}
-		});
-		class_db.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_La.za = class_p.Ga({
+		class_qa.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
@@ -12754,45 +12718,23 @@
 			Ba: false,
 			delay: false
 		});
-		class_Hb.za = class_p.Ga({
+		class_Ja.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
-		class_bb.za = class_p.Ga({});
-		class_Za.za = class_p.Ga({
+		class_fa.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Ea.za = class_p.Ga({
 			Ba: false,
 			delay: false,
 			xj: {
 				kj: 10,
-				Dj: 900
+				Dj: 2E3
 			}
 		});
-		class_Ja.za = class_p.Ga({});
-		class_Ia.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_ma.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Gb.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Ib.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_Pa.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_$a.za = class_p.Ga({
-			Ba: false,
-			delay: false
-		});
-		class_ab.za = class_p.Ga({
+		class_Ya.za = class_p.Ga({
 			Ba: false,
 			delay: false
 		});
@@ -12800,35 +12742,85 @@
 			Ba: false,
 			delay: false
 		});
-		class_I.Dn = .17435839227423353;
-		class_I.Cn = 5.934119456780721;
-		class_da.An = new class_Vb([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
-		class_da.Bn = new class_Vb([0, -1, 3, 0, 0, .35, 0, 0, 0, 0, .65, 0, 0, 1, 3, 1]);
-		class_hb.O = '<div class=\'dialog change-location-view\'><h1>Change Location</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'change\'>Change</button><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
-		class_Xa.O = '<div class=\'chatbox-view\'><div class=\'chatbox-view-contents\'><div data-hook=\'drag\' class=\'drag\'></div><div data-hook=\'log\' class=\'log subtle-thin-scrollbar\'><div data-hook=\'log-contents\' class=\'log-contents\'><p>Controls:<br/>Move: WASD or Arrows<br/>Kick: X, Space, Ctrl, Shift, Numpad 0<br/>View: Numbers 1 to 4</p></div></div><div class=\'autocompletebox\' data-hook=\'autocompletebox\'></div><div class=\'input\'><input data-hook=\'input\' type=\'text\' /></div></div></div>';
-		class_nb.O = '<div class=\'choose-nickname-view\'><img src="' + window.parent._gdir + 'images/haxball.png" /><div class=\'dialog\'><h1>Choose nickname</h1><div class=\'label-input\'><label>Nick:</label><input data-hook=\'input\' type=\'text\' /></div><button data-hook=\'ok\'>Ok</button></div></div>';
-		class_qb.O = '<div class=\'connecting-view\'><div class=\'dialog\'><h1>Connecting</h1><div class=\'connecting-view-log\' data-hook=\'log\'></div><button data-hook=\'cancel\'>Cancel</button></div></div>';
-		class_ob.O = '<div class=\'create-room-view\'><div class=\'dialog\'><h1>Create room</h1><div class=\'label-input\'><label>Room name:</label><input data-hook=\'name\' required /></div><div class=\'label-input\'><label>Password:</label><input data-hook=\'pass\' /></div><div class=\'label-input\'><label>Max players:</label><select data-hook=\'max-pl\'></select></div><button data-hook=\'unlisted\'></button><div class=\'row\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'create\'>Create</button></div></div></div>';
-		class_Ta.O = '<div class=\'disconnected-view\'><div class=\'dialog basic-dialog\'><h1>Disconnected</h1><p data-hook=\'reason\'></p><div class=\'buttons\'><button data-hook=\'ok\'>Ok</button><button data-hook=\'replay\'>Save replay</button></div></div></div>';
-		class_kb.O = '<div class=\'game-state-view\'><div class=\'bar-container\'><div class=\'bar\'><div class=\'scoreboard\'><div class=\'teamicon red\'></div><div class=\'score\' data-hook=\'red-score\'>0</div><div>-</div><div class=\'score\' data-hook=\'blue-score\'>0</div><div class=\'teamicon blue\'></div></div><div class="fps-limit-fix"></div><div data-hook=\'timer\'></div></div></div><div class=\'canvas\' data-hook=\'canvas\'></div></div>';
-		class_wa.O = '<div class=\'game-view\' tabindex=\'-1\'><div class=\'gameplay-section\' data-hook=\'gameplay\'></div><div class=\'top-section\' data-hook=\'top-section\'></div><div class=\'bottom-section\'><div data-hook=\'stats\'></div><div data-hook=\'chatbox\'></div><div class=\'bottom-spacer\'></div></div><div class=\'buttons\'><div class=\'sound-button-container\' data-hook="sound"><div class=\'sound-slider\' data-hook=\'sound-slider\'><div class=\'sound-slider-bar-bg\' data-hook=\'sound-bar-bg\'><div class=\'sound-slider-bar\' data-hook=\'sound-bar\'></div></div></div><button data-hook=\'sound-btn\'><i class=\'icon-volume-up\' data-hook=\'sound-icon\'></i></button></div><button data-hook=\'menu\'><i class=\'icon-menu\'></i>Menu<span class=\'tooltip\'>Toggle room menu [Escape]</span></button><button data-hook=\'settings\'><i class=\'icon-cog\'></i></button></div><div data-hook=\'popups\'></div></div>';
-		class_Jb.O = '<div class=\'dialog kick-player-view\'><h1 data-hook=\'title\'></h1><div class=label-input><label>Reason: </label><input type=\'text\' data-hook=\'reason\' /></div><button data-hook=\'ban-btn\'><i class=\'icon-block\'></i>Ban from rejoining: <span data-hook=\'ban-text\'></span></button><div class="row"><button data-hook=\'close\'>Cancel</button><button data-hook=\'kick\'>Kick</button></div></div>';
-		class_Cb.O = '<div class=\'dialog basic-dialog leave-room-view\'><h1>Leave room?</h1><p>Are you sure you want to leave the room?</p><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'leave\'><i class=\'icon-logout\'></i>Leave</button></div></div>';
-		class_vb.O = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
-		class_rb.O = '<div class=\'dialog\' style=\'min-width:200px\'><h1 data-hook=\'name\'></h1><button data-hook=\'admin\'></button><button data-hook=\'kick\'>Kick</button><button data-hook=\'close\'>Close</button></div>';
-		class_lb.O = '<div class=\'player-list-item\'><div data-hook=\'flag\' class=\'flagico\'></div><div data-hook=\'name\'></div><div data-hook=\'ping\'></div></div>';
-		class_Aa.O = '<div class=\'player-list-view\'><div class=\'buttons\'><button data-hook=\'join-btn\'>Join</button><button data-hook=\'reset-btn\' class=\'admin-only\'></button></div><div class=\'list thin-scrollbar\' data-hook=\'list\'></div></div>';
-		class_Qa.O = '<div class=\'replay-controls-view\'><button data-hook=\'reset\'><i class=\'icon-to-start\'></i></button><button data-hook=\'play\'><i data-hook=\'playicon\'></i></button><div data-hook=\'spd\'>1x</div><button data-hook=\'spddn\'>-</button><button data-hook=\'spdup\'>+</button><div data-hook=\'time\'>00:00</div><div class=\'timebar\' data-hook=\'timebar\'><div class=\'barbg\'><div class=\'bar\' data-hook=\'progbar\'></div></div><div class=\'timetooltip\' data-hook=\'timetooltip\'></div></div><button data-hook=\'leave\'>Leave</button></div>';
-		class_tb.O = '<div class=\'dialog basic-dialog room-link-view\'><h1>Room link</h1><p>Use this url to link others directly into this room.</p><input data-hook=\'link\' readonly></input><div class=\'buttons\'><button data-hook=\'close\'>Close</button><button data-hook=\'copy\'>Copy to clipboard</button></div></div>';
-		class_zb.Cj = '<tr><td><span data-hook=\'tag\'></span><span data-hook=\'name\'></span></td><td data-hook=\'players\'></td><td data-hook=\'pass\'></td><td><div data-hook=\'flag\' class=\'flagico\'></div><span data-hook=\'distance\'></span></td></tr>';
-		class_Ua.Cj = '<div class=\'roomlist-view\'><div class=\'notice\' data-hook=\'notice\' hidden><div data-hook=\'notice-contents\'>Testing the notice.</div><div data-hook=\'notice-close\'><i class=\'icon-cancel\'></i></div></div><div class=\'dialog\'><h1>Room list</h1><p>Tip: Join rooms near you to reduce lag.</p><div class=\'splitter\'><div class=\'list\'><table class=\'header\'><colgroup><col><col><col><col></colgroup><thead><tr><td>Name</td><td>Players</td><td>Pass</td><td>Distance</td></tr></thead></table><div class=\'separator\'></div><div class=\'content\' data-hook=\'listscroll\'><table><colgroup><col><col><col><col></colgroup><tbody data-hook=\'list\'></tbody></table></div><div class=\'filters\'><span class=\'bool\' data-hook=\'fil-pass\'>Show locked <i></i></span><span class=\'bool\' data-hook=\'fil-full\'>Show full <i></i></span><span class=\'bool\' data-hook=\'fil-empty\'>Show empty <i></i></span></div></div><div class=\'buttons\'><button data-hook=\'refresh\'><i class=\'icon-cw\'></i><div>Refresh</div></button><button data-hook=\'join\'><i class=\'icon-login\'></i><div>Join Room</div></button><button data-hook=\'create\'><i class=\'icon-plus\'></i><div>Create Room</div></button><div class=\'spacer\'></div><div class=\'file-btn\'><label for=\'replayfile\'><i class=\'icon-play\'></i><div>Replays</div></label><input id=\'replayfile\' type=\'file\' accept=\'.hbr2\' data-hook=\'replayfile\'/></div><button data-hook=\'settings\'><i class=\'icon-cog\'></i><div>Settings</div></button><button data-hook=\'changenick\'><i class=\'icon-cw\'></i><div>Change Nick</div></button></div></div><p data-hook=\'count\'></p></div></div>';
-		class_pb.O = '<div class=\'room-password-view\'><div class=\'dialog\'><h1>Password required</h1><div class=\'label-input\'><label>Password:</label><input data-hook=\'input\' /></div><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'ok\'>Ok</button></div></div></div>';
-		class_gb.O = '<div class=\'room-view\'><div class=\'container\'><h1 data-hook=\'room-name\'></h1><div class=\'header-btns\'><button data-hook=\'rec-btn\'><i class=\'icon-circle\'></i>Rec</button><button data-hook=\'link-btn\'><i class=\'icon-link\'></i>Link</button><button data-hook=\'leave-btn\'><i class=\'icon-logout\'></i>Leave</button></div><div class=\'teams\'><div class=\'tools admin-only\'><button data-hook=\'auto-btn\'>Auto</button><button data-hook=\'rand-btn\'>Rand</button><button data-hook=\'lock-btn\'>Lock</button><button data-hook=\'reset-all-btn\'>Reset</button></div><div data-hook=\'red-list\'></div><div data-hook=\'spec-list\'></div><div data-hook=\'blue-list\'></div><div class=\'spacer admin-only\'></div></div><div class=\'settings\'><div><label class=\'lbl\'>Time limit</label><select data-hook=\'time-limit-sel\'></select></div><div><label class=\'lbl\'>Score limit</label><select data-hook=\'score-limit-sel\'></select></div><div><label class=\'lbl\'>Stadium</label><label class=\'val\' data-hook=\'stadium-name\'>testing the stadium name</label><button class=\'admin-only\' data-hook=\'stadium-pick\'>Pick</button></div></div><div class=\'controls admin-only\'><button data-hook=\'start-btn\'><i class=\'icon-play\'></i>Start game</button><button data-hook=\'stop-btn\'><i class=\'icon-stop\'></i>Stop game</button><button data-hook=\'pause-btn\'><i class=\'icon-pause\'></i>Pause</button></div></div></div>';
+		class_Da.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_ob.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Wa.za = class_p.Ga({});
+		class_Ta.za = class_p.Ga({
+			Ba: false,
+			delay: false,
+			xj: {
+				kj: 10,
+				Dj: 900
+			}
+		});
+		class_Ca.za = class_p.Ga({});
+		class_Ba.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_ka.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_nb.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_pb.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Ka.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Ua.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Va.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_Ia.za = class_p.Ga({
+			Ba: false,
+			delay: false
+		});
+		class_I_Segment.Dn = .17435839227423353;
+		class_I_Segment.Cn = 5.934119456780721;
+		class_ea.An = new class_cc([0, 0, 2, 1, 0, .35, 1, 0, 1, 0, .7, 1, 0, 0, 0, 1]);
+		class_ea.Bn = new class_cc([0, -1, 3, 0, 0, .35, 0, 0, 0, 0, .65, 0, 0, 1, 3, 1]);
+		class_ub.O = '<div class=\'dialog change-location-view\'><h1>Change Location</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'change\'>Change</button><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
+		class_bb.O = '<div class=\'chatbox-view\'><div class=\'chatbox-view-contents\'><div data-hook=\'drag\' class=\'drag\'></div><div data-hook=\'log\' class=\'log subtle-thin-scrollbar\'><div data-hook=\'log-contents\' class=\'log-contents\'><p>Controls:<br/>Move: WASD or Arrows<br/>Kick: X, Space, Ctrl, Shift, Numpad 0<br/>View: Numbers 1 to 4</p></div></div><div class=\'autocompletebox\' data-hook=\'autocompletebox\'></div><div class=\'input\'><input data-hook=\'input\' type=\'text\' /></div></div></div>';
+		class_tb.O = '<div class=\'choose-nickname-view\'><img src="' + window.parent._gdir + 'images/haxball.png" /><div class=\'dialog\'><h1>Choose nickname</h1><div class=\'label-input\'><label>Nick:</label><input data-hook=\'input\' type=\'text\' /></div><button data-hook=\'ok\'>Ok</button></div></div>';
+		class_wb.O = '<div class=\'connecting-view\'><div class=\'dialog\'><h1>Connecting</h1><div class=\'connecting-view-log\' data-hook=\'log\'></div><button data-hook=\'cancel\'>Cancel</button></div></div>';
+		class_rb.O = '<div class=\'create-room-view\'><div class=\'dialog\'><h1>Create room</h1><div class=\'label-input\'><label>Room name:</label><input data-hook=\'name\' required /></div><div class=\'label-input\'><label>Password:</label><input data-hook=\'pass\' /></div><div class=\'label-input\'><label>Max players:</label><select data-hook=\'max-pl\'></select></div><button data-hook=\'unlisted\'></button><div class=\'row\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'create\'>Create</button></div></div></div>';
+		class_Za.O = '<div class=\'disconnected-view\'><div class=\'dialog basic-dialog\'><h1>Disconnected</h1><p data-hook=\'reason\'></p><div class=\'buttons\'><button data-hook=\'ok\'>Ok</button><button data-hook=\'replay\'>Save replay</button></div></div></div>';
+		class_qb.O = '<div class=\'game-state-view\'><div class=\'bar-container\'><div class=\'bar\'><div class=\'scoreboard\'><div class=\'teamicon red\'></div><div class=\'score\' data-hook=\'red-score\'>0</div><div>-</div><div class=\'score\' data-hook=\'blue-score\'>0</div><div class=\'teamicon blue\'></div></div><div class="fps-limit-fix"></div><div data-hook=\'timer\'></div></div></div><div class=\'canvas\' data-hook=\'canvas\'></div></div>';
+		class_xa.O = '<div class=\'game-view\' tabindex=\'-1\'><div class=\'gameplay-section\' data-hook=\'gameplay\'></div><div class=\'top-section\' data-hook=\'top-section\'></div><div class=\'bottom-section\'><div data-hook=\'stats\'></div><div data-hook=\'chatbox\'></div><div class=\'bottom-spacer\'></div></div><div class=\'buttons\'><div class=\'sound-button-container\' data-hook="sound"><div class=\'sound-slider\' data-hook=\'sound-slider\'><div class=\'sound-slider-bar-bg\' data-hook=\'sound-bar-bg\'><div class=\'sound-slider-bar\' data-hook=\'sound-bar\'></div></div></div><button data-hook=\'sound-btn\'><i class=\'icon-volume-up\' data-hook=\'sound-icon\'></i></button></div><button data-hook=\'menu\'><i class=\'icon-menu\'></i>Menu<span class=\'tooltip\'>Toggle room menu [Escape]</span></button><button data-hook=\'settings\'><i class=\'icon-cog\'></i></button></div><div data-hook=\'popups\'></div></div>';
+		class_Ib.O = '<div class=\'dialog kick-player-view\'><h1 data-hook=\'title\'></h1><div class=label-input><label>Reason: </label><input type=\'text\' data-hook=\'reason\' /></div><button data-hook=\'ban-btn\'><i class=\'icon-block\'></i>Ban from rejoining: <span data-hook=\'ban-text\'></span></button><div class="row"><button data-hook=\'close\'>Cancel</button><button data-hook=\'kick\'>Kick</button></div></div>';
+		class_Fb.O = '<div class=\'dialog basic-dialog leave-room-view\'><h1>Leave room?</h1><p>Are you sure you want to leave the room?</p><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'leave\'><i class=\'icon-logout\'></i>Leave</button></div></div>';
+		class_kb.O = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
+		class_sb.O = '<div class=\'dialog\' style=\'min-width:200px\'><h1 data-hook=\'name\'></h1><button data-hook=\'admin\'></button><button data-hook=\'kick\'>Kick</button><button data-hook=\'close\'>Close</button></div>';
+		class_jb.O = '<div class=\'player-list-item\'><div data-hook=\'flag\' class=\'flagico\'></div><div data-hook=\'name\'></div><div data-hook=\'ping\'></div></div>';
+		class_Oa.O = '<div class=\'player-list-view\'><div class=\'buttons\'><button data-hook=\'join-btn\'>Join</button><button data-hook=\'reset-btn\' class=\'admin-only\'></button></div><div class=\'list thin-scrollbar\' data-hook=\'list\'></div></div>';
+		class_La.O = '<div class=\'replay-controls-view\'><button data-hook=\'reset\'><i class=\'icon-to-start\'></i></button><button data-hook=\'play\'><i data-hook=\'playicon\'></i></button><div data-hook=\'spd\'>1x</div><button data-hook=\'spddn\'>-</button><button data-hook=\'spdup\'>+</button><div data-hook=\'time\'>00:00</div><div class=\'timebar\' data-hook=\'timebar\'><div class=\'barbg\'><div class=\'bar\' data-hook=\'progbar\'></div></div><div class=\'timetooltip\' data-hook=\'timetooltip\'></div></div><button data-hook=\'leave\'>Leave</button></div>';
+		class_Jb.O = '<div class=\'dialog basic-dialog room-link-view\'><h1>Room link</h1><p>Use this url to link others directly into this room.</p><input data-hook=\'link\' readonly></input><div class=\'buttons\'><button data-hook=\'close\'>Close</button><button data-hook=\'copy\'>Copy to clipboard</button></div></div>';
+		class_Bb.Cj = '<tr><td><span data-hook=\'tag\'></span><span data-hook=\'name\'></span></td><td data-hook=\'players\'></td><td data-hook=\'pass\'></td><td><div data-hook=\'flag\' class=\'flagico\'></div><span data-hook=\'distance\'></span></td></tr>';
+		class_$a.Cj = '<div class=\'roomlist-view\'><div class=\'notice\' data-hook=\'notice\' hidden><div data-hook=\'notice-contents\'>Testing the notice.</div><div data-hook=\'notice-close\'><i class=\'icon-cancel\'></i></div></div><div class=\'dialog\'><h1>Room list</h1><p>Tip: Join rooms near you to reduce lag.</p><div class=\'splitter\'><div class=\'list\'><table class=\'header\'><colgroup><col><col><col><col></colgroup><thead><tr><td>Name</td><td>Players</td><td>Pass</td><td>Distance</td></tr></thead></table><div class=\'separator\'></div><div class=\'content\' data-hook=\'listscroll\'><table><colgroup><col><col><col><col></colgroup><tbody data-hook=\'list\'></tbody></table></div><div class=\'filters\'><span class=\'bool\' data-hook=\'fil-pass\'>Show locked <i></i></span><span class=\'bool\' data-hook=\'fil-full\'>Show full <i></i></span><span class=\'bool\' data-hook=\'fil-empty\'>Show empty <i></i></span></div></div><div class=\'buttons\'><button data-hook=\'refresh\'><i class=\'icon-cw\'></i><div>Refresh</div></button><button data-hook=\'join\'><i class=\'icon-login\'></i><div>Join Room</div></button><button data-hook=\'create\'><i class=\'icon-plus\'></i><div>Create Room</div></button><div class=\'spacer\'></div><div class=\'file-btn\'><label for=\'replayfile\'><i class=\'icon-play\'></i><div>Replays</div></label><input id=\'replayfile\' type=\'file\' accept=\'.hbr2\' data-hook=\'replayfile\'/></div><button data-hook=\'settings\'><i class=\'icon-cog\'></i><div>Settings</div></button><button data-hook=\'changenick\'><i class=\'icon-cw\'></i><div>Change Nick</div></button></div></div><p data-hook=\'count\'></p></div></div>';
+		class_vb.O = '<div class=\'room-password-view\'><div class=\'dialog\'><h1>Password required</h1><div class=\'label-input\'><label>Password:</label><input data-hook=\'input\' /></div><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'ok\'>Ok</button></div></div></div>';
+		class_xb.O = '<div class=\'room-view\'><div class=\'container\'><h1 data-hook=\'room-name\'></h1><div class=\'header-btns\'><button data-hook=\'rec-btn\'><i class=\'icon-circle\'></i>Rec</button><button data-hook=\'link-btn\'><i class=\'icon-link\'></i>Link</button><button data-hook=\'leave-btn\'><i class=\'icon-logout\'></i>Leave</button></div><div class=\'teams\'><div class=\'tools admin-only\'><button data-hook=\'auto-btn\'>Auto</button><button data-hook=\'rand-btn\'>Rand</button><button data-hook=\'lock-btn\'>Lock</button><button data-hook=\'reset-all-btn\'>Reset</button></div><div data-hook=\'red-list\'></div><div data-hook=\'spec-list\'></div><div data-hook=\'blue-list\'></div><div class=\'spacer admin-only\'></div></div><div class=\'settings\'><div><label class=\'lbl\'>Time limit</label><select data-hook=\'time-limit-sel\'></select></div><div><label class=\'lbl\'>Score limit</label><select data-hook=\'score-limit-sel\'></select></div><div><label class=\'lbl\'>Stadium</label><label class=\'val\' data-hook=\'stadium-name\'>testing the stadium name</label><button class=\'admin-only\' data-hook=\'stadium-pick\'>Pick</button></div></div><div class=\'controls admin-only\'><button data-hook=\'start-btn\'><i class=\'icon-play\'></i>Start game</button><button data-hook=\'stop-btn\'><i class=\'icon-stop\'></i>Stop game</button><button data-hook=\'pause-btn\'><i class=\'icon-pause\'></i>Pause</button></div></div></div>';
 		class_la.O = '<div class=\'dialog settings-view\'><h1>Settings</h1><button data-hook=\'close\'>Close</button><div class=\'tabs\'><button data-hook=\'soundbtn\'>Sound</button><button data-hook=\'videobtn\'>Video</button><button data-hook=\'inputbtn\'>Input</button><button data-hook=\'miscbtn\'>Misc</button></div><div data-hook=\'presskey\' tabindex=\'-1\'><div>Press a key</div></div><div class=\'tabcontents\'><div class=\'section\' data-hook=\'miscsec\'><div class=\'loc\' data-hook=\'loc\'></div><div class=\'loc\' data-hook=\'loc-ovr\'></div><button data-hook=\'loc-ovr-btn\'></button></div><div class=\'section\' data-hook=\'soundsec\'><div data-hook="tsound-main">Sounds enabled</div><div data-hook="tsound-chat">Chat sound enabled</div><div data-hook="tsound-highlight">Nick highlight sound enabled</div><div data-hook="tsound-crowd">Crowd sound enabled</div></div><div class=\'section\' data-hook=\'inputsec\'></div><div class=\'section\' data-hook=\'videosec\'><div>Viewport Mode:<select data-hook=\'viewmode\'><option>Dynamic</option><option>Restricted 840x410</option><option>Full 1x Zoom</option><option>Full 1.25x Zoom</option><option>Full 1.5x Zoom</option><option>Full 1.75x Zoom</option><option>Full 2x Zoom</option><option>Full 2.25x Zoom</option><option>Full 2.5x Zoom</option></select></div><div>FPS Limit:<select data-hook=\'fps\'><option>None (Recommended)</option><option>30</option></select></div><div>Resolution Scaling:<select data-hook=\'resscale\'><option>100%</option><option>75%</option><option>50%</option><option>25%</option></select></div><div data-hook="tvideo-lowlatency">Use low latency canvas</div><div data-hook="tvideo-teamcol">Custom team colors enabled</div><div data-hook="tvideo-showindicators">Show chat indicators</div><div data-hook="tvideo-showavatars">Show player avatars</div><div class="option-row"><div style="margin-right: 10px; flex: 1; max-width: 115px;">Chat opacity </div><div style="width: 40px" data-hook="chatopacity-value">1</div><input class="slider" type="range" min="0.5" max="1" step="0.01" data-hook="chatopacity-range"></div><div class="option-row"><div style="margin-right: 10px; flex: 1; max-width: 115px;">Chat focus height </div><div style="width: 40px" data-hook="chatfocusheight-value">200</div><input class="slider" type="range" min="0" max="400" step="10" data-hook="chatfocusheight-range"></div><div>Chat background width:<select data-hook=\'chatbgmode\'><option>Full</option><option>Compact</option></select></div></div></div></div>';
 		class_la.sm = 0;
-		class_aa.O = '<div class=\'simple-dialog-view\'><div class=\'dialog basic-dialog\'><h1 data-hook=\'title\'></h1><p data-hook=\'content\'></p><div class=\'buttons\' data-hook=\'buttons\'></div></div></div>';
-		class_mb.O = '<div class="stats-view-container"><div class=\'stats-view\'><p data-hook=\'ping\'></p><p data-hook=\'fps\'></p><div data-hook=\'graph\'></div></div></div>';
-		class_jb.O = '<div class=\'unsupported-browser-view\'><div class=\'dialog\'><h1>Unsupported Browser</h1><p>Sorry! Your browser doesn\'t yet implement some features which are required for HaxBall to work.</p><p>The missing features are: <span data-hook=\'features\'></span></p><h2>Recommended browsers:</h2><div><a href="https://www.mozilla.org/firefox/new/"><img src="' + window.parent._gdir + 'images/firefox-icon.png"/>Firefox</a></div><div><a href="https://www.google.com/chrome/"><img src="' + window.parent._gdir + 'images/chrome-icon.png"/>Chrome</a></div><div><a href="http://www.opera.com/"><img src="' + window.parent._gdir + 'images/opera-icon.png"/>Opera</a></div></div></div>';
+		class_ba.O = '<div class=\'simple-dialog-view\'><div class=\'dialog basic-dialog\'><h1 data-hook=\'title\'></h1><p data-hook=\'content\'></p><div class=\'buttons\' data-hook=\'buttons\'></div></div></div>';
+		class_yb.O = '<div class="stats-view-container"><div class=\'stats-view\'><p data-hook=\'ping\'></p><p data-hook=\'fps\'></p><div data-hook=\'graph\'></div></div></div>';
+		class_hb.O = '<div class=\'unsupported-browser-view\'><div class=\'dialog\'><h1>Unsupported Browser</h1><p>Sorry! Your browser doesn\'t yet implement some features which are required for HaxBall to work.</p><p>The missing features are: <span data-hook=\'features\'></span></p><h2>Recommended browsers:</h2><div><a href="https://www.mozilla.org/firefox/new/"><img src="' + window.parent._gdir + 'images/firefox-icon.png"/>Firefox</a></div><div><a href="https://www.google.com/chrome/"><img src="' + window.parent._gdir + 'images/chrome-icon.png"/>Chrome</a></div><div><a href="http://www.opera.com/"><img src="' + window.parent._gdir + 'images/opera-icon.png"/>Opera</a></div></div></div>';
 		class_B.Op();
 	}
 )('undefined' != typeof window ? window : 'undefined' != typeof global ? global : 'undefined' != typeof self ? self : this);
