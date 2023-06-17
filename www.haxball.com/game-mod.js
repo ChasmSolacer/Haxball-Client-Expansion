@@ -14,7 +14,7 @@
 
 		/* Utility functions begin */
 		/**
-		 * @param {class_xa} dynDisc
+		 * @param {class_sa_DynamicDisc} dynDisc
 		 * @return {{}}
 		 */
 		function getDynamicDiscObject(dynDisc) {
@@ -56,7 +56,7 @@
 				disc: playerDisc,
 				position: playerDisc == null ? null : {x: playerDisc.x, y: playerDisc.y},
 				// When a player kicks the ball, it is set to min and decrements every frame. When it reaches 0, the player can kick when kickMana > 0.
-				nextKickIn: fullPlayer.Zc,
+				nextKickIn: fullPlayer.$c,
 				// This equals to rate * burst. When the player kicks the ball, burst is subtracted from it, and it increments every frame.
 				// When it goes below 0, the player can't kick.
 				kickRateBurst: fullPlayer.Bc,
@@ -76,7 +76,7 @@
 		}
 
 		/**
-		 * @param {class_eb} gameObjects
+		 * @param {class_ab_GameObjects} gameObjects
 		 * @return {{}}
 		 */
 		function getGameObjectsObject(gameObjects) {
@@ -88,7 +88,7 @@
 		}
 
 		/**
-		 * @param {class_ba} game
+		 * @param {class_ca_Game} game
 		 * @return {{id, self, time, blue, red, team, phase, gameObjects, timeLimit, scoreLimit, stadium}}
 		 */
 		function getGameObject(game) {
@@ -100,7 +100,7 @@
 					frameNo: game.jc,
 					self: game.ic,
 					u1: game.Qa,
-					time: game.Mc,
+					time: game.Nc,
 					blue: game.Nb,
 					red: game.Sb,
 					team: game.he,
@@ -132,10 +132,10 @@
 				blueSpawnPoints: stadium.vd,
 				playerPhysics: stadium.Ld,
 				limit: stadium.Gh,
-				maxViewWidth: stadium.jf,
+				maxViewWidth: stadium.kf,
 				cameraFollowsPlayer: stadium.Re,
-				canBeStored: stadium.Xf,
-				kickOffResetFull: stadium.zf,
+				canBeStored: stadium.Yf,
+				kickOffResetFull: stadium.Af,
 				name: stadium.D
 			};
 		}
@@ -152,11 +152,11 @@
 				self: roomState.ic,
 				stadium: getStadiumObject(roomState.T),
 				min: roomState.Hd,
-				rate: roomState.fd,
+				rate: roomState.gd,
 				burst: roomState.je,
 				timeLimit: roomState.Fa,
 				scoreLimit: roomState.jb,
-				teamsLocked: roomState.Vc,
+				teamsLocked: roomState.Wc,
 				game: getGameObject(roomState.M),
 				players: roomState.K.map(fullPlayer => getFullPlayerObject(fullPlayer)),
 				name: roomState.lc,
@@ -167,20 +167,20 @@
 		}
 
 		/**
-		 * @param {class_Ha|class_Rb_ClientRoom} room
+		 * @param {class_Na_ServerRoom|class_Rb_ClientRoom} room
 		 * @return {{}}
 		 */
 		function getRoomObject(room) {
 			return {
 				self: room,
-				password: room.kb,
+				password: room.Kb,
 				playerId: room.xc,
 				roomState: getRoomStateObject(room.U)
 			};
 		}
 
 		/**
-		 * @param {class_Ea} roomManager
+		 * @param {class_Ma_RoomManager} roomManager
 		 * @return {{}}
 		 */
 		function getRoomManagerObject(roomManager) {
@@ -211,10 +211,15 @@
 						return replayArray;
 					}
 				},
-				downloadReplay: replayContents => class_Ea.qm(replayContents)
+				downloadReplay: (replayContents, name) => {
+					if (name?.length === 0) {
+						const date = new Date();
+						name = 'HBReplay-' + date.getFullYear() + '-' + date.getMonth() + 1 + '-' + '' + date.getDate() + '-' + date.getHours() + 'h' + date.getMinutes() + 'm';
+					}
+					class_Ob_ReplayDownloader.Br(replayContents, name + '.hbr2');
+				}
 			};
 		}
-
 		/* Utility functions end */
 
 		function function_ja() {
@@ -1467,7 +1472,7 @@
 		class class_Qa {
 		}
 
-		class class_gc {
+		class class_gc_Replay {
 			constructor(a, b) {
 				this.pn = 0;
 				this.version = 1;
@@ -2858,7 +2863,7 @@
 				;
 				this.Ik.onclick = function () {
 					null != b.kb && b.kb.Xd().then(function (e) {
-						class_Ob.Cr(e.Ae(), e.D + '.hbs');
+						class_Ob_ReplayDownloader.Cr(e.Ae(), e.D + '.hbs');
 					});
 				}
 				;
@@ -6401,7 +6406,7 @@
 			}
 
 			cs() {
-				this.Od = new class_gc(this.ya, 3);
+				this.Od = new class_gc_Replay(this.ya, 3);
 			}
 
 			Yr(a) {
@@ -6559,7 +6564,7 @@
 
 			static qm(a) {
 				let b = new Date;
-				class_Ob.Br(a, 'HBReplay-' + b.getFullYear() + '-' + class_Z.Lf('' + (b.getMonth() + 1)) + '-' + class_Z.Lf('' + b.getDate()) + '-' + class_Z.Lf('' + b.getHours()) + 'h' + class_Z.Lf('' + b.getMinutes()) + 'm.hbr2');
+				class_Ob_ReplayDownloader.Br(a, 'HBReplay-' + b.getFullYear() + '-' + class_Z.Lf('' + (b.getMonth() + 1)) + '-' + class_Z.Lf('' + b.getDate()) + '-' + class_Z.Lf('' + b.getHours()) + 'h' + class_Z.Lf('' + b.getMinutes()) + 'm.hbr2');
 			}
 
 			static ar(a) {
@@ -10049,15 +10054,15 @@
 			}
 		}
 
-		class class_Ob {
+		class class_Ob_ReplayDownloader {
 			static Br(a, b) {
-				class_Ob.pm(new Blob([a], {
+				class_Ob_ReplayDownloader.pm(new Blob([a], {
 					type: 'octet/stream'
 				}), b);
 			}
 
 			static Cr(a, b) {
-				class_Ob.pm(new Blob([a], {
+				class_Ob_ReplayDownloader.pm(new Blob([a], {
 					type: 'text/plain'
 				}), b);
 			}
@@ -12059,7 +12064,7 @@
 		});
 		class_Kb.b = true;
 		class_ib.b = true;
-		class_Ob.b = true;
+		class_Ob_ReplayDownloader.b = true;
 		class_Pb.b = true;
 		Object.assign(class_Pb.prototype, {
 			g: class_Pb
@@ -12097,9 +12102,9 @@
 		Object.assign(class_qc.prototype, {
 			g: class_qc
 		});
-		class_gc.b = true;
-		Object.assign(class_gc.prototype, {
-			g: class_gc
+		class_gc_Replay.b = true;
+		Object.assign(class_gc_Replay.prototype, {
+			g: class_gc_Replay
 		});
 		class_Qa.b = true;
 		class_Qa.Ij = true;
