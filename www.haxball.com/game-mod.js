@@ -210,13 +210,6 @@
 						roomManager.l.Wa.Tr(false);
 						return replayArray;
 					}
-				},
-				downloadReplay: (replayContents, name) => {
-					if (name?.length === 0) {
-						const date = new Date();
-						name = 'HBReplay-' + date.getFullYear() + '-' + date.getMonth() + 1 + '-' + '' + date.getDate() + '-' + date.getHours() + 'h' + date.getMinutes() + 'm';
-					}
-					class_Ob_ReplayDownloader.Br(replayContents, name + '.hbr2');
 				}
 			};
 		}

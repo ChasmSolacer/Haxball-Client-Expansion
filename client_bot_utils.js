@@ -71,7 +71,7 @@ let shrunkFontSize = '0.4em';
 let ballTouchChangesAvatar = false;
 
 // Is the script executor inside room
-let insideRoom = false;
+let insideRoom = g?.getRoomManager != null;
 // ID of player who executed this script
 let lastPlayerId = 0;
 // Last recorded scores
@@ -88,27 +88,84 @@ let lastPlayersWhoTouchedBall = [];
 let lastKickDirection = [];
 /**
  * Last recorded replay.
- * @type {Uint8Array}
+ * @type {Replay}
  */
 let lastReplay = null;
 /**
- * Replays in form of downloadable arrays with timestamps categorized into room names.
- * @type {{roomName: string, replays: {timestamp: number, replayArray: Uint8Array}[]}}
+ * Replay objects array.
+ * @type {Replay[]}
  */
-let replays = {};
+let replays = [];
 
 const BallTouchType = {
 	TOUCH: 0,
 	KICK: 1
 };
 
-// Your player name
+class Replay {
+	/**
+	 * Downloadable Replay object.
+	 *
+	 * @param {Uint8Array} replayArray hbr2 file contents
+	 * @param {number} timestamp Replay time in milliseconds elapsed since the UNIX epoch
+	 * @param {string} name Replay name
+	 * @param {{}} roomManager Room manager object the replay was recorded in
+	 */
+	constructor(replayArray, timestamp, name, roomManager) {
+		this.replayArray = replayArray;
+		this.timestamp = timestamp;
+		this.name = name;
+		this.roomManager = roomManager;
+	}
+
+	download(filename) {
+		if (filename == null) {
+			const roomName = this.roomManager?.room?.roomState?.name ?? '';
+			const dateString = dateToFileString(new Date(this.timestamp));
+			filename = roomName + '_' + dateString + '_' + this.name;
+		}
+		const a = document.createElement('a');
+		a.style.display = 'display: none';
+		document.body.appendChild(a);
+		const downloadUrl = URL.createObjectURL(new Blob([this.replayArray], {
+			type: 'octet/stream'
+		}));
+		a.href = downloadUrl;
+		a.download = filename + '.hbr2';
+		a.click();
+		URL.revokeObjectURL(downloadUrl);
+		a.remove();
+	}
+}
+
+// Player name, who executed this script
 function getPlayerName() {
-	return localStorage.player_name ?? '';
+	const roomManager = getCurrentRoomManager();
+	return roomManager != null ? g.getPlayer(getPlayerId()).name : localStorage.player_name ?? '';
+}
+
+// Player id, who executed this script
+function getPlayerId() {
+	const roomManager = getCurrentRoomManager();
+	return roomManager?.room?.playerId;
 }
 
 function getCurrentRoomManager() {
 	return insideRoom ? g?.getRoomManager() : null;
+}
+
+function getLastRoomManager() {
+	return g?.getRoomManager != null ? g.getRoomManager() : null;
+}
+
+function dateToFileString(date) {
+	const rrrr = date.getFullYear();
+	const MM = ('' + (date.getMonth() + 1)).padStart(2, '0');
+	const dd = ('' + date.getDate()).padStart(2, '0');
+	const HH = ('' + date.getHours()).padStart(2, '0');
+	const mm = ('' + date.getMinutes()).padStart(2, '0');
+	const ss = ('' + date.getSeconds()).padStart(2, '0');
+	return rrrr + '-' + MM + '-' + dd + '_' + HH + '-' + mm + '-' + ss;
 }
 
 // Function to send chat, no matter if the modified game-min.js is present or not
@@ -890,57 +947,71 @@ function setIncrementalLetterAvatar() {
 document.querySelector('iframe').contentDocument.body.addEventListener('keydown', (event) => {
 	const keyName = event.key;
 
-	// Jeżeli wciśnięty jest też Alt
+	// If Alt key is also being pressed
 	if (event.altKey) {
 		// Jeżeli nie naciśnięto tylko Alta
+		// If Alt isn't the only key pressed
 		if (keyName !== 'Alt') {
 			//console.log('Alt + ' + keyName);
 		}
 
 		switch (keyName) {
 			case '2':
-				sendBigTextFromInput(bigChars2);
+				if (insideRoom)
+					sendBigTextFromInput(bigChars2);
 				break;
 			case '3':
-				sendBigTextFromInput(bigChars3);
+				if (insideRoom)
+					sendBigTextFromInput(bigChars3);
 				break;
 			case 'i':
 				dynamicArrows = !dynamicArrows;
 				break;
 			case 'a':
-				printPlayerAvatars();
+				if (insideRoom)
+					printPlayerAvatars();
 				break;
 			case 'f':
-				printFlagCounter();
+				if (insideRoom)
+					printFlagCounter();
 				break;
 			case 'b':
-				sendBigText('BRAMA', bigChars3);
+				if (insideRoom)
+					sendBigText('BRAMA', bigChars3);
 				break;
 			case 'g':
-				sendBigText('GOAL', bigChars3);
+				if (insideRoom)
+					sendBigText('GOAL', bigChars3);
 				break;
 			case 's':
-				slapAll('');
+				if (insideRoom)
+					slapAll('');
 				break;
 			case 'h':
-				slapAll('Hello there');
+				if (insideRoom)
+					slapAll('Hello there');
 				break;
 			case 'o':
-				slapAll('Prepare ur anus');
+				if (insideRoom)
+					slapAll('Prepare ur anus');
 				break;
 			case 'n':
-				slapAll('NIE ŚPIMY');
+				if (insideRoom)
+					slapAll('NIE ŚPIMY');
 				break;
 			case 'y':
-				// Causes kick with Bad Actor
-				cancelAvatar();
-				for (let i = 0; i < 500; i++)
-					setAvatar_s(defaultAvatar);
+				if (insideRoom) {
+					// Causes kick with Bad Actor
+					cancelAvatar();
+					for (let i = 0; i < 500; i++)
+						setAvatar_s(defaultAvatar);
+				}
 				break;
 			case ',':
 				// Starts/resumes the alphabet avatar
 				clearInterval(intervalAvatar);
-				intervalAvatar = setInterval(setIncrementalLetterAvatar, 500);
+				if (insideRoom)
+					intervalAvatar = setInterval(setIncrementalLetterAvatar, 500);
 				break;
 			case '.':
 				// Pauses the alphabet avatar
@@ -953,81 +1024,102 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 				break;
 		}
 	}
-	// Jeżeli Alt jest puszczony
+	// If Alt key is released
 	else {
 		//console.log(keyName);
 
 		switch (keyName) {
 			case 'y':
-				if (avatarIndex === 0)
-					setAvatarFromArray(['🟨'], 2500);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarFromArray(['🟨'], 2500);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'k':
-				if (avatarIndex === 0)
-					setAvatarFromArray(['KU', 'R', 'WA'], 300);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarFromArray(['KU', 'R', 'WA'], 300);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'l':
-				if (avatarIndex === 0)
-					setAvatarFromArray(['KU', 'R', 'DE'], 300);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarFromArray(['KU', 'R', 'DE'], 300);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'b':
-				if (avatarIndex === 0)
-					setAvatarBelt('BRAMA', 300);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarBelt('BRAMA', 300);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'f':
-				if (avatarIndex === 0)
-					setAvatarBelt('NIC SIĘ NIE STAŁO', 300);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarBelt('NIC SIĘ NIE STAŁO', 300);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'e':
-				if (avatarIndex === 0)
-					setAvatarBelt('MIAŁEŚ CHAMIE ZŁOTY RÓG', 300);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarBelt('MIAŁEŚ CHAMIE ZŁOTY RÓG', 300);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'j':
-				if (avatarIndex === 0)
-					setAvatarFromArray(['mb'], 2500);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarFromArray(['mb'], 2500);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'n':
-				if (avatarIndex === 0)
-					setAvatarBelt('Natenczas Wojski chwycił na taśmie przypięty swój róg bawoli, długi, cętkowany, kręty jak wąż boa, oburącz do ust go przycisnął, wzdął policzki jak banię, w oczach krwią zabłysnął, zasunął wpół powieki, wciągnął w głąb pół brzucha i do płuc wysłał z niego cały zapas ducha, i zagrał: róg jak wicher, wirowatym dechem niesie w puszczę muzykę i podwaja echem. Umilkli strzelcy, stali szczwacze zadziwieni mocą, czystością, dziwną harmoniją pieni. Starzec cały kunszt, którym niegdyś w lasach słynął, jeszcze raz przed uszami myśliwców rozwinął; Napełnił wnet, ożywił knieje i dąbrowy, jakby psiarnię w nie wpuścił i rozpoczął łowy. Bo w graniu była łowów historyja krótka: Zrazu odzew dźwięczący, rześki: to pobudka; Potem jęki po jękach skomlą: to psów granie; A gdzieniegdzie ton twardszy jak grzmot: to strzelanie. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Zadął znowu; myśliłbyś, że róg kształty zmieniał i że w ustach Wojskiego to grubiał, to cieniał, udając głosy zwierząt: to raz w wilczą szyję przeciągając się, długo, przeraźliwie wyje, znowu jakby w niedźwiedzie rozwarłszy się garło, ryknął; potem beczenie żubra wiatr rozdarło. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Wysłuchawszy rogowej arcydzieło sztuki, powtarzały je dęby dębom, bukom buki. Dmie znowu: jakby w rogu były setne rogi, słychać zmieszane wrzaski szczwania, gniewu, trwogi, strzelców, psiarni i zwierząt; aż Wojski do góry podniósł róg, i tryumfu hymn uderzył w chmury. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Ile drzew, tyle rogów znalazło się w boru, jedne drugim pieśń niosą jak z choru do choru. I szła muzyka coraz szersza, coraz dalsza, coraz cichsza i coraz czystsza, doskonalsza, aż znikła gdzieś daleko, gdzieś na niebios progu! Wojski obiedwie ręce odjąwszy od rogu rozkrzyżował; róg opadł, na pasie rzemiennym chwiał się. Wojski z obliczem nabrzmiałym, promiennym, z oczyma wzniesionymi, stał jakby natchniony, łowiąc uchem ostatnie znikające tony. A tymczasem zagrzmiało tysiące oklasków, tysiące powinszowań i wiwatnych wrzasków.', 500);
-				else
-					cancelAvatar();
+				if (insideRoom) {
+					if (avatarIndex === 0)
+						setAvatarBelt('Natenczas Wojski chwycił na taśmie przypięty swój róg bawoli, długi, cętkowany, kręty jak wąż boa, oburącz do ust go przycisnął, wzdął policzki jak banię, w oczach krwią zabłysnął, zasunął wpół powieki, wciągnął w głąb pół brzucha i do płuc wysłał z niego cały zapas ducha, i zagrał: róg jak wicher, wirowatym dechem niesie w puszczę muzykę i podwaja echem. Umilkli strzelcy, stali szczwacze zadziwieni mocą, czystością, dziwną harmoniją pieni. Starzec cały kunszt, którym niegdyś w lasach słynął, jeszcze raz przed uszami myśliwców rozwinął; Napełnił wnet, ożywił knieje i dąbrowy, jakby psiarnię w nie wpuścił i rozpoczął łowy. Bo w graniu była łowów historyja krótka: Zrazu odzew dźwięczący, rześki: to pobudka; Potem jęki po jękach skomlą: to psów granie; A gdzieniegdzie ton twardszy jak grzmot: to strzelanie. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Zadął znowu; myśliłbyś, że róg kształty zmieniał i że w ustach Wojskiego to grubiał, to cieniał, udając głosy zwierząt: to raz w wilczą szyję przeciągając się, długo, przeraźliwie wyje, znowu jakby w niedźwiedzie rozwarłszy się garło, ryknął; potem beczenie żubra wiatr rozdarło. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Wysłuchawszy rogowej arcydzieło sztuki, powtarzały je dęby dębom, bukom buki. Dmie znowu: jakby w rogu były setne rogi, słychać zmieszane wrzaski szczwania, gniewu, trwogi, strzelców, psiarni i zwierząt; aż Wojski do góry podniósł róg, i tryumfu hymn uderzył w chmury. Tu przerwał, lecz róg trzymał; wszystkim się zdawało, że Wojski wciąż gra jeszcze, a to echo grało. Ile drzew, tyle rogów znalazło się w boru, jedne drugim pieśń niosą jak z choru do choru. I szła muzyka coraz szersza, coraz dalsza, coraz cichsza i coraz czystsza, doskonalsza, aż znikła gdzieś daleko, gdzieś na niebios progu! Wojski obiedwie ręce odjąwszy od rogu rozkrzyżował; róg opadł, na pasie rzemiennym chwiał się. Wojski z obliczem nabrzmiałym, promiennym, z oczyma wzniesionymi, stał jakby natchniony, łowiąc uchem ostatnie znikające tony. A tymczasem zagrzmiało tysiące oklasków, tysiące powinszowań i wiwatnych wrzasków.', 500);
+					else
+						cancelAvatar();
+				}
 				break;
 			case 'ArrowLeft':
-				if (dynamicArrows && !leftPressedLast) {
-					leftPressedLast = true;
-					rightPressedLast = false;
-					avatarIndex = 0;
-					clearInterval(intervalAvatar);
-					setAvatar_s('👈');
+				if (insideRoom) {
+					if (dynamicArrows && !leftPressedLast) {
+						leftPressedLast = true;
+						rightPressedLast = false;
+						avatarIndex = 0;
+						clearInterval(intervalAvatar);
+						setAvatar_s('👈');
+					}
 				}
 				break;
 			case 'ArrowRight':
-				if (dynamicArrows && !rightPressedLast) {
-					leftPressedLast = false;
-					rightPressedLast = true;
-					avatarIndex = 0;
-					clearInterval(intervalAvatar);
-					setAvatar_s('👉');
+				if (insideRoom) {
+					if (dynamicArrows && !rightPressedLast) {
+						leftPressedLast = false;
+						rightPressedLast = true;
+						avatarIndex = 0;
+						clearInterval(intervalAvatar);
+						setAvatar_s('👉');
+					}
 				}
 				break;
 			case 'i':
-				if (g?.getRoomManager != null && g.getRoomManager().showChatIndicator != null) {
+				const roomManager = getCurrentRoomManager();
+				if (roomManager != null && roomManager.showChatIndicator != null) {
 					chatIndicatorForced = !chatIndicatorForced;
-					g.getRoomManager().showChatIndicator(chatIndicatorForced);
+					roomManager.showChatIndicator(chatIndicatorForced);
 				}
 				break;
 		}
@@ -1158,7 +1250,7 @@ const wersy = [
 		', żeby wyrwać kobiety z domu',
 		', bo to jest w interesie tak zwanych ludzi pracy',
 		', zamiast pozwolić decydować konsumentowi',
-		', żeby nie opłacalo się mieć dzieci',
+		', żeby nie opłacało się mieć dzieci',
 		', zamiast obniżyć podatki',
 		', bo nie rozumieją, że selekcja naturalna jest czymś dobrym',
 		', żeby mężczyźni przestali być agresywni',
@@ -1303,13 +1395,10 @@ function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 	if (roomManager != null) {
 		const gameReplayArray = roomManager.stopReplay();
 		if (gameReplayArray != null) {
-			lastReplay = gameReplayArray;
-			const roomName = roomManager.room.roomState.name;
-			if (!replays.hasOwnProperty(roomName))
-				replays[roomName] = [];
-			const replayName = previousScores == null ? '-:-' : previousScores.red + ':' + previousScores.blue;
-			replays[roomName].push({timestamp: Date.now(), name: replayName, replayArray: lastReplay});
-			console.debug('lastReplay: %o', lastReplay);
+			const replayName = previousScores == null ? 'n-n' : previousScores.red + '-' + previousScores.blue + '_' + Math.floor(previousScores.time) + 's';
+			lastReplay = new Replay(gameReplayArray, Date.now(), replayName, roomManager);
+			replays.push(lastReplay);
+			console.log('lastReplay: %o. Write lastReplay.download() to save it!', lastReplay);
 		}
 	}
 }
@@ -1323,6 +1412,8 @@ g.onRoomJoin = roomManager => {
 	console.log('Joined room: %o', roomManager);
 
 	lastPlayerId = roomManager.room.playerId;
+	// Save current scores
+	previousScores = g.getScores();
 	// Start replay
 	roomManager.startReplay();
 };
@@ -1423,7 +1514,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 		console.log('%c' + text, styleStr);
 	};
 
-	const datetime = (new Date).toLocaleString()
+	const datetime = (new Date).toLocaleString();
 	const time = (new Date).toLocaleTimeString();
 	// Replace all RLTO characters that reverse the message display order
 	const entry = anText.replaceAll('\u202e', '[RLTO]');
@@ -1609,17 +1700,11 @@ g.onTeamGoal = team => {
 		const assistTextD = assistGiver != null ? ' po podaniu ' + odmienionaNazwa(assistGiver.name, dopelniacz) : '';
 		sendChat_s('⚽' + teamIcon + ' ' + goalTime + ' Bramka' + ogText + ' na ' + scoreText + ' zdobyta' + goalScorerTextB + assistTextD);
 	}
-
-	// Save current scores
-	previousScores = scores;
 };
 
 g.onTeamVictory = team => {
 	insideRoom = true;
 	log_c('Team ' + team + ' has won the match', Color.VICTORY);
-
-	// Save current scores
-	previousScores = g.getScores();
 };
 
 g.onGamePause = (byPlayer, isPaused) => {
@@ -1634,9 +1719,6 @@ g.onGamePause = (byPlayer, isPaused) => {
 g.onTimeIsUp = () => {
 	insideRoom = true;
 	log_c('Time is up', Color.VICTORY);
-
-	// Save current scores
-	previousScores = g.getScores();
 };
 
 g.onPositionsReset = () => {
@@ -1656,7 +1738,7 @@ g.onGameStart = byPlayer => {
 	lastKickDirection = [];
 
 	// Start replay recording on game start
-	g.getRoomManager().startReplay();
+	getCurrentRoomManager().startReplay();
 	// Save current scores
 	previousScores = g.getScores();
 };
@@ -1731,6 +1813,9 @@ g.onGameTick = game => {
 			}
 		}
 	});
+
+	// Save current scores
+	previousScores = g.getScores();
 };
 
 g.onKickRateLimitSet = (min, rate, burst, byPlayer) => {
