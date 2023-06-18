@@ -6,6 +6,11 @@
 (function (globalScope) {
 		window.parent.g = {};
 		/**
+		 * game-min.js commit short hash as seen in the top comment.
+		 * @type {string}
+		 */
+		window.parent.g.gameBaseVersion = 'f5f95965';
+		/**
 		 * 0 – None, 1 – Up, 2 – Down, 4 – Left, 8 – Right, 16 – Kick.
 		 * To go up and left and kick simultaneously, set this to 1|4|16 which equals 21
 		 * @type {number}

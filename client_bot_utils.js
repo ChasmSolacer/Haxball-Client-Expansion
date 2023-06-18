@@ -48,8 +48,8 @@ let chatIndicatorForced = false;
 // For big text. If this is too big, the big text is likely to scramble
 let maxLineWidth = 75;
 
-let mutedIds = new Set();
-let mutedNames = new Set();
+let mutedIds = {};
+let mutedNames = {};
 
 let chatHistory = [];
 let announcementHistory = [];
@@ -58,22 +58,23 @@ let announcementHistory = [];
 let logChat = true;
 // 1 – log announcements only from players (some rooms only), 2 – log all announcements to the console, other – don't log
 let logAnnouncements = 1;
-// Activates .korwin
+// Activates .korwin command
 let isOzjasz = false;
+// .korwin command cooldown for specific players
 let bannedFromOzjasz = {};
 // Write who kicked the ball towards an opponent goal
 let announceBallKick = false;
 // Write goalscorer to chat on team goal
 let announceGoal = false;
 // Muted message will be this size
-let shrunkFontSize = '0.4em';
+let shrunkFontSize = 0.4;
 // Change avatar to the avatar set by the player who touched the ball
 let ballTouchChangesAvatar = false;
 
-// Is the script executor inside room
-let insideRoom = g?.getRoomManager != null;
-// ID of player who executed this script
-let lastPlayerId = 0;
+// Is the script owner inside room. If game-min.js is unmodified, it is always true
+let insideRoom = g.gameBaseVersion == null ? true : g.getRoomManager != null;
+// ID of the script owner
+let lastOwnerId = 0;
 // Last recorded scores
 let previousScores = null;
 /**
@@ -138,24 +139,24 @@ class Replay {
 	}
 }
 
-// Player name, who executed this script
-function getPlayerName() {
+// This script owner's player name
+function getOwnerName() {
 	const roomManager = getCurrentRoomManager();
-	return roomManager != null ? g.getPlayer(getPlayerId()).name : localStorage.player_name ?? '';
+	return roomManager != null ? g.getPlayer(getOwnerId()).name : localStorage.player_name ?? '';
 }
 
-// Player id, who executed this script
-function getPlayerId() {
+// This script owner's player id
+function getOwnerId() {
 	const roomManager = getCurrentRoomManager();
 	return roomManager?.room?.playerId;
 }
 
 function getCurrentRoomManager() {
-	return insideRoom ? g?.getRoomManager() : null;
+	return insideRoom ? g.getRoomManager() : null;
 }
 
 function getLastRoomManager() {
-	return g?.getRoomManager != null ? g.getRoomManager() : null;
+	return g.getRoomManager != null ? g.getRoomManager() : null;
 }
 
 function dateToFileString(date) {
@@ -770,7 +771,7 @@ function toBigText(str, bigCharsArray) {
 
 			lineWidth += charWidth;
 
-			let playerName = getPlayerName();
+			let playerName = getOwnerName();
 			if (lineWidth > (maxLineWidth - [...playerName].length)) {
 				linesExceeded++; // 1 line won't fit, add new chunk
 				lineWidth = charWidth;
@@ -1307,10 +1308,85 @@ const generateKorwinSentence = () => wersy.reduce((soFar, current, index) => {
 );
 
 /* =====  Funkcje  ===== */
+function mutePlayerId(playerId, duration, fontSize) {
+	if (duration == null && isNaN(duration))
+		duration = 5 * 60;
+	if (fontSize == null && isNaN(fontSize))
+		fontSize = shrunkFontSize;
+
+	// If duration or fontSize is 0 or less, unmute
+	if (duration <= 0 || fontSize < 0)
+		unmutePlayerName(playerId);
+	// Else mute
+	else {
+		// Clear unmute timeout
+		clearTimeout(mutedIds[playerId]?.timeoutId);
+		// Unmute the player after duration seconds
+		const unmuteTimeoutId = setTimeout(() => {
+			unmutePlayerId(playerId);
+		}, duration * 1000);
+		// Add the player name to muted
+		mutedIds[playerId] = {size: fontSize, timeoutId: unmuteTimeoutId};
+		console.log('#' + playerId + ' muted for ' + duration + ' seconds (font size: ' + fontSize + ')');
+	}
+}
+
+function unmutePlayerId(playerId) {
+	clearTimeout(mutedIds[playerId]?.timeoutId);
+	mutedIds[playerId] = null;
+	console.log('#' + playerId + ' mute expired');
+}
+
+function mutePlayerName(playerName, duration, fontSize) {
+	if (duration == null && isNaN(duration))
+		duration = 5 * 60;
+	if (fontSize == null && isNaN(fontSize))
+		fontSize = shrunkFontSize;
+
+	// If duration or fontSize is 0 or less, unmute
+	if (duration <= 0 || fontSize < 0)
+		unmutePlayerName(playerName);
+	// Else mute
+	else {
+		// Clear unmute timeout
+		clearTimeout(mutedNames[playerName]?.timeoutId);
+		// Unmute the player after duration seconds
+		const unmuteTimeoutId = setTimeout(() => {
+			unmutePlayerName(playerName);
+		}, duration * 1000);
+		// Add the player name to muted
+		mutedNames[playerName] = {size: fontSize, timeoutId: unmuteTimeoutId};
+		console.log(playerName + ' muted for ' + duration + ' seconds (font size: ' + fontSize + ')');
+	}
+}
+
+function unmutePlayerName(playerName) {
+	clearTimeout(mutedNames[playerName]?.timeoutId);
+	mutedNames[playerName] = null;
+	console.log(playerName + ' mute expired');
+}
+
 function checkAndHandleCommand(message, byPlayer) {
 	// Handle admin commands
-	if (byPlayer.name === getPlayerName()) {
+	if (byPlayer.name === getOwnerName()) {
+		// ^mute <name> [fontsize]
+		if (message.startsWith('^mute ')) {
+			const rest = message.substring(6);
+			const lastSpacePos = rest.lastIndexOf(' ');
+			const playerName = rest.substring(0, lastSpacePos);
+			const fontSize = Number.parseFloat(rest.substring(lastSpacePos + 1));
 
+			mutePlayerName(playerName, 5 * 60, fontSize);
+		}
+		// ^cicho <name> [fontsize]
+		if (message.startsWith('^cicho ')) {
+			const rest = message.substring(7);
+			const lastSpacePos = rest.lastIndexOf(' ');
+			const playerName = rest.substring(0, lastSpacePos);
+			const fontSize = Number.parseFloat(rest.substring(lastSpacePos + 1));
+
+			mutePlayerName(playerName, 5 * 60, fontSize);
+		}
 	}
 	// Handle other commands
 	// .korwin
@@ -1411,7 +1487,7 @@ g.onRoomJoin = roomManager => {
 	insideRoom = true;
 	console.log('Joined room: %o', roomManager);
 
-	lastPlayerId = roomManager.room.playerId;
+	lastOwnerId = roomManager.room.playerId;
 	// Save current scores
 	previousScores = g.getScores();
 	// Start replay
@@ -1452,11 +1528,12 @@ g.onPlayerKicked = (player, reason, ban, byPlayer) => {
 g.onPlayerChat = (byPlayer, message) => {
 	insideRoom = true;
 	// Log time and replace all RLTO characters that reverse the message
+	const roomName = g.getRoomState().name;
 	const datetime = (new Date).toLocaleString();
 	const time = (new Date).toLocaleTimeString();
 	const playerEntry = byPlayer.name + '#' + byPlayer.id;
 	const entry = message.replaceAll('\u202e', '[RTLO]');
-	chatHistory.push({date: datetime, player: byPlayer, entry: entry});
+	chatHistory.push({roomName: roomName, date: datetime, player: byPlayer, entry: entry});
 	if (logChat)
 		console.log((time + ' ' + playerEntry + ': ' + message).replaceAll('\u202e', '[RTLO]'));
 
@@ -1469,18 +1546,18 @@ g.onPlayerChat = (byPlayer, message) => {
 
 		// Replace it with dots and shrink chat line
 		lastParagraph.innerText = byPlayer.name + ': ' + message.replaceAll('﷽', '.');
-		lastParagraph.style.fontSize = shrunkFontSize;
+		lastParagraph.style.fontSize = shrunkFontSize + 'em';
 		scrollToBottom(chatLog);
 	}
-	// If the player id is in muted ids
-	if (mutedIds.has(byPlayer.id)) {
+	// If the player id in muted ids has a positive font size value
+	if (mutedIds[byPlayer.id]?.size >= 0) {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const chatLog = iframeBody.querySelector('.log');
 		const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 		const lastParagraph = paragraphs[paragraphs.length - 1];
 
 		// Shrink chat line
-		lastParagraph.style.fontSize = shrunkFontSize;
+		lastParagraph.style.fontSize = mutedIds[byPlayer.id].size + 'em';
 		scrollToBottom(chatLog);
 	}
 
@@ -1514,16 +1591,13 @@ g.onAnnouncement = (anText, color, style, sound) => {
 		console.log('%c' + text, styleStr);
 	};
 
+	const roomName = g.getRoomState().name;
 	const datetime = (new Date).toLocaleString();
 	const time = (new Date).toLocaleTimeString();
 	// Replace all RLTO characters that reverse the message display order
 	const entry = anText.replaceAll('\u202e', '[RLTO]');
-	announcementHistory.push({date: datetime, entry: entry});
-	if (logAnnouncements === 2) {
-		logAnnouncement(time + ' ▌' + entry);
-	}
+	announcementHistory.push({roomName: roomName, date: datetime, entry: entry});
 
-	const roomName = g.getRoomState().name;
 	// In jakjus rooms
 	if (roomName.includes('hb.jakjus.com')) {
 		// Player name
@@ -1536,7 +1610,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 		let onlyMessage = null;
 		// match returns array of matched capture groups: index 0 is whole match, 1 is the 1st capture group, etc...
 		// Example: the announcement – «Player name (Silver): sample text» – matches the following capture groups marked with ⟨⟩:
-		// ⟨Player name⟩ (⟨Silver⟩)⟨ ⭐⟩: ⟨sample text⟩
+		// ⟨Player name⟩ (⟨Silver⟩)⟨ 🟥 ⭐⟩: ⟨sample text⟩
 		let matches = anText.match(/(.*) \((Unranked|Bronze|Silver|Gold|Diamond|Master)\)(.*): (.*)/);
 		if (matches?.length > 1) {
 			playerName = matches[1];
@@ -1547,8 +1621,6 @@ g.onAnnouncement = (anText, color, style, sound) => {
 
 		// If the message is from a player and onlyMessage exists
 		if (playerName != null && onlyMessage != null) {
-			if (logAnnouncements === 1)
-				logAnnouncement(time + ' ▌' + entry);
 			// If a bogus character is spammed
 			if (onlyMessage.split('﷽').length > 5) {
 				const iframeBody = document.querySelector('iframe').contentDocument.body;
@@ -1558,24 +1630,39 @@ g.onAnnouncement = (anText, color, style, sound) => {
 
 				// Replace with dots and shrink chat line
 				lastParagraph.innerText = anText.replaceAll('﷽', '.');
-				lastParagraph.style.fontSize = shrunkFontSize;
+				lastParagraph.style.fontSize = shrunkFontSize + 'em';
+				lastParagraph.style.minHeight = '0px';
 				scrollToBottom(chatLog);
 			}
-			// If the player name is in muted names
-			if (mutedNames.has(playerName)) {
+			// If the player id in muted ids has a positive font size value
+			if (mutedNames[playerName]?.size >= 0) {
 				const iframeBody = document.querySelector('iframe').contentDocument.body;
 				const chatLog = iframeBody.querySelector('.log');
 				const paragraphs = Array.from(chatLog.querySelectorAll('p'));
 				const lastParagraph = paragraphs[paragraphs.length - 1];
 
 				// Shrink chat line
-				lastParagraph.style.fontSize = shrunkFontSize;
+				lastParagraph.style.fontSize = mutedNames[playerName]?.size + 'em';
+				lastParagraph.style.minHeight = '0px';
 				scrollToBottom(chatLog);
 			}
+
+			// Log chat announcement on level 1
+			if (logAnnouncements === 1)
+				logAnnouncement(time + ' ▌' + entry);
 
 			// Handle player commands
 			checkAndHandleCommand(onlyMessage, {name: playerName});
 		}
+		// Log every announcement on level 2
+		if (logAnnouncements === 2)
+			logAnnouncement(time + ' ▌' + entry);
+	}
+	// In other rooms
+	else {
+		// Log all announcements in other rooms on level 1 and 2
+		if (logAnnouncements >= 1)
+			logAnnouncement(time + ' ▌' + entry);
 	}
 };
 
