@@ -351,7 +351,7 @@ function getMatchSummary() {
 	// Goals, cards, substitutions...
 	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
 	// Filter goals
-	const soccerIncidents = incidents.filter(i => i.querySelector('svg').className.baseVal === 'soccer');
+	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.className?.baseVal === 'soccer');
 	// Extract minute, goalscorer and assist from each goal
 	const scorersArray = soccerIncidents.map(si => {
 		const minuteText = si.querySelector('.smv__timeBox').innerText;
