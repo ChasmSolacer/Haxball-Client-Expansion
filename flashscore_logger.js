@@ -281,9 +281,16 @@ function getBotCommentFromSoccerRow(row) {
 	return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 }
 
+/**
+ * Splits long text into arrays of up to maxFragmentLength character long texts.
+ *
+ * @param {string} text
+ * @param {number} maxFragmentLength Max number of characters inside one part
+ * @return {string[]} Split text parts
+ */
 function getSlicedHaxballText(text, maxFragmentLength = 140) {
 	/* In Haxball it's possible to send message up to 140 characters, so it must be split.
-			 Usual flashscore comments are 2 Haxball lines long. */
+			 Usual flashscore comments are 1-3 Haxball lines long. */
 	// Array containing sliced text fragments
 	const slicedTextArr = [];
 	// While generated sentence is too long
@@ -330,9 +337,64 @@ function sendChat_s(message) {
 function sendTextArrayToChat(textArray) {
 	// For each text fragment, send it to chat
 	textArray.forEach(text => {
-		//console.debug(text);
-		sendChat_s(text);
+		if (text.length > 0)
+			sendChat_s(text);
 	});
+}
+
+function getMatchSummary() {
+	const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
+	let scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
+	if (scores.length < 2)
+		scores = ['-', '-'];
+
+	// Goals, cards, substitutions...
+	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+	// Filter goals
+	const soccerIncidents = incidents.filter(i => i.querySelector('svg').className.baseVal === 'soccer');
+	// Extract minute, goalscorer and assist from each goal
+	const scorersArray = soccerIncidents.map(si => {
+		const minuteText = si.querySelector('.smv__timeBox').innerText;
+		let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
+		let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
+		if (scorerText.length > 0) {
+			// Swap name initials and surname
+			const scorerMatches = scorerText.match(/\S+\..*/);
+			if (scorerMatches != null)
+				scorerText = scorerMatches[0] + ' ' + scorerMatches.input.substring(0, scorerMatches.index - 1);
+			scorerText = ' ' + scorerText;
+			if (assistText.length > 0) {
+				// Remove brackets
+				assistText = assistText.substring(1).substring(0, assistText.length - 2);
+				// Swap name initials and surname
+				const assistMatches = assistText.match(/\S+\..*/);
+				if (assistMatches != null)
+					assistText = assistMatches[0] + ' ' + assistMatches.input.substring(0, assistMatches.index - 1);
+				assistText = ' (' + assistText + ')';
+			}
+		}
+
+		return minuteText + scorerText + assistText;
+	});
+
+	// Display match results
+	return [teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1], scorersArray.join(' ◽ ')];
+}
+
+function printMatchSummary() {
+	const tabs = flashscoreFrame.contentDocument.querySelectorAll('.tabs__detail--nav .tabs__tab');
+	// Click SUMMARY
+	if (tabs?.length > 0)
+		tabs[0].click();
+	// After a while
+	setTimeout(() => {
+		const matchSummary = getMatchSummary();
+		// Send match summary
+		matchSummary.forEach(ms => sendTextArrayToChat(getSlicedHaxballText(ms)));
+		// Click COMMENTARY
+		if (tabs?.length >= 4)
+			tabs[3].click();
+	}, 500);
 }
 
 // Callback function to execute when mutations are observed.
@@ -425,9 +487,11 @@ let fCommentsCallback = () => {
 		setTimeout(() => {
 			console.log('Match has ended. Stopping.');
 			const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
-			const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
+			let scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
+			if (scores.length < 2)
+				scores = ['-', '-'];
 			// Display match results
-			sendTextArrayToChat([scoreStatusText + '! ' + teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1]]);
+			sendChat_s(scoreStatusText + '! ' + teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1]);
 			// Stop observing
 			stop();
 		}, 2500);
@@ -470,6 +534,15 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 				// Show or hide the overlay
 				if (fDivOverlay != null)
 					fDivOverlay.hidden = !fDivOverlay.hidden;
+				break;
+			case '\'':
+				// Write last comment
+				if (lastCommentsQueue.length > 0)
+					sendTextArrayToChat(getSlicedHaxballText(lastCommentsQueue[0]));
+				break;
+			case '[':
+				// Send current match results and goalscorers
+				printMatchSummary();
 				break;
 		}
 	}
