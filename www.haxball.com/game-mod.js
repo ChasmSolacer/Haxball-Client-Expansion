@@ -197,7 +197,7 @@
 
 				sendChat: roomManager.l.Oa.yl,
 				showChatIndicator: roomManager.l.Oa.ug,
-				setAvatar: text => roomManager.$f.ym(text),
+				setAvatar: text => roomManager.ag.ym(text),
 				startReplay: () => {
 					if (roomManager.Od == null) {
 						// Start replaying
