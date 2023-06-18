@@ -1327,7 +1327,7 @@ function mutePlayerId(playerId, duration, fontSize) {
 		}, duration * 1000);
 		// Add the player name to muted
 		mutedIds[playerId] = {size: fontSize, timeoutId: unmuteTimeoutId};
-		console.log('#' + playerId + ' muted for ' + duration + 'seconds (font size: ' + fontSize + ')');
+		console.log('#' + playerId + ' muted for ' + duration + ' seconds (font size: ' + fontSize + ')');
 	}
 }
 
@@ -1356,7 +1356,7 @@ function mutePlayerName(playerName, duration, fontSize) {
 		}, duration * 1000);
 		// Add the player name to muted
 		mutedNames[playerName] = {size: fontSize, timeoutId: unmuteTimeoutId};
-		console.log(playerName + ' muted for ' + duration + 'seconds (font size: ' + fontSize + ')');
+		console.log(playerName + ' muted for ' + duration + ' seconds (font size: ' + fontSize + ')');
 	}
 }
 
@@ -1631,6 +1631,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 				// Replace with dots and shrink chat line
 				lastParagraph.innerText = anText.replaceAll('﷽', '.');
 				lastParagraph.style.fontSize = shrunkFontSize + 'em';
+				lastParagraph.style.minHeight = '0px';
 				scrollToBottom(chatLog);
 			}
 			// If the player id in muted ids has a positive font size value
@@ -1642,6 +1643,7 @@ g.onAnnouncement = (anText, color, style, sound) => {
 
 				// Shrink chat line
 				lastParagraph.style.fontSize = mutedNames[playerName]?.size + 'em';
+				lastParagraph.style.minHeight = '0px';
 				scrollToBottom(chatLog);
 			}
 
