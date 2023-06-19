@@ -36,7 +36,9 @@ const FlashscoreSettings = {
 	// Match ID from the commentary url
 	matchId: '',
 	// fDiv opacity
-	overlayOpacity: '0.8'
+	overlayOpacity: '0.8',
+	// Time in milliseconds between consecutive chat messages
+	chatInterval: 0
 };
 
 // Translatable objects
@@ -102,6 +104,42 @@ const Str = {
 		sl: 'KONČANA',
 		hr: 'KRAJ',
 		fi: 'LOPPUTULOS'
+	},
+	OWN_GOAL_ABBR: {
+		pl: 'sam.',
+		en: 'OG',
+		es: 'p.p.',
+		de: 'ET',
+		it: 'AUT',
+		fr: 'c.s.c.',
+		pt: 'AG',
+		tr: 'kk',
+		uk: 'аг',
+		dk: 'sm.',
+		nl: 'e.d.',
+		sv: 'sjm.',
+		sk: 'vl.',
+		sl: 'AG',
+		hr: 'AG',
+		fi: 'om.'
+	},
+	PENALTY_ABBR: {
+		pl: 'k.',
+		en: 'P',
+		es: 'PJ',
+		de: 'P',
+		it: 'G',
+		fr: 'J',
+		pt: 'J',
+		tr: 'P',
+		uk: 'пен.',
+		dk: 'str.',
+		nl: 'str.',
+		sv: 'str.',
+		sk: 'pk.',
+		sl: '11 m',
+		hr: '11 m',
+		fi: 'rp.'
 	}
 };
 
@@ -170,10 +208,16 @@ let endPending = false;
 function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', width = '560px', height = '600px') {
 	if (!(matchId?.length > 0)) {
 		console.error('Oh no! You forgot to specify the match ID');
+		console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
+			, 'background: #00141E; color: #FFCD00; font-size: 1.3em');
+		console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary/0 – the matchId is %cGbHo73tP'
+			, 'background: #00141E; color: #FFCD00; font-size:1.3em', 'background: #00141E; color: #FFCD00; font-size:1.3em; font-weight:900');
 		return;
 	}
 	// Stop the observer
-	stop();
+	stopFlashscore();
+
+	let prevLink = getCommentaryLink();
 
 	FlashscoreSettings.matchId = matchId;
 	FlashscoreSettings.team1Code = team1Code;
@@ -188,41 +232,54 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	flashscoreFrame.height = height;
 	infoSpan.style.maxWidth = width;
 	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
-	// When the flashscore page is loaded
-	flashscoreFrame.onload = ev => {
-		console.log('Flashscore frame loaded');
 
-		// Wait 3 seconds for the comments section to load (should be sufficient)
-		setTimeout(() => {
-			console.log('Flashscore comment section loaded');
-			// Empty last comments queue
-			lastCommentsQueue = [];
-			// Flashscore comments section element
-			fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
+	// If iframe link didn't change, just restart the observer
+	if (prevLink === getCommentaryLink())
+		restartFlashscore();
+	// Else wait for another page to load
+	else {
+		// When the flashscore page is loaded
+		flashscoreFrame.onload = ev => {
+			console.log('Flashscore frame loaded');
 
-			/*
-			const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore comment section loaded');
+				// Empty last comments queue
+				lastCommentsQueue = [];
+				// Flashscore comments section element
+				fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
 
-			if (soccerRows?.length > 0) {
-				// Top row containing minute, icons and comment
-				const topSoccerRow = soccerRows[0];
-				// Add the comment text at the beginning of the last comments queue
-				lastCommentsQueue.unshift(getCommentFromSoccerRow(topSoccerRow));
-				// The final comment from top row that will appear in the Haxball chat
-				let botComment = getBotCommentFromSoccerRow(topSoccerRow);
+				/*
+				const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
 
-				// Print the whole comment to the console
-				console.log(botComment);
+				if (soccerRows?.length > 0) {
+					// Top row containing minute, icons and comment
+					const topSoccerRow = soccerRows[0];
+					// Add the comment text at the beginning of the last comments queue
+					lastCommentsQueue.unshift(getCommentFromSoccerRow(topSoccerRow));
+					// The final comment from top row that will appear in the Haxball chat
+					let botComment = getBotCommentFromSoccerRow(topSoccerRow);
 
-			}
-			*/
-			//let soccerRowsToText = soccerRows.map(row => getTextFromRow(row));
-			//console.debug(soccerRowsToText);
+					// Print the whole comment to the console
+					console.log(botComment);
 
-			// Start a new observer
-			restart();
-		}, 3000);
-	};
+				}
+				*/
+				//let soccerRowsToText = soccerRows.map(row => getTextFromRow(row));
+				//console.debug(soccerRowsToText);
+
+				// Start a new observer
+				restartFlashscore();
+
+				// Delete redundant elements
+				flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+			}, 3000);
+		};
+	}
 }
 
 // Extracts a comment text from soccer row
@@ -268,9 +325,8 @@ function getBotCommentFromSoccerRow(row) {
 
 	let commentText = getCommentFromSoccerRow(row);
 	// Polska pisownia nazwisk z alfabetów niełacińskich
-	if (FlashscoreSettings.language === 'pl') {
+	if (FlashscoreSettings.language === 'pl')
 		commentText = spolszczNazwiska(commentText);
-	}
 
 	// Two-element score array
 	const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
@@ -334,14 +390,24 @@ function sendChat_s(message) {
 	}
 }
 
-function sendTextArrayToChat(textArray) {
+/**
+ * Sends multiple lines of text to chat.
+ *
+ * @param {string[]} textArray Array of chat messages
+ * @param {number} delay Delay between each chat message in milliseconds
+ */
+function sendTextArrayToChat(textArray, delay = 0) {
 	// For each text fragment, send it to chat
-	textArray.forEach(text => {
-		if (text.length > 0)
-			sendChat_s(text);
+	textArray.filter(text => text.length > 0).forEach((text, i) => {
+			setTimeout(() => sendChat_s(text), i * delay);
 	});
 }
 
+/**
+ * Returns current match summary as array of two strings.
+ *
+ * @return {[result: string, goalscorers: string]} Two-element array of strings ready to send to chat. The first element contains the results, the second element contains goalscorers.
+ */
 function getMatchSummary() {
 	const teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText);
 	let scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
@@ -351,19 +417,27 @@ function getMatchSummary() {
 	// Goals, cards, substitutions...
 	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
 	// Filter goals
-	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.className?.baseVal === 'soccer');
+	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.classList?.[0] === 'soccer');
 	// Extract minute, goalscorer and assist from each goal
 	const scorersArray = soccerIncidents.map(si => {
 		const minuteText = si.querySelector('.smv__timeBox').innerText;
 		let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
 		let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
+		let isOwnGoal = si.querySelector('.footballOwnGoal-ico') != null;
+		let isPenalty = !isOwnGoal && si.querySelector('.smv__subIncident') != null;
+		let ownGoalText = '';
+		let penaltyText = '';
 		if (scorerText.length > 0) {
+			if (FlashscoreSettings.language === 'pl')
+				scorerText = spolszczNazwiska(scorerText);
 			// Swap name initials and surname
 			const scorerMatches = scorerText.match(/\S+\..*/);
 			if (scorerMatches != null)
 				scorerText = scorerMatches[0] + ' ' + scorerMatches.input.substring(0, scorerMatches.index - 1);
 			scorerText = ' ' + scorerText;
 			if (assistText.length > 0) {
+				if (FlashscoreSettings.language === 'pl')
+					assistText = spolszczNazwiska(assistText);
 				// Remove brackets
 				assistText = assistText.substring(1).substring(0, assistText.length - 2);
 				// Swap name initials and surname
@@ -372,9 +446,13 @@ function getMatchSummary() {
 					assistText = assistMatches[0] + ' ' + assistMatches.input.substring(0, assistMatches.index - 1);
 				assistText = ' (' + assistText + ')';
 			}
+			if (isOwnGoal)
+				ownGoalText = ' (' + translate(Str.OWN_GOAL_ABBR) + ')';
+			if (isPenalty)
+				penaltyText = ' (' + translate(Str.PENALTY_ABBR) + ')';
 		}
 
-		return minuteText + scorerText + assistText;
+		return minuteText + scorerText + assistText + ownGoalText + penaltyText;
 	});
 
 	// Display match results
@@ -388,9 +466,10 @@ function printMatchSummary() {
 		tabs[0].click();
 	// After a while
 	setTimeout(() => {
-		const matchSummary = getMatchSummary();
+		const matchSummary = getMatchSummary().filter(a => a.length > 0);
 		// Send match summary
-		matchSummary.forEach(ms => sendTextArrayToChat(getSlicedHaxballText(ms)));
+		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
+		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
 		// Click COMMENTARY
 		if (tabs?.length >= 4)
 			tabs[3].click();
@@ -471,7 +550,7 @@ let fCommentsCallback = () => {
 		console.log(botComment);
 
 		// For each bot comment fragment, send it to chat
-		sendTextArrayToChat(botCommentFragments);
+		sendTextArrayToChat(botCommentFragments, FlashscoreSettings.chatInterval);
 
 		previousRowCount = soccerRows.length;
 	}
@@ -493,14 +572,15 @@ let fCommentsCallback = () => {
 			// Display match results
 			sendChat_s(scoreStatusText + '! ' + teamNames[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNames[1]);
 			// Stop observing
-			stop();
+			stopFlashscore();
+			endPending = false;
 		}, 2500);
 		endPending = true;
 	}
 };
 
 // Start observing the target node for configured mutations
-start = () => {
+let startFlashscore = () => {
 	if (fCommentsSection != null) {
 		//fCommentsObserverInterval = new MutationObserver(fCommentsCallback);
 		//fCommentsObserverInterval.observe(fCommentsSection, config);
@@ -512,15 +592,15 @@ start = () => {
 };
 
 // Later, you can stop observing
-stop = () => {
+let stopFlashscore = () => {
 	//fCommentsObserverInterval.disconnect();
 	clearInterval(fCommentsObserverInterval);
 	console.log('Stopped observing flashscore commentary section');
 };
 
-restart = () => {
-	stop();
-	start();
+let restartFlashscore = () => {
+	stopFlashscore();
+	startFlashscore();
 };
 
 // KEY EVENTS
@@ -538,7 +618,7 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 			case '\'':
 				// Write last comment
 				if (lastCommentsQueue.length > 0)
-					sendTextArrayToChat(getSlicedHaxballText(lastCommentsQueue[0]));
+					sendTextArrayToChat(getSlicedHaxballText(lastCommentsQueue[0]), FlashscoreSettings.chatInterval);
 				break;
 			case '[':
 				// Send current match results and goalscorers
@@ -548,6 +628,7 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 	}
 }, false);
 
+// Works if language is set to pl
 function spolszczNazwiska(text) {
 	let commentText = text;
 	commentText = commentText.replaceAll('Odysseas', 'Odiseas');
@@ -606,7 +687,8 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Velkovski', 'Wełkowski');
 	commentText = commentText.replaceAll(/Stole\b/g, 'Stołe');
 	commentText = commentText.replaceAll(/(\w*)vski\b/g, '$1wski');
-	commentText = commentText.replaceAll(/(\w*)ov\b/g, '$1ow');
+	// Nie zamieniać Robert Ivanov
+	//commentText = commentText.replaceAll(/(\w*)ov\b/g, '$1ow');
 
 	commentText = commentText.replaceAll('Bozhidar', 'Bożidar');
 	commentText = commentText.replaceAll('Chorbadzhiyski', 'Czorbadżijski');
