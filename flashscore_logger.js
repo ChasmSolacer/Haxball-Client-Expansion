@@ -437,7 +437,12 @@ function sendTextArrayToChat(textArray, delay = 0) {
 }
 
 /** @return {[team1: string, team2: string]} Two team names array. */
-let getTeamNamesArray = () => Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText.trim());
+let getTeamNamesArray = () => {
+	let teamNames =  Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText.trim());
+	if (FlashscoreSettings.language === 'pl')
+		teamNames = teamNames.map(e => spolszczNazwiska(e));
+	return teamNames;
+};
 
 /** @return {string} Which half is it and what minute or if the match is finished or cancelled. */
 let getMatchDetailsString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.detailScore__status')?.children ?? []).map(d => d.innerText).filter(d => d.trim().length > 0).join(' ').trim() ?? '';
@@ -559,20 +564,25 @@ function getMatchSummary() {
 }
 
 function printMatchSummary() {
-	const tabs = flashscoreFrame.contentDocument.querySelectorAll('.tabs__detail--nav .tabs__tab');
+	let tabs = flashscoreFrame.contentDocument.querySelectorAll('.tabs__detail--nav .tabs__tab');
+	if (tabs?.length === 0)
+		tabs = flashscoreFrame.contentDocument.querySelectorAll('.filter__filter');
 	// Click SUMMARY
-	if (tabs?.length > 0)
+	if (tabs?.length > 0) {
 		tabs[0].click();
-	// After a while
-	setTimeout(() => {
-		const matchSummary = getMatchSummary().filter(a => a.length > 0);
-		// Send match summary
-		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
-		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
-		// Click COMMENTARY
-		if (tabs?.length >= 4)
-			tabs[3].click();
-	}, 500);
+		// After a while
+		setTimeout(() => {
+			const matchSummary = getMatchSummary().filter(a => a.length > 0);
+			// Send match summary
+			const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
+			sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
+			// Click COMMENTARY
+			if (tabs?.length >= 4)
+				tabs[3].click();
+		}, 500);
+	}
+	else
+		console.warn('Could not switch tabs for goalscorers');
 }
 
 function printResultsWithOdds() {
@@ -781,6 +791,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Tsitaishvili', 'Citaiszwili');
 	commentText = commentText.replaceAll('Kvaratskhelia', 'Kwaracchelia');
 	commentText = commentText.replaceAll('Davitashvili', 'Dawitaszwili');
+	commentText = commentText.replaceAll('Gugeshashvili', 'Gugeszaszwili');
 	commentText = commentText.replaceAll('Zivzivadze', 'Ziwziwadze');
 	commentText = commentText.replaceAll('Khvicha', 'Chwicza');
 	commentText = commentText.replaceAll('shvili', 'szwili');
@@ -791,6 +802,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Sergiy Rebrov', 'Serhij Rebrow');
 	commentText = commentText.replaceAll('Oleksandr Svatok', 'Ołeksandr Swatok');
 	commentText = commentText.replaceAll('Oleksandr Tymchyk', 'Ołeksandr Tymczyk');
+	commentText = commentText.replaceAll('Vladyslav Kochergin', 'Władysław Koczerhin');
 	commentText = commentText.replaceAll('Kochergin', 'Koczerhin');
 	commentText = commentText.replaceAll('Konoplyanka', 'Konoplianka');
 	commentText = commentText.replaceAll('Dzyuba', 'Dziuba');
@@ -862,6 +874,22 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Varazdat Haroyan', 'Warazdat Harojan');
 	commentText = commentText.replaceAll('Styopa Mkrtchyan', 'Stiopa Mkrtczian');
 	commentText = commentText.replaceAll('Harutyunyan', 'Harutiunian');
+
+	commentText = commentText.replaceAll('Shahrudin Mahammadaliyev', 'Szachrudin Magomiedalijew');
+	commentText = commentText.replaceAll('Bahlul Mustafazada', 'Bəhlul Mustafazadə');
+	commentText = commentText.replaceAll('Elvin Cafarquliyev', 'Elvin Cəfərquliyev');
+	commentText = commentText.replaceAll('Badavi Huseynov', 'Badawi Gusiejnow');
+	commentText = commentText.replaceAll('Rahil Mammadov', 'Rahil Məmmədov');
+	commentText = commentText.replaceAll('Richard Almeyda', 'Richard Almeida');
+	commentText = commentText.replaceAll('Gurban Gurbanov', 'Gurban Gurbanow');
+	commentText = commentText.replaceAll('B. Mustafazada', 'B. Mustafazadə');
+	commentText = commentText.replaceAll('E. Cafarquliyev', 'E. Cəfərquliyev');
+	commentText = commentText.replaceAll('B. Huseynov', 'B. Gusiejnow');
+	commentText = commentText.replaceAll('R. Mammadov', 'R. Məmmədov');
+	commentText = commentText.replaceAll('R. Almeyda', 'R. Almeida');
+	commentText = commentText.replaceAll('G. Gurbanov', 'G. Gurbanow');
+
+	commentText = commentText.replaceAll('Qarabag', 'Karabach');
 
 	return commentText;
 }
