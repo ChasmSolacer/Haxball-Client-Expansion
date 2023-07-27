@@ -237,10 +237,11 @@ let endPending = false;
  * @param {string} team1Code A short home team abbreviation that is usually seen on a score bug.
  * @param {string} team2Code A short away team abbreviation that is usually seen on a score bug.
  * @param {string} language Language code ("pl" or "en").
+ * @param {boolean} suspended if true, you have to call startFlashscore manually to print comments.
  * @param {string} width iFrame css width.
  * @param {string} height iFrame css height.
  */
-function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', width = '560px', height = '600px') {
+function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', suspended = false, width = '560px', height = '600px') {
 	if (!(matchId?.length > 0)) {
 		console.error('Oh no! You forgot to specify the match ID');
 		console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
@@ -270,7 +271,8 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 
 	// If iframe link didn't change, just restart the observer
 	if (prevLink === getCommentaryLink())
-		restartFlashscore();
+		if (!suspended)
+			restartFlashscore();
 	// Else wait for another page to load
 	else {
 		// When the flashscore page is loaded
@@ -305,7 +307,8 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 				//console.debug(soccerRowsToText);
 
 				// Start a new observer
-				restartFlashscore();
+				if (!suspended)
+					restartFlashscore();
 
 				// Delete redundant elements
 				flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
@@ -603,7 +606,7 @@ function printResultsWithOdds() {
 
 	const line1TeamScores = teamNamesArray[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNamesArray[1];
 	const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
-	const line2 = '1: ' + oddsStr[0] + ' X: ' + oddsStr[1] + ' 2: ' + oddsStr[2];
+	const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
 
 	const resultsWithOddsArray = [line1TeamScores + ' ' + line1Info, line2];
 	sendTextArrayToChat(resultsWithOddsArray, FlashscoreSettings.chatInterval);
@@ -1014,4 +1017,4 @@ function makeElementDraggable(element) {
 makeElementDraggable(fDivOverlay);
 
 // LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. Copy this line (without //) to the console and modify the arguments!
-//loadFlashscoreMatchCommentary('2R3myONg', 'LPO', 'FIO', 'en', '560px', '600px');
+//loadFlashscoreMatchCommentary('2R3myONg', 'LPO', 'FIO', 'en', false, '560px', '600px');
