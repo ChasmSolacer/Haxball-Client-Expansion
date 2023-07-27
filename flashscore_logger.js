@@ -438,7 +438,8 @@ function sendTextArrayToChat(textArray, delay = 0) {
 
 /** @return {[team1: string, team2: string]} Two team names array. */
 let getTeamNamesArray = () => {
-	let teamNames =  Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName')).map(e => e.innerText.trim());
+	let teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName'))
+		.map(e => e.innerText.substring(0, e.innerText.indexOf('(')).trim());
 	if (FlashscoreSettings.language === 'pl')
 		teamNames = teamNames.map(e => spolszczNazwiska(e));
 	return teamNames;
@@ -557,6 +558,8 @@ function getMatchSummary() {
 	else {
 		line1Info = startTimeString;
 		line2 = refereeStadiumString;
+		if (FlashscoreSettings.language === 'pl')
+			line2 = spolszczNazwiska(line2);
 	}
 
 	// Display match results
@@ -568,21 +571,20 @@ function printMatchSummary() {
 	if (tabs?.length === 0)
 		tabs = flashscoreFrame.contentDocument.querySelectorAll('.filter__filter');
 	// Click SUMMARY
-	if (tabs?.length > 0) {
+	if (tabs?.length > 0)
 		tabs[0].click();
-		// After a while
-		setTimeout(() => {
-			const matchSummary = getMatchSummary().filter(a => a.length > 0);
-			// Send match summary
-			const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
-			sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
-			// Click COMMENTARY
-			if (tabs?.length >= 4)
-				tabs[3].click();
-		}, 500);
-	}
 	else
 		console.warn('Could not switch tabs for goalscorers');
+	// After a while
+	setTimeout(() => {
+		const matchSummary = getMatchSummary().filter(a => a.length > 0);
+		// Send match summary
+		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
+		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
+		// Click COMMENTARY
+		if (tabs?.length >= 4)
+			tabs[3].click();
+	}, 500);
 }
 
 function printResultsWithOdds() {
@@ -601,7 +603,7 @@ function printResultsWithOdds() {
 
 	const line1TeamScores = teamNamesArray[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNamesArray[1];
 	const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
-	const line2 = '1: ' + oddsStr[0] + ' X: ' + oddsStr[1] +' 2: ' + oddsStr[2];
+	const line2 = '1: ' + oddsStr[0] + ' X: ' + oddsStr[1] + ' 2: ' + oddsStr[2];
 
 	const resultsWithOddsArray = [line1TeamScores + ' ' + line1Info, line2];
 	sendTextArrayToChat(resultsWithOddsArray, FlashscoreSettings.chatInterval);
@@ -696,7 +698,7 @@ let fCommentsCallback = () => {
 
 	// If the match has ended
 	if (scoreStatusText === translate(Str.FINISHED) && !endPending) {
-		console.log('Match has ended. End pending...')
+		console.log('Match has ended. End pending...');
 		setTimeout(() => {
 			console.log('Match has ended. Stopping.');
 			// Display match results
@@ -762,7 +764,7 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 	}
 }, false);
 
-// Works if language is set to pl
+// Returns localized names. Before calling this, check if language is set to pl
 function spolszczNazwiska(text) {
 	let commentText = text;
 	commentText = commentText.replaceAll('Pantelis Chatzidiakos', 'Pandelis Chadzidiakos');
@@ -772,6 +774,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Georgios Giakoumakis', 'Jorgos Jakumakis');
 	commentText = commentText.replaceAll('Petros Mantalos', 'Petros Mandalos');
 	commentText = commentText.replaceAll('Georgios Athanasiadis', 'Jorgos Atanasiadis');
+	commentText = commentText.replaceAll('Efthymios Koulouris', 'Eftimis Kuluris');
 	commentText = commentText.replaceAll('Athanasiadis', 'Atanasiadis');
 	commentText = commentText.replaceAll('Mavropanos', 'Mawropanos');
 	commentText = commentText.replaceAll('Vlachodimos', 'Wlachodimos');
@@ -786,6 +789,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Giannis', 'Janis');
 	commentText = commentText.replaceAll('Konstantinos', 'Konstandinos');
 	commentText = commentText.replaceAll(/(\w*)poulos\b/g, '$1pulos');
+	commentText = commentText.replaceAll('E. Koulouris', 'E. Kuluris');
 
 	commentText = commentText.replaceAll('Georgiy Tsitaishvili', 'Giorgi Citaiszwili');
 	commentText = commentText.replaceAll('Tsitaishvili', 'Citaiszwili');
@@ -803,6 +807,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Oleksandr Svatok', 'Ołeksandr Swatok');
 	commentText = commentText.replaceAll('Oleksandr Tymchyk', 'Ołeksandr Tymczyk');
 	commentText = commentText.replaceAll('Vladyslav Kochergin', 'Władysław Koczerhin');
+	commentText = commentText.replaceAll('Igor Kharatin', 'Ihor Charatin');
 	commentText = commentText.replaceAll('Kochergin', 'Koczerhin');
 	commentText = commentText.replaceAll('Konoplyanka', 'Konoplianka');
 	commentText = commentText.replaceAll('Dzyuba', 'Dziuba');
@@ -838,6 +843,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Vladyslav', 'Władysław');
 	commentText = commentText.replaceAll('Oleksandr', 'Ołeksandr');
 	commentText = commentText.replaceAll('Evgen', 'Jewhen');
+	commentText = commentText.replaceAll('I. Kharatin', 'I. Charatin');
 	commentText = commentText.replaceAll(/(\w*)chenko\b/g, '$1czenko');
 	commentText = commentText.replaceAll(/(\w*)vsky\b/g, '$1wski');
 	commentText = commentText.replaceAll(/(\w*)chuk\b/g, '$1czuk');
@@ -889,7 +895,73 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('R. Almeyda', 'R. Almeida');
 	commentText = commentText.replaceAll('G. Gurbanov', 'G. Gurbanow');
 
+
+	commentText = commentText.replaceAll('Mukhammedzhan Seysen', 'Muchammiedżan Siejsien');
+	commentText = commentText.replaceAll('Temirlan Erlanov', 'Temyrłan Jerłanow');
+	commentText = commentText.replaceAll('Bauyrzhan Islamkhan', 'Bauyrżan Isłamchan');
+	commentText = commentText.replaceAll('Evgen Makarenko', 'Jewhenij Makarenko');
+	commentText = commentText.replaceAll('Sergey Maliy', 'Siergiej Mały');
+	commentText = commentText.replaceAll('Gafurzhan Suyumbaev', 'Gafurżan Sujumbajew');
+	commentText = commentText.replaceAll('Askhat Tagybergen', 'Aschat Tagybergen');
+	commentText = commentText.replaceAll('Sultanbek Astanov', 'Sułtanbiek Astanow');
+	commentText = commentText.replaceAll('Akmal Bakhtiyarov', 'Akmał Bachtijarow');
+	commentText = commentText.replaceAll('Maxim Fedin', 'Maksim Fedin');
+	commentText = commentText.replaceAll('Duman Narzildaev', 'Duman Narziłdajew');
+	commentText = commentText.replaceAll('Bekkhan Shaizada', 'Biekchan Szajzada');
+	commentText = commentText.replaceAll('Batyrkhan Tazhibay', 'Batyrchan Tażybaj');
+	commentText = commentText.replaceAll('Kazhimukan Tolepbergen', 'Każymukan Tolepbiergien');
+	commentText = commentText.replaceAll('Yerkebulan Tungyshbayev', 'Jerkiebułan Tungyszbajew');
+	commentText = commentText.replaceAll('Vladislav Vasiljev', 'Władisław Wasiljew');
+	commentText = commentText.replaceAll('Aybar Zhaksylykov', 'Ajbar Żaksyłykow');
+	commentText = commentText.replaceAll('Vsevolod Sadovsky', 'Wsiewołod Sadowskij');
+	commentText = commentText.replaceAll('Shakhboz Umarov', 'Szochboz Umarow');
+	commentText = commentText.replaceAll('Bobur Abdikholikov', 'Bobir Abdicholikow');
+	commentText = commentText.replaceAll('Aleksandr Sednev', 'Alaksandr Siadniou');
+	commentText = commentText.replaceAll('S. Astanov', 'S. Astanow');
+	commentText = commentText.replaceAll('M. Seysen', 'M. Siejsien');
+	commentText = commentText.replaceAll('T. Erlanov', 'T. Jerłanow');
+	commentText = commentText.replaceAll('B. Islamkhan', 'B. Isłamchan');
+	commentText = commentText.replaceAll('E. Makarenko', 'Je. Makarenko');
+	commentText = commentText.replaceAll('S. Maliy', 'S. Mały');
+	commentText = commentText.replaceAll('G. Suyumbaev', 'G. Sujumbajew');
+	commentText = commentText.replaceAll('S. Astanov', 'S. Astanow');
+	commentText = commentText.replaceAll('D. Narzildaev', 'D. Narziłdajew');
+	commentText = commentText.replaceAll('B. Shaizada', 'B. Szajzada');
+	commentText = commentText.replaceAll('B. Tazhibay', 'B. Tażybaj');
+	commentText = commentText.replaceAll('K. Tolepbergen', 'K. Tolepbiergien');
+	commentText = commentText.replaceAll('Y. Tungyshbayev', 'J. Tungyszbajew');
+	commentText = commentText.replaceAll('V. Vasiljev', 'W. Wasiljew');
+	commentText = commentText.replaceAll('V. Sadovsky', 'W. Sadowskij');
+	commentText = commentText.replaceAll('S. Umarov', 'S. Umarow');
+	commentText = commentText.replaceAll('B. Abdikholikov', 'B. Abdicholikow');
+	commentText = commentText.replaceAll('A. Sednev', 'A. Siadniou');
+
+	commentText = commentText.replaceAll('Bernardo Matic', 'Bernardo Matić');
+	commentText = commentText.replaceAll('Kosta Runjaic', 'Kosta Runjaić');
+	commentText = commentText.replaceAll('Rafal Augustyniak', 'Rafał Augustyniak');
+	commentText = commentText.replaceAll('Blaz Kramer', 'Blaž Kramer');
+	commentText = commentText.replaceAll('Tomas Pekhart', 'Tomáš Pekhart');
+	commentText = commentText.replaceAll('Ernest Muci', 'Ernest Muçi');
+	commentText = commentText.replaceAll('Jurgen Celhaka', 'Jurgen Çelhaka');
+	commentText = commentText.replaceAll('Antonio Milic', 'Antonio Milić');
+	commentText = commentText.replaceAll('Miha Blazic', 'Miha Blažič');
+	commentText = commentText.replaceAll('Luka Zahovic', 'Luka Zahovič');
+	commentText = commentText.replaceAll('David Smajc', 'David Šmajc');
+	commentText = commentText.replaceAll('B. Matic', 'B. Matić');
+	commentText = commentText.replaceAll('K. Runjaic', 'K. Runjaić');
+	commentText = commentText.replaceAll('E. Muci', 'E. Muçi');
+	commentText = commentText.replaceAll('J. Celhaka', 'J. Çelhaka');
+	commentText = commentText.replaceAll('A. Milic', 'A. Milić');
+	commentText = commentText.replaceAll('M. Blazic', 'M. Blažič');
+	commentText = commentText.replaceAll('L. Zahovic', 'L. Zahovič');
+	commentText = commentText.replaceAll('D. Smajc', 'D. Šmajc');
+	commentText = commentText.replaceAll('Smajc D.', 'D. Šmajc');
+
 	commentText = commentText.replaceAll('Qarabag', 'Karabach');
+	commentText = commentText.replaceAll('Ordabasy Shymkent', 'Ordabasy Szymkent');
+	commentText = commentText.replaceAll('Kauno Zalgiris', 'Żalgiris Kowno');
+
+	commentText = commentText.replaceAll('Stadion Kazhymukan Munaitpasov (Šymkent)', 'Stadion Każymukana Mungajtpasuły (Szymkent)');
 
 	return commentText;
 }
