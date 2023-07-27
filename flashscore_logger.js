@@ -270,9 +270,10 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
 
 	// If iframe link didn't change, just restart the observer
-	if (prevLink === getCommentaryLink())
+	if (prevLink === getCommentaryLink()) {
 		if (!suspended)
 			restartFlashscore();
+	}
 	// Else wait for another page to load
 	else {
 		// When the flashscore page is loaded
@@ -585,8 +586,8 @@ function printMatchSummary() {
 		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
 		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
 		// Click COMMENTARY
-		if (tabs?.length >= 4)
-			tabs[3].click();
+		if (tabs?.length >= 3)
+			tabs[tabs.length - 1].click();
 	}, 500);
 }
 
@@ -916,7 +917,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Yerkebulan Tungyshbayev', 'Jerkiebułan Tungyszbajew');
 	commentText = commentText.replaceAll('Vladislav Vasiljev', 'Władisław Wasiljew');
 	commentText = commentText.replaceAll('Aybar Zhaksylykov', 'Ajbar Żaksyłykow');
-	commentText = commentText.replaceAll('Vsevolod Sadovsky', 'Wsiewołod Sadowskij');
+	commentText = commentText.replaceAll('Usevalad Sadovski', 'Wsiewołod Sadowskij');
 	commentText = commentText.replaceAll('Shakhboz Umarov', 'Szochboz Umarow');
 	commentText = commentText.replaceAll('Bobur Abdikholikov', 'Bobir Abdicholikow');
 	commentText = commentText.replaceAll('Aleksandr Sednev', 'Alaksandr Siadniou');
@@ -934,7 +935,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('K. Tolepbergen', 'K. Tolepbiergien');
 	commentText = commentText.replaceAll('Y. Tungyshbayev', 'J. Tungyszbajew');
 	commentText = commentText.replaceAll('V. Vasiljev', 'W. Wasiljew');
-	commentText = commentText.replaceAll('V. Sadovsky', 'W. Sadowskij');
+	commentText = commentText.replaceAll('U. Sadovski', 'W. Sadowskij');
 	commentText = commentText.replaceAll('S. Umarov', 'S. Umarow');
 	commentText = commentText.replaceAll('B. Abdikholikov', 'B. Abdicholikow');
 	commentText = commentText.replaceAll('A. Sednev', 'A. Siadniou');
