@@ -270,9 +270,10 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
 
 	// If iframe link didn't change, just restart the observer
-	if (prevLink === getCommentaryLink())
+	if (prevLink === getCommentaryLink()) {
 		if (!suspended)
 			restartFlashscore();
+	}
 	// Else wait for another page to load
 	else {
 		// When the flashscore page is loaded
@@ -367,11 +368,14 @@ function getBotCommentFromSoccerRow(row) {
 		commentText = spolszczNazwiska(commentText);
 
 	// Two-element score array
-	const scores = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => e.innerText);
-	const scoreHome = scores[0] || '';
-	const scoreAway = scores[1] || '';
+	let scores = getScoresArray();
+	if (scores.length < 2)
+		scores = ['-', '-'];
+	let firstLegScores = getFirstLegScoresArray();
+	let scoresString = scores[0] + ':' + scores[1] +
+		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
 	// This will precede every chat message
-	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scoreHome + ':' + scoreAway + ' ' + FlashscoreSettings.team2Code + '] ';
+	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scoresString + ' ' + FlashscoreSettings.team2Code + '] ';
 	return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 }
 
@@ -442,7 +446,10 @@ function sendTextArrayToChat(textArray, delay = 0) {
 /** @return {[team1: string, team2: string]} Two team names array. */
 let getTeamNamesArray = () => {
 	let teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName'))
-		.map(e => e.innerText.substring(0, e.innerText.indexOf('(')).trim());
+		.map(e => {
+			const bracketIndex = e.innerText.indexOf('(');
+			return bracketIndex > -1 ? e.innerText.substring(0, bracketIndex).trim() : e.innerText.trim();
+		});
 	if (FlashscoreSettings.language === 'pl')
 		teamNames = teamNames.map(e => spolszczNazwiska(e));
 	return teamNames;
@@ -459,6 +466,19 @@ let getStartTimeString = () => flashscoreFrame.contentDocument.querySelector('.d
 
 /** @return {[score1: number, score2: number]} Scores array. */
 let getScoresArray = () => Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => Number.parseInt(e.innerText));
+
+/**
+ * Works only on 2nd match of a two-legged tie. It returns scores of the first match.
+ *
+ * @return {[score1: number, score2: number]} Scores array or undefined.
+ * */
+let getFirstLegScoresArray = () => {
+	const infoBox = flashscoreFrame.contentDocument.querySelector('.infoBox__info');
+	const firstScoreRaw = infoBox?.innerText?.match(/: (\d+)-(\d+)\./);
+	if (firstScoreRaw?.length === 3) {
+		return [Number.parseInt(firstScoreRaw[1]), Number.parseInt(firstScoreRaw[2])];
+	}
+}
 
 /**
  * Returns odd value for specified team and if it's valid.
@@ -486,9 +506,9 @@ function getOdd(teamId) {
 }
 
 /**
- * Returns goalscorers array.
+ * Returns goalscorers object array.
  *
- * @return {string[]} Example: ["21' G. Ramos (B. Silva)", "37' M. Neuer (OG)"]
+ * @return {{entry, team: number}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
  */
 function getGoalscorers() {
 	// Goals, cards, substitutions...
@@ -497,6 +517,7 @@ function getGoalscorers() {
 	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.classList?.[0] === 'soccer');
 	// Extract minute, goalscorer and assist from each goal
 	return soccerIncidents.map(si => {
+		const team = si.parentElement.classList[1] === 'smv__homeParticipant' ? 1 : si.parentElement.classList[1] === 'smv__awayParticipant' ? 2 : 0;
 		const minuteText = si.querySelector('.smv__timeBox').innerText;
 		let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
 		let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
@@ -529,9 +550,11 @@ function getGoalscorers() {
 				penaltyText = ' (' + translate(Str.PENALTY_ABBR) + ')';
 		}
 
-		return minuteText + scorerText + assistText + ownGoalText + penaltyText;
+		return {team: team, entry: minuteText + scorerText + assistText + ownGoalText + penaltyText};
 	});
 }
+
+const sIcon = ['▫️', '🔸', '🔹'];
 
 /**
  * Returns current match summary as array of two strings.
@@ -546,17 +569,20 @@ function getMatchSummary() {
 	let scores = getScoresArray();
 	if (scores.length < 2)
 		scores = ['-', '-'];
+	let firstLegScores = getFirstLegScoresArray();
+	let scoresString = scores[0] + ':' + scores[1] +
+		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
 	let refereeStadiumString = getMatchRefereeStadiumString();
 
 	// Minute, goalscorer and assist from each goal
 	const scorersArray = getGoalscorers();
 
-	const line1TeamScores = teamNamesArray[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNamesArray[1];
+	const line1TeamScores = '🔶 ' + teamNamesArray[0] + ' ' + scoresString + ' ' + teamNamesArray[1] + ' 🔷';
 	let line1Info;
 	let line2;
 	if (matchDetailsString.length > 0) {
 		line1Info = matchDetailsString;
-		line2 = scorersArray.join(' ◽ ');
+		line2 = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
 	}
 	else {
 		line1Info = startTimeString;
@@ -585,8 +611,8 @@ function printMatchSummary() {
 		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
 		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
 		// Click COMMENTARY
-		if (tabs?.length >= 4)
-			tabs[3].click();
+		if (tabs?.length >= 3)
+			tabs[tabs.length - 1].click();
 	}, 500);
 }
 
@@ -598,13 +624,16 @@ function printResultsWithOdds() {
 	let scores = getScoresArray();
 	if (scores.length < 2)
 		scores = ['-', '-'];
+	let firstLegScores = getFirstLegScoresArray();
+	let scoresString = scores[0] + ':' + scores[1] +
+		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
 	const odds = [getOdd(1), getOdd(0), getOdd(2)];
 	const st = String.fromCharCode(822);
 	const oddsStr = odds.map(odd => {
 		return odd == null || isNaN(odd.value) ? '-' : odd.valid ? odd.value.toString() : [...odd.value.toString()].map(c => c + st).join('');
 	});
 
-	const line1TeamScores = teamNamesArray[0] + ' ' + scores[0] + ':' + scores[1] + ' ' + teamNamesArray[1];
+	const line1TeamScores = '🔶 ' + teamNamesArray[0] + ' ' + scoresString + ' ' + teamNamesArray[1] + ' 🔷';
 	const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 	const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
 
@@ -916,7 +945,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Yerkebulan Tungyshbayev', 'Jerkiebułan Tungyszbajew');
 	commentText = commentText.replaceAll('Vladislav Vasiljev', 'Władisław Wasiljew');
 	commentText = commentText.replaceAll('Aybar Zhaksylykov', 'Ajbar Żaksyłykow');
-	commentText = commentText.replaceAll('Vsevolod Sadovsky', 'Wsiewołod Sadowskij');
+	commentText = commentText.replaceAll('Usevalad Sadovski', 'Wsiewołod Sadowskij');
 	commentText = commentText.replaceAll('Shakhboz Umarov', 'Szochboz Umarow');
 	commentText = commentText.replaceAll('Bobur Abdikholikov', 'Bobir Abdicholikow');
 	commentText = commentText.replaceAll('Aleksandr Sednev', 'Alaksandr Siadniou');
@@ -934,7 +963,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('K. Tolepbergen', 'K. Tolepbiergien');
 	commentText = commentText.replaceAll('Y. Tungyshbayev', 'J. Tungyszbajew');
 	commentText = commentText.replaceAll('V. Vasiljev', 'W. Wasiljew');
-	commentText = commentText.replaceAll('V. Sadovsky', 'W. Sadowskij');
+	commentText = commentText.replaceAll('U. Sadovski', 'W. Sadowskij');
 	commentText = commentText.replaceAll('S. Umarov', 'S. Umarow');
 	commentText = commentText.replaceAll('B. Abdikholikov', 'B. Abdicholikow');
 	commentText = commentText.replaceAll('A. Sednev', 'A. Siadniou');
