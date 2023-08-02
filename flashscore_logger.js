@@ -355,7 +355,7 @@ function getBotCommentFromSoccerRow(row) {
 		iconEmoji = '🟨 ';
 	else if (row.querySelector('.card-ico') != null)
 		iconEmoji = '🟥 ';
-	else if (goalScoreText.length === 0 && (row.querySelector('svg').dataset.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
+	else if (goalScoreText.length === 0 && (row.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
 		iconEmoji = '⚽ ';
 
 	let goalText = '';
