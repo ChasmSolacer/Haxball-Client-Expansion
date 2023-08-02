@@ -355,7 +355,7 @@ function getBotCommentFromSoccerRow(row) {
 		iconEmoji = '🟨 ';
 	else if (row.querySelector('.card-ico') != null)
 		iconEmoji = '🟥 ';
-	else if (goalScoreText.length === 0 && row.querySelector('svg.soccer') != null)
+	else if (goalScoreText.length === 0 && (row.querySelector('svg').dataset.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
 		iconEmoji = '⚽ ';
 
 	let goalText = '';
@@ -514,10 +514,10 @@ function getGoalscorers() {
 	// Goals, cards, substitutions...
 	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
 	// Filter goals
-	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.classList?.[0] === 'soccer');
+	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null);
 	// Extract minute, goalscorer and assist from each goal
 	return soccerIncidents.map(si => {
-		const team = si.parentElement.classList[1] === 'smv__homeParticipant' ? 1 : si.parentElement.classList[1] === 'smv__awayParticipant' ? 2 : 0;
+		const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
 		const minuteText = si.querySelector('.smv__timeBox').innerText;
 		let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
 		let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
@@ -554,7 +554,7 @@ function getGoalscorers() {
 	});
 }
 
-const sIcon = ['▫️', '🔸', '🔹'];
+const sIcon = ['◽', '🔸', '🔹'];
 
 /**
  * Returns current match summary as array of two strings.
