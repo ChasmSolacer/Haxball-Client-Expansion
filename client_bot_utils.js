@@ -25,7 +25,8 @@ const Color = {
 	PAUSE: '#6060B0',
 	STADIUM: '#F0F',
 	DESYNC: '#DC143C',
-	KICKRATE: '#5050FF'
+	KICKRATE: '#5050FF',
+	SPAM: '#696969'
 };
 
 // Haxball iframe body
@@ -75,6 +76,8 @@ let ballTouchChangesAvatar = false;
 let insideRoom = g.gameBaseVersion == null ? true : g.getRoomManager != null;
 // ID of the script owner
 let lastOwnerId = 0;
+// Last room link got from inside g.onRoomLink
+let lastRoomLink = '';
 // Last recorded scores
 let previousScores = null;
 /**
@@ -1307,7 +1310,7 @@ const generateKorwinSentence = () => wersy.reduce((soFar, current, index) => {
 	}, ''
 );
 
-/* =====  Funkcje  ===== */
+/* =====  Functions  ===== */
 function mutePlayerId(playerId, duration, fontSize) {
 	if (duration == null && isNaN(duration))
 		duration = 5 * 60;
@@ -1479,6 +1482,174 @@ function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 	}
 }
 
+/**
+ * Gets an object from given object store from given IDB database.
+ *
+ * @param {string} dbName IDB database name
+ * @param {string} objectStoreName Object store name
+ * @param {number} id Id of the object store's entry. If omitted, all entries will be returned
+ * @param {number} dbVersion Don't pass this argument directly, it will update database to this version if needed.
+ * @return {Promise<Array>} If resolved, it returns an array of object store entries.
+ */
+function getObjectFromStore(dbName, objectStoreName, id, dbVersion) {
+	return new Promise((resolve, reject) => {
+		const request = indexedDB.open(dbName, dbVersion);
+		request.onupgradeneeded = ev => {
+			const db = request.result;
+			db.onerror = reject;
+			// If db didn't exist
+			if (ev.oldVersion < 1) {
+				db.createObjectStore(objectStoreName, {autoIncrement: true});
+				console.debug('Created db ' + dbName + ' with store ' + objectStoreName);
+			}
+			// If the object store didn't exist
+			else if (!db.objectStoreNames.contains(objectStoreName)) {
+				db.createObjectStore(objectStoreName, {autoIncrement: true});
+				console.debug('Created store ' + objectStoreName + ' in ' + dbName);
+			}
+		};
+
+		request.onsuccess = ev => {
+			const db = request.result;
+			db.onerror = reject;
+
+			// If the object store didn't exist
+			if (!db.objectStoreNames.contains(objectStoreName)) {
+				db.close();
+				console.debug('No ' + objectStoreName + ' store in ' + dbName + '. Closed db.');
+				const newVersion = request.result.version + 1;
+				console.debug('Opening new request v' + newVersion);
+				// Re-run this function to create the object store. It should reach here only once
+				const newRequestResult = getObjectFromStore(dbName, objectStoreName, id, newVersion);
+				newRequestResult.then(resolve, reject);
+			}
+			else {
+				const transaction = db.transaction(objectStoreName, 'readonly');
+				transaction.onabort = ev => {
+					reject(ev);
+					db.close();
+				};
+				transaction.onerror = ev => {
+					reject(ev);
+					db.close();
+				};
+				transaction.oncomplete = () => db.close();
+
+				let getRequest;
+				const store = transaction.objectStore(objectStoreName);
+				const results = [];
+				if (id == null)
+					getRequest = store.openCursor();
+				else
+					getRequest = store.openCursor(IDBKeyRange.only(id));
+				getRequest.onsuccess = () => {
+					const cursor = getRequest.result;
+					if (cursor) {
+						const key = cursor.key;
+						const value = cursor.value;
+						results.push({id: key, value: value});
+						cursor.continue();
+					}
+					else {
+						resolve(results);
+					}
+				};
+				getRequest.onerror = reject;
+
+			}
+		};
+
+		request.onerror = reject;
+		request.onblocked = reject;
+	});
+}
+
+/**
+ * Adds an object to given object store from given IDB database.
+ *
+ * @param {string} dbName IDB database name
+ * @param {string} objectStoreName Object store name
+ * @param {{}} obj Object to add to store
+ * @param {number} dbVersion Don't pass this argument directly, it will update database to this version if needed.
+ * @return {Promise<Array>} If resolved, it returns the key of added object.
+ */
+function addObjectToStore(dbName, objectStoreName, obj, dbVersion) {
+	return new Promise((resolve, reject) => {
+		const request = indexedDB.open(dbName, dbVersion);
+		request.onupgradeneeded = ev => {
+			const db = request.result;
+			db.onerror = reject;
+			// If db didn't exist
+			if (ev.oldVersion < 1) {
+				db.createObjectStore(objectStoreName, {autoIncrement: true});
+				console.debug('Created db ' + dbName + ' with store ' + objectStoreName);
+			}
+			// If the object store didn't exist
+			else if (!db.objectStoreNames.contains(objectStoreName)) {
+				db.createObjectStore(objectStoreName, {autoIncrement: true});
+				console.debug('Created store ' + objectStoreName + ' in ' + dbName);
+			}
+		};
+
+		request.onsuccess = ev => {
+			const db = request.result;
+			db.onerror = reject;
+
+			// If the object store didn't exist
+			if (!db.objectStoreNames.contains(objectStoreName)) {
+				db.close();
+				console.debug('No ' + objectStoreName + ' store in ' + dbName + '. Closed db.');
+				const newVersion = request.result.version + 1;
+				console.debug('Opening new request v' + newVersion);
+				const newRequestResult = addObjectToStore(dbName, objectStoreName, obj, newVersion);
+				newRequestResult.then(resolve, reject);
+			}
+			else {
+				const transaction = db.transaction(objectStoreName, 'readwrite');
+				transaction.onabort = ev => {
+					reject(ev);
+					db.close();
+				};
+				transaction.onerror = ev => {
+					reject(ev);
+					db.close();
+				};
+				transaction.oncomplete = () => db.close();
+
+				let addRequest;
+				try {
+					addRequest = transaction.objectStore(objectStoreName).add(obj);
+					addRequest.onsuccess = () => resolve(addRequest.result);
+					addRequest.onerror = reject;
+				}
+				catch (e) {
+					reject(e);
+				}
+			}
+		};
+
+		request.onerror = reject;
+		request.onblocked = reject;
+	});
+}
+
+function addPlayerToIDB(player) {
+	const roomId = lastRoomLink.substring(lastRoomLink.indexOf('?c=') + 3);
+	const roomName = g.getRoomState()?.name;
+	const playerObject = {
+		addDate: Date.now(),
+		uuid: roomId + '#' + player.id,
+		id: player.id,
+		name: player.name,
+		flag: player.flag,
+		avatar: player.avatar,
+		roomName: roomName
+	};
+	addObjectToStore('db', 'players', playerObject)
+		.then(key => console.debug('Added player ' + key + ' to IDB'));
+}
+/* =====  Functions  ===== */
+
 // Game instance from game-min.js, just for debugging
 let gameInst;
 
@@ -1503,12 +1674,20 @@ g.onRoomLeave = roomManager => {
 };
 
 g.onRoomLink = url => {
-	log_c('Room link: ' + url);
+	if (url !== lastRoomLink) {
+		lastRoomLink = url;
+		log_c('Room link: ' + url);
+		g.getPlayerList().forEach(p => addPlayerToIDB(p));
+	}
+	else
+		log_c('Room link: ' + url, Color.SPAM);
 };
 
 g.onPlayerJoin = player => {
 	insideRoom = true;
 	log_c('[+] ' + player.name + '#' + player.id + ' has joined', Color.JOIN);
+
+	addPlayerToIDB(player);
 };
 
 g.onPlayerLeave = player => {
@@ -1910,5 +2089,6 @@ g.onKickRateLimitSet = (min, rate, burst, byPlayer) => {
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c('Kick Rate Limit set to (min: ' + min + ', rate: ' + rate + ', burst: ' + burst + ')' + byPlayerText, Color.KICKRATE);
 };
+/* =====  Events (modified game-min.js required)  ===== */
 
 console.clear();
