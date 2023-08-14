@@ -1,25 +1,29 @@
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
-* This will only work in Chromium based browsers (Chrome, Edge, Brave) with flags enabled, otherwise CORS problems will occur!
+* ⚠️ WARNING ⚠️: it uses iFrames. Working with them will violate the same domain policy.
+* To circumvent the same origin policy, you need to add some FLAGS to browser executable.
+* This will only work in Chromium based browsers (Chrome, Edge, Brave), steps for other browsers are unknown. (There could be a better way to do this, but it is also unknown.)
 * Source: https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome#comment124721890_3177718
 *
-* Steps for Windows:
-* Close all Chromium instances.
-* Make a new folder inside C: and name it ChromeDev (or whatever but make sure to replace the C://ChromeDev part later).
-* Make a shortcut of the browser exe file, open its Properties → Shortcut and paste the following at the bottom of the text field (between quotes, without quotes):
-* " --disable-web-security --disable-site-isolation-trials --disable-features=IsolateOrigins,site-per-process --user-data-dir="C://ChromeDev"
-* Apply and OK.
-* Open the shortcut and go to https://www.haxball.com/play.
-* Disable ad blockers and/or Brave Shield for this site.
-* Paste this script to the console.
+* 🪟 Steps for Windows 🪟:
+* 1.  ❌ Close all Chromium instances.
+* 2.  📁 Make a new folder inside C: and name it ChromeDev (or whatever but make sure to replace the C://ChromeDev part later). It will use up to 1 GB
+* 3.  Make a shortcut of the browser exe file, open its Properties → Shortcut and paste the following at the bottom of the text field (between quotes, without quotes):
+*     "--disable-web-security --disable-site-isolation-trials --disable-features=IsolateOrigins,site-per-process --user-data-dir="C://ChromeDev"
+*     Remember, if your new folder is not C://ChromeDev, replace C://ChromeDev with the patch where you created the new folder
+* 4.  Apply and OK.
+* 5.  Open the shortcut and go to https://www.haxball.com/play.
+* 6.  Disable ad blockers and/or Brave Shield for this site.
+* 7.  Paste this script to the console.
 *
-* After that a flashscore overlay will appear. Don't click anything on it,
-* you can just press "Alt + ;" to hide it (click outside the overlay first).
+* After that a flashscore overlay will appear. It will only show some text.
+* You can press "Alt + ;" to hide/show it (click outside the overlay first for keyboard shortcuts to work).
 *
 * If you are in a room, a comment will be sent in the chat as soon as it appears in Flashscore commentary section.
 *
 * If you want to load a match, call loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
+* After a flashscore page appears, don't click anything on it (but if you do, don't panic, just don't switch tabs).
 */
 
 // Modified game-min.js g object. Not necessary in this script.
@@ -69,29 +73,29 @@ const Str = {
 		vi: 'https://www.flashscore.vn/trandau/'
 	},
 	COMMENTARY_LINK2: {
-		pl: '/#/szczegoly-meczu/komentarz-live/0',
-		en: '/#/match-summary/live-commentary/0',
-		es: '/#/resumen-del-partido/comentarios-en-directo/0',
-		de: '/#/spiel-zusammenfassung/live-kommentar/0',
-		it: '/#/informazioni-partita/cronaca-live/0',
-		fr: '/#/resume-du-match/match-en-direct/0',
-		pt: '/#/sumario-do-jogo/comentarios-ao-vivo/0',
-		tr: '/#/mac-ozeti/canli-yorum/0',
-		uk: '/#/match-summary/live-commentary/0',
-		dk: '/#/kampreferat/live-kommentarer/0',
-		nl: '/#/samenvatting-wedstrijd/live-commentaar/0',
-		sv: '/#/matchsummering/livereferat/0',
-		cs: '/#/prehled-zapasu/live-komentar/0',
-		sk: '/#/prehlad-zapasu/live-komentar/0',
-		sl: '/#/povzetek-dogodka/komentarji-v-zivo/0',
-		hr: '/#/detalji/uzivo-komentar/0',
-		sr: '/#/pregled-meca/komentari-uzivo/0',
-		fi: '/#/ottelun-yhteenveto/live-kommentit/0',
-		ro: '/#/sumar-meci/comentariu-live/0',
-		hu: '/#/osszefoglalas/elo-kommentar/0',
-		el: '/#/match-summary/live-commentary/0',
-		id: '/#/ringkasan-pertandingan/komentatori-langsung/0',
-		vi: '/#/tom-tat-tran-dau/binh-luan-truc-tiep/0'
+		pl: '/#/szczegoly-meczu/komentarz-live',
+		en: '/#/match-summary/live-commentary',
+		es: '/#/resumen-del-partido/comentarios-en-directo',
+		de: '/#/spiel-zusammenfassung/live-kommentar',
+		it: '/#/informazioni-partita/cronaca-live',
+		fr: '/#/resume-du-match/match-en-direct',
+		pt: '/#/sumario-do-jogo/comentarios-ao-vivo',
+		tr: '/#/mac-ozeti/canli-yorum',
+		uk: '/#/match-summary/live-commentary',
+		dk: '/#/kampreferat/live-kommentarer',
+		nl: '/#/samenvatting-wedstrijd/live-commentaar',
+		sv: '/#/matchsummering/livereferat',
+		cs: '/#/prehled-zapasu/live-komentar',
+		sk: '/#/prehlad-zapasu/live-komentar',
+		sl: '/#/povzetek-dogodka/komentarji-v-zivo',
+		hr: '/#/detalji/uzivo-komentar',
+		sr: '/#/pregled-meca/komentari-uzivo',
+		fi: '/#/ottelun-yhteenveto/live-kommentit',
+		ro: '/#/sumar-meci/comentariu-live',
+		hu: '/#/osszefoglalas/elo-kommentar',
+		el: '/#/match-summary/live-commentary',
+		id: '/#/ringkasan-pertandingan/komentatori-langsung',
+		vi: '/#/tom-tat-tran-dau/binh-luan-truc-tiep'
 	},
 	PRESS_TO_SHOW_HIDE: {
 		pl: 'Naciśnij Alt + ; aby pokazać/ukryć nakładkę',
@@ -181,6 +185,9 @@ const Str = {
 // Translate the translatable object into specified language (or English if no such language)
 const translate = (translatableObject, language = FlashscoreSettings.language) => translatableObject[language] || translatableObject['en'];
 
+const getMatchLink = (matchId = FlashscoreSettings.matchId, language = FlashscoreSettings.language) =>
+	translate(Str.COMMENTARY_LINK1, language) + matchId;
+
 const getCommentaryLink = (matchId = FlashscoreSettings.matchId, language = FlashscoreSettings.language) =>
 	translate(Str.COMMENTARY_LINK1, language) + matchId + translate(Str.COMMENTARY_LINK2, language);
 
@@ -209,10 +216,14 @@ infoSpan.style.maxWidth = '400px';
 fDivOverlay.appendChild(infoSpan);
 // Flashscore iframe which will be placed inside the div
 const flashscoreFrame = document.createElement('iframe');
+// Flashscore commentary iframe which will be placed inside the div
+const flashscoreCommentFrame = document.createElement('iframe');
+let findCommentaryTabInterval;
 // Add div to haxball
 document.body.appendChild(fDivOverlay);
-// Add iframe to div
+// Add iframes to div
 fDivOverlay.appendChild(flashscoreFrame);
+fDivOverlay.appendChild(flashscoreCommentFrame);
 
 // Commentary section element
 let fCommentsSection;
@@ -241,7 +252,7 @@ let endPending = false;
  * @param {string} width iFrame css width.
  * @param {string} height iFrame css height.
  */
-function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', suspended = false, width = '560px', height = '600px') {
+function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', suspended = false, width = '560px', height = '400px') {
 	if (!(matchId?.length > 0)) {
 		console.error('Oh no! You forgot to specify the match ID');
 		console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
@@ -252,6 +263,7 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	}
 	// Stop the observer
 	stopFlashscore();
+	fCommentsSection = null;
 
 	let prevLink = getCommentaryLink();
 
@@ -259,13 +271,22 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	FlashscoreSettings.team1Code = team1Code;
 	FlashscoreSettings.team2Code = team2Code;
 	FlashscoreSettings.language = language;
+
 	flashscoreFrame.onload = null;
-	flashscoreFrame.className = 'flashscoreframe';
+	flashscoreFrame.className = 'flashscoreFrame';
 	flashscoreFrame.style.display = 'block';
 	flashscoreFrame.style.marginTop = '16px';
-	flashscoreFrame.src = getCommentaryLink();
+	flashscoreFrame.src = getMatchLink();
 	flashscoreFrame.width = width;
 	flashscoreFrame.height = height;
+
+	flashscoreCommentFrame.onload = null;
+	flashscoreCommentFrame.className = 'flashscoreCommentFrame';
+	flashscoreCommentFrame.style.display = 'block';
+	flashscoreCommentFrame.style.marginTop = '16px';
+	flashscoreCommentFrame.width = width;
+	flashscoreCommentFrame.height = '200px';
+
 	infoSpan.style.maxWidth = width;
 	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
 
@@ -276,17 +297,50 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 	}
 	// Else wait for another page to load
 	else {
-		// When the flashscore page is loaded
+		// When the flashscore match frame is loaded
 		flashscoreFrame.onload = ev => {
-			console.log('Flashscore frame loaded');
+			console.log('Flashscore match frame loaded: ' + getMatchLink());
+			// Empty last comments queue
+			lastCommentsQueue = [];
+			clearInterval(findCommentaryTabInterval);
 
 			// Wait 3 seconds for the comments section to load (should be sufficient)
 			setTimeout(() => {
-				console.log('Flashscore comment section loaded');
-				// Empty last comments queue
-				lastCommentsQueue = [];
+				console.log('Flashscore page should have already been loaded');
+
+				// Delete redundant elements
+				console.log('Deleting redundant elements from flashscore frame');
+				flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				// Check periodically if a commentary section appeared
+				function findCommentaryTab() {
+					const tabs = flashscoreFrame.contentDocument.querySelector('.filter__group');
+					const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
+					// If there is a COMMENTARY tab
+					if (tabsArr?.find(t => t.href.endsWith(translate(Str.COMMENTARY_LINK2))) != null) {
+						console.log('Commentary tab found, loading it...');
+						// Load commentary section in comment frame
+						flashscoreCommentFrame.src = getCommentaryLink();
+						clearInterval(findCommentaryTabInterval);
+					}
+				}
+				findCommentaryTab();
+				findCommentaryTabInterval = setInterval(findCommentaryTab, 5000);
+			}, 2000);
+		};
+
+		// When the flashscore comment frame is loaded
+		flashscoreCommentFrame.onload = ev => {
+			console.log('Flashscore comment frame loaded: ' + getCommentaryLink());
+
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore comment section should have already been loaded');
 				// Flashscore comments section element
-				fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
+				fCommentsSection = flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
 
 				/*
 				const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
@@ -312,11 +366,14 @@ function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', 
 					restartFlashscore();
 
 				// Delete redundant elements
-				flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-				Array.from(flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-				flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-				flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-			}, 3000);
+				console.log('Deleting redundant elements from comment frame');
+				flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				flashscoreCommentFrame.contentWindow.scrollTo({top: fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
+			}, 2000);
 		};
 	}
 }
@@ -327,7 +384,7 @@ function getCommentFromSoccerRow(row) {
 }
 
 function getBotCommentFromSoccerRow(row) {
-	if (row == null || flashscoreFrame == null)
+	if (row == null || flashscoreCommentFrame == null)
 		return null;
 
 	const minuteText = row.querySelector('.soccer__time')?.innerText?.trim() || '';
@@ -353,6 +410,7 @@ function getBotCommentFromSoccerRow(row) {
 		iconEmoji = '🟥 ';
 	else if (row.querySelector('.yellowCard-ico') != null)
 		iconEmoji = '🟨 ';
+	// Second yellow
 	else if (row.querySelector('.card-ico') != null)
 		iconEmoji = '🟥 ';
 	else if (goalScoreText.length === 0 && (row.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
@@ -371,11 +429,15 @@ function getBotCommentFromSoccerRow(row) {
 	let scores = getScoresArray();
 	if (scores.length < 2)
 		scores = ['-', '-'];
+
+	const redCardsArray = getRedCardsArray();
+	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
 	let firstLegScores = getFirstLegScoresArray();
 	let scoresString = scores[0] + ':' + scores[1] +
 		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
 	// This will precede every chat message
-	const prefix = '[' + FlashscoreSettings.team1Code + ' ' + scoresString + ' ' + FlashscoreSettings.team2Code + '] ';
+	const prefix = '[' + FlashscoreSettings.team1Code + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + FlashscoreSettings.team2Code + '] ';
 	return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 }
 
@@ -407,6 +469,7 @@ function getSlicedHaxballText(text, maxFragmentLength = 140) {
 	return slicedTextArr;
 }
 
+// If game-mod.js is loaded, it returns room manager which is needed to send chat without using a text field
 function getCurrentRoomManager() {
 	return insideRoom ? g?.getRoomManager() : null;
 }
@@ -414,10 +477,10 @@ function getCurrentRoomManager() {
 // Function to send chat, no matter if the modified game-min.js is present or not
 function sendChat_s(message) {
 	const roomManager = getCurrentRoomManager();
-	// If modified game-min.js is loaded
+	// If modified game-min.js is loaded, just send chat
 	if (roomManager?.sendChat != null)
 		roomManager.sendChat(message);
-	// Legacy
+	// Legacy, uses input text field
 	else {
 		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const inputElement = iframeBody.querySelector('[data-hook="input"]');
@@ -459,7 +522,7 @@ let getTeamNamesArray = () => {
 let getMatchDetailsString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.detailScore__status')?.children ?? []).map(d => d.innerText).filter(d => d.trim().length > 0).join(' ').trim() ?? '';
 
 /** @return {string} Referee and stadium. */
-let getMatchRefereeStadiumString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.mi__data')?.children ?? []).map(m => Array.from(m.children)).flat().map(i => i.innerText).join(' ');
+let getMatchRefereeStadiumString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.mi__data')?.children ?? []).map(m => Array.from(m.children)).flat().map(i => i.innerText).join(' ');
 
 /** @return {string} Match start date and time. */
 let getStartTimeString = () => flashscoreFrame.contentDocument.querySelector('.duelParticipant__startTime')?.innerText ?? '';
@@ -478,7 +541,7 @@ let getFirstLegScoresArray = () => {
 	if (firstScoreRaw?.length === 3) {
 		return [Number.parseInt(firstScoreRaw[1]), Number.parseInt(firstScoreRaw[2])];
 	}
-}
+};
 
 /**
  * Returns odd value for specified team and if it's valid.
@@ -554,6 +617,30 @@ function getGoalscorers() {
 	});
 }
 
+/**
+ * Returns array of red cards per team.
+ *
+ * @return {[number, number]} Home team red cards and away team red cards.
+ */
+function getRedCardsArray() {
+	// Goals, cards, substitutions...
+	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+	// Filter red cards
+	const redCardIncidents = incidents.filter(i => i.querySelector('svg.card-ico:not(.yellowCard-ico)') != null);
+	const redCardsArray = [0, 0];
+	// For each red card find which team earned it
+	redCardIncidents.forEach(rci => {
+		const isOutOfPitch = rci.querySelector('.smv__assist') != null;
+		if (!isOutOfPitch) {
+			const team = rci.parentElement.classList.contains('smv__homeParticipant') ? 0 : rci.parentElement.classList.contains('smv__awayParticipant') ? 1 : -1;
+			// Add one red card to team
+			redCardsArray[team] += 1;
+		}
+	});
+
+	return redCardsArray;
+}
+
 const sIcon = ['◽', '🔸', '🔹'];
 
 /**
@@ -564,6 +651,9 @@ const sIcon = ['◽', '🔸', '🔹'];
 function getMatchSummary() {
 	const startTimeString = getStartTimeString();
 	const teamNamesArray = getTeamNamesArray();
+	const redCardsArray = getRedCardsArray();
+	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
 	// Which half and minute
 	const matchDetailsString = getMatchDetailsString();
 	let scores = getScoresArray();
@@ -577,7 +667,7 @@ function getMatchSummary() {
 	// Minute, goalscorer and assist from each goal
 	const scorersArray = getGoalscorers();
 
-	const line1TeamScores = '🔶 ' + teamNamesArray[0] + ' ' + scoresString + ' ' + teamNamesArray[1] + ' 🔷';
+	const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
 	let line1Info;
 	let line2;
 	if (matchDetailsString.length > 0) {
@@ -596,29 +686,18 @@ function getMatchSummary() {
 }
 
 function printMatchSummary() {
-	let tabs = flashscoreFrame.contentDocument.querySelectorAll('.tabs__detail--nav .tabs__tab');
-	if (tabs?.length === 0)
-		tabs = flashscoreFrame.contentDocument.querySelectorAll('.filter__filter');
-	// Click SUMMARY
-	if (tabs?.length > 0)
-		tabs[0].click();
-	else
-		console.warn('Could not switch tabs for goalscorers');
-	// After a while
-	setTimeout(() => {
-		const matchSummary = getMatchSummary().filter(a => a.length > 0);
-		// Send match summary
-		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
-		sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
-		// Click COMMENTARY
-		if (tabs?.length >= 3)
-			tabs[tabs.length - 1].click();
-	}, 500);
+	const matchSummary = getMatchSummary().filter(a => a.length > 0);
+	// Send match summary
+	const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
+	sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
 }
 
 function printResultsWithOdds() {
 	const startTimeString = getStartTimeString();
 	const teamNamesArray = getTeamNamesArray();
+	const redCardsArray = getRedCardsArray();
+	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
 	// Which half and minute
 	const matchDetailsString = getMatchDetailsString();
 	let scores = getScoresArray();
@@ -633,7 +712,7 @@ function printResultsWithOdds() {
 		return odd == null || isNaN(odd.value) ? '-' : odd.valid ? odd.value.toString() : [...odd.value.toString()].map(c => c + st).join('');
 	});
 
-	const line1TeamScores = '🔶 ' + teamNamesArray[0] + ' ' + scoresString + ' ' + teamNamesArray[1] + ' 🔷';
+	const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
 	const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 	const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
 
@@ -644,7 +723,7 @@ function printResultsWithOdds() {
 // Callback function to execute when mutations are observed.
 // If you want to modify this function at runtime, modify it, paste it to console and call restart() to reload the observer
 let fCommentsCallback = () => {
-	fCommentsSection = flashscoreFrame.contentDocument.querySelector('#detail > .section');
+	fCommentsSection = flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
 	// Soccer rows array
 	const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
 	// If there are soccer rows
@@ -745,6 +824,9 @@ let fCommentsCallback = () => {
 
 // Start observing the target node for configured mutations
 let startFlashscore = () => {
+	if (fCommentsSection == null) {
+		fCommentsSection = flashscoreCommentFrame.contentDocument?.querySelector('#detail > .section');
+	}
 	if (fCommentsSection != null) {
 		//fCommentsObserverInterval = new MutationObserver(fCommentsCallback);
 		//fCommentsObserverInterval.observe(fCommentsSection, config);
@@ -757,7 +839,6 @@ let startFlashscore = () => {
 
 // Later, you can stop observing
 let stopFlashscore = () => {
-	//fCommentsObserverInterval.disconnect();
 	clearInterval(fCommentsObserverInterval);
 	console.log('Stopped observing flashscore commentary section');
 };
