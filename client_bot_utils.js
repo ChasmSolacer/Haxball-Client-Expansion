@@ -1478,6 +1478,8 @@ function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 			lastReplay = new Replay(gameReplayArray, Date.now(), replayName, roomManager);
 			replays.push(lastReplay);
 			console.log('lastReplay: %o. Write lastReplay.download() to save it!', lastReplay);
+
+			addReplayToIDB(lastReplay);
 		}
 	}
 }
@@ -1573,7 +1575,7 @@ function getObjectFromStore(dbName, objectStoreName, id, dbVersion) {
  * @param {number} dbVersion Don't pass this argument directly, it will update database to this version if needed.
  * @return {Promise<Array>} If resolved, it returns the key of added object.
  */
-function addObjectToStore(dbName, objectStoreName, obj, dbVersion) {
+function addObjectToStore(dbName, objectStoreName, obj, dbVersion = undefined) {
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open(dbName, dbVersion);
 		request.onupgradeneeded = ev => {
@@ -1633,6 +1635,11 @@ function addObjectToStore(dbName, objectStoreName, obj, dbVersion) {
 	});
 }
 
+/**
+ * Adds player to players object store.
+ *
+ * @param {{}} player Player object
+ */
 function addPlayerToIDB(player) {
 	const roomId = lastRoomLink.substring(lastRoomLink.indexOf('?c=') + 3);
 	const roomName = g.getRoomState()?.name;
@@ -1647,6 +1654,25 @@ function addPlayerToIDB(player) {
 	};
 	addObjectToStore('db', 'players', playerObject)
 		.then(key => console.debug('Added player ' + key + ' to IDB'));
+}
+
+/**
+ * Adds replay to replays object store.
+ *
+ * @param {Replay} replay Replay object
+ */
+function addReplayToIDB(replay) {
+	const roomLink = replay.roomManager.roomLink;
+	const roomId = roomLink.substring(roomLink.indexOf('?c=') + 3);
+	const replayObject = {
+		roomId: roomId,
+		replayArray: replay.replayArray,
+		timestamp: replay.timestamp,
+		name: replay.name,
+		roomName: replay.roomManager.room.roomState.name
+	};
+	addObjectToStore('db', 'replays', replayObject)
+		.then(key => console.debug('Added replay ' + key + ' to IDB'));
 }
 /* =====  Functions  ===== */
 
