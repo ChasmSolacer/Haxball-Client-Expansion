@@ -1,3 +1,4 @@
+let version = 'indev-0.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -22,28 +23,12 @@
 *
 * If you are in a room, a comment will be sent in the chat as soon as it appears in Flashscore commentary section.
 *
-* If you want to load a match, call loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
+* If you want to load a match, call OverlayManager.createOverlay().loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
 * After a flashscore page appears, don't click anything on it (but if you do, don't panic, just don't switch tabs).
 */
 
 // Modified game-min.js g object. Not necessary in this script.
 let g = window.g;
-
-// Important settings
-const FlashscoreSettings = {
-	// Current language
-	language: '',
-	// Team 1 abbreviation
-	team1Code: '',
-	// Team 2 abbreviation
-	team2Code: '',
-	// Match ID from the commentary url
-	matchId: '',
-	// fDiv opacity
-	overlayOpacity: '0.8',
-	// Time in milliseconds between consecutive chat messages
-	chatInterval: 0
-};
 
 // Translatable objects
 const Str = {
@@ -183,263 +168,7 @@ const Str = {
 };
 
 // Translate the translatable object into specified language (or English if no such language)
-const translate = (translatableObject, language = FlashscoreSettings.language) => translatableObject[language] || translatableObject['en'];
-
-const getMatchLink = (matchId = FlashscoreSettings.matchId, language = FlashscoreSettings.language) =>
-	translate(Str.COMMENTARY_LINK1, language) + matchId;
-
-const getCommentaryLink = (matchId = FlashscoreSettings.matchId, language = FlashscoreSettings.language) =>
-	translate(Str.COMMENTARY_LINK1, language) + matchId + translate(Str.COMMENTARY_LINK2, language);
-
-// Overlay – div which will contain the flashscore iFrame.
-// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
-const fDivOverlay = document.createElement('div');
-fDivOverlay.style.position = 'absolute';
-fDivOverlay.style.float = 'left';
-fDivOverlay.style.padding = '8px';
-fDivOverlay.style.paddingTop = '16px';
-fDivOverlay.style.opacity = FlashscoreSettings.overlayOpacity;
-fDivOverlay.style.textAlign = 'center';
-fDivOverlay.style.backgroundColor = '#f84';
-fDivOverlay.style.border = '3px solid #F04';
-fDivOverlay.style.zIndex = '9';
-fDivOverlay.style.cursor = 'move';
-// Some info
-const infoSpan = document.createElement('span');
-infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
-infoSpan.style.display = 'block';
-infoSpan.style.color = 'black';
-infoSpan.style.fontWeight = '900';
-infoSpan.style.fontSize = '1.3em';
-infoSpan.style.maxWidth = '400px';
-// Add span to div
-fDivOverlay.appendChild(infoSpan);
-// Flashscore iframe which will be placed inside the div
-const flashscoreFrame = document.createElement('iframe');
-// Flashscore commentary iframe which will be placed inside the div
-const flashscoreCommentFrame = document.createElement('iframe');
-let findCommentaryTabInterval;
-// Add div to haxball
-document.body.appendChild(fDivOverlay);
-// Add iframes to div
-fDivOverlay.appendChild(flashscoreFrame);
-fDivOverlay.appendChild(flashscoreCommentFrame);
-
-// Commentary section element
-let fCommentsSection;
-// Observer interval
-let fCommentsObserverInterval;
-// Previous number of comments
-let previousRowCount = 0;
-// Comments array. The latest is at index 0
-let lastCommentsQueue = [];
-// Match finished flag
-let endPending = false;
-
-// Options for the observer (which mutations to observe)
-//let config = {attributes: true, childList: true, subtree: true};
-
-/**
- * This function loads a flashscore commentary page within the flashscoreFrame.
- * It can be called at any time.
- *
- * @param {string} matchId Match identifier can be found inside the URL, in the middle of it.
- * An English link is always composed of: "https://www.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".
- * @param {string} team1Code A short home team abbreviation that is usually seen on a score bug.
- * @param {string} team2Code A short away team abbreviation that is usually seen on a score bug.
- * @param {string} language Language code ("pl" or "en").
- * @param {boolean} suspended if true, you have to call startFlashscore manually to print comments.
- * @param {string} width iFrame css width.
- * @param {string} height iFrame css height.
- */
-function loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', suspended = false, width = '560px', height = '400px') {
-	if (!(matchId?.length > 0)) {
-		console.error('Oh no! You forgot to specify the match ID');
-		console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
-			, 'background: #00141E; color: #FFCD00; font-size: 1.3em');
-		console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary/0 – the matchId is %cGbHo73tP'
-			, 'background: #00141E; color: #FFCD00; font-size:1.3em', 'background: #00141E; color: #FFCD00; font-size:1.3em; font-weight:900');
-		return;
-	}
-	// Stop the observer
-	stopFlashscore();
-	fCommentsSection = null;
-
-	let prevLink = getCommentaryLink();
-
-	FlashscoreSettings.matchId = matchId;
-	FlashscoreSettings.team1Code = team1Code;
-	FlashscoreSettings.team2Code = team2Code;
-	FlashscoreSettings.language = language;
-
-	flashscoreFrame.onload = null;
-	flashscoreFrame.className = 'flashscoreFrame';
-	flashscoreFrame.style.display = 'block';
-	flashscoreFrame.style.marginTop = '16px';
-	flashscoreFrame.src = getMatchLink();
-	flashscoreFrame.width = width;
-	flashscoreFrame.height = height;
-
-	flashscoreCommentFrame.onload = null;
-	flashscoreCommentFrame.className = 'flashscoreCommentFrame';
-	flashscoreCommentFrame.style.display = 'block';
-	flashscoreCommentFrame.style.marginTop = '16px';
-	flashscoreCommentFrame.width = width;
-	flashscoreCommentFrame.height = '200px';
-
-	infoSpan.style.maxWidth = width;
-	infoSpan.innerText = translate(Str.PRESS_TO_SHOW_HIDE);
-
-	// If iframe link didn't change, just restart the observer
-	if (prevLink === getCommentaryLink()) {
-		if (!suspended)
-			restartFlashscore();
-	}
-	// Else wait for another page to load
-	else {
-		// When the flashscore match frame is loaded
-		flashscoreFrame.onload = ev => {
-			console.log('Flashscore match frame loaded: ' + getMatchLink());
-			// Empty last comments queue
-			lastCommentsQueue = [];
-			clearInterval(findCommentaryTabInterval);
-
-			// Wait 3 seconds for the comments section to load (should be sufficient)
-			setTimeout(() => {
-				console.log('Flashscore page should have already been loaded');
-
-				// Delete redundant elements
-				console.log('Deleting redundant elements from flashscore frame');
-				flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-				Array.from(flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-				flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-				flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-				// Check periodically if a commentary section appeared
-				function findCommentaryTab() {
-					const tabs = flashscoreFrame.contentDocument.querySelector('.filter__group');
-					const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
-					// If there is a COMMENTARY tab
-					if (tabsArr?.find(t => t.href.endsWith(translate(Str.COMMENTARY_LINK2))) != null) {
-						console.log('Commentary tab found, loading it...');
-						// Load commentary section in comment frame
-						flashscoreCommentFrame.src = getCommentaryLink();
-						clearInterval(findCommentaryTabInterval);
-					}
-				}
-				findCommentaryTab();
-				findCommentaryTabInterval = setInterval(findCommentaryTab, 5000);
-			}, 2000);
-		};
-
-		// When the flashscore comment frame is loaded
-		flashscoreCommentFrame.onload = ev => {
-			console.log('Flashscore comment frame loaded: ' + getCommentaryLink());
-
-			// Wait 3 seconds for the comments section to load (should be sufficient)
-			setTimeout(() => {
-				console.log('Flashscore comment section should have already been loaded');
-				// Flashscore comments section element
-				fCommentsSection = flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
-
-				/*
-				const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
-
-				if (soccerRows?.length > 0) {
-					// Top row containing minute, icons and comment
-					const topSoccerRow = soccerRows[0];
-					// Add the comment text at the beginning of the last comments queue
-					lastCommentsQueue.unshift(getCommentFromSoccerRow(topSoccerRow));
-					// The final comment from top row that will appear in the Haxball chat
-					let botComment = getBotCommentFromSoccerRow(topSoccerRow);
-
-					// Print the whole comment to the console
-					console.log(botComment);
-
-				}
-				*/
-				//let soccerRowsToText = soccerRows.map(row => getTextFromRow(row));
-				//console.debug(soccerRowsToText);
-
-				// Start a new observer
-				if (!suspended)
-					restartFlashscore();
-
-				// Delete redundant elements
-				console.log('Deleting redundant elements from comment frame');
-				flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-				Array.from(flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-				flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-				flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-				flashscoreCommentFrame.contentWindow.scrollTo({top: fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
-			}, 2000);
-		};
-	}
-}
-
-// Extracts a comment text from soccer row
-function getCommentFromSoccerRow(row) {
-	return row?.querySelector('.soccer__comment')?.innerText?.trim() || '';
-}
-
-function getBotCommentFromSoccerRow(row) {
-	if (row == null || flashscoreCommentFrame == null)
-		return null;
-
-	const minuteText = row.querySelector('.soccer__time')?.innerText?.trim() || '';
-	const goalScoreText = row.querySelector('.soccer__score')?.innerText?.trim() || '';
-	let iconEmoji = '';
-	if (row.querySelector('.var') != null)
-		iconEmoji = '🖥️ ';
-	else if (row.querySelector('.stopwatch') != null)
-		iconEmoji = '⏱️ ';
-	else if (row.querySelector('.substitution') != null)
-		iconEmoji = '🔄 ';
-	else if (row.querySelector('.corner-ico') != null)
-		iconEmoji = '🚩 ';
-	else if (row.querySelector('.headphones-ico') != null)
-		iconEmoji = 'ℹ️ ';
-	else if (row.querySelector('.injury') != null)
-		iconEmoji = '🩹 ';
-	else if (row.querySelector('.whistle-ico') != null)
-		iconEmoji = '';
-	else if (row.querySelector('.warning') != null)
-		iconEmoji = '⚠️ ';
-	else if (row.querySelector('.redCard-ico') != null)
-		iconEmoji = '🟥 ';
-	else if (row.querySelector('.yellowCard-ico') != null)
-		iconEmoji = '🟨 ';
-	// Second yellow
-	else if (row.querySelector('.card-ico') != null)
-		iconEmoji = '🟥 ';
-	else if (goalScoreText.length === 0 && (row.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
-		iconEmoji = '⚽ ';
-
-	let goalText = '';
-	if (goalScoreText)
-		goalText = ' ⚽ ' + goalScoreText + ' ⚽ ';
-
-	let commentText = getCommentFromSoccerRow(row);
-	// Polska pisownia nazwisk z alfabetów niełacińskich
-	if (FlashscoreSettings.language === 'pl')
-		commentText = spolszczNazwiska(commentText);
-
-	// Two-element score array
-	let scores = getScoresArray();
-	if (scores.length < 2)
-		scores = ['-', '-'];
-
-	const redCardsArray = getRedCardsArray();
-	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
-	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-	let firstLegScores = getFirstLegScoresArray();
-	let scoresString = scores[0] + ':' + scores[1] +
-		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
-	// This will precede every chat message
-	const prefix = '[' + FlashscoreSettings.team1Code + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + FlashscoreSettings.team2Code + '] ';
-	return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
-}
+const translate = (translatableObject, language) => translatableObject[language] || translatableObject['en'];
 
 /**
  * Splits long text into arrays of up to maxFragmentLength character long texts.
@@ -506,347 +235,760 @@ function sendTextArrayToChat(textArray, delay = 0) {
 	textArray.filter(text => text?.length > 0).forEach((text, i) => setTimeout(() => sendChat_s(text), i * delay));
 }
 
-/** @return {[team1: string, team2: string]} Two team names array. */
-let getTeamNamesArray = () => {
-	let teamNames = Array.from(flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName'))
-		.map(e => {
-			const bracketIndex = e.innerText.indexOf('(');
-			return bracketIndex > -1 ? e.innerText.substring(0, bracketIndex).trim() : e.innerText.trim();
-		});
-	if (FlashscoreSettings.language === 'pl')
-		teamNames = teamNames.map(e => spolszczNazwiska(e));
-	return teamNames;
-};
-
-/** @return {string} Which half is it and what minute or if the match is finished or cancelled. */
-let getMatchDetailsString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.detailScore__status')?.children ?? []).map(d => d.innerText).filter(d => d.trim().length > 0).join(' ').trim() ?? '';
-
-/** @return {string} Referee and stadium. */
-let getMatchRefereeStadiumString = () => Array.from(flashscoreFrame.contentDocument.querySelector('.mi__data')?.children ?? []).map(m => Array.from(m.children)).flat().map(i => i.innerText).join(' ');
-
-/** @return {string} Match start date and time. */
-let getStartTimeString = () => flashscoreFrame.contentDocument.querySelector('.duelParticipant__startTime')?.innerText ?? '';
-
-/** @return {[score1: number, score2: number]} Scores array. */
-let getScoresArray = () => Array.from(flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => Number.parseInt(e.innerText));
-
 /**
- * Works only on 2nd match of a two-legged tie. It returns scores of the first match.
+ * Extracts a comment text from soccer row.
  *
- * @return {[score1: number, score2: number]} Scores array or undefined.
- * */
-let getFirstLegScoresArray = () => {
-	const infoBox = flashscoreFrame.contentDocument.querySelector('.infoBox__info');
-	const firstScoreRaw = infoBox?.innerText?.match(/: (\d+)-(\d+)\./);
-	if (firstScoreRaw?.length === 3) {
-		return [Number.parseInt(firstScoreRaw[1]), Number.parseInt(firstScoreRaw[2])];
-	}
-};
-
-/**
- * Returns odd value for specified team and if it's valid.
- *
- * @param {number} teamId 1 – home win, 0 – tie, 2 – away win
- * @return {null|{valid: boolean, value: number}}
+ * @param {Element} row
+ * @return {string}
  */
-function getOdd(teamId) {
-	if (teamId >= 0 && teamId <= 2) {
-		const odd = flashscoreFrame.contentDocument.querySelector('.o_' + teamId)?.children[1];
-		if (odd != null) {
-			const oddValue = Number.parseFloat(odd.innerText);
-			const isValid = !odd.classList.contains('not-published');
-			return {value: oddValue, valid: isValid};
-		}
-		else {
-			console.warn('No odds found for this match');
-			return null;
-		}
-	}
-	else {
-		console.warn('Cannot get odds for team ' + teamId);
-		return null;
-	}
-}
-
-/**
- * Returns goalscorers object array.
- *
- * @return {{entry, team: number}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
- */
-function getGoalscorers() {
-	// Goals, cards, substitutions...
-	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
-	// Filter goals
-	const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null);
-	// Extract minute, goalscorer and assist from each goal
-	return soccerIncidents.map(si => {
-		const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
-		const minuteText = si.querySelector('.smv__timeBox').innerText;
-		let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
-		let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
-		let isOwnGoal = si.querySelector('.footballOwnGoal-ico') != null;
-		let isPenalty = !isOwnGoal && si.querySelector('.smv__subIncident') != null;
-		let ownGoalText = '';
-		let penaltyText = '';
-		if (scorerText.length > 0) {
-			// Swap name initials and surname
-			const scorerMatches = scorerText.match(/\S+\..*/);
-			if (scorerMatches != null)
-				scorerText = scorerMatches[0] + ' ' + scorerMatches.input.substring(0, scorerMatches.index - 1);
-			if (FlashscoreSettings.language === 'pl')
-				scorerText = spolszczNazwiska(scorerText);
-			scorerText = ' ' + scorerText;
-			if (assistText.length > 0) {
-				// Remove brackets
-				assistText = assistText.substring(1).substring(0, assistText.length - 2);
-				// Swap name initials and surname
-				const assistMatches = assistText.match(/\S+\..*/);
-				if (assistMatches != null)
-					assistText = assistMatches[0] + ' ' + assistMatches.input.substring(0, assistMatches.index - 1);
-				if (FlashscoreSettings.language === 'pl')
-					assistText = spolszczNazwiska(assistText);
-				assistText = ' (' + assistText + ')';
-			}
-			if (isOwnGoal)
-				ownGoalText = ' (' + translate(Str.OWN_GOAL_ABBR) + ')';
-			if (isPenalty)
-				penaltyText = ' (' + translate(Str.PENALTY_ABBR) + ')';
-		}
-
-		return {team: team, entry: minuteText + scorerText + assistText + ownGoalText + penaltyText};
-	});
-}
-
-/**
- * Returns array of red cards per team.
- *
- * @return {[number, number]} Home team red cards and away team red cards.
- */
-function getRedCardsArray() {
-	// Goals, cards, substitutions...
-	const incidents = Array.from(flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
-	// Filter red cards
-	const redCardIncidents = incidents.filter(i => i.querySelector('svg.card-ico:not(.yellowCard-ico)') != null);
-	const redCardsArray = [0, 0];
-	// For each red card find which team earned it
-	redCardIncidents.forEach(rci => {
-		const isOutOfPitch = rci.querySelector('.smv__assist') != null;
-		if (!isOutOfPitch) {
-			const team = rci.parentElement.classList.contains('smv__homeParticipant') ? 0 : rci.parentElement.classList.contains('smv__awayParticipant') ? 1 : -1;
-			// Add one red card to team
-			redCardsArray[team] += 1;
-		}
-	});
-
-	return redCardsArray;
+function getCommentFromSoccerRow(row) {
+	return row?.querySelector('.soccer__comment')?.innerText?.trim() || '';
 }
 
 const sIcon = ['◽', '🔸', '🔹'];
 
-/**
- * Returns current match summary as array of two strings.
- *
- * @return {[result: string, goalscorers: string]} Two-element array of strings ready to send to chat. The first element contains the results, the second element contains goalscorers.
- */
-function getMatchSummary() {
-	const startTimeString = getStartTimeString();
-	const teamNamesArray = getTeamNamesArray();
-	const redCardsArray = getRedCardsArray();
-	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
-	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-	// Which half and minute
-	const matchDetailsString = getMatchDetailsString();
-	let scores = getScoresArray();
-	if (scores.length < 2)
-		scores = ['-', '-'];
-	let firstLegScores = getFirstLegScoresArray();
-	let scoresString = scores[0] + ':' + scores[1] +
-		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
-	let refereeStadiumString = getMatchRefereeStadiumString();
+class Overlay {
+	/**
+	 * Creates an overlay with blank iFrames and adds it to document.
+	 *
+	 * @param {string} language Language code
+	 */
+	constructor(language = 'en') {
+		this.language = language;
+		// Overlay – div which will contain the flashscore iFrame.
+		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
+		this.fDivOverlay = document.createElement('div');
+		this.fDivOverlay.style.position = 'absolute';
+		this.fDivOverlay.style.float = 'left';
+		this.fDivOverlay.style.padding = '8px';
+		this.fDivOverlay.style.paddingTop = '16px';
+		this.fDivOverlay.style.opacity = '0.75';
+		this.fDivOverlay.style.textAlign = 'center';
+		this.fDivOverlay.style.backgroundColor = '#f8' + OverlayManager.overlays.length % 10;
+		this.fDivOverlay.style.border = '3px solid #666';
+		this.fDivOverlay.style.zIndex = '9';
+		this.fDivOverlay.style.cursor = 'move';
+		this.fDivOverlay.style.top = OverlayManager.overlays.length * 10 + 'px';
+		this.fDivOverlay.style.left = OverlayManager.overlays.length * 10 + 'px';
 
-	// Minute, goalscorer and assist from each goal
-	const scorersArray = getGoalscorers();
+		// Some help info
+		this.infoSpan = document.createElement('span');
+		this.infoSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
+		this.infoSpan.style.display = 'block';
+		this.infoSpan.style.color = 'black';
+		this.infoSpan.style.fontWeight = '900';
+		this.infoSpan.style.fontSize = '1.3em';
+		this.infoSpan.style.maxWidth = '400px';
+		// Title
+		this.titleSpan = document.createElement('span');
+		this.titleSpan.innerText = 'OverlayManager.focusedOverlay.loadFlashscoreMatchCommentary()';
+		this.titleSpan.style.display = 'block';
+		this.titleSpan.style.color = 'black';
+		this.titleSpan.style.fontSize = '0.9em';
+		this.titleSpan.style.maxWidth = '400px';
 
-	const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
-	let line1Info;
-	let line2;
-	if (matchDetailsString.length > 0) {
-		line1Info = matchDetailsString;
-		line2 = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+		// Add span to div
+		this.fDivOverlay.appendChild(this.infoSpan);
+		this.fDivOverlay.appendChild(this.titleSpan);
+		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
+		this.flashscoreFrame = document.createElement('iframe');
+		// Flashscore commentary iframe which will be placed inside the div below the flashscoreFrame. It will occupy 1/3 of its space
+		this.flashscoreCommentFrame = document.createElement('iframe');
+		this.findCommentaryTabInterval = null;
+		// Add div to haxball
+		document.body.appendChild(this.fDivOverlay);
+		// Add iframes to div
+		this.fDivOverlay.appendChild(this.flashscoreFrame);
+		this.fDivOverlay.appendChild(this.flashscoreCommentFrame);
+
+		makeElementDraggable(this.fDivOverlay);
+
+		// Commentary section element
+		this.fCommentsSection = null;
+		// Observer interval
+		this.fCommentsObserverInterval = null;
+		// Previous number of comments
+		this.previousRowCount = 0;
+		// Comments array. The latest is at index 0
+		this.lastCommentsQueue = [];
+		// Match finished flag
+		this.endPending = false;
+		// Previous commentary link
+		this.prevLink = '';
 	}
-	else {
-		line1Info = startTimeString;
-		line2 = refereeStadiumString;
-		if (FlashscoreSettings.language === 'pl')
-			line2 = spolszczNazwiska(line2);
-	}
 
-	// Display match results
-	return [line1TeamScores + ' ' + line1Info, line2];
-}
-
-function printMatchSummary() {
-	const matchSummary = getMatchSummary().filter(a => a.length > 0);
-	// Send match summary
-	const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
-	sendTextArrayToChat(matchSummaryArray, FlashscoreSettings.chatInterval);
-}
-
-function printResultsWithOdds() {
-	const startTimeString = getStartTimeString();
-	const teamNamesArray = getTeamNamesArray();
-	const redCardsArray = getRedCardsArray();
-	const redCardsHome = '🟥'.repeat(redCardsArray[0]);
-	const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-	// Which half and minute
-	const matchDetailsString = getMatchDetailsString();
-	let scores = getScoresArray();
-	if (scores.length < 2)
-		scores = ['-', '-'];
-	let firstLegScores = getFirstLegScoresArray();
-	let scoresString = scores[0] + ':' + scores[1] +
-		(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
-	const odds = [getOdd(1), getOdd(0), getOdd(2)];
-	const st = String.fromCharCode(822);
-	const oddsStr = odds.map(odd => {
-		return odd == null || isNaN(odd.value) ? '-' : odd.valid ? odd.value.toString() : [...odd.value.toString()].map(c => c + st).join('');
-	});
-
-	const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
-	const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
-	const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
-
-	const resultsWithOddsArray = [line1TeamScores + ' ' + line1Info, line2];
-	sendTextArrayToChat(resultsWithOddsArray, FlashscoreSettings.chatInterval);
-}
-
-// Callback function to execute when mutations are observed.
-// If you want to modify this function at runtime, modify it, paste it to console and call restart() to reload the observer
-let fCommentsCallback = () => {
-	fCommentsSection = flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
-	// Soccer rows array
-	const soccerRows = Array.from(fCommentsSection.querySelectorAll('.soccer__row'));
-	// If there are soccer rows
-	if (soccerRows.length > 0) {
-		const rowCount = soccerRows.length;
-		// Top row containing minute, icons and comment
-		const topSoccerRow = soccerRows[0];
-		// Second top soccer row
-		const secondSoccerRow = soccerRows[1];
-		// Top row converted to text
-		let commentFromTopSoccerRow = getCommentFromSoccerRow(topSoccerRow);
-		// Second top row converted to text
-		let commentFromSecondSoccerRow = getCommentFromSoccerRow(secondSoccerRow);
-
-		let triggeringRow = topSoccerRow;
-
-		// If a comment row was only updated
-		let isUpdate = rowCount === previousRowCount;
-
-		// Reducing some spam.
-		// If the top comment is the same as one of the last four written comments
-		if (lastCommentsQueue.length > 0 && (
-			commentFromTopSoccerRow === lastCommentsQueue[0] ||
-			commentFromTopSoccerRow === lastCommentsQueue[1] ||
-			commentFromTopSoccerRow === lastCommentsQueue[2] ||
-			commentFromTopSoccerRow === lastCommentsQueue[3]
-		)) {
-			// Don't write the same comment for the second time
-			console.debug('Top comment was already written before');
-			// If lastCommentsQueue has max 1 comment OR if the second top comment is the same as the second or third or fourth last written comment
-			if (lastCommentsQueue.length <= 1 || (
-				commentFromSecondSoccerRow === lastCommentsQueue[1] ||
-				commentFromSecondSoccerRow === lastCommentsQueue[2] ||
-				commentFromSecondSoccerRow === lastCommentsQueue[3]
-			)) {
-				// Nothing has really changed, don't write anything this time
-				console.debug('Second top comment was already written too');
-				return;
-			}
-			// If the second top comment contents changed
-			else {
-				isUpdate = true;
-				console.debug('But the second top comment is different');
-				// Add the comment text at the second place of the last comments queue
-				const lastComment = lastCommentsQueue.shift();
-				lastCommentsQueue.unshift(commentFromSecondSoccerRow);
-				lastCommentsQueue.unshift(lastComment);
-				// Print the second row
-				triggeringRow = secondSoccerRow;
-			}
+	/** Changes overlay appearance if its focus state has changed. */
+	onFocusChange() {
+		if (this === OverlayManager.focusedOverlay) {
+			this.fDivOverlay.style.border = '3px solid #0FF';
 		}
-		// If the top comment is different
 		else {
-			console.debug('Top comment is different');
-			triggeringRow = topSoccerRow;
-			// Add the comment text at the beginning of the last comments queue
-			lastCommentsQueue.unshift(commentFromTopSoccerRow);
+			this.fDivOverlay.style.border = '3px solid #666';
+		}
+	}
+
+	/** Closes all iframes, clears all intervals and removes this overlay from document. */
+	terminate() {
+		clearInterval(this.findCommentaryTabInterval);
+		this.stopFlashscore();
+		this.flashscoreFrame.src = '';
+		this.flashscoreCommentFrame.src = '';
+		document.body.removeChild(this.fDivOverlay);
+	}
+
+	hide() {
+		this.fDivOverlay.hidden = true;
+	}
+
+	show() {
+		this.fDivOverlay.hidden = false;
+	}
+
+	toggleHidden() {
+		this.fDivOverlay.hidden = !this.fDivOverlay.hidden;
+	}
+
+	/**
+	 * Converts an object in {@link Str} into string based on current {@link Overlay.language}.
+	 * @param translatableObject
+	 * @return {*}
+	 */
+	translate(translatableObject) {
+		return translatableObject[this.language] || translatableObject['en'];
+	}
+
+	getMatchLink() {
+		return this.translate(Str.COMMENTARY_LINK1, this.language) + this.matchId;
+	}
+
+	getCommentaryLink() {
+		return this.translate(Str.COMMENTARY_LINK1, this.language) + this.matchId + this.translate(Str.COMMENTARY_LINK2, this.language);
+	}
+
+	/**
+	 * This function loads a flashscore commentary page within the flashscoreFrame.
+	 * It can be called at any time.
+	 *
+	 * @param {string} matchId Match identifier can be found inside the URL, in the middle of it.
+	 * An English link is always composed of: "https://www.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary".
+	 * @param {string} team1Code A short home team abbreviation that is usually seen on a score bug.
+	 * @param {string} team2Code A short away team abbreviation that is usually seen on a score bug.
+	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in Str.COMMENTARY_LINK1 object.
+	 * @param {boolean} suspended If true, you have to call startFlashscore manually to print comments.
+	 * @param {number} chatInterval Number in milliseconds of delay between consecutive chat messages. Helpful in rooms with chat slow mode.
+	 * @param {number} width iFrame width in pixels.
+	 * @param {number} height iFrame height in pixels.
+	 */
+	loadFlashscoreMatchCommentary(matchId, team1Code = '', team2Code = '', language = 'pl', suspended = false, chatInterval = 0, width = 560, height = 600) {
+		// Use self instead of this in inner functions (in lambda (arrow) => functions you can use this)
+		const self = this;
+
+		if (!(matchId?.length > 0)) {
+			console.error('Oh no! You forgot to specify the match ID');
+			console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
+				, 'background: #00141E; color: #FFCD00; font-size: 1.3em');
+			console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary/0 – the matchId is %cGbHo73tP'
+				, 'background: #00141E; color: #FFCD00; font-size:1.3em', 'background: #00141E; color: #FFCD00; font-size:1.3em; font-weight:900');
+			return;
 		}
 
-		// The final comment that will appear in the Haxball chat
-		let botComment = getBotCommentFromSoccerRow(triggeringRow);
-		// Mark an update
-		if (isUpdate)
-			botComment = '[' + translate(Str.UPDATE) + '] ' + botComment;
+		this.matchId = matchId;
+		this.team1Code = team1Code;
+		this.team2Code = team2Code;
+		this.language = language;
+		this.suspended = suspended;
+		this.chatInterval = chatInterval;
+		this.width = width;
+		this.height = height;
 
-		// Split the bot comment to fit in the chat
-		const botCommentFragments = getSlicedHaxballText(botComment);
+		this.printUpdates = true;
 
-		// Print the whole comment to the console
-		console.log(botComment);
+		// Stop the observer
+		this.stopFlashscore();
+		this.fCommentsSection = null;
 
-		// For each bot comment fragment, send it to chat
-		sendTextArrayToChat(botCommentFragments, FlashscoreSettings.chatInterval);
+		this.flashscoreFrame.onload = null;
+		this.flashscoreFrame.className = 'flashscoreFrame';
+		this.flashscoreFrame.style.display = 'block';
+		this.flashscoreFrame.style.marginTop = '16px';
+		this.flashscoreFrame.src = this.getMatchLink();
+		this.flashscoreFrame.width = this.width + 'px';
+		this.flashscoreFrame.height = this.height * 2 / 3 + 'px';
 
-		previousRowCount = soccerRows.length;
+		this.flashscoreCommentFrame.onload = null;
+		this.flashscoreCommentFrame.className = 'flashscoreCommentFrame';
+		this.flashscoreCommentFrame.style.display = 'block';
+		this.flashscoreCommentFrame.style.marginTop = '16px';
+		this.flashscoreCommentFrame.width = this.width + 'px';
+		this.flashscoreCommentFrame.height = this.height / 3 + 'px';
+
+		this.infoSpan.style.maxWidth = this.width + 'px';
+		this.infoSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
+
+		this.titleSpan.innerText = this.matchId + ' ' + this.team1Code + ' ' + this.team2Code + ' ' + this.language;
+
+		// If iframe link didn't change, just restart the observer
+		if (this.prevLink === this.getCommentaryLink()) {
+			if (!this.suspended)
+				this.restartFlashscore();
+		}
+		// Else wait for another page to load
+		else {
+			this.prevLink = this.getCommentaryLink();
+			// When the flashscore match frame is loaded
+			this.flashscoreFrame.onload = ev => {
+				console.log('Flashscore match frame loaded: ' + this.getMatchLink());
+				// Empty last comments queue
+				this.lastCommentsQueue = [];
+				clearInterval(this.findCommentaryTabInterval);
+
+				// Wait 3 seconds for the comments section to load (should be sufficient)
+				setTimeout(() => {
+					console.log('Flashscore page should have already been loaded');
+
+					// Delete redundant elements
+					console.log('Deleting redundant elements from flashscore frame');
+					this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+					Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+					this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+					this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+					// Check periodically if a commentary section appeared
+					function findCommentaryTab() {
+						const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
+						const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
+						// If there is a COMMENTARY tab
+						if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
+							console.log('Commentary tab found, loading it...');
+							// Load commentary section in comment frame
+							self.flashscoreCommentFrame.src = self.getCommentaryLink();
+							clearInterval(self.findCommentaryTabInterval);
+						}
+					}
+
+					findCommentaryTab();
+					this.findCommentaryTabInterval = setInterval(() => findCommentaryTab(), 5000);
+				}, 2000);
+			};
+
+			// When the flashscore comment frame is loaded
+			this.flashscoreCommentFrame.onload = ev => {
+				console.log('Flashscore comment frame loaded: ' + this.getCommentaryLink());
+
+				// Wait 3 seconds for the comments section to load (should be sufficient)
+				setTimeout(() => {
+					console.log('Flashscore comment section should have already been loaded');
+					// Flashscore comments section element
+					this.fCommentsSection = this.flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
+
+					// Start a new observer
+					if (!this.suspended)
+						this.restartFlashscore();
+
+					// Delete redundant elements
+					console.log('Deleting redundant elements from comment frame');
+					this.flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+					Array.from(this.flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+					this.flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+					this.flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+					this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
+				}, 2000);
+			};
+		}
 	}
-	else {
-		console.debug('No soccer rows found');
+
+	getBotCommentFromSoccerRow(row) {
+		if (row == null || this.flashscoreCommentFrame == null)
+			return null;
+
+		const minuteText = row.querySelector('.soccer__time')?.innerText?.trim() || '';
+		const goalScoreText = row.querySelector('.soccer__score')?.innerText?.trim() || '';
+		let iconEmoji = '';
+		if (row.querySelector('.var') != null)
+			iconEmoji = '🖥️ ';
+		else if (row.querySelector('.stopwatch') != null)
+			iconEmoji = '⏱️ ';
+		else if (row.querySelector('.substitution') != null)
+			iconEmoji = '🔄 ';
+		else if (row.querySelector('.corner-ico') != null)
+			iconEmoji = '🚩 ';
+		else if (row.querySelector('.headphones-ico') != null)
+			iconEmoji = 'ℹ️ ';
+		else if (row.querySelector('.injury') != null)
+			iconEmoji = '🩹 ';
+		else if (row.querySelector('.whistle-ico') != null)
+			iconEmoji = '';
+		else if (row.querySelector('.warning') != null)
+			iconEmoji = '⚠️ ';
+		else if (row.querySelector('.redCard-ico') != null)
+			iconEmoji = '🟥 ';
+		else if (row.querySelector('.yellowCard-ico') != null)
+			iconEmoji = '🟨 ';
+		// Second yellow
+		else if (row.querySelector('.card-ico') != null)
+			iconEmoji = '🟥 ';
+		else if (goalScoreText.length === 0 && (row.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || row.querySelector('svg.footballOwnGoal-ico') != null))
+			iconEmoji = '⚽ ';
+
+		let goalText = '';
+		if (goalScoreText)
+			goalText = ' ⚽ ' + goalScoreText + ' ⚽ ';
+
+		let commentText = getCommentFromSoccerRow(row);
+		// Polska pisownia nazwisk z alfabetów niełacińskich
+		if (this.language === 'pl')
+			commentText = spolszczNazwiska(commentText);
+
+		// Two-element score array
+		let scores = this.getScoresArray();
+		if (scores.length < 2)
+			scores = ['-', '-'];
+
+		const redCardsArray = this.getRedCardsArray();
+		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
+		let firstLegScores = this.getFirstLegScoresArray();
+		let scoresString = scores[0] + ':' + scores[1] +
+			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		// This will precede every chat message
+		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + this.team2Code + '] ';
+		return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 	}
 
-	// Score status element
-	const scoreStatusText = flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText?.toUpperCase();
-
-	// If the match has ended
-	if (scoreStatusText === translate(Str.FINISHED) && !endPending) {
-		console.log('Match has ended. End pending...');
-		setTimeout(() => {
-			console.log('Match has ended. Stopping.');
-			// Display match results
-			printMatchSummary();
-			// Stop observing
-			stopFlashscore();
-			endPending = false;
-		}, 5000);
-		endPending = true;
+	/** @return {[team1: string, team2: string]} Two team names array. */
+	getTeamNamesArray() {
+		let teamNames = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('div.participant__participantName'))
+			.map(e => {
+				const bracketIndex = e.innerText.indexOf('(');
+				return bracketIndex > -1 ? e.innerText.substring(0, bracketIndex).trim() : e.innerText.trim();
+			});
+		if (this.language === 'pl')
+			teamNames = teamNames.map(e => spolszczNazwiska(e));
+		return teamNames;
 	}
-};
 
-// Start observing the target node for configured mutations
-let startFlashscore = () => {
-	if (fCommentsSection == null) {
-		fCommentsSection = flashscoreCommentFrame.contentDocument?.querySelector('#detail > .section');
+	/** @return {string} Which half is it and what minute or if the match is finished or cancelled. */
+	getMatchDetailsString() {
+		return Array.from(this.flashscoreFrame.contentDocument.querySelector('.detailScore__status')?.children ?? []).map(d => d.innerText).filter(d => d.trim().length > 0).join(' ').trim() ?? '';
 	}
-	if (fCommentsSection != null) {
-		//fCommentsObserverInterval = new MutationObserver(fCommentsCallback);
-		//fCommentsObserverInterval.observe(fCommentsSection, config);
-		fCommentsObserverInterval = setInterval(fCommentsCallback, 2000);
-		console.log('Started observing flashscore commentary section');
+
+	/** @return {string} Referee and stadium. */
+	getMatchRefereeStadiumString() {
+		return Array.from(this.flashscoreFrame.contentDocument.querySelector('.mi__data')?.children ?? []).map(m => Array.from(m.children)).flat().map(i => i.innerText).join(' ');
 	}
-	else
-		console.error('Flashscore commentary section NOT FOUND!');
-};
 
-// Later, you can stop observing
-let stopFlashscore = () => {
-	clearInterval(fCommentsObserverInterval);
-	console.log('Stopped observing flashscore commentary section');
-};
+	/** @return {string} Match start date and time. */
+	getStartTimeString() {
+		return this.flashscoreFrame.contentDocument.querySelector('.duelParticipant__startTime')?.innerText ?? '';
+	}
 
-let restartFlashscore = () => {
-	stopFlashscore();
-	startFlashscore();
-};
+	/** @return {[score1: number, score2: number]} Scores array. */
+	getScoresArray() {
+		return Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.detailScore__wrapper > span:not(.detailScore__divider)')).map(e => Number.parseInt(e.innerText));
+	}
+
+	/**
+	 * Works only on 2nd match of a two-legged tie. It returns scores of the first match.
+	 *
+	 * @return {[score1: number, score2: number]} Scores array or undefined.
+	 * */
+	getFirstLegScoresArray() {
+		const infoBox = this.flashscoreFrame.contentDocument.querySelector('.infoBox__info');
+		const firstScoreRaw = infoBox?.innerText?.match(/: (\d+)-(\d+)\./);
+		if (firstScoreRaw?.length === 3) {
+			return [Number.parseInt(firstScoreRaw[1]), Number.parseInt(firstScoreRaw[2])];
+		}
+	}
+
+	/**
+	 * Returns odd value for specified team and if it's valid.
+	 *
+	 * @param {number} teamId 1 – home win, 0 – tie, 2 – away win
+	 * @return {null|{valid: boolean, value: number}}
+	 */
+	getOdd(teamId) {
+		if (teamId >= 0 && teamId <= 2) {
+			const odd = this.flashscoreFrame.contentDocument.querySelector('.o_' + teamId)?.children[1];
+			if (odd != null) {
+				const oddValue = Number.parseFloat(odd.innerText);
+				const isValid = !odd.classList.contains('not-published');
+				return {value: oddValue, valid: isValid};
+			}
+			else {
+				console.warn('No odds found for this match');
+				return null;
+			}
+		}
+		else {
+			console.warn('Cannot get odds for team ' + teamId);
+			return null;
+		}
+	}
+
+	/**
+	 * Returns goalscorers object array.
+	 *
+	 * @return {{entry, team: number}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
+	 */
+	getGoalscorers() {
+		// Goals, cards, substitutions...
+		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+		// Filter goals
+		const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null);
+		// Extract minute, goalscorer and assist from each goal
+		return soccerIncidents.map(si => {
+			const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
+			const minuteText = si.querySelector('.smv__timeBox').innerText;
+			let scorerText = si.querySelector('.smv__playerName')?.innerText ?? '';
+			let assistText = si.querySelector('.smv__assist')?.innerText ?? '';
+			let isOwnGoal = si.querySelector('.footballOwnGoal-ico') != null;
+			let isPenalty = !isOwnGoal && si.querySelector('.smv__subIncident') != null;
+			let ownGoalText = '';
+			let penaltyText = '';
+			if (scorerText.length > 0) {
+				// Swap name initials and surname
+				const scorerMatches = scorerText.match(/\S+\..*/);
+				if (scorerMatches != null)
+					scorerText = scorerMatches[0] + ' ' + scorerMatches.input.substring(0, scorerMatches.index - 1);
+				if (this.language === 'pl')
+					scorerText = spolszczNazwiska(scorerText);
+				scorerText = ' ' + scorerText;
+				if (assistText.length > 0) {
+					// Remove brackets
+					assistText = assistText.substring(1).substring(0, assistText.length - 2);
+					// Swap name initials and surname
+					const assistMatches = assistText.match(/\S+\..*/);
+					if (assistMatches != null)
+						assistText = assistMatches[0] + ' ' + assistMatches.input.substring(0, assistMatches.index - 1);
+					if (this.language === 'pl')
+						assistText = spolszczNazwiska(assistText);
+					assistText = ' (' + assistText + ')';
+				}
+				if (isOwnGoal)
+					ownGoalText = ' (' + this.translate(Str.OWN_GOAL_ABBR) + ')';
+				if (isPenalty)
+					penaltyText = ' (' + this.translate(Str.PENALTY_ABBR) + ')';
+			}
+
+			return {team: team, entry: minuteText + scorerText + assistText + ownGoalText + penaltyText};
+		});
+	}
+
+	/**
+	 * Returns array of red cards per team.
+	 *
+	 * @return {[number, number]} Home team red cards and away team red cards.
+	 */
+	getRedCardsArray() {
+		// Goals, cards, substitutions...
+		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+		// Filter red cards
+		const redCardIncidents = incidents.filter(i => i.querySelector('svg.card-ico:not(.yellowCard-ico)') != null);
+		const redCardsArray = [0, 0];
+		// For each red card find which team earned it
+		redCardIncidents.forEach(rci => {
+			const isOutOfPitch = rci.querySelector('.smv__assist') != null;
+			if (!isOutOfPitch) {
+				const team = rci.parentElement.classList.contains('smv__homeParticipant') ? 0 : rci.parentElement.classList.contains('smv__awayParticipant') ? 1 : -1;
+				// Add one red card to team
+				redCardsArray[team] += 1;
+			}
+		});
+
+		return redCardsArray;
+	}
+
+
+	/**
+	 * Returns current match summary as array of two strings.
+	 *
+	 * @return {[result: string, goalscorers: string]} Two-element array of strings ready to send to chat. The first element contains the results, the second element contains goalscorers.
+	 */
+	getMatchSummary() {
+		const startTimeString = this.getStartTimeString();
+		const teamNamesArray = this.getTeamNamesArray();
+		const redCardsArray = this.getRedCardsArray();
+		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
+		// Which half and minute
+		const matchDetailsString = this.getMatchDetailsString();
+		let scores = this.getScoresArray();
+		if (scores.length < 2)
+			scores = ['-', '-'];
+		let firstLegScores = this.getFirstLegScoresArray();
+		let scoresString = scores[0] + ':' + scores[1] +
+			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		let refereeStadiumString = this.getMatchRefereeStadiumString();
+
+		// Minute, goalscorer and assist from each goal
+		const scorersArray = this.getGoalscorers();
+
+		const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
+		let line1Info;
+		let line2;
+		if (matchDetailsString.length > 0) {
+			line1Info = matchDetailsString;
+			line2 = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+		}
+		else {
+			line1Info = startTimeString;
+			line2 = refereeStadiumString;
+			if (this.language === 'pl')
+				line2 = spolszczNazwiska(line2);
+		}
+
+		// Display match results
+		return [line1TeamScores + ' ' + line1Info, line2];
+	}
+
+	printMatchSummary() {
+		const matchSummary = this.getMatchSummary().filter(a => a.length > 0);
+		// Send match summary
+		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
+		sendTextArrayToChat(matchSummaryArray, this.chatInterval);
+	}
+
+	printResultsWithOdds() {
+		const startTimeString = this.getStartTimeString();
+		const teamNamesArray = this.getTeamNamesArray();
+		const redCardsArray = this.getRedCardsArray();
+		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
+		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
+		// Which half and minute
+		const matchDetailsString = this.getMatchDetailsString();
+		let scores = this.getScoresArray();
+		if (scores.length < 2)
+			scores = ['-', '-'];
+		let firstLegScores = this.getFirstLegScoresArray();
+		let scoresString = scores[0] + ':' + scores[1] +
+			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		const odds = [this.getOdd(1), this.getOdd(0), this.getOdd(2)];
+		const st = String.fromCharCode(822);
+		const oddsStr = odds.map(odd => {
+			return odd == null || isNaN(odd.value) ? '-' : odd.valid ? odd.value.toString() : [...odd.value.toString()].map(c => c + st).join('');
+		});
+
+		const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
+		const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
+		const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
+
+		const resultsWithOddsArray = [line1TeamScores + ' ' + line1Info, line2];
+		sendTextArrayToChat(resultsWithOddsArray, this.chatInterval);
+	}
+
+	// Callback function to execute when mutations are observed.
+	// If you want to modify this function at runtime, modify it, paste it to console and call restart() to reload the observer
+	fCommentsCallback() {
+		this.fCommentsSection = this.flashscoreCommentFrame?.contentDocument.querySelector('#detail > .section');
+		if (this.fCommentsSection != null) {
+			// Soccer rows array
+			const soccerRows = Array.from(this.fCommentsSection.querySelectorAll('.soccer__row'));
+			// If there are soccer rows
+			if (soccerRows.length > 0) {
+				const rowCount = soccerRows.length;
+				// Top row containing minute, icons and comment
+				const topSoccerRow = soccerRows[0];
+				// Second top soccer row
+				const secondSoccerRow = soccerRows[1];
+				// Top row converted to text
+				let commentFromTopSoccerRow = getCommentFromSoccerRow(topSoccerRow);
+				// Second top row converted to text
+				let commentFromSecondSoccerRow = getCommentFromSoccerRow(secondSoccerRow);
+
+				let triggeringRow = topSoccerRow;
+
+				// If a comment row was only updated
+				let isUpdate = rowCount === this.previousRowCount;
+
+				// Reducing some spam.
+				// If the top comment is the same as one of the last four written comments
+				if (this.lastCommentsQueue.length > 0 && (
+					commentFromTopSoccerRow === this.lastCommentsQueue[0] ||
+					commentFromTopSoccerRow === this.lastCommentsQueue[1] ||
+					commentFromTopSoccerRow === this.lastCommentsQueue[2] ||
+					commentFromTopSoccerRow === this.lastCommentsQueue[3]
+				)) {
+					// Don't write the same comment for the second time
+					console.debug('Top comment was already written before');
+					// If lastCommentsQueue has max 1 comment OR if the second top comment is the same as the second or third or fourth last written comment
+					if (this.lastCommentsQueue.length <= 1 || (
+						commentFromSecondSoccerRow === this.lastCommentsQueue[1] ||
+						commentFromSecondSoccerRow === this.lastCommentsQueue[2] ||
+						commentFromSecondSoccerRow === this.lastCommentsQueue[3]
+					)) {
+						// Nothing has really changed, don't write anything this time
+						console.debug('Second top comment was already written too');
+						return;
+					}
+					// If the second top comment contents changed
+					else {
+						isUpdate = true;
+						console.debug('But the second top comment is different');
+						// Add the comment text at the second place of the last comments queue
+						const lastComment = this.lastCommentsQueue.shift();
+						this.lastCommentsQueue.unshift(commentFromSecondSoccerRow);
+						this.lastCommentsQueue.unshift(lastComment);
+						// Print the second row
+						triggeringRow = secondSoccerRow;
+					}
+				}
+				// If the top comment is different
+				else {
+					console.debug('Top comment is different');
+					triggeringRow = topSoccerRow;
+					// Add the comment text at the beginning of the last comments queue
+					this.lastCommentsQueue.unshift(commentFromTopSoccerRow);
+				}
+
+				// The final comment that will appear in the Haxball chat
+				let botComment = this.getBotCommentFromSoccerRow(triggeringRow);
+				// Mark an update
+				if (isUpdate) {
+					if (this.printUpdates)
+						botComment = '[' + this.translate(Str.UPDATE) + '] ' + botComment;
+					else {
+						console.log('(Discarded) ' + botComment);
+						return;
+					}
+				}
+
+				// Split the bot comment to fit in the chat
+				const botCommentFragments = getSlicedHaxballText(botComment);
+
+				// Print the whole comment to the console
+				console.log(botComment);
+
+				// For each bot comment fragment, send it to chat
+				sendTextArrayToChat(botCommentFragments, this.chatInterval);
+
+				this.previousRowCount = soccerRows.length;
+			}
+			else {
+				console.debug('No soccer rows found');
+			}
+		}
+		else {
+			console.debug('No comment section found');
+		}
+
+		// Score status element
+		const scoreStatusText = this.flashscoreFrame.contentDocument.querySelector('.fixedHeaderDuel__detailStatus')?.innerText?.toUpperCase();
+
+		// If the match has ended
+		if (scoreStatusText === this.translate(Str.FINISHED) && !this.endPending) {
+			console.log('Match has ended. End pending...');
+			setTimeout(() => {
+				console.log('Match has ended. Stopping.');
+				// Display match results
+				this.printMatchSummary();
+				// Stop observing
+				this.stopFlashscore();
+				this.endPending = false;
+			}, 5000);
+			this.endPending = true;
+		}
+	}
+
+	// Start observing the target node for configured mutations
+	startFlashscore() {
+		if (this.fCommentsSection == null) {
+			this.fCommentsSection = this.flashscoreCommentFrame.contentDocument?.querySelector('#detail > .section');
+		}
+		if (this.fCommentsSection != null) {
+			this.fCommentsObserverInterval = setInterval(() => this.fCommentsCallback(), 2000);
+			console.log('Started observing flashscore commentary section');
+		}
+		else
+			console.error('Flashscore commentary section NOT FOUND!');
+	}
+
+	// Later, you can stop observing
+	stopFlashscore() {
+		clearInterval(this.fCommentsObserverInterval);
+		console.log('Stopped observing flashscore commentary section');
+	}
+
+	restartFlashscore() {
+		this.stopFlashscore();
+		this.startFlashscore();
+	}
+}
+
+class OverlayManager {
+	/**
+	 * All created overlays are here.
+	 * @type {Overlay[]}
+	 */
+	static overlays = [];
+	/**
+	 * Focused overlay.
+	 * @type {Overlay}
+	 */
+	static focusedOverlay = null;
+	static focusedId = null;
+
+	/**
+	 * Creates new Overlay object and adds it to {@link OverlayManager.overlays} array.
+	 *
+	 * @param {string} language Language code of the overlay
+	 * @param {boolean} focus Create focused
+	 * @return {Overlay} Created Overlay object
+	 */
+	static createOverlay(language = 'en', focus = true) {
+		const overlay = new Overlay(language);
+		this.overlays.push(overlay);
+		console.log('Created overlay ' + (this.overlays.length - 1));
+		if (focus) {
+			this.focusedOverlay = overlay;
+			this.focusedId = this.overlays.length - 1;
+			this.overlays.forEach(o => o.onFocusChange());
+		}
+		return overlay;
+	}
+
+	/**
+	 * Terminates the Overlay object specified by index and removes it from {@link OverlayManager.overlays} array.
+	 *
+	 * @param {number} overlayId Index of the overlay in the overlays array
+	 * @return {Overlay} Deleted Overlay object
+	 */
+	static deleteOverlay(overlayId) {
+		let deletedOverlay = null;
+		if (overlayId >= 0 && overlayId < this.overlays.length) {
+			deletedOverlay = this.overlays[overlayId];
+			this.overlays.forEach(o => o.onFocusChange());
+			// Terminate the overlay
+			deletedOverlay.terminate();
+			// Remove the overlay from the array
+			this.overlays.splice(overlayId, 1);
+			console.log('Deleted overlay ' + overlayId);
+			// Set focus on the first overlay
+			this.focusedOverlay = this.overlays[0];
+			this.focusedId = this.focusedOverlay != null ? 0 : null;
+		}
+		return deletedOverlay;
+	}
+
+	// Sets focus on one overlay and disables it on the other remaining
+	static setFocus(overlayId) {
+		if (overlayId >= 0 && overlayId < this.overlays.length) {
+			this.focusedOverlay = this.overlays[overlayId];
+			this.focusedId = overlayId;
+			this.overlays.forEach(o => o.onFocusChange());
+		}
+	}
+
+	/** Hides all overlays */
+	static hideAll() {
+		this.overlays.forEach(o => o.hide());
+	}
+
+	/** Shows all overlays */
+	static showAll() {
+		this.overlays.forEach(o => o.show());
+	}
+}
 
 // KEY EVENTS
 document.querySelector('iframe').contentDocument.body.addEventListener('keydown', event => {
@@ -857,21 +999,50 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 		switch (keyName) {
 			case ';':
 				// Show or hide the overlay
-				if (fDivOverlay != null)
-					fDivOverlay.hidden = !fDivOverlay.hidden;
+				OverlayManager.focusedOverlay?.toggleHidden();
 				break;
 			case '\'':
 				// Write last comment
-				if (lastCommentsQueue.length > 0)
-					sendTextArrayToChat(getSlicedHaxballText(lastCommentsQueue[0]), FlashscoreSettings.chatInterval);
+				if (OverlayManager.focusedOverlay?.lastCommentsQueue.length > 0)
+					sendTextArrayToChat(getSlicedHaxballText(OverlayManager.focusedOverlay.lastCommentsQueue[0]), OverlayManager.focusedOverlay.chatInterval);
 				break;
 			case '[':
 				// Send current match results and goalscorers
-				printMatchSummary();
+				OverlayManager.focusedOverlay?.printMatchSummary();
 				break;
 			case ']':
 				// Send current match results and odds
-				printResultsWithOdds();
+				OverlayManager.focusedOverlay?.printResultsWithOdds();
+				break;
+			case '1':
+				OverlayManager.setFocus(0);
+				break;
+			case '2':
+				OverlayManager.setFocus(1);
+				break;
+			case '3':
+				OverlayManager.setFocus(2);
+				break;
+			case '4':
+				OverlayManager.setFocus(3);
+				break;
+			case '5':
+				OverlayManager.setFocus(4);
+				break;
+			case '6':
+				OverlayManager.setFocus(5);
+				break;
+			case '7':
+				OverlayManager.setFocus(6);
+				break;
+			case '8':
+				OverlayManager.setFocus(7);
+				break;
+			case '9':
+				OverlayManager.setFocus(8);
+				break;
+			case '0':
+				OverlayManager.setFocus(9);
 				break;
 		}
 	}
@@ -1123,8 +1294,7 @@ function makeElementDraggable(element) {
 	element.style.cursor = 'move';
 }
 
-// iframe can't be dragged, only div
-makeElementDraggable(fDivOverlay);
-
 // LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. Copy this line (without //) to the console and modify the arguments!
-//loadFlashscoreMatchCommentary('2R3myONg', 'LPO', 'FIO', 'en', false, '560px', '600px');
+//OverlayManager.createOverlay();
+//OverlayManager.focusedOverlay.loadFlashscoreMatchCommentary('jciYwiXp', 'AUV', 'LEG', 'en');
+
