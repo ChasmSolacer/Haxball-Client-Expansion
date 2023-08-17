@@ -1,4 +1,4 @@
-let version = 'indev-0.2';
+let version = 'indev-0.3';
 /*
  HaxBall @ 2023 - Mario Carbajal - All rights reserved.
  be82b08b
