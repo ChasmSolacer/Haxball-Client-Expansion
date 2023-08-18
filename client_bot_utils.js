@@ -1,5 +1,20 @@
+const client_bot_utils_version = 'Indev 0.2';
+
+// Version check
+fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
+	.then(r => r.json()).then(vs => {
+	const githubVersion = vs?.['hce_client-bot-utils'];
+	console.info('Client Bot Utils ' + client_bot_utils_version);
+	if (githubVersion?.length > 0) {
+		if (client_bot_utils_version !== githubVersion)
+			console.info('⬇️ Latest main version: ' + githubVersion + '. Get it at https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/client_bot_utils.js');
+	}
+	else
+		console.warn('Version check failed');
+});
+
 /*
- * Modified game-min.js is recommended for some functions to work properly.
+ * Modified game-min.js (game-mod.js) is recommended for some functions to work properly.
  */
 let g = window.g;
 if (g == null) {

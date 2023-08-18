@@ -10,3 +10,7 @@
 .roomlist-view > .dialog > .splitter > .list col:nth-child(3), .room-view.roomlist-view > .container > .splitter > .list col:nth-child(3) {
 	width: 45px;
 }
+
+.room-view>.container {
+	opacity: 0.9;
+}

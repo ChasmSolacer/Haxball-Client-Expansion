@@ -1,4 +1,4 @@
-let version = 'indev-0.1';
+const flashscore_logger_version = 'Alpha 1.0';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -27,8 +27,37 @@ let version = 'indev-0.1';
 * After a flashscore page appears, don't click anything on it (but if you do, don't panic, just don't switch tabs).
 */
 
+// Version check
+fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
+	.then(r => r.json()).then(vs => {
+	const githubVersion = vs?.['hce_flashscore-logger'];
+	console.info('Flashscore Logger ' + flashscore_logger_version);
+	if (githubVersion?.length > 0) {
+		if (flashscore_logger_version !== githubVersion)
+			console.info('⬇️ Latest main version: ' + githubVersion + '. Get it at https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/flashscore_logger.js');
+	}
+	else
+		console.warn('Version check failed');
+});
+
 // Modified game-min.js g object. Not necessary in this script.
 let g = window.g;
+
+// List of all active overlays in bottom right corner
+const overlayListDiv = document.createElement('div');
+overlayListDiv.style.className = 'overlayList';
+overlayListDiv.style.position = 'absolute';
+overlayListDiv.style.float = 'right';
+overlayListDiv.style.bottom = '1px';
+overlayListDiv.style.right = '1px';
+overlayListDiv.style.maxWidth = '150px';
+overlayListDiv.style.maxHeight = '150px';
+overlayListDiv.style.backgroundColor = '#0008';
+overlayListDiv.style.color = '#FFC';
+overlayListDiv.style.fontSize = '0.85em';
+overlayListDiv.style.overflowY = 'auto';
+overlayListDiv.style.zIndex = '5';
+document.body.appendChild(overlayListDiv);
 
 // Translatable objects
 const Str = {
@@ -249,15 +278,18 @@ const sIcon = ['◽', '🔸', '🔹'];
 
 class Overlay {
 	/**
+	 * Don't call new Overlay, use {@link OverlayManager.createOverlay} for proper initialization.
 	 * Creates an overlay with blank iFrames and adds it to document.
 	 *
 	 * @param {string} language Language code
 	 */
 	constructor(language = 'en') {
+		this.id = OverlayManager.overlays.length + 1;
 		this.language = language;
 		// Overlay – div which will contain the flashscore iFrame.
 		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
 		this.fDivOverlay = document.createElement('div');
+		this.fDivOverlay.className = 'overlay';
 		this.fDivOverlay.style.position = 'absolute';
 		this.fDivOverlay.style.float = 'left';
 		this.fDivOverlay.style.padding = '8px';
@@ -266,41 +298,53 @@ class Overlay {
 		this.fDivOverlay.style.textAlign = 'center';
 		this.fDivOverlay.style.backgroundColor = '#f8' + OverlayManager.overlays.length % 10;
 		this.fDivOverlay.style.border = '3px solid #666';
-		this.fDivOverlay.style.zIndex = '9';
+		this.fDivOverlay.style.zIndex = '3';
 		this.fDivOverlay.style.cursor = 'move';
 		this.fDivOverlay.style.top = OverlayManager.overlays.length * 10 + 'px';
 		this.fDivOverlay.style.left = OverlayManager.overlays.length * 10 + 'px';
 
-		// Some help info
-		this.infoSpan = document.createElement('span');
-		this.infoSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
-		this.infoSpan.style.display = 'block';
-		this.infoSpan.style.color = 'black';
-		this.infoSpan.style.fontWeight = '900';
-		this.infoSpan.style.fontSize = '1.3em';
-		this.infoSpan.style.maxWidth = '400px';
-		// Title
+		// Some hints on what can be done to the overlay
+		this.hintSpan = document.createElement('span');
+		this.hintSpan.style.display = 'block';
+		this.hintSpan.style.color = 'black';
+		this.hintSpan.style.fontWeight = '900';
+		this.hintSpan.style.fontSize = '1.3em';
+		this.hintSpan.style.maxWidth = '400px';
+		// Overlay title
 		this.titleSpan = document.createElement('span');
-		this.titleSpan.innerText = 'OverlayManager.focusedOverlay.loadFlashscoreMatchCommentary()';
 		this.titleSpan.style.display = 'block';
 		this.titleSpan.style.color = 'black';
-		this.titleSpan.style.fontSize = '0.9em';
+		this.titleSpan.style.fontSize = '0.95em';
 		this.titleSpan.style.maxWidth = '400px';
+		// Create new list entry
+		this.listEntrySpan = document.createElement('span');
+		this.listEntrySpan.className = 'overlayListEntry';
+		this.listEntrySpan.style.display = 'block';
+		this.listEntrySpan.style.cursor = 'pointer';
+		this.listEntrySpan.style.whiteSpace = 'pre';
+		// Add entry to list
+		overlayListDiv.appendChild(this.listEntrySpan);
 
-		// Add span to div
-		this.fDivOverlay.appendChild(this.infoSpan);
+		// Add spans to div
+		this.fDivOverlay.appendChild(this.hintSpan);
 		this.fDivOverlay.appendChild(this.titleSpan);
 		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
 		this.flashscoreFrame = document.createElement('iframe');
+		this.flashscoreFrame.className = 'flashscoreFrame';
+		this.flashscoreFrame.style.display = 'block';
+		this.flashscoreFrame.style.marginTop = '16px';
 		// Flashscore commentary iframe which will be placed inside the div below the flashscoreFrame. It will occupy 1/3 of its space
 		this.flashscoreCommentFrame = document.createElement('iframe');
-		this.findCommentaryTabInterval = null;
-		// Add div to haxball
-		document.body.appendChild(this.fDivOverlay);
+		this.flashscoreCommentFrame.className = 'flashscoreCommentFrame';
+		this.flashscoreCommentFrame.style.display = 'block';
+		this.flashscoreCommentFrame.style.marginTop = '16px';
+
 		// Add iframes to div
 		this.fDivOverlay.appendChild(this.flashscoreFrame);
 		this.fDivOverlay.appendChild(this.flashscoreCommentFrame);
-
+		// Add div to haxball
+		document.body.appendChild(this.fDivOverlay);
+		// Make div draggable
 		makeElementDraggable(this.fDivOverlay);
 
 		// Commentary section element
@@ -315,16 +359,39 @@ class Overlay {
 		this.endPending = false;
 		// Previous commentary link
 		this.prevLink = '';
+		this.findCommentaryTabInterval = null;
+
+		// Update overlay handlers and titles
+		this.updateElements();
 	}
 
 	/** Changes overlay appearance if its focus state has changed. */
 	onFocusChange() {
+		// If overlay gains focus
 		if (this === OverlayManager.focusedOverlay) {
 			this.fDivOverlay.style.border = '3px solid #0FF';
+			this.fDivOverlay.style.zIndex = '4';
+			this.listEntrySpan.style.fontWeight = 'bold';
 		}
+		// If overlay loses focus
 		else {
 			this.fDivOverlay.style.border = '3px solid #666';
+			this.fDivOverlay.style.zIndex = '3';
+			this.listEntrySpan.style.fontWeight = 'normal';
 		}
+	}
+
+	updateElements() {
+		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
+		this.titleSpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
+		this.listEntrySpan.innerText = this.id + ') ' + (this.matchId ?? '') + ' ' + (this.team1Code ?? '') + '-' + (this.team2Code ?? '') + ' ' + this.language;
+		this.fDivOverlay.onclick = () => {
+			OverlayManager.setFocus(this.id);
+		};
+		this.listEntrySpan.onclick = () => {
+			OverlayManager.setFocus(this.id);
+			this.toggleHidden();
+		};
 	}
 
 	/** Closes all iframes, clears all intervals and removes this overlay from document. */
@@ -373,7 +440,7 @@ class Overlay {
 	 * An English link is always composed of: "https://www.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary".
 	 * @param {string} team1Code A short home team abbreviation that is usually seen on a score bug.
 	 * @param {string} team2Code A short away team abbreviation that is usually seen on a score bug.
-	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in Str.COMMENTARY_LINK1 object.
+	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in {@link Str.COMMENTARY_LINK1} object.
 	 * @param {boolean} suspended If true, you have to call startFlashscore manually to print comments.
 	 * @param {number} chatInterval Number in milliseconds of delay between consecutive chat messages. Helpful in rooms with chat slow mode.
 	 * @param {number} width iFrame width in pixels.
@@ -408,24 +475,16 @@ class Overlay {
 		this.fCommentsSection = null;
 
 		this.flashscoreFrame.onload = null;
-		this.flashscoreFrame.className = 'flashscoreFrame';
-		this.flashscoreFrame.style.display = 'block';
-		this.flashscoreFrame.style.marginTop = '16px';
 		this.flashscoreFrame.src = this.getMatchLink();
 		this.flashscoreFrame.width = this.width + 'px';
 		this.flashscoreFrame.height = this.height * 2 / 3 + 'px';
 
 		this.flashscoreCommentFrame.onload = null;
-		this.flashscoreCommentFrame.className = 'flashscoreCommentFrame';
-		this.flashscoreCommentFrame.style.display = 'block';
-		this.flashscoreCommentFrame.style.marginTop = '16px';
 		this.flashscoreCommentFrame.width = this.width + 'px';
 		this.flashscoreCommentFrame.height = this.height / 3 + 'px';
 
-		this.infoSpan.style.maxWidth = this.width + 'px';
-		this.infoSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
-
-		this.titleSpan.innerText = this.matchId + ' ' + this.team1Code + ' ' + this.team2Code + ' ' + this.language;
+		this.hintSpan.style.maxWidth = this.width + 'px';
+		this.updateElements();
 
 		// If iframe link didn't change, just restart the observer
 		if (this.prevLink === this.getCommentaryLink()) {
@@ -496,6 +555,15 @@ class Overlay {
 				}, 2000);
 			};
 		}
+	}
+
+	/**
+	 * Loads the same match with different language.
+	 *
+	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in {@link Str.COMMENTARY_LINK1} object.
+	 */
+	changeLanguage(language) {
+		this.loadFlashscoreMatchCommentary(this.matchId, this.team1Code, this.team2Code, language, this.suspended, this.chatInterval, this.width, this.height);
 	}
 
 	getBotCommentFromSoccerRow(row) {
@@ -917,7 +985,7 @@ class Overlay {
 
 class OverlayManager {
 	/**
-	 * All created overlays are here.
+	 * All active overlays. Note that overlay ids start with 1, so indexes are off by -1.
 	 * @type {Overlay[]}
 	 */
 	static overlays = [];
@@ -926,6 +994,10 @@ class OverlayManager {
 	 * @type {Overlay}
 	 */
 	static focusedOverlay = null;
+	/**
+	 * Index of focused overlay
+	 * @type {number}
+	 */
 	static focusedId = null;
 
 	/**
@@ -938,10 +1010,11 @@ class OverlayManager {
 	static createOverlay(language = 'en', focus = true) {
 		const overlay = new Overlay(language);
 		this.overlays.push(overlay);
-		console.log('Created overlay ' + (this.overlays.length - 1));
+		console.log('Created overlay ' + this.overlays.length);
 		if (focus) {
 			this.focusedOverlay = overlay;
-			this.focusedId = this.overlays.length - 1;
+			// Ids start with 1
+			this.focusedId = this.overlays.length;
 			this.overlays.forEach(o => o.onFocusChange());
 		}
 		return overlay;
@@ -955,25 +1028,30 @@ class OverlayManager {
 	 */
 	static deleteOverlay(overlayId) {
 		let deletedOverlay = null;
-		if (overlayId >= 0 && overlayId < this.overlays.length) {
-			deletedOverlay = this.overlays[overlayId];
-			this.overlays.forEach(o => o.onFocusChange());
+		if (overlayId >= 1 && overlayId <= this.overlays.length) {
+			deletedOverlay = this.overlays[overlayId - 1];
+			// Remove the overlay's entry from list div
+			overlayListDiv.removeChild(deletedOverlay.listEntrySpan);
 			// Terminate the overlay
 			deletedOverlay.terminate();
 			// Remove the overlay from the array
-			this.overlays.splice(overlayId, 1);
+			this.overlays.splice(overlayId - 1, 1);
 			console.log('Deleted overlay ' + overlayId);
-			// Set focus on the first overlay
-			this.focusedOverlay = this.overlays[0];
-			this.focusedId = this.focusedOverlay != null ? 0 : null;
+			// Set focus on previous overlay (id 1 or greater)
+			this.setFocus(Math.max(overlayId - 1, 1));
+			// Update ids and spans
+			this.overlays.forEach((o, i) => {
+				o.id = i + 1;
+				o.updateElements();
+			});
 		}
 		return deletedOverlay;
 	}
 
 	// Sets focus on one overlay and disables it on the other remaining
 	static setFocus(overlayId) {
-		if (overlayId >= 0 && overlayId < this.overlays.length) {
-			this.focusedOverlay = this.overlays[overlayId];
+		if (overlayId >= 1 && overlayId <= this.overlays.length) {
+			this.focusedOverlay = this.overlays[overlayId - 1];
 			this.focusedId = overlayId;
 			this.overlays.forEach(o => o.onFocusChange());
 		}
@@ -1015,34 +1093,34 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 				OverlayManager.focusedOverlay?.printResultsWithOdds();
 				break;
 			case '1':
-				OverlayManager.setFocus(0);
-				break;
-			case '2':
 				OverlayManager.setFocus(1);
 				break;
-			case '3':
+			case '2':
 				OverlayManager.setFocus(2);
 				break;
-			case '4':
+			case '3':
 				OverlayManager.setFocus(3);
 				break;
-			case '5':
+			case '4':
 				OverlayManager.setFocus(4);
 				break;
-			case '6':
+			case '5':
 				OverlayManager.setFocus(5);
 				break;
-			case '7':
+			case '6':
 				OverlayManager.setFocus(6);
 				break;
-			case '8':
+			case '7':
 				OverlayManager.setFocus(7);
 				break;
-			case '9':
+			case '8':
 				OverlayManager.setFocus(8);
 				break;
-			case '0':
+			case '9':
 				OverlayManager.setFocus(9);
+				break;
+			case '0':
+				OverlayManager.setFocus(10);
 				break;
 		}
 	}
