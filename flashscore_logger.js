@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.0';
+const flashscore_logger_version = 'Alpha 1.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -53,11 +53,30 @@ overlayListDiv.style.right = '1px';
 overlayListDiv.style.maxWidth = '150px';
 overlayListDiv.style.maxHeight = '150px';
 overlayListDiv.style.backgroundColor = '#0008';
+overlayListDiv.style.paddingBottom = '1px';
 overlayListDiv.style.color = '#FFC';
 overlayListDiv.style.fontSize = '0.85em';
 overlayListDiv.style.overflowY = 'auto';
 overlayListDiv.style.zIndex = '5';
 document.body.appendChild(overlayListDiv);
+// Toolbar with buttons
+const overlayListToolbar = document.createElement('div');
+overlayListToolbar.className = 'overlayListToolbar';
+overlayListToolbar.style.display = 'block';
+overlayListDiv.appendChild(overlayListToolbar);
+// Create overlay button
+const btnCreateOverlay = document.createElement('button');
+btnCreateOverlay.className = 'btnCreateOverlay';
+btnCreateOverlay.innerText = '+';
+btnCreateOverlay.title = 'Create overlay';
+btnCreateOverlay.style.fontSize = '20px';
+btnCreateOverlay.style.lineHeight = '17px'
+btnCreateOverlay.style.width = '20px';
+btnCreateOverlay.style.height = '20px';
+btnCreateOverlay.style.overflow = 'hidden';
+btnCreateOverlay.onclick = () => OverlayManager.createOverlay();
+overlayListToolbar.appendChild(btnCreateOverlay);
+
 
 // Translatable objects
 const Str = {
@@ -477,11 +496,11 @@ class Overlay {
 		this.flashscoreFrame.onload = null;
 		this.flashscoreFrame.src = this.getMatchLink();
 		this.flashscoreFrame.width = this.width + 'px';
-		this.flashscoreFrame.height = this.height * 2 / 3 + 'px';
+		this.flashscoreFrame.height = this.height + 'px';
 
 		this.flashscoreCommentFrame.onload = null;
 		this.flashscoreCommentFrame.width = this.width + 'px';
-		this.flashscoreCommentFrame.height = this.height / 3 + 'px';
+		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
 		this.updateElements();
@@ -519,6 +538,9 @@ class Overlay {
 						// If there is a COMMENTARY tab
 						if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
 							console.log('Commentary tab found, loading it...');
+							// Show the commentary frame
+							self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
+							self.flashscoreCommentFrame.height = self.height / 3 + 'px';
 							// Load commentary section in comment frame
 							self.flashscoreCommentFrame.src = self.getCommentaryLink();
 							clearInterval(self.findCommentaryTabInterval);
@@ -1375,4 +1397,3 @@ function makeElementDraggable(element) {
 // LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. Copy this line (without //) to the console and modify the arguments!
 //OverlayManager.createOverlay();
 //OverlayManager.focusedOverlay.loadFlashscoreMatchCommentary('jciYwiXp', 'AUV', 'LEG', 'en');
-
