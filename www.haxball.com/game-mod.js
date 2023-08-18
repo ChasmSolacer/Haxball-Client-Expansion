@@ -1,9 +1,22 @@
-let version = 'indev-0.3';
 /*
  HaxBall @ 2023 - Mario Carbajal - All rights reserved.
  be82b08b
 */
 'use strict';
+const version = 'Indev 0.4';
+// Version check
+fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
+	.then(r => r.json()).then(vs => {
+	const githubVersion = vs?.['hce_game-mod'];
+	console.info('HCE ' + version);
+	if (githubVersion?.length > 0) {
+		if (version !== githubVersion)
+			console.info('⬇️ Latest main version: ' + githubVersion + '. Download at https://github.com/ChasmSolacer/Haxball-Client-Expansion/archive/refs/heads/master.zip');
+	}
+	else
+		console.warn('Version check failed');
+});
+
 (function (globalScope) {
 		window.parent.g = {};
 		/**
