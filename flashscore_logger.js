@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.2';
+const flashscore_logger_version = 'Alpha 1.3';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -382,7 +382,12 @@ class Overlay {
 	 */
 	constructor(language = 'en') {
 		this.id = OverlayManager.overlays.length + 1;
+		this.matchId = '';
+		this.team1Code = '';
+		this.team2Code = '';
 		this.language = language;
+		this.suspended = false;
+		this.chatInterval = 0;
 		// Overlay – div which will contain the flashscore iFrame.
 		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
 		this.fDivOverlay = document.createElement('div');
@@ -407,12 +412,85 @@ class Overlay {
 		this.hintSpan.style.fontWeight = '900';
 		this.hintSpan.style.fontSize = '1.3em';
 		this.hintSpan.style.maxWidth = '400px';
-		// Overlay title
-		this.titleSpan = document.createElement('span');
-		this.titleSpan.style.display = 'block';
-		this.titleSpan.style.color = 'black';
-		this.titleSpan.style.fontSize = '0.95em';
-		this.titleSpan.style.maxWidth = '400px';
+		// Input container
+		this.inputDiv = document.createElement('div');
+		this.inputDiv.style.display = 'block';
+		this.inputDiv.style.color = 'black';
+		this.inputDiv.style.fontSize = '0.95em';
+		this.inputDiv.style.maxWidth = '400px';
+		this.inputDiv.style.paddingTop = '4px';
+		this.inputDiv.style.paddingBottom = '4px';
+		this.inputDiv.style.whiteSpace = 'nowrap';
+		this.inputDiv.style.overflowX = 'auto';
+		// Match id input
+		this.inputMatchId = document.createElement('input');
+		this.inputMatchId.placeholder = 'GbHo73tP';
+		this.inputMatchId.title = 'Match id';
+		this.inputMatchId.style.width = '100px';
+		this.inputMatchId.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputMatchId);
+		// Team1 input
+		this.inputTeam1 = document.createElement('input');
+		this.inputTeam1.placeholder = 'BRA';
+		this.inputTeam1.title = 'Home team abbreviation';
+		this.inputTeam1.style.width = '50px';
+		this.inputTeam1.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputTeam1);
+		// Team2 input
+		this.inputTeam2 = document.createElement('input');
+		this.inputTeam2.placeholder = 'GER';
+		this.inputTeam2.title = 'Away team abbreviation';
+		this.inputTeam2.style.width = '50px';
+		this.inputTeam2.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputTeam2);
+		// Lang select
+		this.selectLang = document.createElement('select');
+		this.selectLang.title = 'Language';
+		Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
+			const option = document.createElement('option');
+			option.innerText = lang;
+			option.value = lang;
+			this.selectLang.appendChild(option);
+		});
+		this.selectLang.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.selectLang);
+		// Suspended select
+		this.selectSuspended = document.createElement('select');
+		this.selectSuspended.title = 'Suspend observer start?';
+		const optionFalse = document.createElement('option');
+		optionFalse.innerText = 'false';
+		optionFalse.value = 'false';
+		this.selectSuspended.appendChild(optionFalse);
+		const optionTrue = document.createElement('option');
+		optionTrue.innerText = 'true';
+		optionTrue.value = 'true';
+		this.selectSuspended.appendChild(optionTrue);
+		this.selectSuspended.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.selectSuspended);
+		// Chat interval input
+		this.inputChatInterval = document.createElement('input');
+		this.inputChatInterval.title = 'Time in milliseconds between consecutive chat messages';
+		this.inputChatInterval.style.width = '50px';
+		this.inputChatInterval.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputChatInterval);
+		// Load button
+		this.btnLoad = document.createElement('button');
+		this.btnLoad.title = 'Load match to iframes below';
+		this.btnLoad.innerText = 'Load';
+		this.btnLoad.style.display = 'inline-block';
+		this.btnLoad.style.overflow = 'hidden';
+		this.btnLoad.onclick = () => {
+			this.loadFlashscoreMatchCommentary(
+				this.inputMatchId.value,
+				this.inputTeam1.value,
+				this.inputTeam2.value,
+				this.selectLang.selectedOptions[0].value,
+				this.selectSuspended.selectedIndex === 1,
+				Number.parseInt(this.inputChatInterval.value)
+			);
+		};
+		this.inputDiv.appendChild(this.btnLoad);
+
 		// Create new list entry
 		this.listEntrySpan = document.createElement('span');
 		this.listEntrySpan.className = 'overlayListEntry';
@@ -426,9 +504,9 @@ class Overlay {
 		// Add entry to list
 		overlayListDiv.appendChild(this.listEntrySpan);
 
-		// Add spans to div
+		// Add upper elements to div
 		this.fDivOverlay.appendChild(this.hintSpan);
-		this.fDivOverlay.appendChild(this.titleSpan);
+		this.fDivOverlay.appendChild(this.inputDiv);
 		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
 		this.flashscoreFrame = document.createElement('iframe');
 		this.flashscoreFrame.className = 'flashscoreFrame';
@@ -486,8 +564,13 @@ class Overlay {
 
 	updateElements() {
 		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
-		this.titleSpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
-		this.listEntrySpan.innerText = this.id + ') ' + (this.matchId ?? '') + ' ' + (this.team1Code ?? '') + '-' + (this.team2Code ?? '') + ' ' + this.language;
+		this.inputMatchId.value = this.matchId;
+		this.inputTeam1.value = this.team1Code;
+		this.inputTeam2.value = this.team2Code;
+		this.selectLang.selectedIndex = Object.keys(Str.COMMENTARY_LINK1).indexOf(this.language);
+		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
+		this.inputChatInterval.value = this.chatInterval.toString();
+		this.listEntrySpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
 
 		const doRightClickAction = ev => {
 			ContextMenuManager.createContextMenu();
@@ -624,80 +707,75 @@ class Overlay {
 		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
+		this.inputDiv.style.maxWidth = this.width + 'px';
 		this.updateElements();
 
-		// If iframe link didn't change, just restart the observer
-		if (this.prevLink === this.getCommentaryLink()) {
-			if (!this.suspended)
-				this.restartFlashscore();
-		}
-		// Else wait for another page to load
-		else {
+		if (this.prevLink !== this.getCommentaryLink()) {
 			this.prevLink = this.getCommentaryLink();
-			// When the flashscore match frame is loaded
-			this.flashscoreFrame.onload = ev => {
-				console.log('Flashscore match frame loaded: ' + this.getMatchLink());
-				// Empty last comments queue
-				this.lastCommentsQueue = [];
-				clearInterval(this.findCommentaryTabInterval);
-
-				// Wait 3 seconds for the comments section to load (should be sufficient)
-				setTimeout(() => {
-					console.log('Flashscore page should have already been loaded');
-
-					// Delete redundant elements
-					console.log('Deleting redundant elements from flashscore frame');
-					this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-					Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-					this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-					this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-					// Check periodically if a commentary section appeared
-					function findCommentaryTab() {
-						const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
-						const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
-						// If there is a COMMENTARY tab
-						if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
-							console.log('Commentary tab found, loading it...');
-							// Show the commentary frame
-							self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
-							self.flashscoreCommentFrame.height = self.height / 3 + 'px';
-							// Load commentary section in comment frame
-							self.flashscoreCommentFrame.src = self.getCommentaryLink();
-							clearInterval(self.findCommentaryTabInterval);
-						}
-					}
-
-					findCommentaryTab();
-					this.findCommentaryTabInterval = setInterval(() => findCommentaryTab(), 5000);
-				}, 2000);
-			};
-
-			// When the flashscore comment frame is loaded
-			this.flashscoreCommentFrame.onload = ev => {
-				console.log('Flashscore comment frame loaded: ' + this.getCommentaryLink());
-
-				// Wait 3 seconds for the comments section to load (should be sufficient)
-				setTimeout(() => {
-					console.log('Flashscore comment section should have already been loaded');
-					// Flashscore comments section element
-					this.fCommentsSection = this.flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
-
-					// Start a new observer
-					if (!this.suspended)
-						this.restartFlashscore();
-
-					// Delete redundant elements
-					console.log('Deleting redundant elements from comment frame');
-					this.flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-					Array.from(this.flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-					this.flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-					this.flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-					this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
-				}, 2000);
-			};
 		}
+		// When the flashscore match frame is loaded
+		this.flashscoreFrame.onload = ev => {
+			console.log('Flashscore match frame loaded: ' + this.getMatchLink());
+			// Empty last comments queue
+			this.lastCommentsQueue = [];
+			clearInterval(this.findCommentaryTabInterval);
+
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore page should have already been loaded');
+
+				// Delete redundant elements
+				console.log('Deleting redundant elements from flashscore frame');
+				this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				// Check periodically if a commentary section appeared
+				function findCommentaryTab() {
+					const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
+					const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
+					// If there is a COMMENTARY tab
+					if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
+						console.log('Commentary tab found, loading it...');
+						// Show the commentary frame
+						self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
+						self.flashscoreCommentFrame.height = self.height / 3 + 'px';
+						// Load commentary section in comment frame
+						self.flashscoreCommentFrame.src = self.getCommentaryLink();
+						clearInterval(self.findCommentaryTabInterval);
+					}
+				}
+
+				findCommentaryTab();
+				this.findCommentaryTabInterval = setInterval(() => findCommentaryTab(), 5000);
+			}, 2000);
+		};
+
+		// When the flashscore comment frame is loaded
+		this.flashscoreCommentFrame.onload = ev => {
+			console.log('Flashscore comment frame loaded: ' + this.getCommentaryLink());
+
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore comment section should have already been loaded');
+				// Flashscore comments section element
+				this.fCommentsSection = this.flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
+
+				// Start a new observer
+				if (!this.suspended)
+					this.restartFlashscore();
+
+				// Delete redundant elements
+				console.log('Deleting redundant elements from comment frame');
+				this.flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(this.flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				this.flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				this.flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
+			}, 2000);
+		};
 	}
 
 	/**
@@ -1491,8 +1569,6 @@ function makeElementDraggable(element) {
 	}
 
 	function elementDrag(ev) {
-		ev = ev || window.event;
-		ev.preventDefault();
 		// calculate the new cursor position:
 		pos1 = pos3 - ev.clientX;
 		pos2 = pos4 - ev.clientY;
@@ -1504,8 +1580,6 @@ function makeElementDraggable(element) {
 	}
 
 	function dragMouseDown(ev) {
-		ev = ev || window.event;
-		ev.preventDefault();
 		// get the mouse cursor position at startup:
 		pos3 = ev.clientX;
 		pos4 = ev.clientY;
