@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.0';
+const flashscore_logger_version = 'Alpha 1.2';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -42,6 +42,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 
 // Modified game-min.js g object. Not necessary in this script.
 let g = window.g;
+// Haxball iframe body
+let iframeBody = document.querySelector('iframe').contentDocument.body;
 
 // List of all active overlays in bottom right corner
 const overlayListDiv = document.createElement('div');
@@ -53,11 +55,107 @@ overlayListDiv.style.right = '1px';
 overlayListDiv.style.maxWidth = '150px';
 overlayListDiv.style.maxHeight = '150px';
 overlayListDiv.style.backgroundColor = '#0008';
+overlayListDiv.style.paddingBottom = '1px';
 overlayListDiv.style.color = '#FFC';
 overlayListDiv.style.fontSize = '0.85em';
 overlayListDiv.style.overflowY = 'auto';
 overlayListDiv.style.zIndex = '5';
-document.body.appendChild(overlayListDiv);
+// Toolbar with buttons
+const overlayListToolbarDiv = document.createElement('div');
+overlayListToolbarDiv.className = 'overlayListToolbar';
+overlayListToolbarDiv.style.display = 'block';
+overlayListToolbarDiv.style.padding = '4px';
+// Create overlay button
+const btnCreateOverlay = document.createElement('button');
+btnCreateOverlay.className = 'btnCreateOverlay';
+btnCreateOverlay.innerText = '+';
+btnCreateOverlay.title = 'Create overlay';
+btnCreateOverlay.style.fontSize = '20px';
+btnCreateOverlay.style.lineHeight = '17px';
+btnCreateOverlay.style.width = '20px';
+btnCreateOverlay.style.height = '20px';
+btnCreateOverlay.style.overflow = 'hidden';
+btnCreateOverlay.onclick = () => OverlayManager.createOverlay();
+// Append elements
+overlayListToolbarDiv.appendChild(btnCreateOverlay);
+overlayListDiv.appendChild(overlayListToolbarDiv);
+iframeBody.appendChild(overlayListDiv);
+
+// Context menu, added on right click. Don't use new ContextMenu directly, use ContextMenuManager.createContextMenu() instead.
+class ContextMenu {
+	constructor() {
+		this.menu = document.createElement('div');
+		this.menu.className = 'listEntryContextMenu';
+		this.menu.style.position = 'absolute';
+		this.menu.style.zIndex = '99';
+		this.menu.style.backgroundColor = '#333E';
+		this.menu.style.color = '#FFC';
+		this.menu.style.fontSize = '0.85em';
+		this.menu.style.border = '1px solid #FFC';
+	}
+
+	remove() {
+		this.menu.remove();
+	}
+
+	addEntry(text, onclickFunction) {
+		const contextMenuEntrySpan = document.createElement('span');
+		contextMenuEntrySpan.className = 'contextMenuEntry';
+		contextMenuEntrySpan.innerText = text;
+		contextMenuEntrySpan.style.display = 'block';
+		contextMenuEntrySpan.style.cursor = 'pointer';
+		contextMenuEntrySpan.style.whiteSpace = 'pre';
+		contextMenuEntrySpan.style.paddingTop = '2px';
+		contextMenuEntrySpan.style.paddingBottom = '2px';
+		contextMenuEntrySpan.style.paddingLeft = '4px';
+		contextMenuEntrySpan.style.paddingRight = '4px';
+		contextMenuEntrySpan.style.border = '1px solid #FFC';
+		contextMenuEntrySpan.onmouseover = () => {
+			contextMenuEntrySpan.style.backgroundColor = '#339E';
+		};
+		contextMenuEntrySpan.onmouseout = () => {
+			contextMenuEntrySpan.style.backgroundColor = 'inherit';
+		};
+		contextMenuEntrySpan.onclick = onclickFunction;
+
+		this.menu.appendChild(contextMenuEntrySpan);
+	}
+
+	show(x, y) {
+		this.menu.style.bottom = y + 'px';
+		this.menu.style.right = x + 'px';
+		this.menu.hidden = false;
+		this.menu.animate(
+			[
+				// key frames
+				{opacity: '0'},
+				{opacity: '1'}
+			], {
+				// sync options
+				duration: 250
+			}
+		);
+
+		iframeBody.appendChild(this.menu);
+	}
+}
+
+class ContextMenuManager {
+	/** @type {ContextMenu} */
+	static contextMenu = null;
+
+	static createContextMenu() {
+		ContextMenuManager.removeContextMenu();
+		ContextMenuManager.contextMenu = new ContextMenu();
+	}
+
+	static removeContextMenu() {
+		if (ContextMenuManager.contextMenu?.remove != null)
+			ContextMenuManager.contextMenu?.remove();
+	}
+}
+
+iframeBody.onclick = () => ContextMenuManager.removeContextMenu();
 
 // Translatable objects
 const Str = {
@@ -240,7 +338,6 @@ function sendChat_s(message) {
 		roomManager.sendChat(message);
 	// Legacy, uses input text field
 	else {
-		const iframeBody = document.querySelector('iframe').contentDocument.body;
 		const inputElement = iframeBody.querySelector('[data-hook="input"]');
 		// If chat elements were found
 		if (inputElement != null) {
@@ -322,6 +419,10 @@ class Overlay {
 		this.listEntrySpan.style.display = 'block';
 		this.listEntrySpan.style.cursor = 'pointer';
 		this.listEntrySpan.style.whiteSpace = 'pre';
+		this.listEntrySpan.style.paddingTop = '2px';
+		this.listEntrySpan.style.paddingBottom = '2px';
+		this.listEntrySpan.style.paddingLeft = '4px';
+		this.listEntrySpan.style.paddingRight = '4px';
 		// Add entry to list
 		overlayListDiv.appendChild(this.listEntrySpan);
 
@@ -343,7 +444,7 @@ class Overlay {
 		this.fDivOverlay.appendChild(this.flashscoreFrame);
 		this.fDivOverlay.appendChild(this.flashscoreCommentFrame);
 		// Add div to haxball
-		document.body.appendChild(this.fDivOverlay);
+		iframeBody.appendChild(this.fDivOverlay);
 		// Make div draggable
 		makeElementDraggable(this.fDivOverlay);
 
@@ -359,7 +460,9 @@ class Overlay {
 		this.endPending = false;
 		// Previous commentary link
 		this.prevLink = '';
+		// Handlers
 		this.findCommentaryTabInterval = null;
+		this.endTimeout = null;
 
 		// Update overlay handlers and titles
 		this.updateElements();
@@ -385,22 +488,59 @@ class Overlay {
 		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
 		this.titleSpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
 		this.listEntrySpan.innerText = this.id + ') ' + (this.matchId ?? '') + ' ' + (this.team1Code ?? '') + '-' + (this.team2Code ?? '') + ' ' + this.language;
+
+		const doRightClickAction = ev => {
+			ContextMenuManager.createContextMenu();
+			const contextMenu = ContextMenuManager.contextMenu;
+
+			contextMenu.addEntry('Delete', () => {
+				OverlayManager.deleteOverlay(this.id);
+				ContextMenuManager.removeContextMenu();
+			});
+			contextMenu.addEntry('Start/Restart observer', () => {
+				this.restartFlashscore();
+				ContextMenuManager.removeContextMenu();
+			});
+			contextMenu.addEntry('Stop observer', () => {
+				this.stopFlashscore();
+				ContextMenuManager.removeContextMenu();
+			});
+			contextMenu.addEntry((this.fDivOverlay.hidden ? 'Show' : 'Hide') + ' overlay', () => {
+				this.toggleHidden();
+				ContextMenuManager.removeContextMenu();
+			});
+			contextMenu.addEntry('Cancel', () => {
+				ContextMenuManager.removeContextMenu();
+			});
+
+			contextMenu.show(document.querySelector('iframe').offsetWidth - ev.clientX + 3, document.querySelector('iframe').offsetHeight - ev.clientY + 3);
+
+			ev.preventDefault();
+		};
+
 		this.fDivOverlay.onclick = () => {
 			OverlayManager.setFocus(this.id);
+		};
+		this.fDivOverlay.oncontextmenu = ev => {
+			doRightClickAction(ev);
 		};
 		this.listEntrySpan.onclick = () => {
 			OverlayManager.setFocus(this.id);
 			this.toggleHidden();
+		};
+		this.listEntrySpan.oncontextmenu = ev => {
+			doRightClickAction(ev);
 		};
 	}
 
 	/** Closes all iframes, clears all intervals and removes this overlay from document. */
 	terminate() {
 		clearInterval(this.findCommentaryTabInterval);
+		clearTimeout(this.endTimeout);
 		this.stopFlashscore();
 		this.flashscoreFrame.src = '';
 		this.flashscoreCommentFrame.src = '';
-		document.body.removeChild(this.fDivOverlay);
+		iframeBody.removeChild(this.fDivOverlay);
 	}
 
 	hide() {
@@ -477,11 +617,11 @@ class Overlay {
 		this.flashscoreFrame.onload = null;
 		this.flashscoreFrame.src = this.getMatchLink();
 		this.flashscoreFrame.width = this.width + 'px';
-		this.flashscoreFrame.height = this.height * 2 / 3 + 'px';
+		this.flashscoreFrame.height = this.height + 'px';
 
 		this.flashscoreCommentFrame.onload = null;
 		this.flashscoreCommentFrame.width = this.width + 'px';
-		this.flashscoreCommentFrame.height = this.height / 3 + 'px';
+		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
 		this.updateElements();
@@ -519,6 +659,9 @@ class Overlay {
 						// If there is a COMMENTARY tab
 						if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
 							console.log('Commentary tab found, loading it...');
+							// Show the commentary frame
+							self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
+							self.flashscoreCommentFrame.height = self.height / 3 + 'px';
 							// Load commentary section in comment frame
 							self.flashscoreCommentFrame.src = self.getCommentaryLink();
 							clearInterval(self.findCommentaryTabInterval);
@@ -563,7 +706,12 @@ class Overlay {
 	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in {@link Str.COMMENTARY_LINK1} object.
 	 */
 	changeLanguage(language) {
-		this.loadFlashscoreMatchCommentary(this.matchId, this.team1Code, this.team2Code, language, this.suspended, this.chatInterval, this.width, this.height);
+		if (this.matchId != null)
+			this.loadFlashscoreMatchCommentary(this.matchId, this.team1Code, this.team2Code, language, this.suspended, this.chatInterval, this.width, this.height);
+		else {
+			this.language = language;
+			this.updateElements();
+		}
 	}
 
 	getBotCommentFromSoccerRow(row) {
@@ -946,7 +1094,7 @@ class Overlay {
 		// If the match has ended
 		if (scoreStatusText === this.translate(Str.FINISHED) && !this.endPending) {
 			console.log('Match has ended. End pending...');
-			setTimeout(() => {
+			this.endTimeout = setTimeout(() => {
 				console.log('Match has ended. Stopping.');
 				// Display match results
 				this.printMatchSummary();
@@ -1069,7 +1217,7 @@ class OverlayManager {
 }
 
 // KEY EVENTS
-document.querySelector('iframe').contentDocument.body.addEventListener('keydown', event => {
+iframeBody.addEventListener('keydown', event => {
 	const keyName = event.key;
 
 	// If Alt key is also pressed
@@ -1338,8 +1486,8 @@ function makeElementDraggable(element) {
 
 	function closeDragElement() {
 		/* stop moving when mouse button is released:*/
-		document.onmouseup = null;
-		document.onmousemove = null;
+		iframeBody.onmouseup = null;
+		iframeBody.onmousemove = null;
 	}
 
 	function elementDrag(ev) {
@@ -1361,9 +1509,9 @@ function makeElementDraggable(element) {
 		// get the mouse cursor position at startup:
 		pos3 = ev.clientX;
 		pos4 = ev.clientY;
-		document.onmouseup = closeDragElement;
+		iframeBody.onmouseup = closeDragElement;
 		// call a function whenever the cursor moves:
-		document.onmousemove = elementDrag;
+		iframeBody.onmousemove = elementDrag;
 	}
 
 	// move the DIV from anywhere inside the DIV
@@ -1375,4 +1523,3 @@ function makeElementDraggable(element) {
 // LET'S LOAD SOME FLASHSCORE COMMENTARY NOW. Copy this line (without //) to the console and modify the arguments!
 //OverlayManager.createOverlay();
 //OverlayManager.focusedOverlay.loadFlashscoreMatchCommentary('jciYwiXp', 'AUV', 'LEG', 'en');
-
