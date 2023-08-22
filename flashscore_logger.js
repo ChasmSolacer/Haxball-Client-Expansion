@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.4';
+const flashscore_logger_version = 'Alpha 1.5';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -106,7 +106,7 @@ class CMEntry {
 		this.element.style.paddingBottom = '2px';
 		this.element.style.paddingLeft = '4px';
 		this.element.style.paddingRight = '4px';
-		this.element.style.border = '1px solid #FFC';
+		this.element.style.borderBottom = '1px solid #FFC';
 
 		this.element.onmouseover = () => {
 			// Unhighlight other same-level entries
@@ -159,7 +159,9 @@ class ContextMenu {
 		this.menu.style.backgroundColor = '#333E';
 		this.menu.style.color = '#FFC';
 		this.menu.style.fontSize = '0.9em';
-		this.menu.style.border = '1px solid #FFC';
+		this.menu.style.borderTop = '1px solid #FFC';
+		this.menu.style.borderLeft = '1px solid #FFC';
+		this.menu.style.borderRight = '1px solid #FFC';
 		this.menu.style.overflow = 'auto';
 
 		/** @type {CMEntry[]} */
@@ -268,7 +270,7 @@ class ContextMenu {
 		// If menu is higher than page
 		if (rectHeight > pageHeight) {
 			// Shrink it to fit the page
-			this.menu.style.height = 'calc(100% - 2px)';
+			this.menu.style.height = 'calc(100% - 1px)';
 		}
 		// If menu fits in vertically when y is top corner
 		else if (rectBottomP <= pageHeight) {
@@ -360,7 +362,7 @@ class ContextMenu {
 			if (menuHeight > pageHeight) {
 				console.debug('Menu is higher than page: ' + menuHeight + ' > ' + pageHeight);
 				// Shrink it to fit the page
-				this.menu.style.height = 'calc(100% - 2px)';
+				this.menu.style.height = 'calc(100% - 1px)';
 			}
 			// If menu fits in vertically when attached to top of entry |--°𝙸--|
 			else if (entryTopP + menuHeight <= pageHeight) {
@@ -602,7 +604,15 @@ function getSlicedHaxballText(text, maxFragmentLength = 140) {
 
 // If game-mod.js is loaded, it returns room manager which is needed to send chat without using a text field
 function getCurrentRoomManager() {
-	return insideRoom ? g?.getRoomManager() : null;
+	let roomManager;
+	try {
+		roomManager = insideRoom ? g?.getRoomManager() : null;
+	}
+	catch (e) {
+		return null;
+	}
+
+	return roomManager;
 }
 
 // Function to send chat, no matter if the modified game-min.js is present or not
@@ -870,6 +880,18 @@ class Overlay {
 				});
 			});
 			contextMenu.addEntry('Change language', null, langSubMenu);
+			contextMenu.addEntry('Send results', () => {
+				this.printMatchResults();
+			});
+			contextMenu.addEntry('Send results with summary', () => {
+				this.printMatchResultsWithSummary();
+			});
+			contextMenu.addEntry('Send results with odds', () => {
+				this.printMatchResultsWithOdds();
+			});
+			contextMenu.addEntry('Send results & summary & odds', () => {
+				this.printMatchResultsWithSummaryAndOdds();
+			});
 			contextMenu.addEntry('Cancel', () => {
 			});
 
@@ -1270,13 +1292,14 @@ class Overlay {
 		return redCardsArray;
 	}
 
-
 	/**
-	 * Returns current match summary as array of two strings.
+	 * Returns match result as string. This is:
+	 * Team names with red cards and result (with aggregate score from two-legged match) followed by em space
+	 * and match details string ({@link Overlay.getMatchDetailsString}) or match start time.
 	 *
-	 * @return {[result: string, goalscorers: string]} Two-element array of strings ready to send to chat. The first element contains the results, the second element contains goalscorers.
+	 * @return {string} Example: "🔶 The reds🟥 1:2 (2:2) The blues 🔷 2 half 69:42"
 	 */
-	getMatchSummary() {
+	getMatchResultString() {
 		const startTimeString = this.getStartTimeString();
 		const teamNamesArray = this.getTeamNamesArray();
 		const redCardsArray = this.getRedCardsArray();
@@ -1290,62 +1313,67 @@ class Overlay {
 		let firstLegScores = this.getFirstLegScoresArray();
 		let scoresString = scores[0] + ':' + scores[1] +
 			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
-		let refereeStadiumString = this.getMatchRefereeStadiumString();
 
-		// Minute, goalscorer and assist from each goal
-		const scorersArray = this.getGoalscorers();
+		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
+		const matchPhaseWithTime = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 
-		const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
-		let line1Info;
-		let line2;
-		if (matchDetailsString.length > 0) {
-			line1Info = matchDetailsString;
-			line2 = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+		return teamWithScoresAndCards + ' ' + matchPhaseWithTime;
+	}
+
+	printMatchResults() {
+		sendChat_s(this.getMatchResultString());
+	}
+
+	/**
+	 * Returns current match summary which is goalscorers or stadium with referee.
+	 *
+	 * @return {string}
+	 */
+	getMatchSummaryString() {
+		let summary;
+		if (this.getMatchDetailsString().length > 0) {
+			// Minute, goalscorer and assist from each goal
+			const scorersArray = this.getGoalscorers();
+			summary = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
 		}
 		else {
-			line1Info = startTimeString;
-			line2 = refereeStadiumString;
+			summary = this.getMatchRefereeStadiumString();
 			if (this.language === 'pl')
-				line2 = spolszczNazwiska(line2);
+				summary = spolszczNazwiska(summary);
 		}
 
 		// Display match results
-		return [line1TeamScores + ' ' + line1Info, line2];
+		return summary;
 	}
 
-	printMatchSummary() {
-		const matchSummary = this.getMatchSummary().filter(a => a.length > 0);
-		// Send match summary
-		const matchSummaryArray = [matchSummary[0]].concat(getSlicedHaxballText(matchSummary[1]));
-		sendTextArrayToChat(matchSummaryArray, this.chatInterval);
+	printMatchResultsWithSummary() {
+		const results = this.getMatchResultString();
+		const summary = this.getMatchSummaryString();
+		const slicedSummary = getSlicedHaxballText(summary);
+		const resultsWithSummary = [results].concat(slicedSummary);
+		sendTextArrayToChat(resultsWithSummary, this.chatInterval);
 	}
 
-	printResultsWithOdds() {
-		const startTimeString = this.getStartTimeString();
-		const teamNamesArray = this.getTeamNamesArray();
-		const redCardsArray = this.getRedCardsArray();
-		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
-		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-		// Which half and minute
-		const matchDetailsString = this.getMatchDetailsString();
-		let scores = this.getScoresArray();
-		if (scores.length < 2)
-			scores = ['-', '-'];
-		let firstLegScores = this.getFirstLegScoresArray();
-		let scoresString = scores[0] + ':' + scores[1] +
-			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+	getOddsString() {
 		const odds = [this.getOdd(1), this.getOdd(0), this.getOdd(2)];
 		const st = String.fromCharCode(822);
 		const oddsStr = odds.map(odd => {
 			return odd == null || isNaN(odd.value) ? '-' : odd.valid ? odd.value.toString() : [...odd.value.toString()].map(c => c + st).join('');
 		});
+		return '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
+	}
 
-		const line1TeamScores = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
-		const line1Info = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
-		const line2 = '𝟏: ' + oddsStr[0] + ' 𝐗: ' + oddsStr[1] + ' 𝟐: ' + oddsStr[2];
+	printMatchResultsWithOdds() {
+		sendTextArrayToChat([this.getMatchResultString(), this.getOddsString()], this.chatInterval);
+	}
 
-		const resultsWithOddsArray = [line1TeamScores + ' ' + line1Info, line2];
-		sendTextArrayToChat(resultsWithOddsArray, this.chatInterval);
+	printMatchResultsWithSummaryAndOdds() {
+		const results = this.getMatchResultString();
+		const summary = this.getMatchSummaryString();
+		const slicedSummary = getSlicedHaxballText(summary);
+		const odds = this.getOddsString();
+		const resultsWithSummaryAndOdds = [results].concat(slicedSummary, [odds]);
+		sendTextArrayToChat(resultsWithSummaryAndOdds, this.chatInterval);
 	}
 
 	// Callback function to execute when mutations are observed.
@@ -1452,7 +1480,7 @@ class Overlay {
 			this.endTimeout = setTimeout(() => {
 				console.log('Match has ended. Stopping.');
 				// Display match results
-				this.printMatchSummary();
+				this.printMatchResultsWithSummary();
 				// Stop observing
 				this.stopFlashscore();
 				this.endPending = false;
@@ -1589,11 +1617,15 @@ iframeBody.addEventListener('keydown', event => {
 				break;
 			case '[':
 				// Send current match results and goalscorers
-				OverlayManager.focusedOverlay?.printMatchSummary();
+				OverlayManager.focusedOverlay?.printMatchResultsWithSummary();
 				break;
 			case ']':
 				// Send current match results and odds
-				OverlayManager.focusedOverlay?.printResultsWithOdds();
+				OverlayManager.focusedOverlay?.printMatchResultsWithOdds();
+				break;
+			case '\\':
+				// Send current match results and odds
+				OverlayManager.focusedOverlay?.printMatchResultsWithSummaryAndOdds();
 				break;
 			case '1':
 				OverlayManager.setFocus(1);
