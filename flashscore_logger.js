@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.3';
+const flashscore_logger_version = 'Alpha 1.4';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -43,7 +43,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 // Modified game-min.js g object. Not necessary in this script.
 let g = window.g;
 // Haxball iframe body
-let iframeBody = document.querySelector('iframe').contentDocument.body;
+let iframeDocument = document.querySelector('.gameframe').contentDocument;
+let iframeBody = document.querySelector('.gameframe').contentDocument.body;
 
 // List of all active overlays in bottom right corner
 const overlayListDiv = document.createElement('div');
@@ -81,62 +82,336 @@ overlayListToolbarDiv.appendChild(btnCreateOverlay);
 overlayListDiv.appendChild(overlayListToolbarDiv);
 iframeBody.appendChild(overlayListDiv);
 
+class CMEntry {
+	/**
+	 *
+	 * @param {ContextMenu} parentMenu
+	 * @param {string} text
+	 * @param {Function} onclickFunction
+	 * @param {ContextMenu} subMenu
+	 */
+	constructor(parentMenu, text, onclickFunction, subMenu) {
+		this.parentMenu = parentMenu;
+		this.text = text;
+		this.onclickFunction = onclickFunction;
+		this.subMenu = subMenu;
+
+		this.element = document.createElement('span');
+		this.element.className = 'contextMenuEntry';
+		this.element.innerText = text + (subMenu != null ? ' >' : '');
+		this.element.style.display = 'block';
+		this.element.style.cursor = 'pointer';
+		this.element.style.whiteSpace = 'pre';
+		this.element.style.paddingTop = '2px';
+		this.element.style.paddingBottom = '2px';
+		this.element.style.paddingLeft = '4px';
+		this.element.style.paddingRight = '4px';
+		this.element.style.border = '1px solid #FFC';
+
+		this.element.onmouseover = () => {
+			// Unhighlight other same-level entries
+			this.parentMenu.entries.forEach(entry => entry.unhighlight());
+			// Highlight entry
+			this.highlight();
+		};
+		if (this.subMenu != null) {
+			this.subMenu.onmouseover = () => {
+				console.debug('addEntry cm onmouseover: Mouse over submenu ' + this.subMenu.menu.id);
+			};
+		}
+		if (onclickFunction != null)
+			this.element.onclick = onclickFunction;
+		else {
+			this.element.onclick = ev => {
+				// Prevent other onclick events from firing
+				ev.stopPropagation();
+			};
+		}
+	}
+
+	highlight() {
+		this.element.style.backgroundColor = '#339E';
+		// If this entry contains a context menu, show it
+		if (this.subMenu != null) {
+			//this.subMenu.show(this.element.getBoundingClientRect().right + iframeDocument.defaultView.scrollX, this.element.getBoundingClientRect().top + iframeDocument.defaultView.scrollY);
+			this.subMenu.showAtEntry(this);
+		}
+	}
+
+	unhighlight() {
+		this.element.style.backgroundColor = 'inherit';
+		// If this entry contains a context menu, remove it
+		if (this.subMenu != null)
+			this.subMenu.remove();
+	}
+}
+
 // Context menu, added on right click. Don't use new ContextMenu directly, use ContextMenuManager.createContextMenu() instead.
 class ContextMenu {
 	constructor() {
+		this.level = 0;
+		this.parentMenu = null;
 		this.menu = document.createElement('div');
-		this.menu.className = 'listEntryContextMenu';
+		this.menu.className = 'contextMenu';
+		this.menu.id = 'menuLevel0';
 		this.menu.style.position = 'absolute';
 		this.menu.style.zIndex = '99';
 		this.menu.style.backgroundColor = '#333E';
 		this.menu.style.color = '#FFC';
-		this.menu.style.fontSize = '0.85em';
+		this.menu.style.fontSize = '0.9em';
 		this.menu.style.border = '1px solid #FFC';
+		this.menu.style.overflow = 'auto';
+
+		/** @type {CMEntry[]} */
+		this.entries = [];
+	}
+
+	setLevel(number) {
+		this.level = number;
+		this.menu.id = 'menuLevel' + number;
 	}
 
 	remove() {
+		for (const entry of this.entries) {
+			const subMenu = entry.subMenu;
+			if (subMenu != null)
+				// Do this again for the submenu
+				subMenu.remove();
+		}
+		// Remove menu element from document
 		this.menu.remove();
 	}
 
-	addEntry(text, onclickFunction) {
-		const contextMenuEntrySpan = document.createElement('span');
-		contextMenuEntrySpan.className = 'contextMenuEntry';
-		contextMenuEntrySpan.innerText = text;
-		contextMenuEntrySpan.style.display = 'block';
-		contextMenuEntrySpan.style.cursor = 'pointer';
-		contextMenuEntrySpan.style.whiteSpace = 'pre';
-		contextMenuEntrySpan.style.paddingTop = '2px';
-		contextMenuEntrySpan.style.paddingBottom = '2px';
-		contextMenuEntrySpan.style.paddingLeft = '4px';
-		contextMenuEntrySpan.style.paddingRight = '4px';
-		contextMenuEntrySpan.style.border = '1px solid #FFC';
-		contextMenuEntrySpan.onmouseover = () => {
-			contextMenuEntrySpan.style.backgroundColor = '#339E';
-		};
-		contextMenuEntrySpan.onmouseout = () => {
-			contextMenuEntrySpan.style.backgroundColor = 'inherit';
-		};
-		contextMenuEntrySpan.onclick = onclickFunction;
+	addEntry(text, onclickFunction, contextMenu) {
+		if (contextMenu != null)
+			contextMenu.setLevel(this.level + 1);
+		const newEntry = new CMEntry(this, text, onclickFunction, contextMenu);
 
-		this.menu.appendChild(contextMenuEntrySpan);
+		// Add entry to entries array
+		this.entries.push(newEntry);
+		// Add entry span to menu div
+		this.menu.appendChild(newEntry.element);
 	}
 
-	show(x, y) {
-		this.menu.style.bottom = y + 'px';
-		this.menu.style.right = x + 'px';
+	/**
+	 * Temporarily adds this menu to DOM and gets its bounding box.
+	 *
+	 * @return {DOMRect}
+	 */
+	getRect() {
 		this.menu.hidden = false;
+		iframeBody.appendChild(this.menu);
+		const rect = this.menu.getBoundingClientRect();
+		iframeBody.removeChild(this.menu);
+		return rect;
+	}
+
+	/**
+	 * Moves one of this menu's corner to the specified coordinates so that the menu doesn't go offscreen, and then shows it.
+	 *
+	 * @param {number} x Page coordinate x in pixels
+	 * @param {number} y Page coordinate y in pixels
+	 * @param {number} offset Diagonal distance between coordinates and menu's corner
+	 */
+	showAtPoint(x, y, offset = 2) {
+		const parentDocument = iframeDocument.documentElement;
+		// Get page dimensions
+		const pageWidth = parentDocument.scrollWidth;
+		const pageHeight = parentDocument.scrollHeight;
+		const clientWidth = parentDocument.clientWidth;
+		const clientHeight = parentDocument.clientHeight;
+		const scrollX = parentDocument.scrollLeft;
+		const scrollY = parentDocument.scrollTop;
+		// Get menu dimensions
+		let menuRect = this.getRect();
+		const rectWidth = menuRect.width;
+		const rectHeight = menuRect.height;
+		// Assuming left corner
+		const rectRightP = x + offset + rectWidth;
+		// Assuming right corner
+		const rectLeftP = x - offset - rectWidth;
+		// Assuming top corner
+		const rectBottomP = y + offset + rectHeight;
+		// Assuming bottom corner
+		const rectTopP = y - offset - rectHeight;
+
+		// If menu is wider than page
+		if (rectWidth > pageWidth) {
+			// Shrink it to fit the page
+			this.menu.style.width = 'calc(100% - 2px)';
+		}
+		// If menu fits in horizontally when x is left corner
+		else if (rectRightP <= pageWidth) {
+			// Stick menu's left to the x coordinate
+			this.menu.style.left = (x + offset) + 'px';
+		}
+		// If menu goes offscreen when x is left corner
+		else {
+			// If menu fits in horizontally when x is right corner
+			if (rectLeftP >= 0) {
+				// Stick menu's right to the x coordinate
+				this.menu.style.right = (clientWidth - x + offset) + 'px';
+			}
+			// If menu goes offscreen when x is right (and left) corner
+			else {
+				// Stick menu to the nearest horizontal page bound
+				if (rectLeftP > pageWidth - x) {
+					// left = 0 will stick to client left side but not page left side when it's scrolled horizontally. This needs to be corrected.
+					this.menu.style.left = -scrollX + 'px';
+				}
+				else {
+					this.menu.style.right = -(pageWidth - clientWidth) + 'px';
+				}
+			}
+		}
+
+		// If menu is higher than page
+		if (rectHeight > pageHeight) {
+			// Shrink it to fit the page
+			this.menu.style.height = 'calc(100% - 2px)';
+		}
+		// If menu fits in vertically when y is top corner
+		else if (rectBottomP <= pageHeight) {
+			// Stick menu's top to the y coordinate
+			this.menu.style.top = (y + offset) + 'px';
+		}
+		// If menu goes offscreen when y is top corner
+		else {
+			// If menu fits in horizontally when y is bottom corner
+			if (rectTopP >= 0) {
+				// Stick menu's bottom to the y coordinate
+				this.menu.style.bottom = (clientHeight - y + offset) + 'px';
+			}
+			// If menu goes offscreen when y is bottom (and top) corner
+			else {
+				// Stick menu to the nearest vertical page bound
+				if (rectTopP > pageWidth - y) {
+					// left = 0 will stick to client top side but not page top side when it's scrolled vertically. This needs to be corrected.
+					this.menu.style.top = -scrollY + 'px';
+				}
+				else {
+					this.menu.style.bottom = -(pageHeight - clientHeight) + 'px';
+				}
+			}
+		}
+
+		this.show();
+	}
+
+	/**
+	 * Moves this menu next to entry provided but not offscreen, and then shows it.
+	 *
+	 * @param {CMEntry} entry Entry object that has its div added to DOM.
+	 */
+	showAtEntry(entry) {
+		if (entry?.element != null) {
+			const parentDocument = iframeDocument.documentElement;
+			// Get page dimensions
+			const pageWidth = parentDocument.scrollWidth;
+			const pageHeight = parentDocument.scrollHeight;
+			const clientWidth = parentDocument.clientWidth;
+			const clientHeight = parentDocument.clientHeight;
+			const scrollX = parentDocument.scrollLeft;
+			const scrollY = parentDocument.scrollTop;
+			// Get entry bounds
+			const entryRect = entry.element.getBoundingClientRect();
+			// Entry sides' page coordinates
+			const entryTopP = entryRect.top + scrollY;
+			const entryRightP = entryRect.right + scrollX;
+			const entryBottomP = entryRect.bottom + scrollY;
+			const entryLeftP = entryRect.left + scrollX;
+
+			// Get menu dimensions
+			let rect = this.getRect();
+			const menuWidth = rect.width;
+			const menuHeight = rect.height;
+
+			// If menu is wider than page |000000|00
+			if (menuWidth > pageWidth) {
+				// Shrink it to fit the page
+				this.menu.style.width = 'calc(100% - 2px)';
+			}
+			// If menu fits in horizontally when attached to right of entry |----00001111--|
+			else if (entryRightP + menuWidth <= pageWidth) {
+				// Stick menu's left to the right of the entry
+				this.menu.style.left = entryRightP + 'px';
+			}
+			// If menu goes offscreen when attached to right of entry |--------000011|11
+			else {
+				// If menu fits in horizontally when attached to left of entry |-11110000000--|
+				if (entryLeftP - menuWidth >= 0) {
+					// Stick menu's right to the left of the entry
+					this.menu.style.right = (clientWidth - entryLeftP) + 'px';
+				}
+				// If menu goes offscreen when attached to left (and right) of entry 1|111100000000--|
+				else {
+					// Stick menu to the nearest horizontal page bound
+					if (entryLeftP > pageWidth - entryRightP) {
+						// left = 0 will stick to client left side but not page left side when it's scrolled horizontally. This needs to be corrected.
+						this.menu.style.left = -scrollX + 'px';
+					}
+					else {
+						this.menu.style.right = -(pageWidth - clientWidth) + 'px';
+					}
+				}
+			}
+
+			// If menu is higher than page
+			if (menuHeight > pageHeight) {
+				console.debug('Menu is higher than page: ' + menuHeight + ' > ' + pageHeight);
+				// Shrink it to fit the page
+				this.menu.style.height = 'calc(100% - 2px)';
+			}
+			// If menu fits in vertically when attached to top of entry |--°𝙸--|
+			else if (entryTopP + menuHeight <= pageHeight) {
+				// Stick menu's top to the top of the entry
+				this.menu.style.top = entryTopP + 'px';
+			}
+			// If menu goes offscreen when attached to top of entry |--°T--|
+			else {
+				console.debug('Out of bottom bound: ' + (entryTopP + menuHeight) + ' > ' + pageHeight);
+				// If menu fits in vertically when attached to bottom of entry |--o𝙸--|
+				if (entryBottomP - menuHeight >= 0) {
+					// Stick menu's bottom to the bottom of the entry
+					this.menu.style.bottom = (clientHeight - entryBottomP) + 'px';
+				}
+				// If menu goes offscreen when attached to bottom (and top) of entry |--o⟘--|
+				else {
+					console.debug('Out of top bound: ' + (entryBottomP - menuHeight) + ' < 0');
+					// Stick menu to the nearest vertical page bound
+					if (entryTopP > pageHeight - entryBottomP) {
+						console.debug('Need to stick to top page bound');
+						// top = 0 will stick to client top side but not page top side when it's scrolled vertically. This needs to be corrected.
+						this.menu.style.top = -scrollY + 'px';
+					}
+					else {
+						console.debug('Need to stick to bottom page bound');
+						this.menu.style.bottom = -(pageHeight - clientHeight) + 'px';
+					}
+				}
+			}
+
+			this.show();
+		}
+		else {
+			console.warn('Menu ' + this.menu.id + ' cannot be shown because parent entry doesn\'t exist');
+		}
+	}
+
+	/**
+	 * Adds this menu to DOM with a fade-in animation.
+	 */
+	show() {
+		iframeBody.appendChild(this.menu);
+
 		this.menu.animate(
 			[
-				// key frames
 				{opacity: '0'},
 				{opacity: '1'}
 			], {
-				// sync options
 				duration: 250
 			}
 		);
-
-		iframeBody.appendChild(this.menu);
 	}
 }
 
@@ -155,7 +430,7 @@ class ContextMenuManager {
 	}
 }
 
-iframeBody.onclick = () => ContextMenuManager.removeContextMenu();
+iframeDocument.onclick = () => ContextMenuManager.removeContextMenu();
 
 // Translatable objects
 const Str = {
@@ -578,25 +853,27 @@ class Overlay {
 
 			contextMenu.addEntry('Delete', () => {
 				OverlayManager.deleteOverlay(this.id);
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry('Start/Restart observer', () => {
 				this.restartFlashscore();
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry('Stop observer', () => {
 				this.stopFlashscore();
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry((this.fDivOverlay.hidden ? 'Show' : 'Hide') + ' overlay', () => {
 				this.toggleHidden();
-				ContextMenuManager.removeContextMenu();
 			});
+			const langSubMenu = new ContextMenu();
+			Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
+				langSubMenu.addEntry(lang, () => {
+					this.changeLanguage(lang);
+				});
+			});
+			contextMenu.addEntry('Change language', null, langSubMenu);
 			contextMenu.addEntry('Cancel', () => {
-				ContextMenuManager.removeContextMenu();
 			});
 
-			contextMenu.show(document.querySelector('iframe').offsetWidth - ev.clientX + 3, document.querySelector('iframe').offsetHeight - ev.clientY + 3);
+			contextMenu.showAtPoint(ev.pageX, ev.pageY, 2);
 
 			ev.preventDefault();
 		};
@@ -784,7 +1061,7 @@ class Overlay {
 	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in {@link Str.COMMENTARY_LINK1} object.
 	 */
 	changeLanguage(language) {
-		if (this.matchId != null)
+		if (this.matchId?.length > 0)
 			this.loadFlashscoreMatchCommentary(this.matchId, this.team1Code, this.team2Code, language, this.suspended, this.chatInterval, this.width, this.height);
 		else {
 			this.language = language;
