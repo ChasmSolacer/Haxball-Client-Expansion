@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.2';
+const flashscore_logger_version = 'Alpha 1.4';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -43,7 +43,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 // Modified game-min.js g object. Not necessary in this script.
 let g = window.g;
 // Haxball iframe body
-let iframeBody = document.querySelector('iframe').contentDocument.body;
+let iframeDocument = document.querySelector('.gameframe').contentDocument;
+let iframeBody = document.querySelector('.gameframe').contentDocument.body;
 
 // List of all active overlays in bottom right corner
 const overlayListDiv = document.createElement('div');
@@ -81,62 +82,336 @@ overlayListToolbarDiv.appendChild(btnCreateOverlay);
 overlayListDiv.appendChild(overlayListToolbarDiv);
 iframeBody.appendChild(overlayListDiv);
 
+class CMEntry {
+	/**
+	 *
+	 * @param {ContextMenu} parentMenu
+	 * @param {string} text
+	 * @param {Function} onclickFunction
+	 * @param {ContextMenu} subMenu
+	 */
+	constructor(parentMenu, text, onclickFunction, subMenu) {
+		this.parentMenu = parentMenu;
+		this.text = text;
+		this.onclickFunction = onclickFunction;
+		this.subMenu = subMenu;
+
+		this.element = document.createElement('span');
+		this.element.className = 'contextMenuEntry';
+		this.element.innerText = text + (subMenu != null ? ' >' : '');
+		this.element.style.display = 'block';
+		this.element.style.cursor = 'pointer';
+		this.element.style.whiteSpace = 'pre';
+		this.element.style.paddingTop = '2px';
+		this.element.style.paddingBottom = '2px';
+		this.element.style.paddingLeft = '4px';
+		this.element.style.paddingRight = '4px';
+		this.element.style.border = '1px solid #FFC';
+
+		this.element.onmouseover = () => {
+			// Unhighlight other same-level entries
+			this.parentMenu.entries.forEach(entry => entry.unhighlight());
+			// Highlight entry
+			this.highlight();
+		};
+		if (this.subMenu != null) {
+			this.subMenu.onmouseover = () => {
+				console.debug('addEntry cm onmouseover: Mouse over submenu ' + this.subMenu.menu.id);
+			};
+		}
+		if (onclickFunction != null)
+			this.element.onclick = onclickFunction;
+		else {
+			this.element.onclick = ev => {
+				// Prevent other onclick events from firing
+				ev.stopPropagation();
+			};
+		}
+	}
+
+	highlight() {
+		this.element.style.backgroundColor = '#339E';
+		// If this entry contains a context menu, show it
+		if (this.subMenu != null) {
+			//this.subMenu.show(this.element.getBoundingClientRect().right + iframeDocument.defaultView.scrollX, this.element.getBoundingClientRect().top + iframeDocument.defaultView.scrollY);
+			this.subMenu.showAtEntry(this);
+		}
+	}
+
+	unhighlight() {
+		this.element.style.backgroundColor = 'inherit';
+		// If this entry contains a context menu, remove it
+		if (this.subMenu != null)
+			this.subMenu.remove();
+	}
+}
+
 // Context menu, added on right click. Don't use new ContextMenu directly, use ContextMenuManager.createContextMenu() instead.
 class ContextMenu {
 	constructor() {
+		this.level = 0;
+		this.parentMenu = null;
 		this.menu = document.createElement('div');
-		this.menu.className = 'listEntryContextMenu';
+		this.menu.className = 'contextMenu';
+		this.menu.id = 'menuLevel0';
 		this.menu.style.position = 'absolute';
 		this.menu.style.zIndex = '99';
 		this.menu.style.backgroundColor = '#333E';
 		this.menu.style.color = '#FFC';
-		this.menu.style.fontSize = '0.85em';
+		this.menu.style.fontSize = '0.9em';
 		this.menu.style.border = '1px solid #FFC';
+		this.menu.style.overflow = 'auto';
+
+		/** @type {CMEntry[]} */
+		this.entries = [];
+	}
+
+	setLevel(number) {
+		this.level = number;
+		this.menu.id = 'menuLevel' + number;
 	}
 
 	remove() {
+		for (const entry of this.entries) {
+			const subMenu = entry.subMenu;
+			if (subMenu != null)
+				// Do this again for the submenu
+				subMenu.remove();
+		}
+		// Remove menu element from document
 		this.menu.remove();
 	}
 
-	addEntry(text, onclickFunction) {
-		const contextMenuEntrySpan = document.createElement('span');
-		contextMenuEntrySpan.className = 'contextMenuEntry';
-		contextMenuEntrySpan.innerText = text;
-		contextMenuEntrySpan.style.display = 'block';
-		contextMenuEntrySpan.style.cursor = 'pointer';
-		contextMenuEntrySpan.style.whiteSpace = 'pre';
-		contextMenuEntrySpan.style.paddingTop = '2px';
-		contextMenuEntrySpan.style.paddingBottom = '2px';
-		contextMenuEntrySpan.style.paddingLeft = '4px';
-		contextMenuEntrySpan.style.paddingRight = '4px';
-		contextMenuEntrySpan.style.border = '1px solid #FFC';
-		contextMenuEntrySpan.onmouseover = () => {
-			contextMenuEntrySpan.style.backgroundColor = '#339E';
-		};
-		contextMenuEntrySpan.onmouseout = () => {
-			contextMenuEntrySpan.style.backgroundColor = 'inherit';
-		};
-		contextMenuEntrySpan.onclick = onclickFunction;
+	addEntry(text, onclickFunction, contextMenu) {
+		if (contextMenu != null)
+			contextMenu.setLevel(this.level + 1);
+		const newEntry = new CMEntry(this, text, onclickFunction, contextMenu);
 
-		this.menu.appendChild(contextMenuEntrySpan);
+		// Add entry to entries array
+		this.entries.push(newEntry);
+		// Add entry span to menu div
+		this.menu.appendChild(newEntry.element);
 	}
 
-	show(x, y) {
-		this.menu.style.bottom = y + 'px';
-		this.menu.style.right = x + 'px';
+	/**
+	 * Temporarily adds this menu to DOM and gets its bounding box.
+	 *
+	 * @return {DOMRect}
+	 */
+	getRect() {
 		this.menu.hidden = false;
+		iframeBody.appendChild(this.menu);
+		const rect = this.menu.getBoundingClientRect();
+		iframeBody.removeChild(this.menu);
+		return rect;
+	}
+
+	/**
+	 * Moves one of this menu's corner to the specified coordinates so that the menu doesn't go offscreen, and then shows it.
+	 *
+	 * @param {number} x Page coordinate x in pixels
+	 * @param {number} y Page coordinate y in pixels
+	 * @param {number} offset Diagonal distance between coordinates and menu's corner
+	 */
+	showAtPoint(x, y, offset = 2) {
+		const parentDocument = iframeDocument.documentElement;
+		// Get page dimensions
+		const pageWidth = parentDocument.scrollWidth;
+		const pageHeight = parentDocument.scrollHeight;
+		const clientWidth = parentDocument.clientWidth;
+		const clientHeight = parentDocument.clientHeight;
+		const scrollX = parentDocument.scrollLeft;
+		const scrollY = parentDocument.scrollTop;
+		// Get menu dimensions
+		let menuRect = this.getRect();
+		const rectWidth = menuRect.width;
+		const rectHeight = menuRect.height;
+		// Assuming left corner
+		const rectRightP = x + offset + rectWidth;
+		// Assuming right corner
+		const rectLeftP = x - offset - rectWidth;
+		// Assuming top corner
+		const rectBottomP = y + offset + rectHeight;
+		// Assuming bottom corner
+		const rectTopP = y - offset - rectHeight;
+
+		// If menu is wider than page
+		if (rectWidth > pageWidth) {
+			// Shrink it to fit the page
+			this.menu.style.width = 'calc(100% - 2px)';
+		}
+		// If menu fits in horizontally when x is left corner
+		else if (rectRightP <= pageWidth) {
+			// Stick menu's left to the x coordinate
+			this.menu.style.left = (x + offset) + 'px';
+		}
+		// If menu goes offscreen when x is left corner
+		else {
+			// If menu fits in horizontally when x is right corner
+			if (rectLeftP >= 0) {
+				// Stick menu's right to the x coordinate
+				this.menu.style.right = (clientWidth - x + offset) + 'px';
+			}
+			// If menu goes offscreen when x is right (and left) corner
+			else {
+				// Stick menu to the nearest horizontal page bound
+				if (rectLeftP > pageWidth - x) {
+					// left = 0 will stick to client left side but not page left side when it's scrolled horizontally. This needs to be corrected.
+					this.menu.style.left = -scrollX + 'px';
+				}
+				else {
+					this.menu.style.right = -(pageWidth - clientWidth) + 'px';
+				}
+			}
+		}
+
+		// If menu is higher than page
+		if (rectHeight > pageHeight) {
+			// Shrink it to fit the page
+			this.menu.style.height = 'calc(100% - 2px)';
+		}
+		// If menu fits in vertically when y is top corner
+		else if (rectBottomP <= pageHeight) {
+			// Stick menu's top to the y coordinate
+			this.menu.style.top = (y + offset) + 'px';
+		}
+		// If menu goes offscreen when y is top corner
+		else {
+			// If menu fits in horizontally when y is bottom corner
+			if (rectTopP >= 0) {
+				// Stick menu's bottom to the y coordinate
+				this.menu.style.bottom = (clientHeight - y + offset) + 'px';
+			}
+			// If menu goes offscreen when y is bottom (and top) corner
+			else {
+				// Stick menu to the nearest vertical page bound
+				if (rectTopP > pageWidth - y) {
+					// left = 0 will stick to client top side but not page top side when it's scrolled vertically. This needs to be corrected.
+					this.menu.style.top = -scrollY + 'px';
+				}
+				else {
+					this.menu.style.bottom = -(pageHeight - clientHeight) + 'px';
+				}
+			}
+		}
+
+		this.show();
+	}
+
+	/**
+	 * Moves this menu next to entry provided but not offscreen, and then shows it.
+	 *
+	 * @param {CMEntry} entry Entry object that has its div added to DOM.
+	 */
+	showAtEntry(entry) {
+		if (entry?.element != null) {
+			const parentDocument = iframeDocument.documentElement;
+			// Get page dimensions
+			const pageWidth = parentDocument.scrollWidth;
+			const pageHeight = parentDocument.scrollHeight;
+			const clientWidth = parentDocument.clientWidth;
+			const clientHeight = parentDocument.clientHeight;
+			const scrollX = parentDocument.scrollLeft;
+			const scrollY = parentDocument.scrollTop;
+			// Get entry bounds
+			const entryRect = entry.element.getBoundingClientRect();
+			// Entry sides' page coordinates
+			const entryTopP = entryRect.top + scrollY;
+			const entryRightP = entryRect.right + scrollX;
+			const entryBottomP = entryRect.bottom + scrollY;
+			const entryLeftP = entryRect.left + scrollX;
+
+			// Get menu dimensions
+			let rect = this.getRect();
+			const menuWidth = rect.width;
+			const menuHeight = rect.height;
+
+			// If menu is wider than page |000000|00
+			if (menuWidth > pageWidth) {
+				// Shrink it to fit the page
+				this.menu.style.width = 'calc(100% - 2px)';
+			}
+			// If menu fits in horizontally when attached to right of entry |----00001111--|
+			else if (entryRightP + menuWidth <= pageWidth) {
+				// Stick menu's left to the right of the entry
+				this.menu.style.left = entryRightP + 'px';
+			}
+			// If menu goes offscreen when attached to right of entry |--------000011|11
+			else {
+				// If menu fits in horizontally when attached to left of entry |-11110000000--|
+				if (entryLeftP - menuWidth >= 0) {
+					// Stick menu's right to the left of the entry
+					this.menu.style.right = (clientWidth - entryLeftP) + 'px';
+				}
+				// If menu goes offscreen when attached to left (and right) of entry 1|111100000000--|
+				else {
+					// Stick menu to the nearest horizontal page bound
+					if (entryLeftP > pageWidth - entryRightP) {
+						// left = 0 will stick to client left side but not page left side when it's scrolled horizontally. This needs to be corrected.
+						this.menu.style.left = -scrollX + 'px';
+					}
+					else {
+						this.menu.style.right = -(pageWidth - clientWidth) + 'px';
+					}
+				}
+			}
+
+			// If menu is higher than page
+			if (menuHeight > pageHeight) {
+				console.debug('Menu is higher than page: ' + menuHeight + ' > ' + pageHeight);
+				// Shrink it to fit the page
+				this.menu.style.height = 'calc(100% - 2px)';
+			}
+			// If menu fits in vertically when attached to top of entry |--°𝙸--|
+			else if (entryTopP + menuHeight <= pageHeight) {
+				// Stick menu's top to the top of the entry
+				this.menu.style.top = entryTopP + 'px';
+			}
+			// If menu goes offscreen when attached to top of entry |--°T--|
+			else {
+				console.debug('Out of bottom bound: ' + (entryTopP + menuHeight) + ' > ' + pageHeight);
+				// If menu fits in vertically when attached to bottom of entry |--o𝙸--|
+				if (entryBottomP - menuHeight >= 0) {
+					// Stick menu's bottom to the bottom of the entry
+					this.menu.style.bottom = (clientHeight - entryBottomP) + 'px';
+				}
+				// If menu goes offscreen when attached to bottom (and top) of entry |--o⟘--|
+				else {
+					console.debug('Out of top bound: ' + (entryBottomP - menuHeight) + ' < 0');
+					// Stick menu to the nearest vertical page bound
+					if (entryTopP > pageHeight - entryBottomP) {
+						console.debug('Need to stick to top page bound');
+						// top = 0 will stick to client top side but not page top side when it's scrolled vertically. This needs to be corrected.
+						this.menu.style.top = -scrollY + 'px';
+					}
+					else {
+						console.debug('Need to stick to bottom page bound');
+						this.menu.style.bottom = -(pageHeight - clientHeight) + 'px';
+					}
+				}
+			}
+
+			this.show();
+		}
+		else {
+			console.warn('Menu ' + this.menu.id + ' cannot be shown because parent entry doesn\'t exist');
+		}
+	}
+
+	/**
+	 * Adds this menu to DOM with a fade-in animation.
+	 */
+	show() {
+		iframeBody.appendChild(this.menu);
+
 		this.menu.animate(
 			[
-				// key frames
 				{opacity: '0'},
 				{opacity: '1'}
 			], {
-				// sync options
 				duration: 250
 			}
 		);
-
-		iframeBody.appendChild(this.menu);
 	}
 }
 
@@ -155,7 +430,7 @@ class ContextMenuManager {
 	}
 }
 
-iframeBody.onclick = () => ContextMenuManager.removeContextMenu();
+iframeDocument.onclick = () => ContextMenuManager.removeContextMenu();
 
 // Translatable objects
 const Str = {
@@ -382,7 +657,12 @@ class Overlay {
 	 */
 	constructor(language = 'en') {
 		this.id = OverlayManager.overlays.length + 1;
+		this.matchId = '';
+		this.team1Code = '';
+		this.team2Code = '';
 		this.language = language;
+		this.suspended = false;
+		this.chatInterval = 0;
 		// Overlay – div which will contain the flashscore iFrame.
 		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
 		this.fDivOverlay = document.createElement('div');
@@ -407,12 +687,85 @@ class Overlay {
 		this.hintSpan.style.fontWeight = '900';
 		this.hintSpan.style.fontSize = '1.3em';
 		this.hintSpan.style.maxWidth = '400px';
-		// Overlay title
-		this.titleSpan = document.createElement('span');
-		this.titleSpan.style.display = 'block';
-		this.titleSpan.style.color = 'black';
-		this.titleSpan.style.fontSize = '0.95em';
-		this.titleSpan.style.maxWidth = '400px';
+		// Input container
+		this.inputDiv = document.createElement('div');
+		this.inputDiv.style.display = 'block';
+		this.inputDiv.style.color = 'black';
+		this.inputDiv.style.fontSize = '0.95em';
+		this.inputDiv.style.maxWidth = '400px';
+		this.inputDiv.style.paddingTop = '4px';
+		this.inputDiv.style.paddingBottom = '4px';
+		this.inputDiv.style.whiteSpace = 'nowrap';
+		this.inputDiv.style.overflowX = 'auto';
+		// Match id input
+		this.inputMatchId = document.createElement('input');
+		this.inputMatchId.placeholder = 'GbHo73tP';
+		this.inputMatchId.title = 'Match id';
+		this.inputMatchId.style.width = '100px';
+		this.inputMatchId.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputMatchId);
+		// Team1 input
+		this.inputTeam1 = document.createElement('input');
+		this.inputTeam1.placeholder = 'BRA';
+		this.inputTeam1.title = 'Home team abbreviation';
+		this.inputTeam1.style.width = '50px';
+		this.inputTeam1.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputTeam1);
+		// Team2 input
+		this.inputTeam2 = document.createElement('input');
+		this.inputTeam2.placeholder = 'GER';
+		this.inputTeam2.title = 'Away team abbreviation';
+		this.inputTeam2.style.width = '50px';
+		this.inputTeam2.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputTeam2);
+		// Lang select
+		this.selectLang = document.createElement('select');
+		this.selectLang.title = 'Language';
+		Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
+			const option = document.createElement('option');
+			option.innerText = lang;
+			option.value = lang;
+			this.selectLang.appendChild(option);
+		});
+		this.selectLang.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.selectLang);
+		// Suspended select
+		this.selectSuspended = document.createElement('select');
+		this.selectSuspended.title = 'Suspend observer start?';
+		const optionFalse = document.createElement('option');
+		optionFalse.innerText = 'false';
+		optionFalse.value = 'false';
+		this.selectSuspended.appendChild(optionFalse);
+		const optionTrue = document.createElement('option');
+		optionTrue.innerText = 'true';
+		optionTrue.value = 'true';
+		this.selectSuspended.appendChild(optionTrue);
+		this.selectSuspended.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.selectSuspended);
+		// Chat interval input
+		this.inputChatInterval = document.createElement('input');
+		this.inputChatInterval.title = 'Time in milliseconds between consecutive chat messages';
+		this.inputChatInterval.style.width = '50px';
+		this.inputChatInterval.style.display = 'inline-block';
+		this.inputDiv.appendChild(this.inputChatInterval);
+		// Load button
+		this.btnLoad = document.createElement('button');
+		this.btnLoad.title = 'Load match to iframes below';
+		this.btnLoad.innerText = 'Load';
+		this.btnLoad.style.display = 'inline-block';
+		this.btnLoad.style.overflow = 'hidden';
+		this.btnLoad.onclick = () => {
+			this.loadFlashscoreMatchCommentary(
+				this.inputMatchId.value,
+				this.inputTeam1.value,
+				this.inputTeam2.value,
+				this.selectLang.selectedOptions[0].value,
+				this.selectSuspended.selectedIndex === 1,
+				Number.parseInt(this.inputChatInterval.value)
+			);
+		};
+		this.inputDiv.appendChild(this.btnLoad);
+
 		// Create new list entry
 		this.listEntrySpan = document.createElement('span');
 		this.listEntrySpan.className = 'overlayListEntry';
@@ -426,9 +779,9 @@ class Overlay {
 		// Add entry to list
 		overlayListDiv.appendChild(this.listEntrySpan);
 
-		// Add spans to div
+		// Add upper elements to div
 		this.fDivOverlay.appendChild(this.hintSpan);
-		this.fDivOverlay.appendChild(this.titleSpan);
+		this.fDivOverlay.appendChild(this.inputDiv);
 		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
 		this.flashscoreFrame = document.createElement('iframe');
 		this.flashscoreFrame.className = 'flashscoreFrame';
@@ -486,8 +839,13 @@ class Overlay {
 
 	updateElements() {
 		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
-		this.titleSpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
-		this.listEntrySpan.innerText = this.id + ') ' + (this.matchId ?? '') + ' ' + (this.team1Code ?? '') + '-' + (this.team2Code ?? '') + ' ' + this.language;
+		this.inputMatchId.value = this.matchId;
+		this.inputTeam1.value = this.team1Code;
+		this.inputTeam2.value = this.team2Code;
+		this.selectLang.selectedIndex = Object.keys(Str.COMMENTARY_LINK1).indexOf(this.language);
+		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
+		this.inputChatInterval.value = this.chatInterval.toString();
+		this.listEntrySpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
 
 		const doRightClickAction = ev => {
 			ContextMenuManager.createContextMenu();
@@ -495,25 +853,27 @@ class Overlay {
 
 			contextMenu.addEntry('Delete', () => {
 				OverlayManager.deleteOverlay(this.id);
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry('Start/Restart observer', () => {
 				this.restartFlashscore();
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry('Stop observer', () => {
 				this.stopFlashscore();
-				ContextMenuManager.removeContextMenu();
 			});
 			contextMenu.addEntry((this.fDivOverlay.hidden ? 'Show' : 'Hide') + ' overlay', () => {
 				this.toggleHidden();
-				ContextMenuManager.removeContextMenu();
 			});
+			const langSubMenu = new ContextMenu();
+			Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
+				langSubMenu.addEntry(lang, () => {
+					this.changeLanguage(lang);
+				});
+			});
+			contextMenu.addEntry('Change language', null, langSubMenu);
 			contextMenu.addEntry('Cancel', () => {
-				ContextMenuManager.removeContextMenu();
 			});
 
-			contextMenu.show(document.querySelector('iframe').offsetWidth - ev.clientX + 3, document.querySelector('iframe').offsetHeight - ev.clientY + 3);
+			contextMenu.showAtPoint(ev.pageX, ev.pageY, 2);
 
 			ev.preventDefault();
 		};
@@ -624,80 +984,75 @@ class Overlay {
 		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
+		this.inputDiv.style.maxWidth = this.width + 'px';
 		this.updateElements();
 
-		// If iframe link didn't change, just restart the observer
-		if (this.prevLink === this.getCommentaryLink()) {
-			if (!this.suspended)
-				this.restartFlashscore();
-		}
-		// Else wait for another page to load
-		else {
+		if (this.prevLink !== this.getCommentaryLink()) {
 			this.prevLink = this.getCommentaryLink();
-			// When the flashscore match frame is loaded
-			this.flashscoreFrame.onload = ev => {
-				console.log('Flashscore match frame loaded: ' + this.getMatchLink());
-				// Empty last comments queue
-				this.lastCommentsQueue = [];
-				clearInterval(this.findCommentaryTabInterval);
-
-				// Wait 3 seconds for the comments section to load (should be sufficient)
-				setTimeout(() => {
-					console.log('Flashscore page should have already been loaded');
-
-					// Delete redundant elements
-					console.log('Deleting redundant elements from flashscore frame');
-					this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-					Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-					this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-					this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-					// Check periodically if a commentary section appeared
-					function findCommentaryTab() {
-						const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
-						const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
-						// If there is a COMMENTARY tab
-						if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
-							console.log('Commentary tab found, loading it...');
-							// Show the commentary frame
-							self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
-							self.flashscoreCommentFrame.height = self.height / 3 + 'px';
-							// Load commentary section in comment frame
-							self.flashscoreCommentFrame.src = self.getCommentaryLink();
-							clearInterval(self.findCommentaryTabInterval);
-						}
-					}
-
-					findCommentaryTab();
-					this.findCommentaryTabInterval = setInterval(() => findCommentaryTab(), 5000);
-				}, 2000);
-			};
-
-			// When the flashscore comment frame is loaded
-			this.flashscoreCommentFrame.onload = ev => {
-				console.log('Flashscore comment frame loaded: ' + this.getCommentaryLink());
-
-				// Wait 3 seconds for the comments section to load (should be sufficient)
-				setTimeout(() => {
-					console.log('Flashscore comment section should have already been loaded');
-					// Flashscore comments section element
-					this.fCommentsSection = this.flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
-
-					// Start a new observer
-					if (!this.suspended)
-						this.restartFlashscore();
-
-					// Delete redundant elements
-					console.log('Deleting redundant elements from comment frame');
-					this.flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-					Array.from(this.flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-					this.flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
-					this.flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
-
-					this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
-				}, 2000);
-			};
 		}
+		// When the flashscore match frame is loaded
+		this.flashscoreFrame.onload = ev => {
+			console.log('Flashscore match frame loaded: ' + this.getMatchLink());
+			// Empty last comments queue
+			this.lastCommentsQueue = [];
+			clearInterval(this.findCommentaryTabInterval);
+
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore page should have already been loaded');
+
+				// Delete redundant elements
+				console.log('Deleting redundant elements from flashscore frame');
+				this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				// Check periodically if a commentary section appeared
+				function findCommentaryTab() {
+					const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
+					const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
+					// If there is a COMMENTARY tab
+					if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
+						console.log('Commentary tab found, loading it...');
+						// Show the commentary frame
+						self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
+						self.flashscoreCommentFrame.height = self.height / 3 + 'px';
+						// Load commentary section in comment frame
+						self.flashscoreCommentFrame.src = self.getCommentaryLink();
+						clearInterval(self.findCommentaryTabInterval);
+					}
+				}
+
+				findCommentaryTab();
+				this.findCommentaryTabInterval = setInterval(() => findCommentaryTab(), 5000);
+			}, 2000);
+		};
+
+		// When the flashscore comment frame is loaded
+		this.flashscoreCommentFrame.onload = ev => {
+			console.log('Flashscore comment frame loaded: ' + this.getCommentaryLink());
+
+			// Wait 3 seconds for the comments section to load (should be sufficient)
+			setTimeout(() => {
+				console.log('Flashscore comment section should have already been loaded');
+				// Flashscore comments section element
+				this.fCommentsSection = this.flashscoreCommentFrame.contentDocument.querySelector('#detail > .section');
+
+				// Start a new observer
+				if (!this.suspended)
+					this.restartFlashscore();
+
+				// Delete redundant elements
+				console.log('Deleting redundant elements from comment frame');
+				this.flashscoreCommentFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
+				Array.from(this.flashscoreCommentFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
+				this.flashscoreCommentFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				this.flashscoreCommentFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+
+				this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
+			}, 2000);
+		};
 	}
 
 	/**
@@ -706,7 +1061,7 @@ class Overlay {
 	 * @param {string} language Language code. Example codes are "pl" or "en", see all codes in {@link Str.COMMENTARY_LINK1} object.
 	 */
 	changeLanguage(language) {
-		if (this.matchId != null)
+		if (this.matchId?.length > 0)
 			this.loadFlashscoreMatchCommentary(this.matchId, this.team1Code, this.team2Code, language, this.suspended, this.chatInterval, this.width, this.height);
 		else {
 			this.language = language;
@@ -1491,8 +1846,6 @@ function makeElementDraggable(element) {
 	}
 
 	function elementDrag(ev) {
-		ev = ev || window.event;
-		ev.preventDefault();
 		// calculate the new cursor position:
 		pos1 = pos3 - ev.clientX;
 		pos2 = pos4 - ev.clientY;
@@ -1504,8 +1857,6 @@ function makeElementDraggable(element) {
 	}
 
 	function dragMouseDown(ev) {
-		ev = ev || window.event;
-		ev.preventDefault();
 		// get the mouse cursor position at startup:
 		pos3 = ev.clientX;
 		pos4 = ev.clientY;
