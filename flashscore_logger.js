@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.4';
+const flashscore_logger_version = 'Alpha 1.4.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -106,7 +106,7 @@ class CMEntry {
 		this.element.style.paddingBottom = '2px';
 		this.element.style.paddingLeft = '4px';
 		this.element.style.paddingRight = '4px';
-		this.element.style.border = '1px solid #FFC';
+		this.element.style.borderBottom = '1px solid #FFC';
 
 		this.element.onmouseover = () => {
 			// Unhighlight other same-level entries
@@ -159,7 +159,9 @@ class ContextMenu {
 		this.menu.style.backgroundColor = '#333E';
 		this.menu.style.color = '#FFC';
 		this.menu.style.fontSize = '0.9em';
-		this.menu.style.border = '1px solid #FFC';
+		this.menu.style.borderTop = '1px solid #FFC';
+		this.menu.style.borderLeft = '1px solid #FFC';
+		this.menu.style.borderRight = '1px solid #FFC';
 		this.menu.style.overflow = 'auto';
 
 		/** @type {CMEntry[]} */
@@ -268,7 +270,7 @@ class ContextMenu {
 		// If menu is higher than page
 		if (rectHeight > pageHeight) {
 			// Shrink it to fit the page
-			this.menu.style.height = 'calc(100% - 2px)';
+			this.menu.style.height = 'calc(100% - 1px)';
 		}
 		// If menu fits in vertically when y is top corner
 		else if (rectBottomP <= pageHeight) {
@@ -360,7 +362,7 @@ class ContextMenu {
 			if (menuHeight > pageHeight) {
 				console.debug('Menu is higher than page: ' + menuHeight + ' > ' + pageHeight);
 				// Shrink it to fit the page
-				this.menu.style.height = 'calc(100% - 2px)';
+				this.menu.style.height = 'calc(100% - 1px)';
 			}
 			// If menu fits in vertically when attached to top of entry |--°𝙸--|
 			else if (entryTopP + menuHeight <= pageHeight) {
@@ -602,7 +604,7 @@ function getSlicedHaxballText(text, maxFragmentLength = 140) {
 
 // If game-mod.js is loaded, it returns room manager which is needed to send chat without using a text field
 function getCurrentRoomManager() {
-	return insideRoom ? g?.getRoomManager() : null;
+	return window?.insideRoom ? g?.getRoomManager() : null;
 }
 
 // Function to send chat, no matter if the modified game-min.js is present or not
