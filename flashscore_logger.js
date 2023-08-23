@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.5';
+const flashscore_logger_version = 'Alpha 1.6';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -873,6 +873,9 @@ class Overlay {
 			contextMenu.addEntry((this.fDivOverlay.hidden ? 'Show' : 'Hide') + ' overlay', () => {
 				this.toggleHidden();
 			});
+			contextMenu.addEntry((this.printUpdates ? 'Ignore ' : 'Detect ') + 'comment edits', () => {
+				this.printUpdates = !this.printUpdates;
+			});
 			const langSubMenu = new ContextMenu();
 			Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
 				langSubMenu.addEntry(lang, () => {
@@ -1664,15 +1667,19 @@ iframeBody.addEventListener('keydown', event => {
 // Returns localized names. Before calling this, check if language is set to pl
 function spolszczNazwiska(text) {
 	let commentText = text;
+	commentText = commentText.replaceAll('Efthymios Koulouris', 'Eftimis Kuluris');
 	commentText = commentText.replaceAll('Pantelis Chatzidiakos', 'Pandelis Chadzidiakos');
-	commentText = commentText.replaceAll('P. Chatzidiakos', 'P. Chadzidiakos');
-	commentText = commentText.replaceAll('Konstantinos Tsimikas', 'Kostas Tsimikas');
-	commentText = commentText.replaceAll('Georgios Masouras', 'Giorgos Masouras');
+	commentText = commentText.replaceAll('Georgios Vagiannidis', 'Jeorjos Wajanidis');
+	commentText = commentText.replaceAll('Fotis Ioannidis', 'Fotis Joanidis');
+	commentText = commentText.replaceAll('Georgios Karakasidis', 'Jeorjos Karakasidis');
+	commentText = commentText.replaceAll('Giannis Sourdis', 'Janis Surdis');
+	commentText = commentText.replaceAll('Vasilios Xenopoulos', 'Wasilios Ksenopulos');
+	commentText = commentText.replaceAll('Georgios Sideras', 'Jeorjos Sideras');
+	commentText = commentText.replaceAll('Georgios Masouras', 'Giorgos Masuras');
 	commentText = commentText.replaceAll('Georgios Giakoumakis', 'Jorgos Jakumakis');
 	commentText = commentText.replaceAll('Petros Mantalos', 'Petros Mandalos');
 	commentText = commentText.replaceAll('Georgios Athanasiadis', 'Jorgos Atanasiadis');
-	commentText = commentText.replaceAll('Efthymios Koulouris', 'Eftimis Kuluris');
-	commentText = commentText.replaceAll('Athanasiadis', 'Atanasiadis');
+	commentText = commentText.replaceAll('Christos Chatziioannou', 'Christos Chadziioanu');
 	commentText = commentText.replaceAll('Mavropanos', 'Mawropanos');
 	commentText = commentText.replaceAll('Vlachodimos', 'Wlachodimos');
 	commentText = commentText.replaceAll('Fortounis', 'Fortunis');
@@ -1684,12 +1691,21 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Stavros', 'Stawros');
 	commentText = commentText.replaceAll('Tzavellas', 'Dzawelas');
 	commentText = commentText.replaceAll('Giannis', 'Janis');
-	commentText = commentText.replaceAll('Konstantinos', 'Konstandinos');
+	commentText = commentText.replaceAll('Konstantinos Tsimikas', 'Kostas Tsimikas');
 	commentText = commentText.replaceAll(/(\w*)poulos\b/g, '$1pulos');
 	commentText = commentText.replaceAll('E. Koulouris', 'E. Kuluris');
+	commentText = commentText.replaceAll('P. Chatzidiakos', 'P. Chadzidiakos');
+	commentText = commentText.replaceAll('G. Vagiannidis', 'J. Wajanidis');
+	commentText = commentText.replaceAll('F. Ioannidis', 'F. Joanidis');
+	commentText = commentText.replaceAll('G. Karakasidis', 'J. Karakasidis');
+	commentText = commentText.replaceAll('G. Sourdis', 'J. Surdis');
+	commentText = commentText.replaceAll('V. Xenopoulos', 'W. Ksenopulos');
+	commentText = commentText.replaceAll('G. Sideras', 'J. Sideras');
+	commentText = commentText.replaceAll('G. Giakoumakis', 'J. Jakumakis');
+	commentText = commentText.replaceAll('P. Mantalos', 'P. Mandalos');
+	commentText = commentText.replaceAll('G. Athanasiadis', 'J. Atanasiadis');
+	commentText = commentText.replaceAll('C. Chatziioannou', 'C. Chadziioanu');
 
-	commentText = commentText.replaceAll('Georgiy Tsitaishvili', 'Giorgi Citaiszwili');
-	commentText = commentText.replaceAll('Tsitaishvili', 'Citaiszwili');
 	commentText = commentText.replaceAll('Kvaratskhelia', 'Kwaracchelia');
 	commentText = commentText.replaceAll('Davitashvili', 'Dawitaszwili');
 	commentText = commentText.replaceAll('Gugeshashvili', 'Gugeszaszwili');
@@ -1697,6 +1713,14 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Khvicha', 'Chwicza');
 	commentText = commentText.replaceAll('shvili', 'szwili');
 	commentText = commentText.replaceAll('Kvekve', 'Kwekwe');
+	commentText = commentText.replaceAll('Georgiy Tsitaishvili', 'Giorgi Citaiszwili');
+	commentText = commentText.replaceAll('Davit Khocholava', 'Dawit Choczolawa');
+	commentText = commentText.replaceAll('Guram Kashia', 'Guram Kaszia');
+	commentText = commentText.replaceAll('Jaba Kankava', 'Dżaba Kankawa');
+	commentText = commentText.replaceAll('G. Tsitaishvili', 'G. Citaiszwili');
+	commentText = commentText.replaceAll('D. Khocholava', 'D. Choczolawa');
+	commentText = commentText.replaceAll('G. Kashia', 'G. Kaszia');
+	commentText = commentText.replaceAll('J. Kankava', 'Dż. Kankawa');
 
 	commentText = commentText.replaceAll('Danylo Ignatenko', 'Danyło Ihnatenko');
 	commentText = commentText.replaceAll('Vladyslav Vanat', 'Władysław Wanat');
