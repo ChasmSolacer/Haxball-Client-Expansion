@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.6';
+const flashscore_logger_version = 'Alpha 1.6.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -707,12 +707,35 @@ class Overlay {
 		this.inputDiv.style.paddingBottom = '4px';
 		this.inputDiv.style.whiteSpace = 'nowrap';
 		this.inputDiv.style.overflowX = 'auto';
+		this.inputDiv.style.cursor = 'auto';
+		// Prevent dragging from this element
+		this.inputDiv.onmousedown = ev => {
+			ev.stopPropagation();
+		};
+		// Prevent conflicting with game input keys
+		this.inputDiv.onkeydown = ev => {
+			ev.stopPropagation();
+		};
+		// Animations
+		function greenFadeOut(event) {
+			event.target.animate(
+				[
+					{backgroundColor: '#0F05'},
+					{backgroundColor: 'revert'}
+				],
+				{
+					duration: 250
+				}
+			);
+		}
 		// Match id input
 		this.inputMatchId = document.createElement('input');
 		this.inputMatchId.placeholder = 'GbHo73tP';
 		this.inputMatchId.title = 'Match id';
 		this.inputMatchId.style.width = '100px';
 		this.inputMatchId.style.display = 'inline-block';
+		this.inputMatchId.style.backgroundColor = 'white';
+		this.inputMatchId.style.borderWidth = '1px';
 		this.inputDiv.appendChild(this.inputMatchId);
 		// Team1 input
 		this.inputTeam1 = document.createElement('input');
@@ -720,6 +743,13 @@ class Overlay {
 		this.inputTeam1.title = 'Home team abbreviation';
 		this.inputTeam1.style.width = '50px';
 		this.inputTeam1.style.display = 'inline-block';
+		this.inputTeam1.style.backgroundColor = 'white';
+		this.inputTeam1.style.borderWidth = '1px';
+		this.inputTeam1.oninput = ev => {
+			this.team1Code = ev.target.value;
+			this.updateElements();
+			greenFadeOut(ev);
+		};
 		this.inputDiv.appendChild(this.inputTeam1);
 		// Team2 input
 		this.inputTeam2 = document.createElement('input');
@@ -727,21 +757,31 @@ class Overlay {
 		this.inputTeam2.title = 'Away team abbreviation';
 		this.inputTeam2.style.width = '50px';
 		this.inputTeam2.style.display = 'inline-block';
+		this.inputTeam2.style.backgroundColor = 'white';
+		this.inputTeam2.style.borderWidth = '1px';
+		this.inputTeam2.oninput = ev => {
+			this.team2Code = ev.target.value;
+			this.updateElements();
+			greenFadeOut(ev);
+		};
 		this.inputDiv.appendChild(this.inputTeam2);
 		// Lang select
 		this.selectLang = document.createElement('select');
 		this.selectLang.title = 'Language';
+		this.selectLang.style.display = 'inline-block';
+		this.selectLang.style.backgroundColor = 'white';
 		Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
 			const option = document.createElement('option');
 			option.innerText = lang;
 			option.value = lang;
 			this.selectLang.appendChild(option);
 		});
-		this.selectLang.style.display = 'inline-block';
 		this.inputDiv.appendChild(this.selectLang);
 		// Suspended select
 		this.selectSuspended = document.createElement('select');
 		this.selectSuspended.title = 'Suspend observer start?';
+		this.selectSuspended.style.display = 'inline-block';
+		this.selectSuspended.style.backgroundColor = 'white';
 		const optionFalse = document.createElement('option');
 		optionFalse.innerText = 'false';
 		optionFalse.value = 'false';
@@ -750,13 +790,26 @@ class Overlay {
 		optionTrue.innerText = 'true';
 		optionTrue.value = 'true';
 		this.selectSuspended.appendChild(optionTrue);
-		this.selectSuspended.style.display = 'inline-block';
+		this.selectSuspended.onchange = ev => {
+			this.suspended = ev.target.selectedIndex === 1;
+			greenFadeOut(ev);
+		};
 		this.inputDiv.appendChild(this.selectSuspended);
 		// Chat interval input
 		this.inputChatInterval = document.createElement('input');
 		this.inputChatInterval.title = 'Time in milliseconds between consecutive chat messages';
 		this.inputChatInterval.style.width = '50px';
 		this.inputChatInterval.style.display = 'inline-block';
+		this.inputChatInterval.style.backgroundColor = 'white';
+		this.inputChatInterval.style.borderWidth = '1px';
+		this.inputChatInterval.type = 'number';
+		this.inputChatInterval.min = '0';
+		this.inputChatInterval.oninput = ev => {
+			const num = Number.parseInt(ev.target.value);
+			this.chatInterval = isNaN(num) ? 0 : num;
+			this.updateElements();
+			greenFadeOut(ev);
+		};
 		this.inputDiv.appendChild(this.inputChatInterval);
 		// Load button
 		this.btnLoad = document.createElement('button');
