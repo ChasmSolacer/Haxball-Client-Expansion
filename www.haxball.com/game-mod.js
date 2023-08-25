@@ -3,7 +3,7 @@
  be82b08b
 */
 'use strict';
-const version = 'Indev 0.4';
+const version = 'Indev 0.4.1';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -610,8 +610,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 							b.ue(!b.nd));
 						a.preventDefault();
 						break;
-					case 48:
-						c ? this.W.Fa(a) : b.ha(0);
+					case 48: // Modified zoom
+						c ? this.W.Fa(a) : b.ha(0.1);
 						break;
 					case 49:
 						c ? this.W.Fa(a) : b.ha(1);
@@ -9586,7 +9586,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 							b.ue(!b.nd));
 						a.preventDefault();
 						break;
-					case 48:
+					case 48: // Modified zoom
 						c ? this.W.Fa(a) : b.ha(0.1);
 						break;
 					case 49:
