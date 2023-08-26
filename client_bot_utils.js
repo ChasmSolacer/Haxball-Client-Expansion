@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.2';
+const client_bot_utils_version = 'Indev 0.3';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -120,6 +120,9 @@ const BallTouchType = {
 	TOUCH: 0,
 	KICK: 1
 };
+
+let onGameTickEndFunctions = [];
+let onPlayerBallTouchEndFunctions = [];
 
 class Replay {
 	/**
@@ -1953,6 +1956,9 @@ function onPlayerBallTouch(byPlayer, ballTouchType) {
 			}
 		}
 	}
+
+	// Invoke pre-defined functions
+	onPlayerBallTouchEndFunctions.forEach(f => f(byPlayer, ballTouchType));
 }
 
 g.onPlayerBallKick = byPlayer => {
@@ -2120,6 +2126,9 @@ g.onGameTick = game => {
 			}
 		}
 	});
+
+	// Invoke pre-defined functions
+	onGameTickEndFunctions.forEach(f => f(game));
 
 	// Save current scores
 	previousScores = g.getScores();
