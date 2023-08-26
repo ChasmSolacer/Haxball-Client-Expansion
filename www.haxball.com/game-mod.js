@@ -3,7 +3,7 @@
  be82b08b
 */
 'use strict';
-const version = 'Indev 0.4.1';
+const version = 'Indev 0.5';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -1846,7 +1846,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					120 > this.Ra && this.Ra--;
 				else {
 					// Exposing global fields begin
-					const onGameTickFun = window.parent.g.onGameTick;
+					const onGameTickFun = this.Qa.onGameTickFun;
 					if (onGameTickFun != null)
 						onGameTickFun(getGameObject(this));
 					// Exposing global fields end
@@ -7079,6 +7079,12 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						const player = getFullPlayerObject(e);
 						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onPlayerAdminChange(player, byPlayer, player.admin);
+					}
+				}
+				;
+				a.onGameTickFun = function (gameInst) {
+					if (window.parent.g.onGameTick != null) {
+						window.parent.g.onGameTick(gameInst);
 					}
 				}
 				;
