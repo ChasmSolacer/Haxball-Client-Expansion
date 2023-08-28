@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.6.1';
+const flashscore_logger_version = 'Alpha 1.7';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -673,6 +673,7 @@ class Overlay {
 		this.language = language;
 		this.suspended = false;
 		this.chatInterval = 0;
+
 		// Overlay – div which will contain the flashscore iFrame.
 		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
 		this.fDivOverlay = document.createElement('div');
@@ -697,28 +698,87 @@ class Overlay {
 		this.hintSpan.style.fontWeight = '900';
 		this.hintSpan.style.fontSize = '1.3em';
 		this.hintSpan.style.maxWidth = '400px';
-		// Input container
-		this.inputDiv = document.createElement('div');
-		this.inputDiv.style.display = 'block';
-		this.inputDiv.style.color = 'black';
-		this.inputDiv.style.fontSize = '0.95em';
-		this.inputDiv.style.maxWidth = '400px';
-		this.inputDiv.style.paddingTop = '4px';
-		this.inputDiv.style.paddingBottom = '4px';
-		this.inputDiv.style.whiteSpace = 'nowrap';
-		this.inputDiv.style.overflowX = 'auto';
-		this.inputDiv.style.cursor = 'auto';
+
+		// Link input container
+		this.linkInputDiv = document.createElement('div');
+		this.linkInputDiv.style.display = 'table';
+		this.linkInputDiv.style.color = 'black';
+		this.linkInputDiv.style.fontSize = '0.95em';
+		this.linkInputDiv.style.width = '100%';
+		this.linkInputDiv.style.maxWidth = '400px';
+		this.linkInputDiv.style.paddingTop = '4px';
+		this.linkInputDiv.style.paddingBottom = '4px';
+		this.linkInputDiv.style.whiteSpace = 'nowrap';
+		this.linkInputDiv.style.overflowX = 'auto';
+		this.linkInputDiv.style.cursor = 'auto';
 		// Prevent dragging from this element
-		this.inputDiv.onmousedown = ev => {
+		this.linkInputDiv.onmousedown = ev => {
 			ev.stopPropagation();
 		};
 		// Prevent conflicting with game input keys
-		this.inputDiv.onkeydown = ev => {
+		this.linkInputDiv.onkeydown = ev => {
+			ev.stopPropagation();
+		};
+
+		// Link input label
+		this.labelLink = document.createElement('label');
+		this.labelLink.htmlFor = 'matchLink';
+		this.labelLink.innerText = 'Match link'
+		this.labelLink.style.display = 'table-cell';
+		this.labelLink.style.width = '1px';
+		this.labelLink.style.whiteSpace = 'nowrap';
+		this.labelLink.style.paddingRight = '4px';
+		this.linkInputDiv.appendChild(this.labelLink);
+
+		// Match id input
+		this.inputLink = document.createElement('input');
+		this.inputLink.name = 'matchLink';
+		this.inputLink.placeholder = 'https://www.flashscore.com/match/GbHo73tP';
+		this.inputLink.title = 'Flashscore match link goes here';
+		this.labelLink.style.display = 'table-cell';
+		this.inputLink.style.backgroundColor = 'white';
+		this.inputLink.style.borderWidth = '1px';
+		this.inputLink.style.width = 'calc(100% - 2px)';
+		this.inputLink.oninput = ev => {
+			const inputVal = ev.target.value;
+			if (inputVal.startsWith('https://')) {
+				// Get 4th occurence of "/" in inputVal
+				const matchIdIndex = inputVal.split('/', 4).join('/').length + 1;
+				const link1 = inputVal.substring(0, matchIdIndex);
+				this.matchId = inputVal.substring(matchIdIndex, matchIdIndex + 8);
+				for (let lang in Str.COMMENTARY_LINK1) {
+					if (Str.COMMENTARY_LINK1[lang] === link1) {
+						// Change language to lang
+						this.language = lang;
+					}
+				}
+				this.updateElements();
+			}
+		};
+		this.linkInputDiv.appendChild(this.inputLink);
+
+		// Parameters input container
+		this.paramInputsDiv = document.createElement('div');
+		this.paramInputsDiv.style.display = 'block';
+		this.paramInputsDiv.style.color = 'black';
+		this.paramInputsDiv.style.fontSize = '0.95em';
+		this.paramInputsDiv.style.maxWidth = '400px';
+		this.paramInputsDiv.style.paddingTop = '4px';
+		this.paramInputsDiv.style.paddingBottom = '4px';
+		this.paramInputsDiv.style.whiteSpace = 'nowrap';
+		this.paramInputsDiv.style.overflowX = 'auto';
+		this.paramInputsDiv.style.cursor = 'auto';
+		// Prevent dragging from this element
+		this.paramInputsDiv.onmousedown = ev => {
+			ev.stopPropagation();
+		};
+		// Prevent conflicting with game input keys
+		this.paramInputsDiv.onkeydown = ev => {
 			ev.stopPropagation();
 		};
 		// Animations
-		function greenFadeOut(event) {
-			event.target.animate(
+		function greenFadeOut(element) {
+			element.animate(
 				[
 					{backgroundColor: '#0F05'},
 					{backgroundColor: 'revert'}
@@ -736,7 +796,7 @@ class Overlay {
 		this.inputMatchId.style.display = 'inline-block';
 		this.inputMatchId.style.backgroundColor = 'white';
 		this.inputMatchId.style.borderWidth = '1px';
-		this.inputDiv.appendChild(this.inputMatchId);
+		this.paramInputsDiv.appendChild(this.inputMatchId);
 		// Team1 input
 		this.inputTeam1 = document.createElement('input');
 		this.inputTeam1.placeholder = 'BRA';
@@ -748,9 +808,9 @@ class Overlay {
 		this.inputTeam1.oninput = ev => {
 			this.team1Code = ev.target.value;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputTeam1);
+		this.paramInputsDiv.appendChild(this.inputTeam1);
 		// Team2 input
 		this.inputTeam2 = document.createElement('input');
 		this.inputTeam2.placeholder = 'GER';
@@ -762,9 +822,9 @@ class Overlay {
 		this.inputTeam2.oninput = ev => {
 			this.team2Code = ev.target.value;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputTeam2);
+		this.paramInputsDiv.appendChild(this.inputTeam2);
 		// Lang select
 		this.selectLang = document.createElement('select');
 		this.selectLang.title = 'Language';
@@ -776,7 +836,7 @@ class Overlay {
 			option.value = lang;
 			this.selectLang.appendChild(option);
 		});
-		this.inputDiv.appendChild(this.selectLang);
+		this.paramInputsDiv.appendChild(this.selectLang);
 		// Suspended select
 		this.selectSuspended = document.createElement('select');
 		this.selectSuspended.title = 'Suspend observer start?';
@@ -792,9 +852,9 @@ class Overlay {
 		this.selectSuspended.appendChild(optionTrue);
 		this.selectSuspended.onchange = ev => {
 			this.suspended = ev.target.selectedIndex === 1;
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.selectSuspended);
+		this.paramInputsDiv.appendChild(this.selectSuspended);
 		// Chat interval input
 		this.inputChatInterval = document.createElement('input');
 		this.inputChatInterval.title = 'Time in milliseconds between consecutive chat messages';
@@ -808,9 +868,9 @@ class Overlay {
 			const num = Number.parseInt(ev.target.value);
 			this.chatInterval = isNaN(num) ? 0 : num;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputChatInterval);
+		this.paramInputsDiv.appendChild(this.inputChatInterval);
 		// Load button
 		this.btnLoad = document.createElement('button');
 		this.btnLoad.title = 'Load match to iframes below';
@@ -827,7 +887,7 @@ class Overlay {
 				Number.parseInt(this.inputChatInterval.value)
 			);
 		};
-		this.inputDiv.appendChild(this.btnLoad);
+		this.paramInputsDiv.appendChild(this.btnLoad);
 
 		// Create new list entry
 		this.listEntrySpan = document.createElement('span');
@@ -844,7 +904,8 @@ class Overlay {
 
 		// Add upper elements to div
 		this.fDivOverlay.appendChild(this.hintSpan);
-		this.fDivOverlay.appendChild(this.inputDiv);
+		this.fDivOverlay.appendChild(this.linkInputDiv);
+		this.fDivOverlay.appendChild(this.paramInputsDiv);
 		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
 		this.flashscoreFrame = document.createElement('iframe');
 		this.flashscoreFrame.className = 'flashscoreFrame';
@@ -890,13 +951,13 @@ class Overlay {
 		if (this === OverlayManager.focusedOverlay) {
 			this.fDivOverlay.style.border = '3px solid #0FF';
 			this.fDivOverlay.style.zIndex = '4';
-			this.listEntrySpan.style.fontWeight = 'bold';
+			this.listEntrySpan.style.backgroundColor = '#0FF4';
 		}
 		// If overlay loses focus
 		else {
 			this.fDivOverlay.style.border = '3px solid #666';
 			this.fDivOverlay.style.zIndex = '3';
-			this.listEntrySpan.style.fontWeight = 'normal';
+			this.listEntrySpan.style.backgroundColor = '';
 		}
 	}
 
@@ -1030,9 +1091,9 @@ class Overlay {
 
 		if (!(matchId?.length > 0)) {
 			console.error('Oh no! You forgot to specify the match ID');
-			console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
+			console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary".'
 				, 'background: #00141E; color: #FFCD00; font-size: 1.3em');
-			console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary/0 – the matchId is %cGbHo73tP'
+			console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary – the matchId is %cGbHo73tP'
 				, 'background: #00141E; color: #FFCD00; font-size:1.3em', 'background: #00141E; color: #FFCD00; font-size:1.3em; font-weight:900');
 			return;
 		}
@@ -1062,7 +1123,8 @@ class Overlay {
 		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
-		this.inputDiv.style.maxWidth = this.width + 'px';
+		this.linkInputDiv.style.maxWidth = this.width + 'px';
+		this.paramInputsDiv.style.maxWidth = this.width + 'px';
 		this.updateElements();
 
 		if (this.prevLink !== this.getCommentaryLink()) {
