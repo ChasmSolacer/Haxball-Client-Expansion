@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.7.1';
+const flashscore_logger_version = 'Alpha 1.8';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -723,7 +723,7 @@ class Overlay {
 		// Link input label
 		this.labelLink = document.createElement('label');
 		this.labelLink.htmlFor = 'matchLink';
-		this.labelLink.innerText = 'Match link'
+		this.labelLink.innerText = 'Match link';
 		this.labelLink.style.display = 'table-cell';
 		this.labelLink.style.width = '1px';
 		this.labelLink.style.whiteSpace = 'nowrap';
@@ -776,6 +776,7 @@ class Overlay {
 		this.paramInputsDiv.onkeydown = ev => {
 			ev.stopPropagation();
 		};
+
 		// Animations
 		function greenFadeOut(element) {
 			element.animate(
@@ -788,6 +789,7 @@ class Overlay {
 				}
 			);
 		}
+
 		// Match id input
 		this.inputMatchId = document.createElement('input');
 		this.inputMatchId.placeholder = 'GbHo73tP';
@@ -1261,11 +1263,21 @@ class Overlay {
 		const redCardsArray = this.getRedCardsArray();
 		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
 		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-		let firstLegScores = this.getFirstLegScoresArray();
-		let scoresString = scores[0] + ':' + scores[1] +
-			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		const firstLegScores = this.getFirstLegScoresArray();
+		const scoreString = scores[0] + ':' + scores[1];
+		const aggregateScoreString = firstLegScores != null ?
+			(' ('
+				+ (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0])
+				+ ':'
+				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
+				+ ')') :
+			'';
+		const pensData = this.getPenaltiesData();
+		const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+		const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+		const pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
 		// This will precede every chat message
-		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + this.team2Code + '] ';
+		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + this.team2Code + '] ';
 		return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 	}
 
@@ -1342,13 +1354,15 @@ class Overlay {
 	/**
 	 * Returns goalscorers object array.
 	 *
-	 * @return {{entry, team: number}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
+	 * @return {{team: number, entry: string}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
 	 */
 	getGoalscorers() {
 		// Goals, cards, substitutions...
 		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
-		// Filter goals
-		const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null);
+		// Filter goals (excluding penalty shootout)
+		const soccerIncidents = incidents
+			.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null)
+			.filter(si => si.querySelector('.smv__timeBox').innerText.endsWith('\''));
 		// Extract minute, goalscorer and assist from each goal
 		return soccerIncidents.map(si => {
 			const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
@@ -1385,6 +1399,35 @@ class Overlay {
 			}
 
 			return {team: team, entry: minuteText + scorerText + assistText + ownGoalText + penaltyText};
+		});
+	}
+
+	/**
+	 * Returns penalty shootout players with their teams and if they missed.
+	 *
+	 * @return {{team: number, player: string, missed: boolean}[]}
+	 */
+	getPenaltiesData() {
+		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+		// Filter penalties incidents
+		const penIncidents = incidents.filter(si => si.querySelector('.smv__timeBox')?.innerText?.endsWith('\'') === false);
+		// Extract player and missed from each penalty
+		return penIncidents.map(si => {
+			const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
+			let playerText = si.querySelector('.smv__playerName')?.innerText ?? '';
+			let isMissed = si.querySelector('.warning') != null;
+
+			if (playerText.length > 0) {
+				// Swap name initials and surname
+				const playerMatches = playerText.match(/\S+\..*/);
+				if (playerMatches != null)
+					playerText = playerMatches[0] + ' ' + playerMatches.input.substring(0, playerMatches.index - 1);
+				if (this.language === 'pl')
+					playerText = spolszczNazwiska(playerText);
+				playerText = ' ' + playerText;
+			}
+
+			return {team: team, player: playerText, missed: isMissed};
 		});
 	}
 
@@ -1430,11 +1473,21 @@ class Overlay {
 		let scores = this.getScoresArray();
 		if (scores.length < 2)
 			scores = ['-', '-'];
-		let firstLegScores = this.getFirstLegScoresArray();
-		let scoresString = scores[0] + ':' + scores[1] +
-			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		const firstLegScores = this.getFirstLegScoresArray();
+		const scoreString = scores[0] + ':' + scores[1];
+		const aggregateScoreString = firstLegScores != null ?
+			(' ('
+				+ (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0])
+				+ ':'
+				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
+				+ ')') :
+			'';
+		const pensData = this.getPenaltiesData();
+		const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+		const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+		const pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
 
-		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
+		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
 		const matchPhaseWithTime = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 
 		return teamWithScoresAndCards + ' ' + matchPhaseWithTime;
@@ -1451,11 +1504,16 @@ class Overlay {
 	 */
 	getMatchSummaryString() {
 		let summary;
+		// During or after match
 		if (this.getMatchDetailsString().length > 0) {
 			// Minute, goalscorer and assist from each goal
 			const scorersArray = this.getGoalscorers();
-			summary = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+			const scorersString = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+			const pensArray = this.getPenaltiesData();
+			const pensString = pensArray.length > 0 ? ' ¦ ' + pensArray.map(pen => sIcon[pen.team] + (pen.missed ? '❌' : '⚽') + pen.player).join(' ') : '';
+			summary = scorersString + pensString;
 		}
+		// Before match
 		else {
 			summary = this.getMatchRefereeStadiumString();
 			if (this.language === 'pl')
