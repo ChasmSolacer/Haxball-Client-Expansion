@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.7';
+const flashscore_logger_version = 'Alpha 1.7.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -911,11 +911,13 @@ class Overlay {
 		this.flashscoreFrame.className = 'flashscoreFrame';
 		this.flashscoreFrame.style.display = 'block';
 		this.flashscoreFrame.style.marginTop = '16px';
+		this.flashscoreFrame.style.backgroundColor = '#001e28';
 		// Flashscore commentary iframe which will be placed inside the div below the flashscoreFrame. It will occupy 1/3 of its space
 		this.flashscoreCommentFrame = document.createElement('iframe');
 		this.flashscoreCommentFrame.className = 'flashscoreCommentFrame';
 		this.flashscoreCommentFrame.style.display = 'block';
 		this.flashscoreCommentFrame.style.marginTop = '16px';
+		this.flashscoreCommentFrame.style.backgroundColor = '#001e28';
 
 		// Add iframes to div
 		this.fDivOverlay.appendChild(this.flashscoreFrame);
