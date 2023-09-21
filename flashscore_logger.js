@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.8';
+const flashscore_logger_version = 'Alpha 1.9';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -734,11 +734,13 @@ class Overlay {
 		this.inputLink = document.createElement('input');
 		this.inputLink.name = 'matchLink';
 		this.inputLink.placeholder = 'https://www.flashscore.com/match/GbHo73tP';
+		this.inputLink.value = Str.COMMENTARY_LINK1[this.language];
 		this.inputLink.title = 'Flashscore match link goes here';
 		this.labelLink.style.display = 'table-cell';
 		this.inputLink.style.backgroundColor = 'white';
 		this.inputLink.style.borderWidth = '1px';
 		this.inputLink.style.width = 'calc(100% - 2px)';
+		// Update link and match id on input change
 		this.inputLink.oninput = ev => {
 			const inputVal = ev.target.value;
 			if (inputVal.startsWith('https://')) {
@@ -752,8 +754,10 @@ class Overlay {
 						this.language = lang;
 					}
 				}
-				this.updateElements();
 			}
+			else
+				this.matchId = '';
+			this.updateElements();
 		};
 		this.linkInputDiv.appendChild(this.inputLink);
 
@@ -798,6 +802,11 @@ class Overlay {
 		this.inputMatchId.style.display = 'inline-block';
 		this.inputMatchId.style.backgroundColor = 'white';
 		this.inputMatchId.style.borderWidth = '1px';
+		// Update link and match id on input change
+		this.inputMatchId.oninput = ev => {
+			this.matchId = ev.target.value;
+			this.updateElements();
+		};
 		this.paramInputsDiv.appendChild(this.inputMatchId);
 		// Team1 input
 		this.inputTeam1 = document.createElement('input');
@@ -807,6 +816,7 @@ class Overlay {
 		this.inputTeam1.style.display = 'inline-block';
 		this.inputTeam1.style.backgroundColor = 'white';
 		this.inputTeam1.style.borderWidth = '1px';
+		// Update team 1 code on input change
 		this.inputTeam1.oninput = ev => {
 			this.team1Code = ev.target.value;
 			this.updateElements();
@@ -821,6 +831,7 @@ class Overlay {
 		this.inputTeam2.style.display = 'inline-block';
 		this.inputTeam2.style.backgroundColor = 'white';
 		this.inputTeam2.style.borderWidth = '1px';
+		// Update team 2 code on input change
 		this.inputTeam2.oninput = ev => {
 			this.team2Code = ev.target.value;
 			this.updateElements();
@@ -838,6 +849,11 @@ class Overlay {
 			option.value = lang;
 			this.selectLang.appendChild(option);
 		});
+		// Update language and link on selection change
+		this.selectLang.onchange = ev => {
+			this.language = ev.target.selectedOptions[0].value;
+			this.updateElements();
+		};
 		this.paramInputsDiv.appendChild(this.selectLang);
 		// Suspended select
 		this.selectSuspended = document.createElement('select');
@@ -852,6 +868,7 @@ class Overlay {
 		optionTrue.innerText = 'true';
 		optionTrue.value = 'true';
 		this.selectSuspended.appendChild(optionTrue);
+		// Update suspended value on selection change
 		this.selectSuspended.onchange = ev => {
 			this.suspended = ev.target.selectedIndex === 1;
 			greenFadeOut(ev.target);
@@ -866,6 +883,7 @@ class Overlay {
 		this.inputChatInterval.style.borderWidth = '1px';
 		this.inputChatInterval.type = 'number';
 		this.inputChatInterval.min = '0';
+		// Update chat interval value on input change
 		this.inputChatInterval.oninput = ev => {
 			const num = Number.parseInt(ev.target.value);
 			this.chatInterval = isNaN(num) ? 0 : num;
@@ -879,6 +897,7 @@ class Overlay {
 		this.btnLoad.innerText = 'Load';
 		this.btnLoad.style.display = 'inline-block';
 		this.btnLoad.style.overflow = 'hidden';
+		// Load flashscore commentary on click
 		this.btnLoad.onclick = () => {
 			this.loadFlashscoreMatchCommentary(
 				this.inputMatchId.value,
@@ -965,6 +984,9 @@ class Overlay {
 		}
 	}
 
+	/**
+	 * Updates overlay fields and load button state based on input values and updates context menu actions.
+	 */
 	updateElements() {
 		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
 		this.inputMatchId.value = this.matchId;
@@ -974,6 +996,8 @@ class Overlay {
 		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
 		this.inputChatInterval.value = this.chatInterval.toString();
 		this.listEntrySpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
+		this.inputLink.value = this.getMatchLink();
+		this.btnLoad.disabled = this.matchId.length === 0;
 
 		const doRightClickAction = ev => {
 			ContextMenuManager.createContextMenu();
@@ -1111,7 +1135,7 @@ class Overlay {
 		this.width = width;
 		this.height = height;
 
-		this.printUpdates = true;
+		this.printUpdates = false;
 
 		// Stop the observer
 		this.stopFlashscore();
@@ -1272,10 +1296,13 @@ class Overlay {
 				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
 				+ ')') :
 			'';
+		let pensScoreString = '';
 		const pensData = this.getPenaltiesData();
-		const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
-		const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
-		const pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
+		if (pensData?.length > 0) {
+			const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+			const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+			pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
+		}
 		// This will precede every chat message
 		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + this.team2Code + '] ';
 		return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
@@ -1482,11 +1509,13 @@ class Overlay {
 				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
 				+ ')') :
 			'';
+		let pensScoreString = '';
 		const pensData = this.getPenaltiesData();
-		const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
-		const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
-		const pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
-
+		if (pensData?.length > 0) {
+			const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+			const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+			pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
+		}
 		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
 		const matchPhaseWithTime = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 
@@ -1509,8 +1538,9 @@ class Overlay {
 			// Minute, goalscorer and assist from each goal
 			const scorersArray = this.getGoalscorers();
 			const scorersString = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
-			const pensArray = this.getPenaltiesData();
-			const pensString = pensArray.length > 0 ? ' ¦ ' + pensArray.map(pen => sIcon[pen.team] + (pen.missed ? '❌' : '⚽') + pen.player).join(' ') : '';
+			const pensData = this.getPenaltiesData();
+			const pensString = pensData?.length > 0 ? ' ¦ ' +
+				pensData.map(pen => sIcon[pen.team] + (pen.missed ? '❌' : '⚽') + pen.player).join(' ') : '';
 			summary = scorersString + pensString;
 		}
 		// Before match
