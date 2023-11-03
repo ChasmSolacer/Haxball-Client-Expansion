@@ -1,9 +1,9 @@
 /*
  HaxBall @ 2023 - Mario Carbajal - All rights reserved.
- be82b08b
+ 00f80ea7
 */
 'use strict';
-const version = 'Indev 0.5';
+const version = 'Indev 0.6';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -23,13 +23,29 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		 * game-min.js commit short hash as seen in the top comment.
 		 * @type {string}
 		 */
-		window.parent.g.gameBaseVersion = 'be82b08b';
+		window.parent.g.gameBaseVersion = '00f80ea7';
 		/**
 		 * 0 – None, 1 – Up, 2 – Down, 4 – Left, 8 – Right, 16 – Kick.
 		 * To go up and left and kick simultaneously, set this to 1|4|16 which equals 21
 		 * @type {number}
 		 */
 		window.parent.g.emulatedInput = 0;
+		/**
+		 * This will override player ping if not null.
+		 * @type {number|null}
+		 */
+		window.parent.g.fakePing = null;
+		/**
+		 * This line will be rendered on the game canvas.
+		 * @type {{strokeStyle: string, width: number, enabled: boolean, startPos: {x: number, y: number}, endPos: {x: number, y: number}}}
+		 */
+		window.parent.g.line = {
+			enabled: false,
+			width: 1,
+			strokeStyle: '#0008',
+			startPos: {x: 0, y: 0},
+			endPos: {x: 0, y: 0}
+		}
 
 		/* Utility functions begin */
 		/**
@@ -1023,7 +1039,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.yd = this.Um = 0;
 				this.$i = new class_$b(50);
 				this.Dg = new class_$b(50);
-				this.In = 1E3;
+				this.In = 500;
 				this.xk = '';
 				super.Za(b.state);
 				this.Yh = b.st;
@@ -1296,6 +1312,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.Mi.splice(0, b);
 			}
 
+			// Ping
 			Ii() {
 				let a = window.performance.now();
 				this.Um = a;
@@ -1303,6 +1320,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				let b = this.Dg.hh() | 0
 					,
 					c = class_A.ka();
+				if (window.parent.g.fakePing != null)
+					b = window.parent.g.fakePing;
 				c.m(2);
 				c.u(a);
 				c.nb(b);
@@ -1647,9 +1666,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 
 			ar(a, b) {
-				let c = a.jb()
-					,
-					d = a.jb();
+				var c = a.jb();
+				let d = a.jb();
 				a = class_p.mh(a);
 				var e = a.Kf.yj;
 				if (null != e) {
@@ -1659,12 +1677,29 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					if (!f.Ym())
 						throw class_v.C(3);
 				}
-				e = this.aa;
-				f = this.aa + 20;
-				c < e ? c = e : c > f && (c = f);
+				e = this.aa + this.Fi;
+				f = this.aa;
+				var g = this.aa + 20;
+				f = c < f ? f : c > g ? g : c;
+				g = c - e;
+				if (a.Kf.delay) {
+					if (g < -this.Fi - 3)
+						f = e;
+					else {
+						let h = -this.Fi;
+						let k = this.Fi;
+						b.yc_field_new11nc.new11nc_method_1(g < h ? h : g > k ? k : g);
+					}
+					f < e && -.85 > b.yc_field_new11nc.new11nc_method_2() && (f = e);
+					f < b.yc_field_number2 && (f = b.yc_field_number2);
+					b.yc_field_number2 = f;
+				}
+				a.action_field3 = g;
+				c = f - c;
+				a.action_field2 = 0 < c ? c : 0;
 				a.Ce = d;
 				a.R = b.ba;
-				a.ob = c;
+				a.ob = f;
 				a.wn(this.U) && (this.Lg(a),
 					this.Mg(this.fi(a), 1));
 			}
@@ -4356,6 +4391,34 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 		}
 
+		class class_new11_nc {
+			constructor(a) {
+				let b = []
+					,
+					c = 0;
+				for (; c < a;)
+					++c,
+						b.push(0);
+				this.new11nc_array1 = b;
+				this.new11nc_number3 = this.new11nc_number2 = 0;
+			}
+
+			new11nc_method_1(a) {
+				this.new11nc_number3 -= this.new11nc_array1[this.new11nc_number2];
+				this.new11nc_array1[this.new11nc_number2] = a;
+				this.new11nc_number3 += a;
+				this.new11nc_number2++;
+				this.new11nc_number2 >= this.new11nc_array1.length && (this.new11nc_number2 = 0);
+			}
+
+			new11nc_method_2() {
+				return this.new11nc_number3 / this.new11nc_array1.length;
+			}
+		}
+
+		class class_new11_empty {
+		}
+
 		class class_sc {
 			constructor() {
 				this.Eh = 0;
@@ -5032,15 +5095,16 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.Ta = new RTCPeerConnection({
 					iceServers: b
 				}, class_Ua.xo);
-				let d = this;
-				this.Vh = new Promise(function (e) {
-						d.tp = e;
+				let d;
+				this.Vh = new Promise(function (f1) {
+						d = f1;
 					}
 				);
-				this.Ta.onicecandidate = function (e) {
-					null == e.candidate ? d.tp(d.gg) : (e = e.candidate,
-					null != e.candidate && '' != e.candidate && (null != d.ug && d.ug(e),
-						d.gg.push(e)));
+				let e = this;
+				this.Ta.onicecandidate = function (f2) {
+					null == f2.candidate ? d(e.gg) : (f2 = f2.candidate,
+					null != f2.candidate && '' != f2.candidate && (null != e.ug && e.ug(f2),
+						e.gg.push(f2)));
 				}
 				;
 				for (b = 0; b < c.length;)
@@ -5054,37 +5118,30 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.ze = window.setTimeout(function_M(this, this.rp), a);
 			}
 
-			Bo(a, b) {
-				let c = this;
-				this.vk(this.Ta.setRemoteDescription(a).then(function () {
-					return c.Ta.createAnswer();
-				}), b, 500);
+			async Bo(a, b) {
+				await this.Ta.setRemoteDescription(a);
+				a = await this.Ta.createAnswer();
+				await this.Ta.setLocalDescription(a);
+				let c = 0;
+				for (; c < b.length;)
+					this.Nj(b[c++]);
+				try {
+					await class_Gc.js(this.Vh, 500);
+				}
+				catch (d) {
+				}
+				return a;
 			}
 
-			Do() {
-				this.vk(this.Ta.createOffer(), [], 1E3);
-			}
-
-			vk(a, b, c) {
-				let d = this;
-				a.then(function (e) {
-					return d.Ta.setLocalDescription(e).then(function () {
-						return e;
-					});
-				}).then(function (e) {
-					function f() {
-						return e;
-					}
-
-					let g = 0;
-					for (; g < b.length;)
-						d.Nj(b[g++]);
-					return class_Gc.js(d.Vh, c).then(f, f);
-				}).then(function (e) {
-					d.ki(e);
-				}).catch(function () {
-					d.fg();
-				});
+			async Do() {
+				let a = await this.Ta.createOffer();
+				await this.Ta.setLocalDescription(a);
+				try {
+					await class_Gc.js(this.Vh, 1E3);
+				}
+				catch (b) {
+				}
+				return a;
 			}
 
 			Co(a) {
@@ -5141,7 +5198,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 
 			jk() {
 				window.clearTimeout(this.ze);
-				this.ki = this.Id = this.ug = this.jd = null;
+				this.Id = this.ug = this.jd = null;
 				this.Ta.onicecandidate = null;
 				this.Ta.ondatachannel = null;
 				this.Ta.onsignalingstatechange = null;
@@ -5427,17 +5484,17 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.yi();
 				this.ng.connect(this.c.destination);
 				let c = this;
-				this.Po = Promise.all([b('sounds/chat.ogg').then(function (d) {
+				this.Po = Promise.all([b('sounds/chat.wav').then(function (d) {
 					return c.fk = d;
 				}), b('sounds/highlight.wav').then(function (d) {
 					return c.Rk = d;
-				}), b('sounds/kick.ogg').then(function (d) {
+				}), b('sounds/kick.wav').then(function (d) {
 					return c.Bp = d;
-				}), b('sounds/goal.ogg').then(function (d) {
+				}), b('sounds/goal.wav').then(function (d) {
 					return c.gp = d;
-				}), b('sounds/join.ogg').then(function (d) {
+				}), b('sounds/join.wav').then(function (d) {
 					return c.zp = d;
-				}), b('sounds/leave.ogg').then(function (d) {
+				}), b('sounds/leave.wav').then(function (d) {
 					return c.Fp = d;
 				}), b('sounds/crowd.ogg').then(function (d) {
 					c.Fo = d;
@@ -7446,31 +7503,35 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					g.kk();
 				}
 				;
-				this.sa.ki = function (h) {
-					g.Mr = h;
-					g.$ = new WebSocket(a + 'client?id=' + c + (null == f ? '' : '&token=' + f));
-					g.$.binaryType = 'arraybuffer';
-					g.$.onclose = function (k) {
-						g.Ch || g.Ze(na.Ke(k.code));
+				(async function () {
+						try {
+							let h = await g.sa.Do();
+							g.$ = new WebSocket(a + 'client?id=' + c + (null == f ? '' : '&token=' + f));
+							g.$.binaryType = 'arraybuffer';
+							g.$.onclose = function (k) {
+								g.Ch || g.Ze(na.Ke(k.code));
+							}
+							;
+							g.$.onerror = function () {
+								g.Ch || g.Ze(na.Error);
+							}
+							;
+							g.$.onmessage = function_M(g, g.Sh);
+							g.$.onopen = function () {
+								null != g.Cl && g.Cl();
+								g.sa.Wi();
+								g.Ki(h, g.sa.gg, e);
+								g.sa.ug = function_M(g, g.Hi);
+								g.sa.Vh.then(function () {
+									g.Tc(0, null);
+								});
+							};
+						}
+						catch (h) {
+							g.Ze(na.Je);
+						}
 					}
-					;
-					g.$.onerror = function () {
-						g.Ch || g.Ze(na.Error);
-					}
-					;
-					g.$.onmessage = function_M(g, g.Sh);
-					g.$.onopen = function () {
-						null != g.Cl && g.Cl();
-						g.sa.Wi();
-						g.Ki(g.Mr, g.sa.gg, e);
-						g.sa.ug = function_M(g, g.Hi);
-						g.sa.Vh.then(function () {
-							g.Tc(0, null);
-						});
-					};
-				}
-				;
-				this.sa.Do();
+				)();
 			}
 
 			eo() {
@@ -7521,13 +7582,13 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.sa.Ta.setRemoteDescription(new RTCSessionDescription({
 					sdp: a,
 					type: 'answer'
-				}), function () {
+				})).then(function () {
 					let d = 0;
 					for (; d < b.length;)
 						c.sa.Ta.addIceCandidate(b[d++]);
-				}, function () {
+				}).catch(function () {
 					c.Ze(na.Error);
-				});
+				})
 			}
 
 			Qh(a) {
@@ -7891,32 +7952,37 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					k.rd = b;
 					this.xd.set(a, k);
 					var l = this;
-					k.jd = function () {
+					var n = function () {
 						l.Tc(0, k, null);
 						l.xd.delete(k.ba);
-					}
-					;
+					};
+					k.jd = n;
 					k.Id = function () {
 						l.xd.delete(k.ba);
 						l.Tc(0, k, null);
 						null != l.xl && l.xl(new class_Zb(k));
 					}
 					;
-					k.ki = function (n) {
-						l.Ki(k, n, k.gg, null);
-						k.Vh.then(function () {
-							l.Tc(0, k, null);
-						});
-						k.ug = function (r) {
-							l.Hi(k, r);
-						};
-					}
-					;
 					k.Wi();
-					k.Bo(new RTCSessionDescription({
-						sdp: c,
-						type: 'offer'
-					}), d);
+					(async function () {
+							try {
+								let r = await k.Bo(new RTCSessionDescription({
+									sdp: c,
+									type: 'offer'
+								}), d);
+								l.Ki(k, r, k.gg, null);
+								k.Vh.then(function () {
+									l.Tc(0, k, null);
+								});
+								k.ug = function (t) {
+									l.Hi(k, t);
+								};
+							}
+							catch (r) {
+								n();
+							}
+						}
+					)();
 				}
 			}
 
@@ -8198,6 +8264,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 
 		class class_yc {
 			constructor(a) {
+				this.yc_field_new11nc = new class_new11_nc(15);
+				this.yc_field_number2 = 0;
 				this.Mj = new Map;
 				this.fp = new class_tb(100, 16);
 				this.Ig = false;
@@ -8363,6 +8431,18 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					null != g && this.rr(g.a);
 					this.c.lineWidth = 2;
 					f = 0;
+					// Modified canvas begin
+					const lineProp = window.parent.g.line;
+					if (lineProp.enabled) {
+						this.c.lineWidth = lineProp.width;
+						this.c.strokeStyle = lineProp.strokeStyle;
+						this.c.beginPath();
+						this.c.moveTo(lineProp.startPos.x, lineProp.startPos.y);
+						this.c.lineTo(lineProp.endPos.x, lineProp.endPos.y);
+						this.c.stroke();
+						this.c.lineWidth = 2;
+					}
+					// Modified canvas end
 					for (g = a.K; f < g.length;)
 						l = g[f],
 							++f,
@@ -11415,7 +11495,11 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 
 			apply(a) {
-				a.Pb(this.R) && (a.Vc = this.newValue);
+				if (a.Pb(this.R)) {
+					var b = a.Ac;
+					a.Vc = this.newValue;
+					b != this.newValue && class_Ma.i(a.onTeamsLockedFun, a.qa(this.R), this.newValue);
+				}
 			}
 
 			wa(a) {
@@ -11564,7 +11648,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					var c = this.input;
 					0 == (b.W & 16) && 0 != (c & 16) && (b.Yb = true);
 					b.W = c;
-					null != a.Kq && a.Kq(b);
+					null != a.Kq && null != b.J && a.Kq(b, this.input, this.action_field3, this.action_field2);
 				}
 			}
 
@@ -12064,7 +12148,10 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		Object.assign(class_ac.prototype, {
 			g: class_ac
 		});
+		class_new11_empty.b = true;
+		class_new11_empty.uh = true;
 		class_Ua.b = true;
+		class_Ua.qd = [class_new11_empty];
 		Object.assign(class_Ua.prototype, {
 			g: class_Ua
 		});
@@ -12218,6 +12305,10 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		class_yc.b = true;
 		Object.assign(class_yc.prototype, {
 			g: class_yc
+		});
+		class_new11_nc.b = true;
+		Object.assign(class_new11_nc.prototype, {
+			g: class_new11_nc
 		});
 		class_qc.b = true;
 		class_Rb.b = true;
@@ -12861,7 +12952,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		class_ua.O = '<div class=\'game-view\' tabindex=\'-1\'><div class=\'gameplay-section\' data-hook=\'gameplay\'></div><div class=\'top-section\' data-hook=\'top-section\'></div><div class=\'bottom-section\'><div data-hook=\'stats\'></div><div data-hook=\'chatbox\'></div><div class=\'bottom-spacer\'></div></div><div class=\'buttons\'><div class=\'sound-button-container\' data-hook="sound"><div class=\'sound-slider\' data-hook=\'sound-slider\'><div class=\'sound-slider-bar-bg\' data-hook=\'sound-bar-bg\'><div class=\'sound-slider-bar\' data-hook=\'sound-bar\'></div></div></div><button data-hook=\'sound-btn\'><i class=\'icon-volume-up\' data-hook=\'sound-icon\'></i></button></div><button data-hook=\'menu\'><i class=\'icon-menu\'></i>Menu<span class=\'tooltip\'>Toggle room menu [Escape]</span></button><button data-hook=\'settings\'><i class=\'icon-cog\'></i></button></div><div data-hook=\'popups\'></div></div>';
 		class_rb.O = '<div class=\'dialog kick-player-view\'><h1 data-hook=\'title\'></h1><div class=label-input><label>Reason: </label><input type=\'text\' data-hook=\'reason\' /></div><button data-hook=\'ban-btn\'><i class=\'icon-block\'></i>Ban from rejoining: <span data-hook=\'ban-text\'></span></button><div class="row"><button data-hook=\'close\'>Cancel</button><button data-hook=\'kick\'>Kick</button></div></div>';
 		class_Ab.O = '<div class=\'dialog basic-dialog leave-room-view\'><h1>Leave room?</h1><p>Are you sure you want to leave the room?</p><div class=\'buttons\'><button data-hook=\'cancel\'>Cancel</button><button data-hook=\'leave\'><i class=\'icon-logout\'></i>Leave</button></div></div>';
-		class_mb.O = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
+		class_mb.O = '<div class=\'dialog pick-stadium-view\'><h1>Pick a stadium</h1><div class=\'splitter\'><div class=\'list\' data-hook=\'list\'></div><div class=\'buttons\'><button data-hook=\'pick\'>Pick</button><button data-hook=\'delete\'>Delete</button><div class=\'file-btn\'><label for=\'stadfile\'>Load</label><input id=\'stadfile\' type=\'file\' accept=\'.hbs,.json,.json5\' data-hook=\'file\'/></div><button data-hook=\'export\'>Export</button><div class=\'spacer\'></div><button data-hook=\'cancel\'>Cancel</button></div></div></div>';
 		class_ub.O = '<div class=\'dialog\' style=\'min-width:200px\'><h1 data-hook=\'name\'></h1><button data-hook=\'admin\'></button><button data-hook=\'kick\'>Kick</button><button data-hook=\'close\'>Close</button></div>';
 		class_wb.O = '<div class=\'player-list-item\'><div data-hook=\'flag\' class=\'flagico\'></div><div data-hook=\'name\'></div><div data-hook=\'ping\'></div></div>';
 		class_Na.O = '<div class=\'player-list-view\'><div class=\'buttons\'><button data-hook=\'join-btn\'>Join</button><button data-hook=\'reset-btn\' class=\'admin-only\'></button></div><div class=\'list thin-scrollbar\' data-hook=\'list\'></div></div>';

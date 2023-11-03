@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.3';
+const client_bot_utils_version = 'Indev 0.4';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -60,6 +60,7 @@ let dynamicArrows = false;
 let leftPressedLast = false;
 let rightPressedLast = false;
 let chatIndicatorForced = false;
+let aimLineEnabled = false;
 
 // For big text. If this is too big, the big text is likely to scramble
 let maxLineWidth = 75;
@@ -86,6 +87,8 @@ let announceGoal = false;
 let shrunkFontSize = 0.4;
 // Change avatar to the avatar set by the player who touched the ball
 let ballTouchChangesAvatar = false;
+// Interval in ms between big text rendering in chat, useful when slowmode is enabled
+let bigTextDelay = 0;
 
 // Is the script owner inside room. If game-min.js is unmodified, it is always true
 let insideRoom = g.gameBaseVersion == null ? true : g.getRoomManager != null;
@@ -178,6 +181,15 @@ function getCurrentRoomManager() {
 
 function getLastRoomManager() {
 	return g.getRoomManager != null ? g.getRoomManager() : null;
+}
+
+function enableAimLine() {
+	aimLineEnabled = true;
+}
+
+function disableAimLine() {
+	aimLineEnabled = false;
+	g.line.enabled = false;
 }
 
 function dateToFileString(date) {
@@ -813,19 +825,23 @@ function toBigText(str, bigCharsArray) {
 	return bigText;
 }
 
-function sendBigText(str, bigCharsArray) {
+function sendBigText(str, bigCharsArray, delayMs) {
 	const bigText = toBigText(str, bigCharsArray);
 	console.debug(bigText);
 
+	let linesWritten = 0;
 	for (let lineNr = 0; lineNr < bigText.length; lineNr++) {
-		sendChat_s(bigText[lineNr][0]);
+		setTimeout(() => {
+			sendChat_s(bigText[lineNr][0]);
+			linesWritten++;
+		}, lineNr * delayMs);
 	}
 	if (bigText[0][1].length > 0) {
 		setTimeout(() => {
 			for (let lineNr = 0; lineNr < bigText.length; lineNr++) {
-				sendChat_s(bigText[lineNr][1]);
+				setTimeout(() => sendChat_s(bigText[lineNr][1]), lineNr * delayMs);
 			}
-		}, 3000);
+		}, 3000 + linesWritten * delayMs);
 	}
 }
 
@@ -834,7 +850,7 @@ function sendBigTextFromInput(bigCharsArray) {
 	const input = iframeBody.querySelector('[data-hook="input"]');
 
 	if (input?.value?.length > 0) {
-		sendBigText(input.value, bigCharsArray);
+		sendBigText(input.value, bigCharsArray, bigTextDelay);
 	}
 }
 
@@ -971,7 +987,6 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 
 	// If Alt key is also being pressed
 	if (event.altKey) {
-		// Jeżeli nie naciśnięto tylko Alta
 		// If Alt isn't the only key pressed
 		if (keyName !== 'Alt') {
 			//console.log('Alt + ' + keyName);
@@ -1460,11 +1475,15 @@ function getDistanceBetweenPoints(point1, point2) {
 }
 
 function isTouchingBall(player) {
+	return isPlayerNearBall(player, 0.01);
+}
+
+function isPlayerNearBall(player, minimumDistance) {
 	const ballPosition = g.getBallPosition();
 	const distancePlayerToBall = getDistanceBetweenPoints(player.position, ballPosition);
 	const playerRadius = g.getPlayerDiscProperties(player.id).radius;
 	const ballRadius = g.getDiscProperties(0).radius;
-	const maxBallTouchDistance = ballRadius + playerRadius + 0.01;
+	const maxBallTouchDistance = ballRadius + playerRadius + minimumDistance;
 	return distancePlayerToBall < maxBallTouchDistance;
 }
 
@@ -1692,6 +1711,7 @@ function addReplayToIDB(replay) {
 	addObjectToStore('db', 'replays', replayObject)
 		.then(key => console.debug('Added replay ' + key + ' to IDB'));
 }
+
 /* =====  Functions  ===== */
 
 // Game instance from game-min.js, just for debugging
@@ -2126,6 +2146,49 @@ g.onGameTick = game => {
 			}
 		}
 	});
+
+	// If aim line is enabled
+	if (aimLineEnabled) {
+		// Draw aim line from player through the ball if close enough
+		const playerDistanceMap = players
+			.filter(p => p.position != null)
+			.map(p => ({player: p, distance: getDistanceBetweenPoints(p.position, ballPos)}))
+			.sort((pDist1, pDist2) => pDist1.distance - pDist2.distance);
+		const closestPlayerWithDistance = playerDistanceMap[0];
+		if (closestPlayerWithDistance?.player != null) {
+			const closestPlayer = closestPlayerWithDistance.player;
+			const MIN_BALL_PROXIMITY = 100;
+			const CLOSE_BALL_PROXIMITY = 10;
+			const LINE_DISTANCE = 3000;
+
+			// If closest player is close enough to the ball
+			if (isPlayerNearBall(closestPlayer, MIN_BALL_PROXIMITY)) {
+				/** Get third point based on player and ball position */
+				function getP3(point1, point2, distance) {
+					const p1p2d = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+					const dx = (point2.x - point1.x) / p1p2d;
+					const dy = (point2.y - point1.y) / p1p2d;
+					const p3x = point2.x + distance * dx;
+					const p3y = point2.y + distance * dy;
+					return {x: p3x, y: p3y};
+				}
+
+				const aimPoint = getP3(closestPlayer.position, ballPos, LINE_DISTANCE);
+				// Draw the aim line
+				g.line.enabled = true;
+				g.line.width = isPlayerNearBall(closestPlayer, CLOSE_BALL_PROXIMITY) ? 2 : 1;
+				g.line.strokeStyle = closestPlayer.team === 1 ? '#E438' : '#09F8';
+				g.line.startPos = ballPos;
+				g.line.endPos = aimPoint;
+			}
+			else
+				g.line.enabled = false;
+		}
+		else
+			g.line.enabled = false;
+	}
+	else
+		g.line.enabled = false;
 
 	// Invoke pre-defined functions
 	onGameTickEndFunctions.forEach(f => f(game));
