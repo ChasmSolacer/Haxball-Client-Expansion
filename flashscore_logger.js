@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.6.1';
+const flashscore_logger_version = 'Alpha 1.9';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -673,6 +673,7 @@ class Overlay {
 		this.language = language;
 		this.suspended = false;
 		this.chatInterval = 0;
+
 		// Overlay – div which will contain the flashscore iFrame.
 		// It is draggable followed by the orange area, show and hide it by pressing Alt + ;
 		this.fDivOverlay = document.createElement('div');
@@ -697,28 +698,92 @@ class Overlay {
 		this.hintSpan.style.fontWeight = '900';
 		this.hintSpan.style.fontSize = '1.3em';
 		this.hintSpan.style.maxWidth = '400px';
-		// Input container
-		this.inputDiv = document.createElement('div');
-		this.inputDiv.style.display = 'block';
-		this.inputDiv.style.color = 'black';
-		this.inputDiv.style.fontSize = '0.95em';
-		this.inputDiv.style.maxWidth = '400px';
-		this.inputDiv.style.paddingTop = '4px';
-		this.inputDiv.style.paddingBottom = '4px';
-		this.inputDiv.style.whiteSpace = 'nowrap';
-		this.inputDiv.style.overflowX = 'auto';
-		this.inputDiv.style.cursor = 'auto';
+
+		// Link input container
+		this.linkInputDiv = document.createElement('div');
+		this.linkInputDiv.style.display = 'table';
+		this.linkInputDiv.style.color = 'black';
+		this.linkInputDiv.style.fontSize = '0.95em';
+		this.linkInputDiv.style.width = '100%';
+		this.linkInputDiv.style.maxWidth = '400px';
+		this.linkInputDiv.style.paddingTop = '4px';
+		this.linkInputDiv.style.paddingBottom = '4px';
+		this.linkInputDiv.style.whiteSpace = 'nowrap';
+		this.linkInputDiv.style.overflowX = 'auto';
+		this.linkInputDiv.style.cursor = 'auto';
 		// Prevent dragging from this element
-		this.inputDiv.onmousedown = ev => {
+		this.linkInputDiv.onmousedown = ev => {
 			ev.stopPropagation();
 		};
 		// Prevent conflicting with game input keys
-		this.inputDiv.onkeydown = ev => {
+		this.linkInputDiv.onkeydown = ev => {
 			ev.stopPropagation();
 		};
+
+		// Link input label
+		this.labelLink = document.createElement('label');
+		this.labelLink.htmlFor = 'matchLink';
+		this.labelLink.innerText = 'Match link';
+		this.labelLink.style.display = 'table-cell';
+		this.labelLink.style.width = '1px';
+		this.labelLink.style.whiteSpace = 'nowrap';
+		this.labelLink.style.paddingRight = '4px';
+		this.linkInputDiv.appendChild(this.labelLink);
+
+		// Match id input
+		this.inputLink = document.createElement('input');
+		this.inputLink.name = 'matchLink';
+		this.inputLink.placeholder = 'https://www.flashscore.com/match/GbHo73tP';
+		this.inputLink.value = Str.COMMENTARY_LINK1[this.language];
+		this.inputLink.title = 'Flashscore match link goes here';
+		this.labelLink.style.display = 'table-cell';
+		this.inputLink.style.backgroundColor = 'white';
+		this.inputLink.style.borderWidth = '1px';
+		this.inputLink.style.width = 'calc(100% - 2px)';
+		// Update link and match id on input change
+		this.inputLink.oninput = ev => {
+			const inputVal = ev.target.value;
+			if (inputVal.startsWith('https://')) {
+				// Get 4th occurence of "/" in inputVal
+				const matchIdIndex = inputVal.split('/', 4).join('/').length + 1;
+				const link1 = inputVal.substring(0, matchIdIndex);
+				this.matchId = inputVal.substring(matchIdIndex, matchIdIndex + 8);
+				for (let lang in Str.COMMENTARY_LINK1) {
+					if (Str.COMMENTARY_LINK1[lang] === link1) {
+						// Change language to lang
+						this.language = lang;
+					}
+				}
+			}
+			else
+				this.matchId = '';
+			this.updateElements();
+		};
+		this.linkInputDiv.appendChild(this.inputLink);
+
+		// Parameters input container
+		this.paramInputsDiv = document.createElement('div');
+		this.paramInputsDiv.style.display = 'block';
+		this.paramInputsDiv.style.color = 'black';
+		this.paramInputsDiv.style.fontSize = '0.95em';
+		this.paramInputsDiv.style.maxWidth = '400px';
+		this.paramInputsDiv.style.paddingTop = '4px';
+		this.paramInputsDiv.style.paddingBottom = '4px';
+		this.paramInputsDiv.style.whiteSpace = 'nowrap';
+		this.paramInputsDiv.style.overflowX = 'auto';
+		this.paramInputsDiv.style.cursor = 'auto';
+		// Prevent dragging from this element
+		this.paramInputsDiv.onmousedown = ev => {
+			ev.stopPropagation();
+		};
+		// Prevent conflicting with game input keys
+		this.paramInputsDiv.onkeydown = ev => {
+			ev.stopPropagation();
+		};
+
 		// Animations
-		function greenFadeOut(event) {
-			event.target.animate(
+		function greenFadeOut(element) {
+			element.animate(
 				[
 					{backgroundColor: '#0F05'},
 					{backgroundColor: 'revert'}
@@ -728,6 +793,7 @@ class Overlay {
 				}
 			);
 		}
+
 		// Match id input
 		this.inputMatchId = document.createElement('input');
 		this.inputMatchId.placeholder = 'GbHo73tP';
@@ -736,7 +802,12 @@ class Overlay {
 		this.inputMatchId.style.display = 'inline-block';
 		this.inputMatchId.style.backgroundColor = 'white';
 		this.inputMatchId.style.borderWidth = '1px';
-		this.inputDiv.appendChild(this.inputMatchId);
+		// Update link and match id on input change
+		this.inputMatchId.oninput = ev => {
+			this.matchId = ev.target.value;
+			this.updateElements();
+		};
+		this.paramInputsDiv.appendChild(this.inputMatchId);
 		// Team1 input
 		this.inputTeam1 = document.createElement('input');
 		this.inputTeam1.placeholder = 'BRA';
@@ -745,12 +816,13 @@ class Overlay {
 		this.inputTeam1.style.display = 'inline-block';
 		this.inputTeam1.style.backgroundColor = 'white';
 		this.inputTeam1.style.borderWidth = '1px';
+		// Update team 1 code on input change
 		this.inputTeam1.oninput = ev => {
 			this.team1Code = ev.target.value;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputTeam1);
+		this.paramInputsDiv.appendChild(this.inputTeam1);
 		// Team2 input
 		this.inputTeam2 = document.createElement('input');
 		this.inputTeam2.placeholder = 'GER';
@@ -759,12 +831,13 @@ class Overlay {
 		this.inputTeam2.style.display = 'inline-block';
 		this.inputTeam2.style.backgroundColor = 'white';
 		this.inputTeam2.style.borderWidth = '1px';
+		// Update team 2 code on input change
 		this.inputTeam2.oninput = ev => {
 			this.team2Code = ev.target.value;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputTeam2);
+		this.paramInputsDiv.appendChild(this.inputTeam2);
 		// Lang select
 		this.selectLang = document.createElement('select');
 		this.selectLang.title = 'Language';
@@ -776,7 +849,12 @@ class Overlay {
 			option.value = lang;
 			this.selectLang.appendChild(option);
 		});
-		this.inputDiv.appendChild(this.selectLang);
+		// Update language and link on selection change
+		this.selectLang.onchange = ev => {
+			this.language = ev.target.selectedOptions[0].value;
+			this.updateElements();
+		};
+		this.paramInputsDiv.appendChild(this.selectLang);
 		// Suspended select
 		this.selectSuspended = document.createElement('select');
 		this.selectSuspended.title = 'Suspend observer start?';
@@ -790,11 +868,12 @@ class Overlay {
 		optionTrue.innerText = 'true';
 		optionTrue.value = 'true';
 		this.selectSuspended.appendChild(optionTrue);
+		// Update suspended value on selection change
 		this.selectSuspended.onchange = ev => {
 			this.suspended = ev.target.selectedIndex === 1;
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.selectSuspended);
+		this.paramInputsDiv.appendChild(this.selectSuspended);
 		// Chat interval input
 		this.inputChatInterval = document.createElement('input');
 		this.inputChatInterval.title = 'Time in milliseconds between consecutive chat messages';
@@ -804,19 +883,21 @@ class Overlay {
 		this.inputChatInterval.style.borderWidth = '1px';
 		this.inputChatInterval.type = 'number';
 		this.inputChatInterval.min = '0';
+		// Update chat interval value on input change
 		this.inputChatInterval.oninput = ev => {
 			const num = Number.parseInt(ev.target.value);
 			this.chatInterval = isNaN(num) ? 0 : num;
 			this.updateElements();
-			greenFadeOut(ev);
+			greenFadeOut(ev.target);
 		};
-		this.inputDiv.appendChild(this.inputChatInterval);
+		this.paramInputsDiv.appendChild(this.inputChatInterval);
 		// Load button
 		this.btnLoad = document.createElement('button');
 		this.btnLoad.title = 'Load match to iframes below';
 		this.btnLoad.innerText = 'Load';
 		this.btnLoad.style.display = 'inline-block';
 		this.btnLoad.style.overflow = 'hidden';
+		// Load flashscore commentary on click
 		this.btnLoad.onclick = () => {
 			this.loadFlashscoreMatchCommentary(
 				this.inputMatchId.value,
@@ -827,7 +908,7 @@ class Overlay {
 				Number.parseInt(this.inputChatInterval.value)
 			);
 		};
-		this.inputDiv.appendChild(this.btnLoad);
+		this.paramInputsDiv.appendChild(this.btnLoad);
 
 		// Create new list entry
 		this.listEntrySpan = document.createElement('span');
@@ -844,17 +925,20 @@ class Overlay {
 
 		// Add upper elements to div
 		this.fDivOverlay.appendChild(this.hintSpan);
-		this.fDivOverlay.appendChild(this.inputDiv);
+		this.fDivOverlay.appendChild(this.linkInputDiv);
+		this.fDivOverlay.appendChild(this.paramInputsDiv);
 		// Flashscore iframe which will be placed inside the div. It will occupy 2/3 of its space
 		this.flashscoreFrame = document.createElement('iframe');
 		this.flashscoreFrame.className = 'flashscoreFrame';
 		this.flashscoreFrame.style.display = 'block';
 		this.flashscoreFrame.style.marginTop = '16px';
+		this.flashscoreFrame.style.backgroundColor = '#001e28';
 		// Flashscore commentary iframe which will be placed inside the div below the flashscoreFrame. It will occupy 1/3 of its space
 		this.flashscoreCommentFrame = document.createElement('iframe');
 		this.flashscoreCommentFrame.className = 'flashscoreCommentFrame';
 		this.flashscoreCommentFrame.style.display = 'block';
 		this.flashscoreCommentFrame.style.marginTop = '16px';
+		this.flashscoreCommentFrame.style.backgroundColor = '#001e28';
 
 		// Add iframes to div
 		this.fDivOverlay.appendChild(this.flashscoreFrame);
@@ -890,16 +974,19 @@ class Overlay {
 		if (this === OverlayManager.focusedOverlay) {
 			this.fDivOverlay.style.border = '3px solid #0FF';
 			this.fDivOverlay.style.zIndex = '4';
-			this.listEntrySpan.style.fontWeight = 'bold';
+			this.listEntrySpan.style.backgroundColor = '#0FF4';
 		}
 		// If overlay loses focus
 		else {
 			this.fDivOverlay.style.border = '3px solid #666';
 			this.fDivOverlay.style.zIndex = '3';
-			this.listEntrySpan.style.fontWeight = 'normal';
+			this.listEntrySpan.style.backgroundColor = '';
 		}
 	}
 
+	/**
+	 * Updates overlay fields and load button state based on input values and updates context menu actions.
+	 */
 	updateElements() {
 		this.hintSpan.innerText = this.translate(Str.PRESS_TO_SHOW_HIDE);
 		this.inputMatchId.value = this.matchId;
@@ -909,6 +996,8 @@ class Overlay {
 		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
 		this.inputChatInterval.value = this.chatInterval.toString();
 		this.listEntrySpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
+		this.inputLink.value = this.getMatchLink();
+		this.btnLoad.disabled = this.matchId.length === 0;
 
 		const doRightClickAction = ev => {
 			ContextMenuManager.createContextMenu();
@@ -1030,9 +1119,9 @@ class Overlay {
 
 		if (!(matchId?.length > 0)) {
 			console.error('Oh no! You forgot to specify the match ID');
-			console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary/0".'
+			console.log('%cMatch identifier can be found in the middle of match commentary URL.\nAn English link is always composed of: "http﻿s://ww﻿w.flashscore.com/match/" + matchId + "/#/match-summary/live-commentary".'
 				, 'background: #00141E; color: #FFCD00; font-size: 1.3em');
-			console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary/0 – the matchId is %cGbHo73tP'
+			console.log('%cFor example: in this url – https://www.flashscore.com/match/GbHo73tP/#/match-summary/live-commentary – the matchId is %cGbHo73tP'
 				, 'background: #00141E; color: #FFCD00; font-size:1.3em', 'background: #00141E; color: #FFCD00; font-size:1.3em; font-weight:900');
 			return;
 		}
@@ -1046,7 +1135,7 @@ class Overlay {
 		this.width = width;
 		this.height = height;
 
-		this.printUpdates = true;
+		this.printUpdates = false;
 
 		// Stop the observer
 		this.stopFlashscore();
@@ -1062,7 +1151,8 @@ class Overlay {
 		this.flashscoreCommentFrame.height = '0';
 
 		this.hintSpan.style.maxWidth = this.width + 'px';
-		this.inputDiv.style.maxWidth = this.width + 'px';
+		this.linkInputDiv.style.maxWidth = this.width + 'px';
+		this.paramInputsDiv.style.maxWidth = this.width + 'px';
 		this.updateElements();
 
 		if (this.prevLink !== this.getCommentaryLink()) {
@@ -1197,11 +1287,24 @@ class Overlay {
 		const redCardsArray = this.getRedCardsArray();
 		const redCardsHome = '🟥'.repeat(redCardsArray[0]);
 		const redCardsAway = '🟥'.repeat(redCardsArray[1]);
-		let firstLegScores = this.getFirstLegScoresArray();
-		let scoresString = scores[0] + ':' + scores[1] +
-			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
+		const firstLegScores = this.getFirstLegScoresArray();
+		const scoreString = scores[0] + ':' + scores[1];
+		const aggregateScoreString = firstLegScores != null ?
+			(' ('
+				+ (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0])
+				+ ':'
+				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
+				+ ')') :
+			'';
+		let pensScoreString = '';
+		const pensData = this.getPenaltiesData();
+		if (pensData?.length > 0) {
+			const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+			const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+			pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
+		}
 		// This will precede every chat message
-		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + this.team2Code + '] ';
+		const prefix = '[' + this.team1Code + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + this.team2Code + '] ';
 		return prefix + minuteText + ' ' + iconEmoji + goalText + commentText;
 	}
 
@@ -1278,13 +1381,15 @@ class Overlay {
 	/**
 	 * Returns goalscorers object array.
 	 *
-	 * @return {{entry, team: number}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
+	 * @return {{team: number, entry: string}[]} Example: [{team: 1, entry: "21' G. Ramos (B. Silva)"}, {team: 1, entry: "37' M. Neuer (OG)"}]
 	 */
 	getGoalscorers() {
 		// Goals, cards, substitutions...
 		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
-		// Filter goals
-		const soccerIncidents = incidents.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null);
+		// Filter goals (excluding penalty shootout)
+		const soccerIncidents = incidents
+			.filter(i => i.querySelector('svg')?.dataset?.testid === 'wcl-icon-soccer' || i.querySelector('svg.footballOwnGoal-ico') != null)
+			.filter(si => si.querySelector('.smv__timeBox').innerText.endsWith('\''));
 		// Extract minute, goalscorer and assist from each goal
 		return soccerIncidents.map(si => {
 			const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
@@ -1321,6 +1426,35 @@ class Overlay {
 			}
 
 			return {team: team, entry: minuteText + scorerText + assistText + ownGoalText + penaltyText};
+		});
+	}
+
+	/**
+	 * Returns penalty shootout players with their teams and if they missed.
+	 *
+	 * @return {{team: number, player: string, missed: boolean}[]}
+	 */
+	getPenaltiesData() {
+		const incidents = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll('.smv__incident'));
+		// Filter penalties incidents
+		const penIncidents = incidents.filter(si => si.querySelector('.smv__timeBox')?.innerText?.endsWith('\'') === false);
+		// Extract player and missed from each penalty
+		return penIncidents.map(si => {
+			const team = si.parentElement.classList.contains('smv__homeParticipant') ? 1 : si.parentElement.classList.contains('smv__awayParticipant') ? 2 : 0;
+			let playerText = si.querySelector('.smv__playerName')?.innerText ?? '';
+			let isMissed = si.querySelector('.warning') != null;
+
+			if (playerText.length > 0) {
+				// Swap name initials and surname
+				const playerMatches = playerText.match(/\S+\..*/);
+				if (playerMatches != null)
+					playerText = playerMatches[0] + ' ' + playerMatches.input.substring(0, playerMatches.index - 1);
+				if (this.language === 'pl')
+					playerText = spolszczNazwiska(playerText);
+				playerText = ' ' + playerText;
+			}
+
+			return {team: team, player: playerText, missed: isMissed};
 		});
 	}
 
@@ -1366,11 +1500,23 @@ class Overlay {
 		let scores = this.getScoresArray();
 		if (scores.length < 2)
 			scores = ['-', '-'];
-		let firstLegScores = this.getFirstLegScoresArray();
-		let scoresString = scores[0] + ':' + scores[1] +
-			(firstLegScores != null ? ' (' + (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0]) + ':' + (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1]) + ')' : '');
-
-		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoresString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
+		const firstLegScores = this.getFirstLegScoresArray();
+		const scoreString = scores[0] + ':' + scores[1];
+		const aggregateScoreString = firstLegScores != null ?
+			(' ('
+				+ (isNaN(scores[0]) ? firstLegScores[0] : scores[0] + firstLegScores[0])
+				+ ':'
+				+ (isNaN(scores[1]) ? firstLegScores[1] : scores[1] + firstLegScores[1])
+				+ ')') :
+			'';
+		let pensScoreString = '';
+		const pensData = this.getPenaltiesData();
+		if (pensData?.length > 0) {
+			const pens1 = pensData.reduce((acc, pen) => acc + (pen.team === 1 && pen.missed === false ? 1 : 0), 0);
+			const pens2 = pensData.reduce((acc, pen) => acc + (pen.team === 2 && pen.missed === false ? 1 : 0), 0);
+			pensScoreString = ' {' + pens1 + ':' + pens2 + '}';
+		}
+		const teamWithScoresAndCards = '🔶 ' + teamNamesArray[0] + redCardsHome + ' ' + scoreString + aggregateScoreString + pensScoreString + ' ' + redCardsAway + teamNamesArray[1] + ' 🔷';
 		const matchPhaseWithTime = matchDetailsString.length > 0 ? matchDetailsString : startTimeString;
 
 		return teamWithScoresAndCards + ' ' + matchPhaseWithTime;
@@ -1387,11 +1533,17 @@ class Overlay {
 	 */
 	getMatchSummaryString() {
 		let summary;
+		// During or after match
 		if (this.getMatchDetailsString().length > 0) {
 			// Minute, goalscorer and assist from each goal
 			const scorersArray = this.getGoalscorers();
-			summary = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+			const scorersString = scorersArray.map(te => sIcon[te.team] + te.entry).join(' ');
+			const pensData = this.getPenaltiesData();
+			const pensString = pensData?.length > 0 ? ' ¦ ' +
+				pensData.map(pen => sIcon[pen.team] + (pen.missed ? '❌' : '⚽') + pen.player).join(' ') : '';
+			summary = scorersString + pensString;
 		}
+		// Before match
 		else {
 			summary = this.getMatchRefereeStadiumString();
 			if (this.language === 'pl')
