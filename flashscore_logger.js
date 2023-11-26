@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.9';
+const flashscore_logger_version = 'Alpha 1.9.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -995,7 +995,7 @@ class Overlay {
 		this.selectLang.selectedIndex = Object.keys(Str.COMMENTARY_LINK1).indexOf(this.language);
 		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
 		this.inputChatInterval.value = this.chatInterval.toString();
-		this.listEntrySpan.innerText = this.id + ') ' + this.matchId + ' ' + this.team1Code + '-' + this.team2Code + ' ' + this.language;
+		this.listEntrySpan.innerText = this.id + ') ' + this.team1Code + '-' + this.team2Code + ' ' + this.language + ' ' + this.matchId;
 		this.inputLink.value = this.getMatchLink();
 		this.btnLoad.disabled = this.matchId.length === 0;
 
