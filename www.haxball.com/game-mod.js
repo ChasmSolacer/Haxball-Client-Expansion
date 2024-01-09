@@ -393,6 +393,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			c3: -2147483648, // 2^31
 			all: 63
 		};
+
 		/* Utility functions end */
 
 		function function_ja() {
@@ -6528,7 +6529,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 		}
 
-		class NoticeItem {
+		class GameNoticeContainer {
 			constructor(a) {
 				this.ol = a.get('notice');
 				this.zo = a.get('notice-contents');
@@ -6540,10 +6541,10 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				let a = this;
 				WebserverApiOps.Lk(ConnectionConstants.rsUrl + 'api/notice').then(function (b) {
 					let c = b.content;
-					null != c && '' != c && NoticeItem.no != c && (a.zo.innerHTML = c,
+					null != c && '' != c && GameNoticeContainer.no != c && (a.zo.innerHTML = c,
 							a.ol.hidden = false,
 							a.wd.onclick = function () {
-								NoticeItem.no = c;
+								GameNoticeContainer.no = c;
 								return a.ol.hidden = true;
 							}
 					);
@@ -7487,7 +7488,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						fn: lMap.get(y + 'btn'),
 						jh: lMap.get(y + 'sec')
 					};
-					n.push(F);
+					nArr.push(F);
 					F.fn.onclick = function () {
 						k(F);
 					};
@@ -7497,8 +7498,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					let F = 0
 						,
 						L = 0;
-					for (; L < n.length;) {
-						let ea = n[L];
+					for (; L < nArr.length;) {
+						let ea = nArr[L];
 						++L;
 						let S = ea == y;
 						S && (SettingsDialogContainer.vm = F);
@@ -7512,12 +7513,12 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.f = ViewUtil.Ia(SettingsDialogContainer.htmlContents);
 				let lMap = ViewUtil.Ba(this.f);
 				this.wd = lMap.get('close');
-				let n = [];
+				let nArr = [];
 				h('sound');
 				h('video');
 				h('misc');
 				h('input');
-				k(n[SettingsDialogContainer.vm]);
+				k(nArr[SettingsDialogContainer.vm]);
 				g('tsound-main', ConnectionConstants.localStorageUtilInst.lsSoundMain, function () {
 					ConnectionConstants.audioUtil.yi();
 				});
@@ -9470,7 +9471,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.La = ViewUtil.Ia(RoomListContainer.Dj);
 				let c = ViewUtil.Ba(this.La)
 					,
-					d = new NoticeItem(c);
+					gameNoticeCont = new GameNoticeContainer(c);
 				this.zj = c.get('refresh');
 				this.pn = c.get('join');
 				a = c.get('create');
@@ -9509,7 +9510,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.it = ScrollUtil.ei(this.Ws);
 				this.sj = c.get('list');
 				this.zj.onclick = function () {
-					d.em();
+					gameNoticeCont.em();
 					self.kn();
 				}
 				;
@@ -12936,9 +12937,9 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		Object.assign(RoomListContainer.prototype, {
 			g: RoomListContainer
 		});
-		NoticeItem.b = true;
-		Object.assign(NoticeItem.prototype, {
-			g: NoticeItem
+		GameNoticeContainer.b = true;
+		Object.assign(GameNoticeContainer.prototype, {
+			g: GameNoticeContainer
 		});
 		RoomPasswordContainer.b = true;
 		Object.assign(RoomPasswordContainer.prototype, {

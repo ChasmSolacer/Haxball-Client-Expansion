@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.5';
+const client_bot_utils_version = 'Indev 0.6';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -109,6 +109,11 @@ let lastPlayersWhoTouchedBall = [];
  */
 let lastKickDirection = [];
 /**
+ * Replay object currently being recorded.
+ * @type {Replay}
+ */
+let currentReplay = null;
+/**
  * Last recorded replay.
  * @type {Replay}
  */
@@ -134,18 +139,38 @@ class Replay {
 	 * @param {Uint8Array} replayArray hbr2 file contents
 	 * @param {number} timestamp Replay time in milliseconds elapsed since the UNIX epoch
 	 * @param {string} name Replay name
-	 * @param {{}} roomManager Room manager object the replay was recorded in
+	 * @param {{}} roomManager Room manager object at the moment the replay was stopped
 	 */
 	constructor(replayArray, timestamp, name, roomManager) {
 		this.replayArray = replayArray;
 		this.timestamp = timestamp;
 		this.name = name;
-		this.roomManager = roomManager;
+		this.startRoomManager = null;
+		this.startDetails = null;
+		this.endRoomManager = roomManager;
+		this.endDetails = getDetailsFromRoomManager(roomManager);
+	}
+
+	static init(roomManager) {
+		const emptyReplay =  new Replay();
+		emptyReplay.startRoomManager = roomManager;
+		emptyReplay.startDetails = getDetailsFromRoomManager(roomManager);
+		return emptyReplay;
+	}
+
+	finish(replayArray, name, roomManager) {
+		this.replayArray = replayArray;
+		this.timestamp = Date.now();
+		this.name = name;
+		this.endRoomManager = roomManager;
+		this.endDetails = getDetailsFromRoomManager(roomManager);
 	}
 
 	download(filename) {
+		if (this.replayArray == null)
+			console.warn('[Replay.download] This replay file is empty');
 		if (filename == null) {
-			const roomName = this.roomManager?.room?.roomState?.name ?? '';
+			const roomName = this.endDetails?.roomName ?? '';
 			const dateString = dateToFileString(new Date(this.timestamp));
 			filename = roomName + '_' + dateString + '_' + this.name;
 		}
@@ -181,6 +206,36 @@ function getCurrentRoomManager() {
 
 function getLastRoomManager() {
 	return g.getRoomManager != null ? g.getRoomManager() : null;
+}
+
+/**
+ * Clones specified object omitting specified properties.
+ *
+ * @param {{}} object Object to castrate
+ * @param {string} properties Property names to discard. If omitted, this function clones the whole object.
+ * @return {{}} cloned object without specified properties
+ */
+function cloneWithout(object, ...properties) {
+	if (object == null)
+		return object;
+	const clonedObject = {};
+	for (const key in object) {
+		if (!properties.includes(key))
+			clonedObject[key] = object[key];
+	}
+	return clonedObject;
+}
+
+function getDetailsFromRoomManager(roomManager) {
+	return roomManager != null ? {
+		roomName: roomManager.room.roomState.name,
+		roomLink: roomManager.roomLink,
+		recPlayerId: roomManager.room.playerId,
+		redPlayers: roomManager.room.roomState.players.filter(p => p.team === 1),
+		specPlayers: roomManager.room.roomState.players.filter(p => p.team === 0),
+		bluePlayers: roomManager.room.roomState.players.filter(p => p.team === 2),
+		game: roomManager.room.roomState.game
+	} : null;
 }
 
 function enableAimLine() {
@@ -1512,9 +1567,11 @@ function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 		const gameReplayArray = roomManager.stopReplay();
 		if (gameReplayArray != null) {
 			const replayName = previousScores == null ? 'n-n' : previousScores.red + '-' + previousScores.blue + '_' + Math.floor(previousScores.time) + 's';
-			lastReplay = new Replay(gameReplayArray, Date.now(), replayName, roomManager);
+			currentReplay.finish(gameReplayArray, replayName, roomManager);
+			lastReplay = currentReplay;
 			replays.push(lastReplay);
 			console.log('lastReplay: %o. Write lastReplay.download() to save it!', lastReplay);
+			currentReplay = null;
 
 			addReplayToIDB(lastReplay);
 		}
@@ -1752,14 +1809,19 @@ function addPlayerToIDB(player) {
  * @param {Replay} replay Replay object
  */
 function addReplayToIDB(replay) {
-	const roomLink = replay.roomManager.roomLink;
+	const roomLink = replay.endDetails.roomLink;
 	const roomId = roomLink.substring(roomLink.indexOf('?c=') + 3);
+	const castratedStartDetails = cloneWithout(replay.startDetails);
+	castratedStartDetails.game = cloneWithout(castratedStartDetails.game, 'self', 'extrapolated');
+	const castratedEndDetails = cloneWithout(replay.endDetails);
+	castratedEndDetails.game = cloneWithout(castratedEndDetails.game, 'self', 'extrapolated');
 	const replayObject = {
 		roomId: roomId,
 		replayArray: replay.replayArray,
 		timestamp: replay.timestamp,
 		name: replay.name,
-		roomName: replay.roomManager.room.roomState.name
+		startDetails: castratedStartDetails,
+		endDetails: castratedEndDetails
 	};
 	addObjectToStore('db', 'replays', replayObject)
 		.then(key => console.debug('Added replay ' + key + ' to IDB'));
@@ -1780,6 +1842,7 @@ g.onRoomJoin = roomManager => {
 	previousScores = g.getScores();
 	// Start replay
 	roomManager.startReplay();
+	currentReplay = Replay.init(roomManager);
 };
 
 g.onRoomLeave = roomManager => {
@@ -2124,7 +2187,10 @@ g.onGameStart = byPlayer => {
 	lastKickDirection = [];
 
 	// Start replay recording on game start
-	getCurrentRoomManager().startReplay();
+	const roomManager = getCurrentRoomManager();
+	roomManager.startReplay();
+	currentReplay = Replay.init(roomManager);
+
 	// Save current scores
 	previousScores = g.getScores();
 };
