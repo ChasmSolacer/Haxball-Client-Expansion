@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.6';
+const client_bot_utils_version = 'Indev 0.7';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -162,8 +162,11 @@ class Replay {
 		this.replayArray = replayArray;
 		this.timestamp = Date.now();
 		this.name = name;
-		this.endRoomManager = roomManager;
-		this.endDetails = getDetailsFromRoomManager(roomManager);
+		const endRoomManager = cloneWithout(roomManager);
+		if (endRoomManager.game == null)
+			endRoomManager.game = previousScores;
+		this.endRoomManager = endRoomManager;
+		this.endDetails = getDetailsFromRoomManager(endRoomManager);
 	}
 
 	download(filename) {
@@ -1589,7 +1592,7 @@ function drawAimLineFromNearestPlayerThroughBall() {
 				// Draw aim line from player through the ball if close enough
 				// Use player extrapolated (client) position
 				const playerDistanceMap = players
-					.filter(p => p.extrapolated.position != null)
+					.filter(p => p.extrapolated?.position != null)
 					.map(p => ({player: p, distance: getDistanceBetweenPoints(p.extrapolated.position, extrapolatedBallPos)}))
 					.sort((pDist1, pDist2) => pDist1.distance - pDist2.distance);
 				const closestPlayerWithDistance = playerDistanceMap[0];
