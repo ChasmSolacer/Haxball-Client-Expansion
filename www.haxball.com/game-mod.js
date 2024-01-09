@@ -3,7 +3,7 @@
  00f80ea7
 */
 'use strict';
-const version = 'Indev 0.7';
+const version = 'Indev 0.7.1';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
