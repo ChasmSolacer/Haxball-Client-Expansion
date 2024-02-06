@@ -1,10 +1,10 @@
 .roomlist-view > .dialog, .room-view.roomlist-view > .container {
 	position: relative;
 	min-height: 0;
-	max-width: none;
+	max-width: 1100px;
 	max-height: none;
 	height: 90%;
-	width: 90%;
+	width: 100%;
 }
 
 .roomlist-view > .dialog > .splitter > .list col:nth-child(3), .room-view.roomlist-view > .container > .splitter > .list col:nth-child(3) {
