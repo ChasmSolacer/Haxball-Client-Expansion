@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.7';
+const client_bot_utils_version = 'Indev 0.7.1';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -152,7 +152,7 @@ class Replay {
 	}
 
 	static init(roomManager) {
-		const emptyReplay =  new Replay();
+		const emptyReplay = new Replay();
 		emptyReplay.startRoomManager = roomManager;
 		emptyReplay.startDetails = getDetailsFromRoomManager(roomManager);
 		return emptyReplay;
@@ -204,7 +204,7 @@ function getOwnerId() {
 }
 
 function getCurrentRoomManager() {
-	return insideRoom ? g.getRoomManager() : null;
+	return insideRoom && g.getRoomManager != null ? g.getRoomManager() : null;
 }
 
 function getLastRoomManager() {
@@ -1582,56 +1582,58 @@ function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 }
 
 function drawAimLineFromNearestPlayerThroughBall() {
-	if (aimLineEnabled) {
-		const game = getCurrentRoomManager()?.room?.roomState?.game;
-		const players = getCurrentRoomManager()?.room?.roomState?.players;
-		if (game != null && players != null) {
-			// Client ball position
-			if (game.extrapolated?.gameObjects?.dynamicDiscs?.length > 0) {
-				const extrapolatedBallPos = {x: game.extrapolated.gameObjects.dynamicDiscs[0].x, y: game.extrapolated.gameObjects.dynamicDiscs[0].y};
-				// Draw aim line from player through the ball if close enough
-				// Use player extrapolated (client) position
-				const playerDistanceMap = players
-					.filter(p => p.extrapolated?.position != null)
-					.map(p => ({player: p, distance: getDistanceBetweenPoints(p.extrapolated.position, extrapolatedBallPos)}))
-					.sort((pDist1, pDist2) => pDist1.distance - pDist2.distance);
-				const closestPlayerWithDistance = playerDistanceMap[0];
-				if (closestPlayerWithDistance?.player != null) {
-					const closestPlayer = closestPlayerWithDistance.player;
-					const MIN_BALL_PROXIMITY = 100;
-					const CLOSE_BALL_PROXIMITY = 10;
-					const LINE_DISTANCE = 3000;
+	if (g.line != null) {
+		if (aimLineEnabled) {
+			const game = getCurrentRoomManager()?.room?.roomState?.game;
+			const players = getCurrentRoomManager()?.room?.roomState?.players;
+			if (game != null && players != null) {
+				// Client ball position
+				if (game.extrapolated?.gameObjects?.dynamicDiscs?.length > 0) {
+					const extrapolatedBallPos = {x: game.extrapolated.gameObjects.dynamicDiscs[0].x, y: game.extrapolated.gameObjects.dynamicDiscs[0].y};
+					// Draw aim line from player through the ball if close enough
+					// Use player extrapolated (client) position
+					const playerDistanceMap = players
+						.filter(p => p.extrapolated?.position != null)
+						.map(p => ({player: p, distance: getDistanceBetweenPoints(p.extrapolated.position, extrapolatedBallPos)}))
+						.sort((pDist1, pDist2) => pDist1.distance - pDist2.distance);
+					const closestPlayerWithDistance = playerDistanceMap[0];
+					if (closestPlayerWithDistance?.player != null) {
+						const closestPlayer = closestPlayerWithDistance.player;
+						const MIN_BALL_PROXIMITY = 100;
+						const CLOSE_BALL_PROXIMITY = 10;
+						const LINE_DISTANCE = 3000;
 
-					// If closest player is close enough to the ball
-					if (isPlayerNearBall(closestPlayer, MIN_BALL_PROXIMITY)) {
-						/** Get third point based on player and ball position */
-						function getP3(point1, point2, distance) {
-							const p1p2d = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
-							const dx = (point2.x - point1.x) / p1p2d;
-							const dy = (point2.y - point1.y) / p1p2d;
-							const p3x = point2.x + distance * dx;
-							const p3y = point2.y + distance * dy;
-							return {x: p3x, y: p3y};
+						// If closest player is close enough to the ball
+						if (isPlayerNearBall(closestPlayer, MIN_BALL_PROXIMITY)) {
+							/** Get third point based on player and ball position */
+							function getP3(point1, point2, distance) {
+								const p1p2d = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+								const dx = (point2.x - point1.x) / p1p2d;
+								const dy = (point2.y - point1.y) / p1p2d;
+								const p3x = point2.x + distance * dx;
+								const p3y = point2.y + distance * dy;
+								return {x: p3x, y: p3y};
+							}
+
+							const aimPoint = getP3(closestPlayer.extrapolated.position, extrapolatedBallPos, LINE_DISTANCE);
+							// Draw the aim line
+							g.line.enabled = true;
+							g.line.width = isPlayerNearBall(closestPlayer, CLOSE_BALL_PROXIMITY) ? 2 : 1;
+							g.line.strokeStyle = closestPlayer.team === 1 ? '#E438' : '#09F8';
+							g.line.startPos = extrapolatedBallPos;
+							g.line.endPos = aimPoint;
 						}
-
-						const aimPoint = getP3(closestPlayer.extrapolated.position, extrapolatedBallPos, LINE_DISTANCE);
-						// Draw the aim line
-						g.line.enabled = true;
-						g.line.width = isPlayerNearBall(closestPlayer, CLOSE_BALL_PROXIMITY) ? 2 : 1;
-						g.line.strokeStyle = closestPlayer.team === 1 ? '#E438' : '#09F8';
-						g.line.startPos = extrapolatedBallPos;
-						g.line.endPos = aimPoint;
+						else
+							g.line.enabled = false;
 					}
 					else
 						g.line.enabled = false;
 				}
-				else
-					g.line.enabled = false;
 			}
 		}
+		else
+			g.line.enabled = false;
 	}
-	else
-		g.line.enabled = false;
 }
 
 /**
