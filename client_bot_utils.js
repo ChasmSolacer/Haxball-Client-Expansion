@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.7.1';
+const client_bot_utils_version = 'Indev 0.7.2';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -61,6 +61,7 @@ let leftPressedLast = false;
 let rightPressedLast = false;
 let chatIndicatorForced = false;
 let aimLineEnabled = false;
+let autoReplayEnabled = true;
 
 // For big text. If this is too big, the big text is likely to scramble
 let maxLineWidth = 75;
@@ -248,6 +249,22 @@ function enableAimLine() {
 function disableAimLine() {
 	aimLineEnabled = false;
 	g.line.enabled = false;
+}
+
+function enableAutoReplay() {
+	if (!autoReplayEnabled) {
+		console.log('Enabling auto replay');
+		autoReplayEnabled = true;
+		createAndStartReplay();
+	}
+}
+
+function disableAutoReplay() {
+	if (autoReplayEnabled) {
+		console.log('Disabling auto replay');
+		autoReplayEnabled = false;
+		stopAndSaveReplay();
+	}
 }
 
 function dateToFileString(date) {
@@ -1102,6 +1119,12 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 						setAvatar_s(defaultAvatar);
 				}
 				break;
+			case 'l':
+				if (aimLineEnabled)
+					disableAimLine();
+				else
+					enableAimLine();
+				break;
 			case ',':
 				// Starts/resumes the alphabet avatar
 				clearInterval(intervalAvatar);
@@ -1140,7 +1163,7 @@ document.querySelector('iframe').contentDocument.body.addEventListener('keydown'
 						cancelAvatar();
 				}
 				break;
-			case 'l':
+			case 'd':
 				if (insideRoom) {
 					if (avatarIndex === 0)
 						setAvatarFromArray(['KU', 'R', 'DE'], 300);
@@ -1565,6 +1588,14 @@ function isKickedBallHeadingGoal(twoPointsArray, targetTeam, goalBounds) {
 	return Math.abs(fy) < goalY;
 }
 
+function createAndStartReplay(roomManager = getCurrentRoomManager()) {
+	if (roomManager != null) {
+		roomManager.startReplay();
+		currentReplay = Replay.init(roomManager);
+		console.log('Started currentReplay: %o. Will be stopped on game stop or room leave.', currentReplay);
+	}
+}
+
 function stopAndSaveReplay(roomManager = getCurrentRoomManager()) {
 	if (roomManager != null) {
 		const gameReplayArray = roomManager.stopReplay();
@@ -1845,17 +1876,20 @@ g.onRoomJoin = roomManager => {
 	lastOwnerId = roomManager.room.playerId;
 	// Save current scores
 	previousScores = g.getScores();
-	// Start replay
-	roomManager.startReplay();
-	currentReplay = Replay.init(roomManager);
+	if (autoReplayEnabled) {
+		// Start replay on room join
+		createAndStartReplay(roomManager);
+	}
 };
 
 g.onRoomLeave = roomManager => {
 	insideRoom = false;
 	console.log('Left room: %o', roomManager);
 
-	// Stop replay
-	stopAndSaveReplay(roomManager);
+	if (autoReplayEnabled) {
+		// Stop replay
+		stopAndSaveReplay(roomManager);
+	}
 };
 
 g.onRoomLink = url => {
@@ -2191,10 +2225,10 @@ g.onGameStart = byPlayer => {
 	lastPlayersWhoTouchedBall = [];
 	lastKickDirection = [];
 
-	// Start replay recording on game start
-	const roomManager = getCurrentRoomManager();
-	roomManager.startReplay();
-	currentReplay = Replay.init(roomManager);
+	if (autoReplayEnabled) {
+		// Start replay recording on game start
+		createAndStartReplay();
+	}
 
 	// Save current scores
 	previousScores = g.getScores();
@@ -2205,7 +2239,9 @@ g.onGameStop = byPlayer => {
 	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
 	log_c('⏹️ Game stopped' + byPlayerText, Color.STOP);
 
-	stopAndSaveReplay();
+	if (autoReplayEnabled) {
+		stopAndSaveReplay();
+	}
 };
 
 g.onStadiumChange = (byPlayer, stadiumName, checksum) => {
