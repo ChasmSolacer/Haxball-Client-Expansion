@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.9.1';
+const flashscore_logger_version = 'Alpha 1.9.2';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -1178,16 +1178,17 @@ class Overlay {
 
 				// Check periodically if a commentary section appeared
 				function findCommentaryTab() {
-					const tabs = self.flashscoreFrame.contentDocument.querySelector('.filter__group');
+					const tabs = self.flashscoreFrame.contentDocument.querySelector('.filterOver div');
 					const tabsArr = tabs != null ? Array.from(tabs?.children) : null;
 					// If there is a COMMENTARY tab
-					if (tabsArr?.find(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
+					if (tabsArr?.find?.(t => t.href.endsWith(self.translate(Str.COMMENTARY_LINK2))) != null) {
 						console.log('Commentary tab found, loading it...');
 						// Show the commentary frame
 						self.flashscoreFrame.height = self.height * 2 / 3 + 'px';
 						self.flashscoreCommentFrame.height = self.height / 3 + 'px';
 						// Load commentary section in comment frame
 						self.flashscoreCommentFrame.src = self.getCommentaryLink();
+						// Stop finding commentary tab
 						clearInterval(self.findCommentaryTabInterval);
 					}
 				}
