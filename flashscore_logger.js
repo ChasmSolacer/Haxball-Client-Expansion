@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.9.3';
+const flashscore_logger_version = 'Alpha 1.9.4';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -1932,9 +1932,13 @@ iframeBody.addEventListener('keydown', event => {
 	}
 }, false);
 
-// Returns localized names. Before calling this, check if language is set to pl
+/**
+ * Flashscore transliterates names from foreign alphabets into spoken English. This function replaces them with proper localized transcription.<br>
+ * This is for Polish language, so before calling this check if language is set to pl
+ */
 function spolszczNazwiska(text) {
 	let commentText = text;
+	// Grecki
 	commentText = commentText.replaceAll('Efthymios Koulouris', 'Eftimis Kuluris');
 	commentText = commentText.replaceAll('Pantelis Chatzidiakos', 'Pandelis Chadzidiakos');
 	commentText = commentText.replaceAll('Georgios Vagiannidis', 'Jeorjos Wajanidis');
@@ -1960,7 +1964,6 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Tzavellas', 'Dzawelas');
 	commentText = commentText.replaceAll('Giannis', 'Janis');
 	commentText = commentText.replaceAll('Konstantinos Tsimikas', 'Kostas Tsimikas');
-	commentText = commentText.replaceAll(/(\w*)poulos\b/g, '$1pulos');
 	commentText = commentText.replaceAll('E. Koulouris', 'E. Kuluris');
 	commentText = commentText.replaceAll('P. Chatzidiakos', 'P. Chadzidiakos');
 	commentText = commentText.replaceAll('G. Vagiannidis', 'J. Wajanidis');
@@ -1973,13 +1976,16 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('P. Mantalos', 'P. Mandalos');
 	commentText = commentText.replaceAll('G. Athanasiadis', 'J. Atanasiadis');
 	commentText = commentText.replaceAll('C. Chatziioannou', 'C. Chadziioanu');
-
+	commentText = commentText.replaceAll('Dimitrios Stavropoulos', 'Dimitrios Stawropulos');
+	commentText = commentText.replaceAll('D. Stavropoulos', 'D. Stawropulos');
+	// Słowa z takimi końcówkami są pewnie z greckiego
+	commentText = commentText.replaceAll(/(\w*)poulos\b/g, '$1pulos');
+	// Gruziński
 	commentText = commentText.replaceAll('Kvaratskhelia', 'Kwaracchelia');
 	commentText = commentText.replaceAll('Davitashvili', 'Dawitaszwili');
 	commentText = commentText.replaceAll('Gugeshashvili', 'Gugeszaszwili');
 	commentText = commentText.replaceAll('Zivzivadze', 'Ziwziwadze');
 	commentText = commentText.replaceAll('Khvicha', 'Chwicza');
-	commentText = commentText.replaceAll('shvili', 'szwili');
 	commentText = commentText.replaceAll('Kvekve', 'Kwekwe');
 	commentText = commentText.replaceAll('Georgiy Tsitaishvili', 'Giorgi Citaiszwili');
 	commentText = commentText.replaceAll('Davit Khocholava', 'Dawit Choczolawa');
@@ -1989,7 +1995,9 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('D. Khocholava', 'D. Choczolawa');
 	commentText = commentText.replaceAll('G. Kashia', 'G. Kaszia');
 	commentText = commentText.replaceAll('J. Kankava', 'Dż. Kankawa');
-
+	// Słowa z takimi końcówkami są pewnie z gruzińskiego
+	commentText = commentText.replaceAll('(\w*)shvili\b', 'szwili');
+	// Cyrylica
 	commentText = commentText.replaceAll('Danylo Ignatenko', 'Danyło Ihnatenko');
 	commentText = commentText.replaceAll('Vladyslav Vanat', 'Władysław Wanat');
 	commentText = commentText.replaceAll('Sergiy Rebrov', 'Serhij Rebrow');
@@ -2033,23 +2041,51 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Oleksandr', 'Ołeksandr');
 	commentText = commentText.replaceAll('Evgen', 'Jewhen');
 	commentText = commentText.replaceAll('I. Kharatin', 'I. Charatin');
+	commentText = commentText.replaceAll('Ilya Shkurin', 'Ilja Szkurin');
+	commentText = commentText.replaceAll('I. Shkurin', 'I. Szkurin');
+	commentText = commentText.replaceAll('Chichkan', 'Czyczkan');
+	commentText = commentText.replaceAll('Simeon Petrov', 'Simeon Petrow');
+	commentText = commentText.replaceAll('S. Petrov', 'S. Petrow');
+	commentText = commentText.replaceAll('Yegor Matsenko', 'Jehor Macenko');
+	commentText = commentText.replaceAll('Y. Matsenko', 'J. Macenko');
+	commentText = commentText.replaceAll('Alex Petkov', 'Aleks Petkow');
+	commentText = commentText.replaceAll('A. Petkov', 'A. Petkow');
+	commentText = commentText.replaceAll('Sergiy Buletsa', 'Serhij Bułeca');
+	commentText = commentText.replaceAll('S Buletsa', 'S Bułeca');
+	commentText = commentText.replaceAll('Roman Yakuba', 'Roman Jakuba');
+	commentText = commentText.replaceAll('R. Yakuba', 'R. Jakuba');
+	commentText = commentText.replaceAll('Yevgeniy Shikavka', 'Jewgienij Szykawka');
+	commentText = commentText.replaceAll('Y. Shikavka', 'J. Szykawka');
+	commentText = commentText.replaceAll('Bogdan Sarnavskyi', 'Bohdan Sarnawski');
+	commentText = commentText.replaceAll('B. Sarnavskyi', 'B. Sarnawski');
+	commentText = commentText.replaceAll('Maksym Khlan', 'Maksym Chłań');
+	commentText = commentText.replaceAll('M. Khlan', 'M. Chłań');
+	commentText = commentText.replaceAll('Ivan Zhelizko', 'Iwan Żelizko');
+	commentText = commentText.replaceAll('I. Zhelizko', 'I. Żelizko');
+	commentText = commentText.replaceAll('Oleksandr Azatsky', 'Ołeksandr Azacki');
+	commentText = commentText.replaceAll('O. Azatsky', 'O. Azacki');
+	// Słowa z takimi końcówkami są pewnie z cyrylicy
 	commentText = commentText.replaceAll(/(\w*)chenko\b/g, '$1czenko');
 	commentText = commentText.replaceAll(/(\w*)vsky\b/g, '$1wski');
 	commentText = commentText.replaceAll(/(\w*)chuk\b/g, '$1czuk');
 	commentText = commentText.replaceAll(/(\w*)lenko\b/g, '$1łenko');
-
+	// Macedoński
 	commentText = commentText.replaceAll('Velkovski', 'Wełkowski');
+	commentText = commentText.replaceAll('Jani Atanasov', 'Jani Atanasow');
+	commentText = commentText.replaceAll('J Atanasov', 'J Atanasow');
 	commentText = commentText.replaceAll(/Stole\b/g, 'Stołe');
 	commentText = commentText.replaceAll(/(\w*)vski\b/g, '$1wski');
-	// Nie zamieniać Robert Ivanov
+	commentText = commentText.replaceAll(/(\w*)vskyi\b/g, '$1wski');
+	// Wykomentowane, żeby nie zamieniać Robert Ivanov na Robert Ivanow, bo to źle
 	//commentText = commentText.replaceAll(/(\w*)ov\b/g, '$1ow');
 
+	// Bułgarski
 	commentText = commentText.replaceAll('Bozhidar', 'Bożidar');
 	commentText = commentText.replaceAll('Chorbadzhiyski', 'Czorbadżijski');
-
+	// Uzbecki
 	commentText = commentText.replaceAll('Yakhshiboev', 'Jakszibojew');
 	commentText = commentText.replaceAll('Yaxshiboyev', 'Jakszibojew');
-
+	// Ormiański
 	commentText = commentText.replaceAll('Henrikh', 'Henrich');
 	commentText = commentText.replaceAll('Mkhitaryan', 'Mchitarjan');
 	commentText = commentText.replaceAll('Vahan', 'Wahan');
@@ -2069,7 +2105,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Varazdat Haroyan', 'Warazdat Harojan');
 	commentText = commentText.replaceAll('Styopa Mkrtchyan', 'Stiopa Mkrtczian');
 	commentText = commentText.replaceAll('Harutyunyan', 'Harutiunian');
-
+	// Azerbejdźański
 	commentText = commentText.replaceAll('Shahrudin Mahammadaliyev', 'Szachrudin Magomiedalijew');
 	commentText = commentText.replaceAll('Bahlul Mustafazada', 'Bəhlul Mustafazadə');
 	commentText = commentText.replaceAll('Elvin Cafarquliyev', 'Elvin Cəfərquliyev');
@@ -2083,8 +2119,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('R. Mammadov', 'R. Məmmədov');
 	commentText = commentText.replaceAll('R. Almeyda', 'R. Almeida');
 	commentText = commentText.replaceAll('G. Gurbanov', 'G. Gurbanow');
-
-
+	// Karabach
 	commentText = commentText.replaceAll('Mukhammedzhan Seysen', 'Muchammiedżan Siejsien');
 	commentText = commentText.replaceAll('Temirlan Erlanov', 'Temyrłan Jerłanow');
 	commentText = commentText.replaceAll('Bauyrzhan Islamkhan', 'Bauyrżan Isłamchan');
@@ -2124,7 +2159,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('S. Umarov', 'S. Umarow');
 	commentText = commentText.replaceAll('B. Abdikholikov', 'B. Abdicholikow');
 	commentText = commentText.replaceAll('A. Sednev', 'A. Siadniou');
-
+	// Dodawanie brakujących znaków diakrytycznych
 	commentText = commentText.replaceAll('Bernardo Matic', 'Bernardo Matić');
 	commentText = commentText.replaceAll('Kosta Runjaic', 'Kosta Runjaić');
 	commentText = commentText.replaceAll('Rafal Augustyniak', 'Rafał Augustyniak');
@@ -2145,11 +2180,25 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('L. Zahovic', 'L. Zahovič');
 	commentText = commentText.replaceAll('D. Smajc', 'D. Šmajc');
 	commentText = commentText.replaceAll('Smajc D.', 'D. Šmajc');
-
+	commentText = commentText.replaceAll('Slawomir', 'Sławomir');
+	commentText = commentText.replaceAll('Terpilowski', 'Terpiłowski');
+	commentText = commentText.replaceAll('Kieres', 'Kiereś');
+	commentText = commentText.replaceAll('Bartolomiej', 'Bartłomiej');
+	commentText = commentText.replaceAll('Milosz', 'Miłosz');
+	commentText = commentText.replaceAll('Michal Buchalik', 'Michał Buchalik');
+	commentText = commentText.replaceAll('Stepinski', 'Stępiński');
+	commentText = commentText.replaceAll('Foszmanczyk', 'Foszmańczyk');
+	commentText = commentText.replaceAll('Lobodzinski', 'Łobodziński');
+	commentText = commentText.replaceAll('Goncalo', 'Gonçalo');
+	commentText = commentText.replaceAll('Ciganiks', 'Cigaņiks');
+	commentText = commentText.replaceAll('Craciun', 'Crăciun');
+	commentText = commentText.replaceAll('Ioan-Calin', 'Ioan-Călin');
+	commentText = commentText.replaceAll('Albert Rude', 'Albert Rudé');
+	// Nazwy zespołów
 	commentText = commentText.replaceAll('Qarabag', 'Karabach');
 	commentText = commentText.replaceAll('Ordabasy Shymkent', 'Ordabasy Szymkent');
 	commentText = commentText.replaceAll('Kauno Zalgiris', 'Żalgiris Kowno');
-
+	// Stadiony
 	commentText = commentText.replaceAll('Stadion Kazhymukan Munaitpasov (Šymkent)', 'Stadion Każymukana Mungajtpasuły (Szymkent)');
 
 	return commentText;
