@@ -3,7 +3,7 @@
  00f80ea7
 */
 'use strict';
-const version = 'Indev 0.7.1';
+const version = 'Indev 0.7.2';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -7782,7 +7782,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				let g = roomInfoWithGeo.roomInfoInst;
 				c.textContent = g.D;
 				d.textContent = '' + g.K + '/' + g.jf;
-				f.textContent = g.Kb ? 'Yes' : 'No';
+				f.textContent = g.Kb ? 'Yes' : '-';
 				e.textContent = '' + (roomInfoWithGeo.distanceKm | 0) + 'km';
 				try {
 					b.classList.add('f-' + g.vb.toLowerCase());
