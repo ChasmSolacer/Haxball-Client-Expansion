@@ -1,4 +1,4 @@
-const client_bot_utils_version = 'Indev 0.7.2';
+const client_bot_utils_version = 'Indev 0.8';
 
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
@@ -76,6 +76,8 @@ let announcementHistory = [];
 let logChat = true;
 // 1 – log announcements only from players (some rooms only), 2 – log all announcements to the console, other – don't log
 let logAnnouncements = 1;
+// If true, logs team color change events fired by non-player host to console
+let logColorChangeByHost = false;
 // Activates .korwin command
 let isOzjasz = false;
 // .korwin command cooldown for specific players
@@ -1668,6 +1670,18 @@ function drawAimLineFromNearestPlayerThroughBall() {
 }
 
 /**
+ * Swaps red and blue team colors.
+ */
+function swapTeamColors() {
+	if (g.getRoomState != null) {
+		const redColors = g.getRoomState().teamColors[1];
+		const blueColors = g.getRoomState().teamColors[2];
+		g.getRoomManager().setTeamColors(2, redColors.angle, redColors.textColor, redColors.colors);
+		g.getRoomManager().setTeamColors(1, blueColors.angle, blueColors.textColor, blueColors.colors);
+	}
+}
+
+/**
  * Gets an object from given object store from given IDB database.
  *
  * @param {string} dbName IDB database name
@@ -2282,6 +2296,17 @@ g.onChatIndicatorStateChange = (player, chatIndicatorShown) => {
 	else
 		console.log('💬 ' + player?.name + '#' + player?.id + ' is no more typing');
 	*/
+};
+
+g.onTeamColorsChange = (byPlayer, team, angle, textColor, colors) => {
+	insideRoom = true;
+	const byPlayerText = byPlayer == null ? '' : ' by ' + byPlayer.name + '#' + byPlayer.id;
+	if (byPlayer != null || logColorChangeByHost) {
+		log_c('🎨 ' + team + ' team colors changed (angle: ' + angle
+			+ ', textColor: ' + textColor.toString(16).toUpperCase().padStart(6, '0')
+			+ ', colors: ' + colors.map(c => c.toString(16).toUpperCase().padStart(6, '0')).join(', ') + ')'
+			+ byPlayerText, Color.TEAM);
+	}
 };
 
 g.onGameTick = game => {

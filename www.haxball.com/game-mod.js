@@ -1,9 +1,9 @@
 /*
- HaxBall @ 2023 - Mario Carbajal - All rights reserved.
- 00f80ea7
+ HaxBall @ 2024 - Mario Carbajal - All rights reserved.
+ 15ee796a
 */
 'use strict';
-const version = 'Indev 0.7.2';
+const version = 'Indev 0.8';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -200,7 +200,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				game: getGameObject(roomState.M),
 				players: roomState.K.map(fullPlayer => getFullPlayerObject(fullPlayer)),
 				name: roomState.lc,
-				teamColors: roomState.mb,
+				teamColors: roomState.mb.map(tc => getTeamColorsObject(tc)),
 
 				getFullPlayerById: id => roomState.getFullPlayerById(id)
 			};
@@ -235,6 +235,19 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				sendChat: playableRoomManager.field_gameContainer.gameContChatboxCont.Bl,
 				showChatIndicator: playableRoomManager.field_gameContainer.gameContChatboxCont.tg,
 				setAvatar: text => playableRoomManager.prmChatHandler.Bm(text),
+				setTeamColors: (team, angle, textColor, colors) => {
+					let setTeamColorsAction = new SetTeamColorsAction;
+					let teamColors = new TeamColors;
+					setTeamColorsAction.Zg = teamColors;
+					setTeamColorsAction.fa = 1 === team ? Team.red : 2 === team ? Team.blue : Team.spec;
+					teamColors.sd = 256 * angle / 360 | 0;
+					teamColors.od = textColor | 0;
+					teamColors.hb = [];
+					for (let d = 0; d < colors.length; d++)
+						teamColors.hb.push(colors[d]);
+
+					playableRoomManager.prmRoom.executeActionAsPlayer(setTeamColorsAction);
+				},
 				startReplay: () => {
 					if (playableRoomManager.prmReplay == null) {
 						// Start replaying
@@ -252,6 +265,12 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						playableRoomManager.field_gameContainer.gameContRoomMenuCont.Vr(false);
 						return replayArray;
 					}
+				},
+				kickPlayer: (playerId, reason, ban) => {
+					playableRoomManager.prmRoom.executeActionAsPlayer(KickAction.pa(playerId, reason, ban));
+				},
+				setPlayerAdmin: (playerId, admin) => {
+					playableRoomManager.prmRoom.executeActionAsPlayer(GiveAdminAction.pa(playerId, admin));
 				}
 			};
 		}
@@ -273,10 +292,28 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				showChatIndicator: replayManager.field_gameContainer.gameContChatboxCont.tg,
 				setAvatar: () => {
 				},
+				setTeamColors: () => {
+				},
 				startReplay: () => {
 				},
 				stopReplay: () => {
+				},
+				kickPlayer: () => {
+				},
+				setPlayerAdmin: () => {
 				}
+			};
+		}
+
+		/**
+		 * @param {TeamColors} teamColors
+		 * @return {{}}
+		 */
+		function getTeamColorsObject(teamColors) {
+			return teamColors == null ? null : {
+				angle: Math.ceil(360 * teamColors.sd / 256),
+				textColor: teamColors.od,
+				colors: teamColors.hb
 			};
 		}
 
@@ -452,7 +489,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.prmRoom = room;
 				room.U.Io = function (d) {
 					self.prmSync != d && (self.prmSync = d,
-						room.ua(SyncChangeAction.pa(d)));
+						room.executeActionAsPlayer(SyncChangeAction.pa(d)));
 				}
 				;
 				this.field_gameContainer = new GameContainer(room.roomClientPlayerId);
@@ -471,7 +508,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				;
 				this.W.yg = function (d) {
 					room.A();
-					room.ua(d);
+					room.executeActionAsPlayer(d);
 				}
 				;
 				this.W.ul = function (d) {
@@ -479,23 +516,23 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.Dq = function (d) {
-					room.ua(SetLimitsAction.pa(1, d));
+					room.executeActionAsPlayer(SetLimitsAction.pa(1, d));
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.vq = function (d) {
-					room.ua(SetLimitsAction.pa(0, d));
+					room.executeActionAsPlayer(SetLimitsAction.pa(0, d));
 				}
 				;
 				this.field_gameContainer.zg = function (d) {
-					room.ua(SetStadiumAction.pa(d));
+					room.executeActionAsPlayer(SetStadiumAction.pa(d));
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.Aq = function () {
-					room.ua(new GameStartAction);
+					room.executeActionAsPlayer(new GameStartAction);
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.Bq = function () {
-					room.ua(new GameStopAction);
+					room.executeActionAsPlayer(new GameStopAction);
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.oq = function () {
@@ -503,12 +540,12 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.xg = function (d, e) {
-					room.ua(MoveToTeamAction.pa(d, e));
+					room.executeActionAsPlayer(MoveToTeamAction.pa(d, e));
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.me = function_M(this, this.yr);
 				this.field_gameContainer.gameContRoomMenuCont.eq = function () {
-					room.ua(new AutoAction);
+					room.executeActionAsPlayer(new AutoAction);
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.rq = function () {
@@ -516,7 +553,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.Cq = function (d) {
-					room.ua(LockTeamsAction.pa(d));
+					room.executeActionAsPlayer(LockTeamsAction.pa(d));
 				}
 				;
 				this.field_gameContainer.gameContRoomMenuCont.tf = function (d) {
@@ -528,7 +565,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						}
 						;
 						playerDialog.cq = function (g, h) {
-							room.ua(GiveAdminAction.pa(g, h));
+							room.executeActionAsPlayer(GiveAdminAction.pa(g, h));
 						}
 						;
 						playerDialog.li = function () {
@@ -597,7 +634,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				}
 				;
 				kickDialogContainer.li = function (c, d, e) {
-					self.prmRoom.ua(KickAction.pa(c, d, e));
+					self.prmRoom.executeActionAsPlayer(KickAction.pa(c, d, e));
 					self.field_gameContainer.ab(null);
 				}
 				;
@@ -633,7 +670,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					e.fa == a && b.push(MoveToTeamAction.pa(e.Y, Team.spec));
 				}
 				for (a = 0; a < b.length;)
-					this.prmRoom.ua(b[a++]);
+					this.prmRoom.executeActionAsPlayer(b[a++]);
 			}
 
 			pf() {
@@ -657,7 +694,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.prmChatHandler.uf(a) || this.prmTimestampUtil.yo(function () {
 					let chatAction = new ChatAction;
 					chatAction.$c = a;
-					self.prmRoom.ua(chatAction);
+					self.prmRoom.executeActionAsPlayer(chatAction);
 				});
 			}
 
@@ -672,7 +709,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 
 			xm(a) {
-				a != this.prmChatIndicatorState2 && (this.prmRoom.ua(ChatIndicatorAction.pa(a ? 0 : 1)),
+				a != this.prmChatIndicatorState2 && (this.prmRoom.executeActionAsPlayer(ChatIndicatorAction.pa(a ? 0 : 1)),
 					this.prmChatIndicatorState2 = a);
 			}
 
@@ -680,7 +717,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				if (null != this.prmRoom.U.M) {
 					let gamePauseAction = new GamePauseAction;
 					gamePauseAction.Mf = 120 != this.prmRoom.U.M.Ra;
-					this.prmRoom.ua(gamePauseAction);
+					this.prmRoom.executeActionAsPlayer(gamePauseAction);
 				}
 			}
 
@@ -768,9 +805,9 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					return c.splice(Math.random() * c.length | 0, 1)[0];
 				}
 					,
-					e == d ? 2 > f || (a.ua(MoveToTeamAction.pa(b(), Team.red)),
-						a.ua(MoveToTeamAction.pa(b(), Team.blue))) : (d = e > d ? Team.red : Team.blue,
-						a.ua(MoveToTeamAction.pa(b(), d))));
+					e == d ? 2 > f || (a.executeActionAsPlayer(MoveToTeamAction.pa(b(), Team.red)),
+						a.executeActionAsPlayer(MoveToTeamAction.pa(b(), Team.blue))) : (d = e > d ? Team.red : Team.blue,
+						a.executeActionAsPlayer(MoveToTeamAction.pa(b(), d))));
 			}
 		}
 
@@ -1015,7 +1052,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				super.Za(roomState);
 			}
 
-			ua() {
+			executeActionAsPlayer() {
 				throw GlobalError.C('missing implementation');
 			}
 
@@ -1063,10 +1100,11 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				b.splice(0, c);
 			}
 
-			Lg(a) {
-				a.ob == this.aa && a.Cc <= this.ec ? (a.Cc = this.ec++,
-					a.apply(this.U),
-				null != this.hc && this.hc(a)) : this.te.nn(a);
+			/** @param {Action} action */
+			Lg(action) {
+				action.ob == this.aa && action.Cc <= this.ec ? (action.Cc = this.ec++,
+					action.apply(this.U),
+				null != this.hc && this.hc(action)) : this.te.nn(action);
 			}
 
 			Ok(a, b) {
@@ -1423,23 +1461,23 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.ck();
 			}
 
-			ua(a) {
+			executeActionAsPlayer(action) {
 				if (3 == this.yd) {
 					var b = this.$p++
 						,
 						c = 0;
 					0 > this.dc && (this.dc = 0);
-					a.Kf.delay && (c = this.aa + (this.dd | 0) + this.dc);
+					action.Kf.delay && (c = this.aa + (this.dd | 0) + this.dc);
 					var d = StreamWriter.ka();
 					d.m(1);
 					d.ub(c);
 					d.ub(b);
-					Action.wj(a, d);
+					Action.wj(action, d);
 					this.Vb(d);
-					a.Kf.Ca && (a.Ce = b,
-						a.R = this.roomClientPlayerId,
-						a.ob = c,
-						this.Eg.nn(a));
+					action.Kf.Ca && (action.Ce = b,
+						action.R = this.roomClientPlayerId,
+						action.ob = c,
+						this.Eg.nn(action));
 				}
 			}
 
@@ -1542,14 +1580,15 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.Nc.Ni(a);
 			}
 
-			ua(a) {
-				a.R = 0;
+			/** @param {Action} action */
+			executeActionAsPlayer(action) {
+				action.R = 0;
 				let b = this.aa + this.Fi + this.dc;
-				a.Kf.delay || (b = this.aa);
-				a.ob = b;
-				this.Lg(a);
+				action.Kf.delay || (b = this.aa);
+				action.ob = b;
+				this.Lg(action);
 				this.Li();
-				0 < this.cc.length && this.Mg(this.fi(a), 1);
+				0 < this.cc.length && this.Mg(this.fi(action), 1);
 			}
 
 			A() {
@@ -1868,7 +1907,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				return this.aa / this.yf;
 			}
 
-			ua() {
+			executeActionAsPlayer() {
 			}
 
 			eg() {
@@ -6086,10 +6125,10 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					}
 					;
 					let r = window.setInterval(function () {
-						hostRoom.ua(UpdatePlayerPingsAction.pa(hostRoom));
+						hostRoom.executeActionAsPlayer(UpdatePlayerPingsAction.pa(hostRoom));
 					}, 3E3);
 					hostRoom.vl = function (t) {
-						null != newRoomState.getFullPlayerById(t) && hostRoom.ua(KickAction.pa(t, 'Bad actor', false));
+						null != newRoomState.getFullPlayerById(t) && hostRoom.executeActionAsPlayer(KickAction.pa(t, 'Bad actor', false));
 					}
 					;
 					hostRoom.iq = function (t, z) {
@@ -6102,12 +6141,12 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						z = z.Bb();
 						if (null != z && 2 < z.length)
 							throw GlobalError.C('avatar too long');
-						hostRoom.ua(PlayerJoinAction.pa(t, J, N, z));
+						hostRoom.executeActionAsPlayer(PlayerJoinAction.pa(t, J, N, z));
 						d();
 					}
 					;
 					hostRoom.jq = function (t) {
-						null != newRoomState.getFullPlayerById(t) && hostRoom.ua(KickAction.pa(t, null, false));
+						null != newRoomState.getFullPlayerById(t) && hostRoom.executeActionAsPlayer(KickAction.pa(t, null, false));
 					}
 					;
 					hostRoom.vg = function (t) {
@@ -7291,6 +7330,13 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					if (window.parent.g.onKickRateLimitSet != null) {
 						const byPlayer = getFullPlayerObject(d);
 						window.parent.g.onKickRateLimitSet(e, f, g, byPlayer);
+					}
+				}
+				;
+				roomState.onTeamColorsChangeFun = function (byFullPlayer, team, angle, textColor, colors) {
+					if (window.parent.g.onTeamColorsChange != null) {
+						const realAngle = Math.ceil(360 * angle / 256);
+						window.parent.g.onTeamColorsChange(getFullPlayerObject(byFullPlayer), team, realAngle, textColor, colors);
 					}
 				};
 				// Invoking global fields end
@@ -9543,28 +9589,22 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				RoomListContainer.ht(c).then(a, a);
 			}
 
-			yn(a) {
-				this.pj = a;
-				RoomDataParser.ot(this.Qs, a);
-				a.sort(function (k, l) {
+			yn(roomGeos) {
+				this.pj = roomGeos;
+				RoomDataParser.ot(this.Qs, roomGeos);
+				roomGeos.sort(function (k, l) {
 					return k.distanceKm - l.distanceKm;
 				});
 				ViewUtil.Nf(this.sj);
-				let b = 0
-					,
-					c = 0
-					,
-					d = !this.Ps.He
-					,
-					e = !this.gt.He
-					,
-					f = !this.Os.He
-					,
-					self = this
-					,
-					h = 0;
-				for (; h < a.length;) {
-					let roomInfoWithGeo = a[h];
+				let playerCount = 0;
+				let roomCount = 0;
+				let d = !this.Ps.He;
+				let e = !this.gt.He;
+				let f = !this.Os.He;
+				let self = this;
+				let h = 0;
+				for (; h < roomGeos.length;) {
+					let roomInfoWithGeo = roomGeos[h];
 					++h;
 					let roomInfo = roomInfoWithGeo.roomInfoInst;
 					if (d && roomInfo.K >= roomInfo.jf)
@@ -9583,10 +9623,10 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 					}
 					;
 					this.sj.appendChild(roomItem.La);
-					b += roomInfo.K;
-					++c;
+					playerCount += roomInfo.K;
+					++roomCount;
 				}
-				this.Ls.textContent = '' + b + ' players in ' + c + ' rooms';
+				this.Ls.textContent = '' + playerCount + ' players in ' + roomCount + ' rooms';
 				this.it.update();
 			}
 
@@ -10485,8 +10525,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 						break;
 					case 'colors':
 						try {
-							d = ChatHandler.Fq(a),
-								this.za.ua(d);
+							d = ChatHandler.getTeamColorsActionFromArgs(a);
+							this.za.executeActionAsPlayer(d);
 						}
 						catch (g) {
 							a = GlobalError.Mb(g).Gb(),
@@ -10511,7 +10551,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 							d = StringOpsInt.parseInt(a[1]);
 							var e = StringOpsInt.parseInt(a[2]);
 							a = StringOpsInt.parseInt(a[3]);
-							null == d || null == e || null == a ? this.da('Invalid arguments') : this.za.ua(KickRateAction.pa(d, e, a));
+							null == d || null == e || null == a ? this.da('Invalid arguments') : this.za.executeActionAsPlayer(KickRateAction.pa(d, e, a));
 						}
 						break;
 					case 'recaptcha':
@@ -10564,43 +10604,42 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			Bm(a) {
 				null != a && (a = StringOpsSubstr.Xc(a, 2));
 				ConnectionConstants.localStorageUtilInst.lsAvatar.setLSItem(a);
-				this.za.ua(CmdAvatarAction.pa(a));
+				this.za.executeActionAsPlayer(CmdAvatarAction.pa(a));
 			}
 
-			static Fq(a) {
-				if (3 > a.length)
+			static getTeamColorsActionFromArgs(colorArgs) {
+				if (3 > colorArgs.length)
 					throw GlobalError.C('Not enough arguments');
-				if (7 < a.length)
+				if (7 < colorArgs.length)
 					throw GlobalError.C('Too many arguments');
-				let b = new SetTeamColorsAction
-					,
-					c = new TeamColors;
-				b.Zg = c;
-				switch (a[1]) {
+				let setTeamColorsAction = new SetTeamColorsAction;
+				let teamColors = new TeamColors;
+				setTeamColorsAction.Zg = teamColors;
+				switch (colorArgs[1]) {
 					case 'blue':
-						c.hb = [Team.blue.S];
-						b.fa = Team.blue;
+						teamColors.hb = [Team.blue.S];
+						setTeamColorsAction.fa = Team.blue;
 						break;
 					case 'red':
-						c.hb = [Team.red.S];
-						b.fa = Team.red;
+						teamColors.hb = [Team.red.S];
+						setTeamColorsAction.fa = Team.red;
 						break;
 					default:
 						throw GlobalError.C('First argument must be either "red" or "blue"');
 				}
-				if ('clear' == a[2])
-					return b;
-				c.sd = 256 * StringOpsInt.parseInt(a[2]) / 360 | 0;
-				c.od = StringOpsInt.parseInt('0x' + a[3]);
-				if (4 < a.length) {
-					c.hb = [];
+				if ('clear' == colorArgs[2])
+					return setTeamColorsAction;
+				teamColors.sd = 256 * StringOpsInt.parseInt(colorArgs[2]) / 360 | 0;
+				teamColors.od = StringOpsInt.parseInt('0x' + colorArgs[3]);
+				if (4 < colorArgs.length) {
+					teamColors.hb = [];
 					let d = 4
 						,
-						e = a.length;
+						e = colorArgs.length;
 					for (; d < e;)
-						c.hb.push(StringOpsInt.parseInt('0x' + a[d++]));
+						teamColors.hb.push(StringOpsInt.parseInt('0x' + colorArgs[d++]));
 				}
-				return b;
+				return setTeamColorsAction;
 			}
 		}
 
@@ -11712,7 +11751,11 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 
 			apply(a) {
-				a.Pb(this.R) && this.fa != Team.spec && (a.mb[this.fa.ba] = this.Zg);
+				if (a.Pb(this.R) && this.fa != Team.spec) {
+					a.mb[this.fa.ba] = this.Zg;
+					// New room event
+					FunctionRunner6.i(a.onTeamColorsChangeFun, a.getFullPlayerById(this.R), this.fa.ba, this.Zg.sd, this.Zg.od, this.Zg.hb);
+				}
 			}
 
 			wa(a) {
@@ -12324,6 +12367,13 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			}
 		}
 
+		// New class
+		class FunctionRunner6 {
+			static i(a, b, c, d, e, f) {
+				null != a && a(b, c, d, e, f);
+			}
+		}
+
 		class class_Cast2 {
 		}
 
@@ -12579,6 +12629,8 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 		FunctionRunner3.b = true;
 		FunctionRunner4.b = true;
 		FunctionRunner5.b = true;
+		// New class
+		FunctionRunner6.b = true;
 		TimestampUtil.b = true;
 		Object.assign(TimestampUtil.prototype, {
 			g: TimestampUtil
