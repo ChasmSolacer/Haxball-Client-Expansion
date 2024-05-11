@@ -30,9 +30,14 @@ In order to modify it, it needs to be overridden.
 - Click `Allow` to give the browser access to folders.
 
 ![Click Allow](https://user-images.githubusercontent.com/46286197/230603501-2fe09d7d-19ba-4f27-afad-6997cd2c3d9b.png)
-- This will override game-min.js file
-- Now **refresh the page**. You should notice some changes (eg. the room list spanning the whole window).
-- Hint: the overrides are preserved after browser restart and work in all browser windows, so you have to do it only once. Next time just go to Haxball, press F12 and refresh the page. The changes should apply.
+- This will override game-min.js file.
+- Now **refresh the page**. You should notice some changes (eg. `folder_name=<random string>` on top).
+- Everything should look like this – check if the directory structure on the right is the same as yours, the `www.haxball.com` folder is crucial:
+  ![Overrides Working](https://github.com/ChasmSolacer/Haxball-Client-Expansion/assets/46286197/32fdc632-52c3-46a0-9576-4665373e3671)
+- When you close the browser, and you want to launch Haxball again, just go to [Haxball](https://www.haxball.com/play), press F12 to open Dev Tools and refresh the page. The changes should apply. The overrides are preserved after browser restart, so you don't have to set them up again.
+- If you want to update, download this repo again (click green `Code` button → `Download ZIP`) and replace the old folder with the new one.
+___
+___
 
 ### 3. Adding snippets (optional)
 There are some example scripts in this repo such as: `client_bot_utils.js` or `flashscore_logger.js`.<br>

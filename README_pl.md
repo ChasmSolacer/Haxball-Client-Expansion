@@ -31,8 +31,13 @@ Aby go zmodyfikować, musi zostać zastąpiony.
 
 ![Naciśnij Zezwalaj](https://user-images.githubusercontent.com/46286197/230603501-2fe09d7d-19ba-4f27-afad-6997cd2c3d9b.png)
 - To podmieni plik game-min.js.
-- Teraz **odśwież stronę**. Powinny nastąpić widoczne zmiany (np. lista pokojów zajmująca całe okno).
-- Wskazówka: zastąpienia zostają po restarcie przeglądarki i działają we wszystkich jej oknach, dzięki temu trzeba to robić tylko raz. Następnym razem wejdź na Haxballa, naciśnij F12 i odśwież stronę. Zmiany powinny być po tym widoczne.
+- Teraz **odśwież stronę**. Powinny nastąpić widoczne zmiany (np. `folder_name=<losowe znaki>` na górze).
+- Wszystko powinno wyglądać jak na zrzucie poniżej – sprawdź, czy struktura folderów po prawej jest taka sama, folder `www.haxball.com` jest tu istotny:
+  ![Działające zastąpienia](https://github.com/ChasmSolacer/Haxball-Client-Expansion/assets/46286197/32fdc632-52c3-46a0-9576-4665373e3671)
+- Jeżeli zamkniesz przeglądarkę i chcesz włączyć Haxballa ponownie, wejdź na [Haxballa](https://www.haxball.com/play), naciśnij F12, aby otworzyć panel narzędzi i odśwież stronę. Zmiany powinny być po tym widoczne. Zastąpienia zostają po restarcie przeglądarki, więc nie trzeba powtarzać powyższych kroków.
+- Aby zastosować aktualizację, pobierz repozytorium ponownie (naciśnij zielony przycisk `Code` → `Download ZIP`) i zamień stary folder z tym nowym.
+___
+___
 
 ### 3. Dodawanie fragmentów (nieobowiązkowe)
 Na tym repozytorium można znaleźć przykładowe skrypty, np.: `client_bot_utils.js` lub `flashscore_logger.js`.<br>
@@ -42,7 +47,7 @@ Fragmenty pozwalają na zapisywanie plików js w przeglądarce i uruchamianie ic
 - Wybierz zakładkę `Źródła`.
 - Otwórz kartę `Fragmenty`.
 
-![Otwórz Fragmentyb](https://user-images.githubusercontent.com/46286197/230608281-43c4fa5d-6eb7-4d4a-8189-ad3a520fe7df.png)
+![Otwórz Fragmenty](https://user-images.githubusercontent.com/46286197/230608281-43c4fa5d-6eb7-4d4a-8189-ad3a520fe7df.png)
 - Naciśnij `Nowy fragment`
 
 ![Naciśnij Nowy fragment](https://user-images.githubusercontent.com/46286197/230608837-b500e47b-26e7-4ad5-a794-199e12b252b4.png)
