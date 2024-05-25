@@ -36,6 +36,9 @@ In order to modify it, it needs to be overridden.
   ![Overrides Working](https://github.com/ChasmSolacer/Haxball-Client-Expansion/assets/46286197/32fdc632-52c3-46a0-9576-4665373e3671)
 - When you close the browser, and you want to launch Haxball again, just go to [Haxball](https://www.haxball.com/play), press F12 to open Dev Tools and refresh the page. The changes should apply. The overrides are preserved after browser restart, so you don't have to set them up again.
 - If you want to update, download this repo again (click green `Code` button → `Download ZIP`) and replace the old folder with the new one.
+
+**REMOVING OVERRIDES:**<br>
+If you want to **remove overrides**, click the Ø button next to `Enable Local Overrides` option on the above image (if you don't see it, resize the panel).
 ___
 ___
 
