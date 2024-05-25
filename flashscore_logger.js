@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.9.4';
+const flashscore_logger_version = 'Alpha 1.10';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -53,8 +53,8 @@ overlayListDiv.style.position = 'absolute';
 overlayListDiv.style.float = 'right';
 overlayListDiv.style.bottom = '1px';
 overlayListDiv.style.right = '1px';
-overlayListDiv.style.maxWidth = '150px';
-overlayListDiv.style.maxHeight = '150px';
+overlayListDiv.style.maxWidth = '180px';
+overlayListDiv.style.maxHeight = '200px';
 overlayListDiv.style.backgroundColor = '#0008';
 overlayListDiv.style.paddingBottom = '1px';
 overlayListDiv.style.color = '#FFC';
@@ -686,6 +686,63 @@ function getCommentTextContentFromCommentRow(commentRow) {
 
 const sIcon = ['◽', '🔸', '🔹'];
 
+class ListEntry {
+	constructor() {
+		this.div = document.createElement('div');
+		this.div.className = 'overlayListEntry';
+		this.div.style.display = 'flex';
+		this.div.style.flexFlow = 'row nowrap';
+		this.div.style.cursor = 'pointer';
+		this.div.style.whiteSpace = 'pre';
+		this.div.style.paddingTop = '2px';
+		this.div.style.paddingBottom = '2px';
+		this.div.style.paddingLeft = '4px';
+		this.div.style.paddingRight = '4px';
+
+		this.activeSpan = document.createElement('span');
+		this.activeSpan.textContent = '•';
+		this.activeSpan.style.color = 'red';
+
+		this.idSpan = document.createElement('span');
+		this.idSpan.style.marginLeft = '0.2em';
+
+		this.team1Span = document.createElement('span');
+		this.team1Span.style.marginLeft = '0.2em';
+
+		this.team1Score = document.createElement('span');
+		this.team1Score.textContent = '-';
+		this.team1Score.style.marginLeft = '0.2em';
+		this.teamScoreSeparatorSpan = document.createElement('span');
+		this.teamScoreSeparatorSpan.textContent = ':';
+		this.team2Score = document.createElement('span');
+		this.team2Score.textContent = '-';
+
+		this.team2Span = document.createElement('span');
+		this.team2Span.style.marginLeft = '0.2em';
+
+		this.languageSpan = document.createElement('span');
+		this.languageSpan.style.marginLeft = '0.2em';
+
+		this.matchIdSpan = document.createElement('span');
+		this.matchIdSpan.style.marginLeft = '0.2em';
+
+		this.div.appendChild(this.activeSpan);
+		this.div.appendChild(this.idSpan);
+		this.div.appendChild(this.team1Span);
+		this.div.appendChild(this.team1Score);
+		this.div.appendChild(this.teamScoreSeparatorSpan);
+		this.div.appendChild(this.team2Score);
+		this.div.appendChild(this.team2Span);
+		this.div.appendChild(this.languageSpan);
+		this.div.appendChild(this.matchIdSpan);
+	}
+
+	/** Add entry to overlay list div */
+	addToList() {
+		overlayListDiv.appendChild(this.div);
+	}
+}
+
 class Overlay {
 	/**
 	 * Don't call new Overlay, use {@link OverlayManager.createOverlay} for proper initialization.
@@ -772,7 +829,7 @@ class Overlay {
 		this.inputLink.oninput = ev => {
 			const inputVal = ev.target.value;
 			if (inputVal.startsWith('https://')) {
-				// Get 4th occurence of "/" in inputVal
+				// Get 4th occurrence of "/" in inputVal
 				const matchIdIndex = inputVal.split('/', 4).join('/').length + 1;
 				const link1 = inputVal.substring(0, matchIdIndex);
 				this.matchId = inputVal.substring(matchIdIndex, matchIdIndex + 8);
@@ -938,18 +995,9 @@ class Overlay {
 		};
 		this.paramInputsDiv.appendChild(this.btnLoad);
 
-		// Create new list entry
-		this.listEntrySpan = document.createElement('span');
-		this.listEntrySpan.className = 'overlayListEntry';
-		this.listEntrySpan.style.display = 'block';
-		this.listEntrySpan.style.cursor = 'pointer';
-		this.listEntrySpan.style.whiteSpace = 'pre';
-		this.listEntrySpan.style.paddingTop = '2px';
-		this.listEntrySpan.style.paddingBottom = '2px';
-		this.listEntrySpan.style.paddingLeft = '4px';
-		this.listEntrySpan.style.paddingRight = '4px';
-		// Add entry to list
-		overlayListDiv.appendChild(this.listEntrySpan);
+		// Create and add new list entry
+		this.listEntry = new ListEntry();
+		this.listEntry.addToList();
 
 		// Add upper elements to div
 		this.fDivOverlay.appendChild(this.hintSpan);
@@ -994,6 +1042,10 @@ class Overlay {
 
 		// Update overlay handlers and titles
 		this.updateElements();
+
+		this.updateListEntryInterval = setInterval(() => {
+			this.updateListEntry();
+		}, 5000);
 	}
 
 	/** Changes overlay appearance if its focus state has changed. */
@@ -1002,14 +1054,25 @@ class Overlay {
 		if (this === OverlayManager.focusedOverlay) {
 			this.fDivOverlay.style.border = '3px solid #0FF';
 			this.fDivOverlay.style.zIndex = '4';
-			this.listEntrySpan.style.backgroundColor = '#0FF4';
+			this.listEntry.div.style.backgroundColor = '#0FF4';
 		}
 		// If overlay loses focus
 		else {
 			this.fDivOverlay.style.border = '3px solid #666';
 			this.fDivOverlay.style.zIndex = '3';
-			this.listEntrySpan.style.backgroundColor = '';
+			this.listEntry.div.style.backgroundColor = '';
 		}
+	}
+
+	updateListEntry() {
+		this.listEntry.activeSpan.textContent = this.printUpdates ? '★' : '•';
+		this.listEntry.idSpan.textContent = this.id + ')';
+		this.listEntry.team1Span.textContent = this.team1Code;
+		this.listEntry.team1Score.textContent = this.getScoresArray()[0]?.toString?.() ?? '-';
+		this.listEntry.team2Score.textContent = this.getScoresArray()[1]?.toString?.() ?? '-';
+		this.listEntry.team2Span.textContent = this.team2Code;
+		this.listEntry.languageSpan.textContent = this.language;
+		this.listEntry.matchIdSpan.textContent = this.matchId;
 	}
 
 	/**
@@ -1023,7 +1086,9 @@ class Overlay {
 		this.selectLang.selectedIndex = Object.keys(Str.COMMENTARY_LINK1).indexOf(this.language);
 		this.selectSuspended.selectedIndex = this.suspended ? 1 : 0;
 		this.inputChatInterval.value = this.chatInterval.toString();
-		this.listEntrySpan.textContent = this.id + ') ' + this.team1Code + '-' + this.team2Code + ' ' + this.language + ' ' + this.matchId;
+
+		this.updateListEntry();
+
 		this.inputLink.value = this.getMatchLink();
 		this.btnLoad.disabled = this.matchId.length === 0;
 
@@ -1044,7 +1109,7 @@ class Overlay {
 				this.toggleHidden();
 			});
 			contextMenu.addEntry((this.printUpdates ? 'Ignore ' : 'Detect ') + 'comment edits', () => {
-				this.printUpdates = !this.printUpdates;
+				this.togglePrintUpdates();
 			});
 			const langSubMenu = new ContextMenu();
 			Object.keys(Str.COMMENTARY_LINK1).forEach(lang => {
@@ -1079,17 +1144,18 @@ class Overlay {
 		this.fDivOverlay.oncontextmenu = ev => {
 			doRightClickAction(ev);
 		};
-		this.listEntrySpan.onclick = () => {
+		this.listEntry.div.onclick = () => {
 			OverlayManager.setFocus(this.id);
 			this.toggleHidden();
 		};
-		this.listEntrySpan.oncontextmenu = ev => {
+		this.listEntry.div.oncontextmenu = ev => {
 			doRightClickAction(ev);
 		};
 	}
 
 	/** Closes all iframes, clears all intervals and removes this overlay from document. */
 	terminate() {
+		clearInterval(this.updateListEntryInterval);
 		clearInterval(this.findCommentaryTabInterval);
 		clearTimeout(this.endTimeout);
 		this.stopFlashscore();
@@ -1104,10 +1170,18 @@ class Overlay {
 
 	show() {
 		this.fDivOverlay.hidden = false;
+		setTimeout(() => {
+			this.flashscoreCommentFrame.contentWindow.scrollTo({top: this.fCommentsSection?.offsetTop - 70, behavior: 'smooth'});
+		}, 50)
 	}
 
 	toggleHidden() {
 		this.fDivOverlay.hidden = !this.fDivOverlay.hidden;
+	}
+
+	togglePrintUpdates() {
+		this.printUpdates = !this.printUpdates;
+		this.updateListEntry();
 	}
 
 	/**
@@ -1768,15 +1842,19 @@ class Overlay {
 		if (this.fCommentsSection != null) {
 			this.fCommentsObserverInterval = setInterval(() => this.fCommentsCallback(), 2000);
 			console.log('Started observing flashscore commentary section');
+			this.listEntry.activeSpan.style.color = 'lime';
 		}
-		else
+		else {
 			console.error('Flashscore commentary section NOT FOUND!');
+			this.listEntry.activeSpan.style.color = 'yellow';
+		}
 	}
 
 	// Later, you can stop observing
 	stopFlashscore() {
 		clearInterval(this.fCommentsObserverInterval);
 		console.log('Stopped observing flashscore commentary section');
+		this.listEntry.activeSpan.style.color = 'red';
 	}
 
 	restartFlashscore() {
@@ -1829,11 +1907,12 @@ class OverlayManager {
 	 * @return {Overlay} Deleted Overlay object
 	 */
 	static deleteOverlay(overlayId) {
+		/** @type {Overlay} */
 		let deletedOverlay = null;
 		if (overlayId >= 1 && overlayId <= this.overlays.length) {
 			deletedOverlay = this.overlays[overlayId - 1];
 			// Remove the overlay's entry from list div
-			overlayListDiv.removeChild(deletedOverlay.listEntrySpan);
+			overlayListDiv.removeChild(deletedOverlay.listEntry.div);
 			// Terminate the overlay
 			deletedOverlay.terminate();
 			// Remove the overlay from the array
@@ -1886,15 +1965,31 @@ iframeBody.addEventListener('keydown', event => {
 				if (OverlayManager.focusedOverlay?.lastCommentsQueue.length > 0)
 					sendTextArrayToChat(getSlicedHaxballText(OverlayManager.focusedOverlay.lastCommentsQueue[0]), OverlayManager.focusedOverlay.chatInterval);
 				break;
+			case '"':
+				// Toggle updates
+				OverlayManager.focusedOverlay?.togglePrintUpdates();
+				break;
+			case '-':
+				// Stop writing comments
+				OverlayManager.focusedOverlay?.stopFlashscore();
+				break;
+			case '=':
+				// Start writing comments
+				OverlayManager.focusedOverlay?.restartFlashscore();
+				break;
 			case '[':
+				// Send current match results
+				OverlayManager.focusedOverlay?.printMatchResults();
+				break;
+			case ']':
 				// Send current match results and goalscorers
 				OverlayManager.focusedOverlay?.printMatchResultsWithSummary();
 				break;
-			case ']':
+			case '\\':
 				// Send current match results and odds
 				OverlayManager.focusedOverlay?.printMatchResultsWithOdds();
 				break;
-			case '\\':
+			case '|':
 				// Send current match results and odds
 				OverlayManager.focusedOverlay?.printMatchResultsWithSummaryAndOdds();
 				break;

@@ -36,6 +36,9 @@ Aby go zmodyfikować, musi zostać zastąpiony.
   ![Działające zastąpienia](https://github.com/ChasmSolacer/Haxball-Client-Expansion/assets/46286197/32fdc632-52c3-46a0-9576-4665373e3671)
 - Jeżeli zamkniesz przeglądarkę i chcesz włączyć Haxballa ponownie, wejdź na [Haxballa](https://www.haxball.com/play), naciśnij F12, aby otworzyć panel narzędzi i odśwież stronę. Zmiany powinny być po tym widoczne. Zastąpienia zostają po restarcie przeglądarki, więc nie trzeba powtarzać powyższych kroków.
 - Aby zastosować aktualizację, pobierz repozytorium ponownie (naciśnij zielony przycisk `Code` → `Download ZIP`) i zamień stary folder z tym nowym.
+
+**USUWANIE ZASTĄPIEŃ:**<br>
+Aby usunąć zastąpienia, naciśnij przycisk Ø obok opcji `Włącz Lokalne Zastąpienia` widocznym na powyższym obrazie (jeżeli go nie widać, należy rozszerzyć panel).
 ___
 ___
 
