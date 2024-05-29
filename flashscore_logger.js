@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.10';
+const flashscore_logger_version = 'Alpha 1.10.1';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -1275,7 +1275,7 @@ class Overlay {
 				console.log('Deleting redundant elements from flashscore frame');
 				this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
 				Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-				this.flashscoreFrame.contentDocument.querySelector('#onetrust-banner-sdk')?.remove();
+				this.flashscoreFrame.contentDocument.querySelector('#onetrust-consent-sdk')?.remove();
 				this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
 
 				// Check periodically if a commentary section appeared
@@ -2284,6 +2284,7 @@ function spolszczNazwiska(text) {
 	commentText = commentText.replaceAll('Stepinski', 'Stępiński');
 	commentText = commentText.replaceAll('Foszmanczyk', 'Foszmańczyk');
 	commentText = commentText.replaceAll('Lobodzinski', 'Łobodziński');
+	commentText = commentText.replaceAll('A. Blad', 'A. Błąd');
 	commentText = commentText.replaceAll('Goncalo', 'Gonçalo');
 	commentText = commentText.replaceAll('Ciganiks', 'Cigaņiks');
 	commentText = commentText.replaceAll('Craciun', 'Crăciun');
