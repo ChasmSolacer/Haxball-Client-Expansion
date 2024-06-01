@@ -1,4 +1,4 @@
-const flashscore_logger_version = 'Alpha 1.10.1';
+const flashscore_logger_version = 'Alpha 1.11';
 /*
 * Description: This script observes the Flashscore commentary section. When a comment appears, it gets printed to Haxball chat.
 *
@@ -18,13 +18,15 @@ const flashscore_logger_version = 'Alpha 1.10.1';
 * 6.  Disable ad blockers and/or Brave Shield for this site.
 * 7.  Paste this script to the console.
 *
+* If everything is done correctly, a small rectangle with plus button (+) will appear in the bottom right corner. Click the + button to create a new overlay.
 * After that a flashscore overlay will appear. It will only show some text.
+* To load a match, paste a Flashscore match link to the top input and click load.
 * You can press "Alt + ;" to hide/show it (click outside the overlay first for keyboard shortcuts to work).
 *
 * If you are in a room, a comment will be sent in the chat as soon as it appears in Flashscore commentary section.
 *
-* If you want to load a match, call OverlayManager.createOverlay().loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
-* After a flashscore page appears, don't click anything on it (but if you do, don't panic, just don't switch tabs).
+* If you want to load a match using a console, call OverlayManager.createOverlay().loadFlashscoreMatchCommentary function. Scroll to bottom of this file for an example.
+* After a flashscore page appears, don't click anything on it (but if you do, don't panic, just don't click on stats, lineups buttons).
 */
 
 // Version check
@@ -1201,6 +1203,24 @@ class Overlay {
 		return this.translate(Str.COMMENTARY_LINK1, this.language) + this.matchId + this.translate(Str.COMMENTARY_LINK2, this.language);
 	}
 
+	hideElement(selector) {
+		let element = this.flashscoreFrame.contentDocument.querySelector(selector);
+		if (element != null) {
+			element.style.display = 'none';
+			console.log(selector + ' hidden');
+		}
+	}
+
+	hideAllElements(selector) {
+		let elements = Array.from(this.flashscoreFrame.contentDocument.querySelectorAll(selector));
+		elements.forEach((element, i) => {
+			if (element != null) {
+				element.style.display = 'none';
+				console.log(selector + '#' + i + ' hidden');
+			}
+		});
+	}
+
 	/**
 	 * This function loads a flashscore commentary page within the flashscoreFrame.
 	 * It can be called at any time.
@@ -1273,10 +1293,10 @@ class Overlay {
 
 				// Delete redundant elements
 				console.log('Deleting redundant elements from flashscore frame');
-				this.flashscoreFrame.contentDocument.querySelector('.detailLeaderboard')?.remove();
-				Array.from(this.flashscoreFrame.contentDocument.querySelector('.bannerEnvelope')?.children ?? []).forEach(e => e.remove());
-				this.flashscoreFrame.contentDocument.querySelector('#onetrust-consent-sdk')?.remove();
-				this.flashscoreFrame.contentDocument.querySelector('.sg-b-f')?.remove();
+				this.hideElement('.detailLeaderboard');
+				this.hideElement('.header__brand');
+				this.hideAllElements('.bannerEnvelope');
+				this.hideElement('#onetrust-banner-sdk');
 
 				// Check periodically if a commentary section appeared
 				function findCommentaryTab() {
