@@ -3,7 +3,7 @@
  15ee796a
 */
 'use strict';
-const version = 'Indev 0.8';
+const version = 'Indev 0.9';
 // Version check
 fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/master/versions.json')
 	.then(r => r.json()).then(vs => {
@@ -19,6 +19,20 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 
 (function (globalScope) {
 		window.parent.g = {};
+
+		/**
+		 * Copies text to clipboard using an old method.
+		 * @param {string} text
+		 */
+		function copyText(text) {
+			const tempInput = document.createElement('input');
+			tempInput.value = text;
+			document.body.appendChild(tempInput);
+			tempInput.select();
+			document.execCommand('Copy');
+			tempInput.remove();
+		}
+
 		/**
 		 * game-min.js commit short hash as seen in the top comment.
 		 * @type {string}
@@ -317,6 +331,7 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 			};
 		}
 
+		window.parent.g.joinRoom = (roomId, pass, token) => HaxballClientManager.joinRoom(roomId, pass, token);
 		window.parent.g.getCurrentStadium = () => {
 			const roomState = window.parent.g.getRoomManager?.()?.room?.roomState;
 			if (roomState == null) {
@@ -7827,11 +7842,17 @@ fetch('https://raw.githubusercontent.com/ChasmSolacer/Haxball-Client-Expansion/m
 				this.mt = roomInfoWithGeo;
 				let g = roomInfoWithGeo.roomInfoInst;
 				c.textContent = g.D;
+				// Room id
+				c.title = 'Right click to copy: ' + roomInfoWithGeo.ba;
+				c.onauxclick = () => copyText(roomInfoWithGeo.ba);
 				d.textContent = '' + g.K + '/' + g.jf;
 				f.textContent = g.Kb ? 'Yes' : '-';
 				e.textContent = '' + (roomInfoWithGeo.distanceKm | 0) + 'km';
+				e.title = 'Right click to copy: ' + g.Ic + ', ' + g.Lc;
+				e.onauxclick = () => copyText(g.Ic + ', ' + g.Lc);
 				try {
 					b.classList.add('f-' + g.vb.toLowerCase());
+					b.title = g.vb.toLowerCase();
 				}
 				catch (h) {
 				}
